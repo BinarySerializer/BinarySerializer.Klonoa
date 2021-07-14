@@ -5,8 +5,8 @@
         // TODO: Parse this - most files are TMD, but not all
         public RawData_ArchiveFile ObjectModels { get; set; }
 
-        // TODO: Parse this - Seems to be a bunch of stuff like sprites etc.
-        public ArchiveFile<ArchiveFile<ArchiveFile<RawData_File>>> File_1 { get; set; }
+        // TODO: Parse this - Seems to be a bunch of stuff like sprites etc., some models too
+        public ArchiveFile<RawData_File> File_1 { get; set; }
         
         public AnimationPack_ArchiveFile AnimationPack { get; set; }
 
@@ -23,7 +23,7 @@
         protected override void SerializeFiles(SerializerObject s)
         {
             ObjectModels = SerializeFile<RawData_ArchiveFile>(s, ObjectModels, 0, name: nameof(ObjectModels));
-            File_1 = SerializeFile<ArchiveFile<ArchiveFile<ArchiveFile<RawData_File>>>>(s, File_1, 1, name: nameof(File_1));
+            File_1 = SerializeFile<ArchiveFile<RawData_File>>(s, File_1, 1, name: nameof(File_1));
             AnimationPack = SerializeFile<AnimationPack_ArchiveFile>(s, AnimationPack, 2, name: nameof(AnimationPack));
 
             File_3 = SerializeFile<RawData_File>(s, File_3, 3, name: nameof(File_3));

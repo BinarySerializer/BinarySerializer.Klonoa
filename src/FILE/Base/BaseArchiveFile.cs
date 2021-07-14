@@ -23,7 +23,7 @@ namespace BinarySerializer.KlonoaDTP
             var end = OffsetTable.FilePointers.OrderBy(x => x.FileOffset).FirstOrDefault(x => x.FileOffset > start.FileOffset);
 
             if (end == null)
-                end = Offset + Pre_FileSize;
+                end = OffsetTable.Offset + Pre_FileSize;
 
             return end;
         }

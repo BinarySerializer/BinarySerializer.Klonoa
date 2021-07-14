@@ -3,11 +3,11 @@
     public class MovementPathBlock : BinarySerializable
     {
         // TODO: Parse
-        public byte[] Data { get; set; }
+        public short[] Data { get; set; }
 
         public override void SerializeImpl(SerializerObject s)
         {
-            Data = s.SerializeArray<byte>(Data, 28, name: nameof(Data));
+            Data = s.SerializeArray<short>(Data, 28 / 2, name: nameof(Data));
         }
     }
 }
