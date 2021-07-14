@@ -25,10 +25,10 @@ namespace BinarySerializer.KlonoaDTP
             var buffer2 = new ushort[(0x412 - 0x212) / 2]; // 800E436A
             var buffer3 = new ushort[(0x2412 - 0x412) / 2];
             var buffer4 = new ushort[(0x2c08 - 0x2412) / 2];
-            var buffer5 = new ushort[(0xFC60 - 0x2c08) / 2]; // TODO: Might be too big
+            //var buffer5 = new ushort[(0xFC60 - 0x2c08) / 2]; // Might be too big
+            var buffer5 = new ushort[buffer4.Length]; // Not sure what the length is since it's the last buffer. Hopefully same as previous one.
 
-            // FUN_8007853c
-            bool UknownDecomp2_HasFinished = false;
+            bool hasFinishedDecompressing = false;
             ushort USHORT_1f80001c = 0;
             ushort USHORT_1f800018 = 0;
             ushort USHORT_1f80001a = 0;
@@ -38,8 +38,8 @@ namespace BinarySerializer.KlonoaDTP
             void FUN_80078cdc(int param_1)
             {
                 uint uVar3 = USHORT_1f80001c;
-                USHORT_1f80001a = (ushort)(USHORT_1f80001a << (int)((int)(short)param_1 & 0x1fU));
-                if ((int)USHORT_1f80001c < (int)(short)param_1)
+                USHORT_1f80001a = (ushort)(USHORT_1f80001a << (int)((short)param_1 & 0x1fU));
+                if (USHORT_1f80001c < (short)param_1)
                 {
                     uint uVar2;
 
@@ -53,7 +53,7 @@ namespace BinarySerializer.KlonoaDTP
                         uVar3 = 8;
                     } while (8 < (int)uVar2);
                 }
-                USHORT_1f80001a = (ushort)(USHORT_1f80001a | (ushort)((int)(uint)USHORT_1f800018 >> (int)((uint)(ushort)USHORT_1f80001c - param_1 & 0x1f)));
+                USHORT_1f80001a = (ushort)(USHORT_1f80001a | (ushort)(USHORT_1f800018 >> (int)((uint)USHORT_1f80001c - param_1 & 0x1f)));
                 USHORT_1f80001c = (ushort)((uint)USHORT_1f80001c - param_1);
             }
 
@@ -65,7 +65,7 @@ namespace BinarySerializer.KlonoaDTP
 
                     if (cycles < 0)
                     {
-                        UknownDecomp2_HasFinished = true;
+                        hasFinishedDecompressing = true;
                         return 0;
                     }
 
@@ -74,18 +74,16 @@ namespace BinarySerializer.KlonoaDTP
                     FUN_80078a24();
                     FUN_800787b0(0x10, 4, -1);
 
-                    if (UknownDecomp2_HasFinished)
+                    if (hasFinishedDecompressing)
                         return 0;
                 }
 
-                ushort uVar1;
                 uint uVar2;
-                uint uVar4;
 
                 USHORT_1f80001e--;
-                uVar1 = buffer3[USHORT_1f80001a >> 4];
-                uVar4 = 8;
-                while (0x1fd < (uVar2 = (uint)uVar1)) 
+                var uVar1 = buffer3[USHORT_1f80001a >> 4];
+                uint uVar4 = 8;
+                while (0x1fd < (uVar2 = uVar1)) 
                 {
                     var puVar3 = buffer4;
                     
@@ -101,22 +99,16 @@ namespace BinarySerializer.KlonoaDTP
 
             void FUN_80078a24()
             {
-                if (UknownDecomp2_HasFinished)
+                if (hasFinishedDecompressing)
                     return;
 
-                ushort uVar1;
-                uint uVar2;
-                short sVar3;
-                ushort uVar4;
-                short sVar5;
                 int iVar6;
-                uint uVar8;
                 int iVar9;
 
-                sVar3 = (short)FUN_80078c98(9);
+                var sVar3 = (short)FUN_80078c98(9);
                 if (sVar3 == 0)
                 {
-                    uVar4 = (ushort)FUN_80078c98(9);
+                    var uVar4 = (ushort)FUN_80078c98(9);
                     iVar9 = 0;
                     do
                     {
@@ -139,9 +131,10 @@ namespace BinarySerializer.KlonoaDTP
                     {
                         do
                         {
-                            uVar1 = buffer2[USHORT_1f80001a >> 8];
-                            uVar8 = 0x80;
+                            var uVar1 = buffer2[USHORT_1f80001a >> 8];
+                            uint uVar8 = 0x80;
 
+                            uint uVar2;
                             while (0x12 < (uVar2 = uVar1))
                             {
                                 var puVar7 = buffer4;
@@ -154,7 +147,7 @@ namespace BinarySerializer.KlonoaDTP
                             }
 
                             FUN_80078cdc(buffer0[uVar2]);
-                            sVar5 = (short)iVar9;
+                            short sVar5 = (short)iVar9;
                             if (uVar2 < 3)
                             {
                                 if (uVar2 == 0)
@@ -174,7 +167,7 @@ namespace BinarySerializer.KlonoaDTP
                                         iVar6 = (int)((uVar8 & 0xffff) + 0x14);
                                     }
                                 }
-                                while (-1 < (iVar6 = iVar6 + -1)) 
+                                while (-1 < (iVar6 += -1)) 
                                 {
                                     sVar5 = (short)iVar9;
                                     iVar9++;
@@ -186,7 +179,7 @@ namespace BinarySerializer.KlonoaDTP
                                 iVar9++;
                                 buffer1[sVar5] = (byte)((byte)uVar1 - 2);
                             }
-                        } while ((short)iVar9 < sVar3) ;
+                        } while ((short)iVar9 < sVar3);
                     }
                     if ((short)iVar9 < 0x1fe)
                     {
@@ -205,12 +198,12 @@ namespace BinarySerializer.KlonoaDTP
             {
                 int uVar1 = USHORT_1f80001a;
                 FUN_80078cdc(param_1);
-                return (uint)(uVar1 >> (int)(0x10U - (int)param_1 & 0x1f) & 0xffff);
+                return (uint)(uVar1 >> (int)(0x10U - param_1 & 0x1f) & 0xffff);
             }
 
             void FUN_800787b0(short param_1, short param_2, short param_3)
             {
-                if (UknownDecomp2_HasFinished) 
+                if (hasFinishedDecompressing) 
                     return;
                 
                 short sVar2 = (short)FUN_80078c98(param_2);
@@ -227,7 +220,7 @@ namespace BinarySerializer.KlonoaDTP
                             sVar2 = (short)iVar9;
                             iVar9++;
                             buffer0[sVar2] = 0;
-                        } while (iVar9 * 0x10000 >> 0x10 < (int)param_1);
+                        } while (iVar9 * 0x10000 >> 0x10 < param_1);
                     }
 
                     iVar9 = 0;
@@ -281,7 +274,7 @@ namespace BinarySerializer.KlonoaDTP
 
                             buffer0[sVar7] = (byte)uVar8;
                             
-                            if (iVar9 * 0x10000 >> 0x10 == (int)param_3)
+                            if (iVar9 * 0x10000 >> 0x10 == param_3)
                             {
                                 uVar8 = FUN_80078c98(2);
                                 iVar4 = (int)((uVar8 & 0xffff) - 1);
@@ -322,18 +315,10 @@ namespace BinarySerializer.KlonoaDTP
 
             void FUN_80078dc0(ushort param_1, byte[] paramBuffer0, uint param_3, ushort[] paramBuffer1)
             {
-                ushort uVar1;
                 uint uVar2;
-                uint uVar3;
-                ushort[] iVar5;
-                uint uVar6;
-                ushort uVar9;
-                uint uVar10;
-                uint uVar11;
                 var asStack120 = new short[20];
                 var auStack80 = new ushort[20];
                 var auStack40 = new ushort[18];
-                short local_6 = 0;
 
                 ushort uVar8 = 1;
                 do
@@ -351,23 +336,24 @@ namespace BinarySerializer.KlonoaDTP
                     {
                         uVar8++;
                         asStack120[paramBuffer0[uVar2]] = (short)(asStack120[paramBuffer0[uVar2]] + 1);
-                        uVar2 = (uint)uVar8;
+                        uVar2 = uVar8;
                     } while (uVar8 < param_1);
                 }
                 auStack40[1] = 0;
                 uVar8 = 1;
                 do
                 {
-                    uVar2 = (uint)uVar8;
+                    uVar2 = uVar8;
                     uVar8++;
                     auStack40[uVar2 + 1] = (ushort)(auStack40[uVar2] + (asStack120[uVar2] << (int)(0x10 - uVar2 & 0x1f)));
                 } while (uVar8 < 0x11);
 
                 if (auStack40[17] == 0)
                 {
-                    uVar11 = 0x10 - param_3;
-                    uVar6 = param_3 & 0xffff;
+                    var uVar11 = 0x10 - param_3;
+                    var uVar6 = param_3 & 0xffff;
                     uVar2 = 1;
+                    uint uVar3;
                     if (uVar6 != 0)
                     {
                         do
@@ -375,7 +361,7 @@ namespace BinarySerializer.KlonoaDTP
                             uVar3 = uVar2 & 0xffff;
                             uVar2++;
                             auStack80[uVar3] = (ushort)(1 << (int)(uVar6 - uVar3 & 0x1f));
-                            auStack40[uVar3] = (ushort)((int)(uint)auStack40[uVar3] >> (int)(uVar11 & 0x1f));
+                            auStack40[uVar3] = (ushort)(auStack40[uVar3] >> (int)(uVar11 & 0x1f));
                         } while ((uVar2 & 0xffff) <= uVar6);
                     }
                     while ((uVar6 = uVar2 & 0xffff) < 0x11) 
@@ -383,7 +369,7 @@ namespace BinarySerializer.KlonoaDTP
                         auStack80[uVar6] = (ushort)(1 << (int)(0x10 - uVar6 & 0x1f));
                         uVar2++;
                     }
-                    uVar2 = (uint)((int)(uint)auStack40[(param_3 & 0xffff) + 1] >> (int)(uVar11 & 0x1f));
+                    uVar2 = (uint)(auStack40[(param_3 & 0xffff) + 1] >> (int)(uVar11 & 0x1f));
 
                     if (((uVar2 & 0xffff) != 0))
                     {
@@ -402,66 +388,68 @@ namespace BinarySerializer.KlonoaDTP
 
                     uVar8 = 0;
 
-                    if (param_1 != 0)
-                    {
-                        uVar2 = 0;
-                        uVar9 = param_1;
-                        do
-                        {
-                            uVar2 = (uint)paramBuffer0[uVar2];
-                            if (uVar2 != 0)
-                            {
-                                uVar6 = (uint)auStack40[uVar2];
-                                uVar10 = uVar6 + auStack80[uVar2];
-                                uVar3 = uVar6;
-                                if ((param_3 & 0xffff) < uVar2)
-                                {
-                                    var bufferOffset = (auStack40[uVar2] >> (int)(uVar11 & 0x1f));
-                                    var buffer = paramBuffer1;
+                    if (param_1 == 0) 
+                        return;
 
-                                    uVar3 = uVar2 - param_3;
-                                    while ((uVar3 & 0xffff) != 0)
-                                    {
-                                        if (buffer[bufferOffset] == 0)
-                                        {
-                                            buffer5[uVar9] = 0;
-                                            buffer4[uVar9] = 0;
-                                            buffer[bufferOffset] = uVar9;
-                                            uVar9++;
-                                        }
-                                        if ((uVar6 & 1 << (int)(0xf - (param_3 & 0xffff) & 0x1f) & 0xffffU) == 0)
-                                        {
-                                            uVar1 = buffer[bufferOffset];
-                                            buffer = buffer4;
-                                            bufferOffset = 0;
-                                        }
-                                        else
-                                        {
-                                            uVar1 = buffer[bufferOffset];
-                                            buffer = buffer5;
-                                            bufferOffset = 0;
-                                        }
-                                        bufferOffset += uVar1;
-                                        uVar3--;
-                                        uVar6 = uVar6 << 1;
-                                    }
-                                    buffer[bufferOffset] = uVar8;
-                                }
-                                else
+                    uVar2 = 0;
+                    var uVar9 = param_1;
+                    do
+                    {
+                        uVar2 = paramBuffer0[uVar2];
+                        if (uVar2 != 0)
+                        {
+                            uVar6 = auStack40[uVar2];
+                            var uVar10 = uVar6 + auStack80[uVar2];
+                            uVar3 = uVar6;
+                            if ((param_3 & 0xffff) < uVar2)
+                            {
+                                var bufferOffset = (auStack40[uVar2] >> (int)(uVar11 & 0x1f));
+                                var buffer = paramBuffer1;
+
+                                uVar3 = uVar2 - param_3;
+                                while ((uVar3 & 0xffff) != 0)
                                 {
-                                    while (uVar3 < uVar10)
+                                    if (buffer[bufferOffset] == 0)
                                     {
-                                        paramBuffer1[uVar3] = uVar8;
-                                        uVar6++;
-                                        uVar3 = uVar6 & 0xffff;
+                                        buffer5[uVar9] = 0;
+                                        buffer4[uVar9] = 0;
+                                        buffer[bufferOffset] = uVar9;
+                                        uVar9++;
                                     }
+
+                                    ushort uVar1;
+                                    if ((uVar6 & 1 << (int)(0xf - (param_3 & 0xffff) & 0x1f) & 0xffffU) == 0)
+                                    {
+                                        uVar1 = buffer[bufferOffset];
+                                        buffer = buffer4;
+                                        bufferOffset = 0;
+                                    }
+                                    else
+                                    {
+                                        uVar1 = buffer[bufferOffset];
+                                        buffer = buffer5;
+                                        bufferOffset = 0;
+                                    }
+                                    bufferOffset += uVar1;
+                                    uVar3--;
+                                    uVar6 = uVar6 << 1;
                                 }
-                                auStack40[uVar2] = (ushort)uVar10;
+                                buffer[bufferOffset] = uVar8;
                             }
-                            uVar8++;
-                            uVar2 = (uint)uVar8;
-                        } while (uVar8 < param_1);
-                    }
+                            else
+                            {
+                                while (uVar3 < uVar10)
+                                {
+                                    paramBuffer1[uVar3] = uVar8;
+                                    uVar6++;
+                                    uVar3 = uVar6 & 0xffff;
+                                }
+                            }
+                            auStack40[uVar2] = (ushort)uVar10;
+                        }
+                        uVar8++;
+                        uVar2 = uVar8;
+                    } while (uVar8 < param_1);
                 }
                 else
                 {
@@ -471,14 +459,11 @@ namespace BinarySerializer.KlonoaDTP
 
             uint FUN_800786d0()
             {
-                ushort uVar1;
-                int iVar2;
-                uint uVar4;
                 uint uVar5;
 
-                uVar1 = buffer2[USHORT_1f80001a >> 8];
-                uVar4 = 0x80;
-                while (0xf < (uVar5 = (uint)uVar1)) 
+                var uVar1 = buffer2[USHORT_1f80001a >> 8];
+                uint uVar4 = 0x80;
+                while (0xf < (uVar5 = uVar1)) 
                 {
                     var puVar3 = buffer4;
                     if ((USHORT_1f80001a & uVar4) != 0)
@@ -491,7 +476,7 @@ namespace BinarySerializer.KlonoaDTP
                 FUN_80078cdc(buffer0[uVar5]);
                 if (uVar5 != 0)
                 {
-                    iVar2 = (int)FUN_80078c98((short)((int)((uVar5 - 1) * 0x10000) >> 0x10));
+                    var iVar2 = (int)FUN_80078c98((short)((int)((uVar5 - 1) * 0x10000) >> 0x10));
                     uVar5 = (uint)(iVar2 + (1 << (int)(uVar5 - 1 & 0x1f)));
                 }
                 return uVar5 & 0xffff;
@@ -499,7 +484,7 @@ namespace BinarySerializer.KlonoaDTP
 
             uint value = UnknownDecomp2_GetNextValue();
 
-            while (UknownDecomp2_HasFinished == false) 
+            while (hasFinishedDecompressing == false) 
             {
                 uint count = value & 0xffff;
 
@@ -545,7 +530,7 @@ namespace BinarySerializer.KlonoaDTP
 
         public Stream EncodeStream(Stream s)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
     }
 }
