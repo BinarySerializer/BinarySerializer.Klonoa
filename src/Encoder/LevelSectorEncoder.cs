@@ -16,7 +16,6 @@ namespace BinarySerializer.KlonoaDTP
 
             // Create a stream to store the decompressed data
             var decompressedStream = new MemoryStream();
-            //var decompressedStream = File.Create(@"C:\Users\RayCarrot\Downloads\decomp.dat");
 
             var writer = new Writer(decompressedStream, isLittleEndian: true, leaveOpen: true);
 
