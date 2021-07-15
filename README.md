@@ -90,7 +90,7 @@ As an example, here are all the files in Vision 1-1:
 - 10: SEQ
 
 ## Compression
-The game uses multiple compression types. So far I've found 3 of them, with 2 being implemented.
+The game uses multiple compression types.
 
 ### ULZ
 A variant of LZSS. It has 4 types, with only 2 of them being used in the game.
@@ -98,5 +98,5 @@ A variant of LZSS. It has 4 types, with only 2 of them being used in the game.
 ### Raw texture block
 A compression used on certain raw texture data blocks.
 
-### Unknown
-An unknown compression type used on the level files which has not been implemented.
+### Level sector
+An unknown compression type used for the level sectors.
