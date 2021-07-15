@@ -1,12 +1,14 @@
-﻿namespace BinarySerializer.KlonoaDTP
+﻿using BinarySerializer.PS1;
+
+namespace BinarySerializer.KlonoaDTP
 {
     /// <summary>
     /// A sector of a level
     /// </summary>
     public class Sector_ArchiveFile : BaseArchiveFile
     {
+        public PS1_TMD LevelModel { get; set; }
         // TODO: Parse these
-        public RawData_File LevelModel { get; set; } // TMD file
         public File_1_Data File_1 { get; set; }
         public File_2_Data File_2 { get; set; }
         public File_3_Data File_3 { get; set; }
@@ -48,7 +50,7 @@
 
         protected override void SerializeFiles(SerializerObject s)
         {
-            LevelModel = SerializeFile<RawData_File>(s, LevelModel, 0, name: nameof(LevelModel));
+            LevelModel = SerializeFile<PS1_TMD>(s, LevelModel, 0, name: nameof(LevelModel));
             File_1 = SerializeFile<File_1_Data>(s, File_1, 1, name: nameof(File_1));
             File_2 = SerializeFile<File_2_Data>(s, File_2, 2, name: nameof(File_2));
             File_3 = SerializeFile<File_3_Data>(s, File_3, 3, name: nameof(File_3));
