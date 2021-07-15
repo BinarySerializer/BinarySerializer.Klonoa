@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 
 namespace BinarySerializer.KlonoaDTP
 {
@@ -40,6 +41,12 @@ namespace BinarySerializer.KlonoaDTP
         public T SerializeFile<T>(SerializerObject s, T obj, int index, string name = null)
             where T : BinarySerializable, new()
         {
+            if (index >= OffsetTable.FilePointers.Length)
+            {
+                s.LogWarning($"File {index} of requested type {typeof(T).Name} does not exist in archive at {Offset}");
+                return null;
+            }
+
             s.DoAt(OffsetTable.FilePointers[index], () =>
             {
                 var endPointer = GetFileEndPointer(index);
