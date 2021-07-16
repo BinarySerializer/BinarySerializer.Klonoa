@@ -1,5 +1,6 @@
 ﻿using BinarySerializer.PS1;
 using System;
+using System.Threading.Tasks;
 
 namespace BinarySerializer.KlonoaDTP
 {
@@ -68,6 +69,22 @@ namespace BinarySerializer.KlonoaDTP
             LoadBINFiles((cmd, i) =>
             {
                 logAction?.Invoke($"Loading BIN {BINBlock} file {i} of type {cmd.FILE_Type}");
+
+                ProcessBINFile(i);
+            });
+        }
+
+        public async Task LoadAndProcessBINBlockAsync(Func<string, Task> logAction = null)
+        {
+            // Null out previous data. This should get overwritten below when loading the new level block, but if a menu is loaded instead they will not.
+            BackgroundPack = null;
+            OA05 = null;
+            LevelPack = null;
+
+            await LoadBINFilesAsync(async (cmd, i) =>
+            {
+                if (logAction != null)
+                    await logAction($"Loading BIN {BINBlock} file {i} of type {cmd.FILE_Type}");
 
                 ProcessBINFile(i);
             });
@@ -203,31 +220,33 @@ namespace BinarySerializer.KlonoaDTP
         public void LoadBINFiles(Action<IDXLoadCommand, int> loadAction)
         {
             var s = Context.Deserializer;
-            var binFile = Context.GetFile(FilePath_BIN);
 
             // Enumerate every load command
             for (int cmdIndex = 0; cmdIndex < IDXEntry.LoadCommands.Length; cmdIndex++)
             {
                 var cmd = IDXEntry.LoadCommands[cmdIndex];
 
-                // Seek
-                if (cmd.Type == 1)
+                if (cmd.Type == 2)
                 {
-                    s.Goto(binFile.StartPointer + cmd.BIN_Offset);
-                }
-                // Read file
-                else if (cmd.Type == 2)
-                {
-                    var p = s.CurrentPointer;
-
-                    // Add a region for nicer pointer logging
-                    binFile.AddRegion(p.FileOffset, cmd.FILE_Length, $"File_{cmdIndex}");
-
-                    // Process the file
+                    s.Goto(cmd.FILE_Pointer);
                     loadAction(cmd, cmdIndex);
+                }
+            }
+        }
 
-                    // Go to the end of the file for the next file
-                    s.Goto(p + cmd.FILE_Length);
+        public async Task LoadBINFilesAsync(Func<IDXLoadCommand, int, Task> loadAction)
+        {
+            var s = Context.Deserializer;
+
+            // Enumerate every load command
+            for (int cmdIndex = 0; cmdIndex < IDXEntry.LoadCommands.Length; cmdIndex++)
+            {
+                var cmd = IDXEntry.LoadCommands[cmdIndex];
+
+                if (cmd.Type == 2)
+                {
+                    s.Goto(cmd.FILE_Pointer);
+                    await loadAction(cmd, cmdIndex);
                 }
             }
         }

@@ -11,6 +11,7 @@ namespace BinarySerializer.KlonoaDTP
         // Type 1
         public uint BIN_LBA { get; set; } // The LBA offset relative to the LBA of the BIN
         public uint BIN_Offset => BIN_LBA * SectorSize;
+        public Pointer BIN_Pointer => new Pointer(BIN_Offset, Context.GetFile(Loader.FilePath_BIN));
         public uint BIN_UnknownPointerValue { get; set; }
         public uint BIN_LengthValue { get; set; }
         public uint BIN_Length => BIN_LengthValue * SectorSize;
@@ -20,6 +21,7 @@ namespace BinarySerializer.KlonoaDTP
         public uint FILE_UnknownValue { get; set; }
         public uint FILE_FunctionPointer { get; set; }
         public FileType FILE_Type { get; set; }
+        public Pointer FILE_Pointer { get; set; }
 
         public override void SerializeImpl(SerializerObject s)
         {
