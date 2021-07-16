@@ -17,18 +17,19 @@ context.AddFile(new MemoryMappedFile(context, Loader.FilePath_IDX, 0x80010000));
 // Load the IDX
 IDX idx = Load_IDX(context);
 
-// Get the entry you want to load. Entry 3 is Vision 1-1 for example.
-IDXEntry entry = idx.Entries[3];
-
 // Create the loader
-Loader loader = Loader.Create(context);
+Loader loader = Loader.Create(context, idx);
 
-// Load the BIN
-loader.Load_BIN(entry, 3);
+// Switch to the BIN block you want to load. Block 3 is Vision 1-1 for example.
+loader.SwitchBlocks(3);
+
+// Load the BIN block
+loader.LoadAndProcessBINBlock();
 
 // The data is now stored in the loader and can be accessed
 LevelPack_ArchiveFile level = loader.LevelPack;
 Sprites_ArchiveFile[] spriteFrames = loader.SpriteFrames;
+
 ```
 
 # Documentation

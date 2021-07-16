@@ -1,5 +1,5 @@
-﻿using System;
-using BinarySerializer.PS1;
+﻿using BinarySerializer.PS1;
+using System;
 
 namespace BinarySerializer.KlonoaDTP
 {
@@ -10,9 +10,10 @@ namespace BinarySerializer.KlonoaDTP
     {
         #region Constructor
 
-        protected Loader(Context context)
+        protected Loader(Context context, IDX idx)
         {
             Context = context;
+            IDX = idx;
             VRAM = new PS1_VRAM();
             SpriteFrames = new Sprites_ArchiveFile[70];
         }
@@ -39,6 +40,8 @@ namespace BinarySerializer.KlonoaDTP
 
         // Properties
         public Context Context { get; }
+        public IDX IDX { get; }
+        public IDXEntry IDXEntry => IDX.Entries[BINBlock];
         public int BINBlock { get; protected set; }
         public bool IsLevel => BINBlock >= 3;
         public bool IsBossFight => IsLevel && BINBlock % 3 == 2;
@@ -47,84 +50,98 @@ namespace BinarySerializer.KlonoaDTP
 
         #region Public Methods
 
-        public void Load_BIN(IDXEntry entry, int blockIndex)
+        public void SwitchBlocks(int blockIndex)
         {
-            BINBlock = blockIndex;
+            if (blockIndex >= IDX.Entries.Length)
+                throw new Exception($"Block index {blockIndex} is out of range. Should be between 0-{IDX.Entries.Length - 1}");
 
+            BINBlock = blockIndex;
+        }
+
+        public void LoadAndProcessBINBlock(Action<string> logAction = null)
+        {
             // Null out previous data. This should get overwritten below when loading the new level block, but if a menu is loaded instead they will not.
             BackgroundPack = null;
             OA05 = null;
             LevelPack = null;
 
-            ProcessBINFiles(entry, blockIndex, (cmd, i) =>
+            LoadBINFiles((cmd, i) =>
             {
-                // Load the file
-                var binFile = Load_BINFile(cmd, blockIndex, i);
+                logAction?.Invoke($"Loading BIN {BINBlock} file {i} of type {cmd.FILE_Type}");
 
-                switch (cmd.FILE_Type)
-                {
-                    // Copy the TIM files data to VRAM
-                    case IDXLoadCommand.FileType.Archive_TIM_Generic:
-                    case IDXLoadCommand.FileType.Archive_TIM_SpriteSheets:
-                        foreach (PS1_TIM tim in ((TIM_ArchiveFile)binFile).Files)
-                            AddToVRAM(tim);
-                        break;
-
-                    case IDXLoadCommand.FileType.Archive_TIM_SongsText:
-                    case IDXLoadCommand.FileType.Archive_TIM_SaveText:
-                        // TODO: Save these, but don't load into VRAM
-                        break;
-
-                    // Save for later
-                    case IDXLoadCommand.FileType.OA05:
-                        OA05 = (OA05_File)binFile;
-                        break;
-
-                    case IDXLoadCommand.FileType.SEQ:
-                        // TODO: Save once parsed
-                        break;
-
-                    // Save for later and copy the TIM files data to VRAM
-                    case IDXLoadCommand.FileType.Archive_BackgroundPack:
-                        BackgroundPack = (BackgroundPack_ArchiveFile)binFile;
-
-                        foreach (PS1_TIM tim in BackgroundPack.TIMFiles.Files)
-                            AddToVRAM(tim);
-                        break;
-
-                    // The fixed sprites are always the last set of sprite frames
-                    case IDXLoadCommand.FileType.FixedSprites:
-                        SpriteFrames[69] = (Sprites_ArchiveFile)binFile;
-                        break;
-
-                    // Add the level sprite frames
-                    case IDXLoadCommand.FileType.Archive_SpritePack:
-                        for (int j = 0; j < 69; j++)
-                            SpriteFrames[j] = ((LevelSpritePack_ArchiveFile)binFile).Sprites[j];
-                        break;
-
-                    // Save for later
-                    case IDXLoadCommand.FileType.Archive_LevelPack:
-                        LevelPack = (LevelPack_ArchiveFile)binFile;
-                        break;
-
-                    case IDXLoadCommand.FileType.Archive_Unk0:
-                    case IDXLoadCommand.FileType.Archive_Unk4:
-                        // TODO: Save once parsed
-                        break;
-
-                    case IDXLoadCommand.FileType.Code:
-                    case IDXLoadCommand.FileType.Unknown:
-                    default:
-                        // Do nothing
-                        break;
-                }
+                ProcessBINFile(i);
             });
         }
 
-        public BaseFile Load_BINFile(IDXLoadCommand cmd, int blockIndex, int cmdIndex)
+        public void ProcessBINFile(int fileIndex)
         {
-            BINBlock = blockIndex;
+            // Load the file
+            var binFile = LoadBINFile(fileIndex);
+            var cmd = IDXEntry.LoadCommands[fileIndex];
+
+            switch (cmd.FILE_Type)
+            {
+                // Copy the TIM files data to VRAM
+                case IDXLoadCommand.FileType.Archive_TIM_Generic:
+                case IDXLoadCommand.FileType.Archive_TIM_SpriteSheets:
+                    foreach (PS1_TIM tim in ((TIM_ArchiveFile)binFile).Files)
+                        AddToVRAM(tim);
+                    break;
+
+                case IDXLoadCommand.FileType.Archive_TIM_SongsText:
+                case IDXLoadCommand.FileType.Archive_TIM_SaveText:
+                    // TODO: Save these, but don't load into VRAM
+                    break;
+
+                // Save for later
+                case IDXLoadCommand.FileType.OA05:
+                    OA05 = (OA05_File)binFile;
+                    break;
+
+                case IDXLoadCommand.FileType.SEQ:
+                    // TODO: Save once parsed
+                    break;
+
+                // Save for later and copy the TIM files data to VRAM
+                case IDXLoadCommand.FileType.Archive_BackgroundPack:
+                    BackgroundPack = (BackgroundPack_ArchiveFile)binFile;
+
+                    foreach (PS1_TIM tim in BackgroundPack.TIMFiles.Files)
+                        AddToVRAM(tim);
+                    break;
+
+                // The fixed sprites are always the last set of sprite frames
+                case IDXLoadCommand.FileType.FixedSprites:
+                    SpriteFrames[69] = (Sprites_ArchiveFile)binFile;
+                    break;
+
+                // Add the level sprite frames
+                case IDXLoadCommand.FileType.Archive_SpritePack:
+                    for (int j = 0; j < 69; j++)
+                        SpriteFrames[j] = ((LevelSpritePack_ArchiveFile)binFile).Sprites[j];
+                    break;
+
+                // Save for later
+                case IDXLoadCommand.FileType.Archive_LevelPack:
+                    LevelPack = (LevelPack_ArchiveFile)binFile;
+                    break;
+
+                case IDXLoadCommand.FileType.Archive_Unk0:
+                case IDXLoadCommand.FileType.Archive_Unk4:
+                    // TODO: Save once parsed
+                    break;
+
+                case IDXLoadCommand.FileType.Code:
+                case IDXLoadCommand.FileType.Unknown:
+                default:
+                    // Do nothing
+                    break;
+            }
+        }
+
+        public BaseFile LoadBINFile(int fileIndex)
+        {
+            var cmd = IDXEntry.LoadCommands[fileIndex];
 
             switch (cmd.FILE_Type)
             {
@@ -132,32 +149,32 @@ namespace BinarySerializer.KlonoaDTP
                 case IDXLoadCommand.FileType.Archive_TIM_SongsText:
                 case IDXLoadCommand.FileType.Archive_TIM_SaveText:
                 case IDXLoadCommand.FileType.Archive_TIM_SpriteSheets:
-                    return Load_BINFile<TIM_ArchiveFile>(cmd, blockIndex, cmdIndex);
+                    return LoadBINFile<TIM_ArchiveFile>(fileIndex);
 
                 case IDXLoadCommand.FileType.OA05:
-                    return Load_BINFile<OA05_File>(cmd, blockIndex, cmdIndex);
+                    return LoadBINFile<OA05_File>(fileIndex);
 
                 case IDXLoadCommand.FileType.SEQ:
                     // TODO: Parse SEQ
                     return null;
 
                 case IDXLoadCommand.FileType.Archive_BackgroundPack:
-                    return Load_BINFile<BackgroundPack_ArchiveFile>(cmd, blockIndex, cmdIndex);
+                    return LoadBINFile<BackgroundPack_ArchiveFile>(fileIndex);
 
                 case IDXLoadCommand.FileType.FixedSprites:
-                    return Load_BINFile<Sprites_ArchiveFile>(cmd, blockIndex, cmdIndex);
+                    return LoadBINFile<Sprites_ArchiveFile>(fileIndex);
 
                 case IDXLoadCommand.FileType.Archive_SpritePack:
-                    return Load_BINFile<LevelSpritePack_ArchiveFile>(cmd, blockIndex, cmdIndex);
+                    return LoadBINFile<LevelSpritePack_ArchiveFile>(fileIndex);
 
                 case IDXLoadCommand.FileType.Archive_LevelPack:
-                    return Load_BINFile<LevelPack_ArchiveFile>(cmd, blockIndex, cmdIndex);
+                    return LoadBINFile<LevelPack_ArchiveFile>(fileIndex);
 
                 case IDXLoadCommand.FileType.Archive_Unk0:
-                    return Load_BINFile<Unk0_ArchiveFile>(cmd, blockIndex, cmdIndex);
+                    return LoadBINFile<Unk0_ArchiveFile>(fileIndex);
 
                 case IDXLoadCommand.FileType.Archive_Unk4:
-                    return Load_BINFile<RawData_ArchiveFile>(cmd, blockIndex, cmdIndex);
+                    return LoadBINFile<RawData_ArchiveFile>(fileIndex);
 
                 case IDXLoadCommand.FileType.Code:
                     // Ignore compiled code
@@ -165,36 +182,33 @@ namespace BinarySerializer.KlonoaDTP
 
                 case IDXLoadCommand.FileType.Unknown:
                 default:
-                    Context.Logger.LogWarning($"Unsupported file format for file at command {cmdIndex} parsed at 0x{cmd.FILE_FunctionPointer:X8}");
+                    Context.Logger.LogWarning($"Unsupported file format for file {fileIndex} parsed at 0x{cmd.FILE_FunctionPointer:X8}");
                     return null;
             }
         }
 
-        public T Load_BINFile<T>(IDXLoadCommand cmd, int blockIndex, int cmdIndex)
+        public T LoadBINFile<T>(int fileIndex)
             where T : BaseFile, new()
         {
-            BINBlock = blockIndex;
-
             var s = Context.Deserializer;
+            var cmd = IDXEntry.LoadCommands[fileIndex];
 
             return s.SerializeObject<T>(null, x =>
             {
                 x.Pre_FileSize = cmd.FILE_Length;
                 x.Pre_IsCompressed = false;
-            }, name: $"BIN_File_{blockIndex}_{cmdIndex}");
+            }, name: $"BIN_File_{BINBlock}_{fileIndex}");
         }
 
-        public void ProcessBINFiles(IDXEntry entry, int blockIndex, Action<IDXLoadCommand, int> action)
+        public void LoadBINFiles(Action<IDXLoadCommand, int> loadAction)
         {
-            BINBlock = blockIndex;
-
             var s = Context.Deserializer;
             var binFile = Context.GetFile(FilePath_BIN);
 
             // Enumerate every load command
-            for (int cmdIndex = 0; cmdIndex < entry.LoadCommands.Length; cmdIndex++)
+            for (int cmdIndex = 0; cmdIndex < IDXEntry.LoadCommands.Length; cmdIndex++)
             {
-                var cmd = entry.LoadCommands[cmdIndex];
+                var cmd = IDXEntry.LoadCommands[cmdIndex];
 
                 // Seek
                 if (cmd.Type == 1)
@@ -210,7 +224,7 @@ namespace BinarySerializer.KlonoaDTP
                     binFile.AddRegion(p.FileOffset, cmd.FILE_Length, $"File_{cmdIndex}");
 
                     // Process the file
-                    action(cmd, cmdIndex);
+                    loadAction(cmd, cmdIndex);
 
                     // Go to the end of the file for the next file
                     s.Goto(p + cmd.FILE_Length);
@@ -234,10 +248,10 @@ namespace BinarySerializer.KlonoaDTP
         #region Public Static Methods
 
         public static Loader GetLoader(Context context) => context.GetStoredObject<Loader>(Key);
-        public static Loader Create(Context context)
+        public static Loader Create(Context context, IDX idx)
         {
             // Create the loader
-            var loader = new Loader(context);
+            var loader = new Loader(context, idx);
 
             // Store in the context so it can be accessed
             context.StoreObject(Key, loader);
