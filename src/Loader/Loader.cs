@@ -1,5 +1,6 @@
 ﻿using BinarySerializer.PS1;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace BinarySerializer.KlonoaDTP
@@ -11,10 +12,11 @@ namespace BinarySerializer.KlonoaDTP
     {
         #region Constructor
 
-        protected Loader(Context context, IDX idx)
+        protected Loader(Context context, IDX idx, LoaderConfiguration config)
         {
             Context = context;
             IDX = idx;
+            Config = config;
             VRAM = new PS1_VRAM();
             SpriteFrames = new Sprites_ArchiveFile[70];
         }
@@ -42,6 +44,7 @@ namespace BinarySerializer.KlonoaDTP
         // Properties
         public Context Context { get; }
         public IDX IDX { get; }
+        public LoaderConfiguration Config { get; }
         public IDXEntry IDXEntry => IDX.Entries[BINBlock];
         public int BINBlock { get; protected set; }
         public bool IsLevel => BINBlock >= 3;
@@ -143,12 +146,18 @@ namespace BinarySerializer.KlonoaDTP
                     LevelPack = (LevelPack_ArchiveFile)binFile;
                     break;
 
+                // Memory map code files
+                case IDXLoadCommand.FileType.Code:
+                    var rawData = ((RawData_File)binFile).Data;
+                    var f = new MemoryMappedByteArrayFile(Context, $"CODE_{BINBlock}_{fileIndex}", cmd.GetFileDestinationAddress(this), rawData);
+                    Context.AddFile(f);
+                    break;
+
                 case IDXLoadCommand.FileType.Archive_Unk0:
                 case IDXLoadCommand.FileType.Archive_Unk4:
                     // TODO: Save once parsed
                     break;
 
-                case IDXLoadCommand.FileType.Code:
                 case IDXLoadCommand.FileType.Unknown:
                 default:
                     // Do nothing
@@ -194,8 +203,7 @@ namespace BinarySerializer.KlonoaDTP
                     return LoadBINFile<RawData_ArchiveFile>(fileIndex);
 
                 case IDXLoadCommand.FileType.Code:
-                    // Ignore compiled code
-                    return null;
+                    return LoadBINFile<RawData_File>(fileIndex);
 
                 case IDXLoadCommand.FileType.Unknown:
                 default:
@@ -251,6 +259,28 @@ namespace BinarySerializer.KlonoaDTP
             }
         }
 
+        public void ProcessLevelTable()
+        {
+            var s = Context.Deserializer;
+            var funcAddr = Config.LevelTableFunctionAddress;
+
+            // Find the file for the pointer
+            var files = Context.MemoryMap.Files.OfType<MemoryMappedByteArrayFile>().ToList();
+            files.Sort((a, b) => b.BaseAddress.CompareTo(a.BaseAddress));
+            var file = files.FirstOrDefault(f => funcAddr >= f.BaseAddress && funcAddr <= f.BaseAddress + f.Length);
+
+            if (file == null)
+                throw new Exception($"Code file for parsing the level table has not been loaded");
+
+            var funcPointer = new Pointer(funcAddr, file);
+
+            s.DoAt(funcPointer, () =>
+            {
+                // TODO: Parse the MIPS instructions and get the pointer for the level table. Hopefully this function is always structured the same.
+                var instructions = s.SerializeArrayUntil<uint>(default, x => x == 0, name: $"MIPS");
+            });
+        }
+
         public void AddToVRAM(PS1_TIM tim)
         {
             // Add the palette if available
@@ -267,10 +297,10 @@ namespace BinarySerializer.KlonoaDTP
         #region Public Static Methods
 
         public static Loader GetLoader(Context context) => context.GetStoredObject<Loader>(Key);
-        public static Loader Create(Context context, IDX idx)
+        public static Loader Create(Context context, IDX idx, LoaderConfiguration config)
         {
             // Create the loader
-            var loader = new Loader(context, idx);
+            var loader = new Loader(context, idx, config);
 
             // Store in the context so it can be accessed
             context.StoreObject(Key, loader);

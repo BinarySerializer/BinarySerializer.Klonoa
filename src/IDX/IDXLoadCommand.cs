@@ -18,10 +18,20 @@ namespace BinarySerializer.KlonoaDTP
 
         // Type 2
         public uint FILE_Length { get; set; }
-        public uint FILE_UnknownValue { get; set; }
+        public uint FILE_DestinationValue { get; set; }
         public uint FILE_FunctionPointer { get; set; }
         public FileType FILE_Type { get; set; }
         public Pointer FILE_Pointer { get; set; }
+
+        public uint GetFileDestinationAddress(Loader loader)
+        {
+            var fileAddr = loader.Config.FileAddresses;
+
+            if (fileAddr.ContainsKey(FILE_DestinationValue))
+                return fileAddr[FILE_DestinationValue];
+            else
+                return FILE_DestinationValue;
+        }
 
         public override void SerializeImpl(SerializerObject s)
         {
@@ -42,8 +52,8 @@ namespace BinarySerializer.KlonoaDTP
             {
                 FILE_Length = s.Serialize<uint>(FILE_Length, name: nameof(FILE_Length));
 
-                FILE_UnknownValue = s.Serialize<uint>(FILE_UnknownValue, name: nameof(FILE_UnknownValue));
-                s.Log($"{nameof(FILE_UnknownValue)}: 0x{FILE_UnknownValue:X8}");
+                FILE_DestinationValue = s.Serialize<uint>(FILE_DestinationValue, name: nameof(FILE_DestinationValue));
+                s.Log($"{nameof(FILE_DestinationValue)}: 0x{FILE_DestinationValue:X8}");
 
                 FILE_FunctionPointer = s.Serialize<uint>(FILE_FunctionPointer, name: nameof(FILE_FunctionPointer));
                 s.Log($"{nameof(FILE_FunctionPointer)}: 0x{FILE_FunctionPointer:X8}");
