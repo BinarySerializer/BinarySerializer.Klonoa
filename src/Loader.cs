@@ -51,7 +51,7 @@ namespace BinarySerializer.KlonoaDTP
         {
             BINBlock = blockIndex;
 
-            // Null out previous data (this does not get kept between levels)
+            // Null out previous data. This should get overwritten below when loading the new level block, but if a menu is loaded instead they will not.
             BackgroundPack = null;
             OA05 = null;
             LevelPack = null;
@@ -61,51 +61,62 @@ namespace BinarySerializer.KlonoaDTP
                 // Load the file
                 var binFile = Load_BINFile(cmd, blockIndex, i);
 
-                switch (binFile)
+                switch (cmd.FILE_Type)
                 {
                     // Copy the TIM files data to VRAM
-                    case TIM_ArchiveFile file:
-
-                        foreach (PS1_TIM tim in file.Files)
+                    case IDXLoadCommand.FileType.Archive_TIM_Generic:
+                    case IDXLoadCommand.FileType.Archive_TIM_SpriteSheets:
+                        foreach (PS1_TIM tim in ((TIM_ArchiveFile)binFile).Files)
                             AddToVRAM(tim);
+                        break;
 
+                    case IDXLoadCommand.FileType.Archive_TIM_SongsText:
+                    case IDXLoadCommand.FileType.Archive_TIM_SaveText:
+                        // TODO: Save these, but don't load into VRAM
                         break;
 
                     // Save for later
-                    case OA05_File file:
-                        OA05 = file;
+                    case IDXLoadCommand.FileType.OA05:
+                        OA05 = (OA05_File)binFile;
+                        break;
+
+                    case IDXLoadCommand.FileType.SEQ:
+                        // TODO: Save once parsed
                         break;
 
                     // Save for later and copy the TIM files data to VRAM
-                    case BackgroundPack_ArchiveFile file:
+                    case IDXLoadCommand.FileType.Archive_BackgroundPack:
+                        BackgroundPack = (BackgroundPack_ArchiveFile)binFile;
 
-                        BackgroundPack = file;
-
-                        foreach (PS1_TIM tim in file.TIMFiles.Files)
+                        foreach (PS1_TIM tim in BackgroundPack.TIMFiles.Files)
                             AddToVRAM(tim);
-
-                        break;
-
-                    case Unk0_ArchiveFile file:
-                        // TODO: Use file
                         break;
 
                     // The fixed sprites are always the last set of sprite frames
-                    case Sprites_ArchiveFile file:
-                        SpriteFrames[69] = file;
+                    case IDXLoadCommand.FileType.FixedSprites:
+                        SpriteFrames[69] = (Sprites_ArchiveFile)binFile;
                         break;
 
                     // Add the level sprite frames
-                    case LevelSpritePack_ArchiveFile file:
-
+                    case IDXLoadCommand.FileType.Archive_SpritePack:
                         for (int j = 0; j < 69; j++)
-                            SpriteFrames[j] = file.Sprites[j];
-
+                            SpriteFrames[j] = ((LevelSpritePack_ArchiveFile)binFile).Sprites[j];
                         break;
 
                     // Save for later
-                    case LevelPack_ArchiveFile file:
-                        LevelPack = file;
+                    case IDXLoadCommand.FileType.Archive_LevelPack:
+                        LevelPack = (LevelPack_ArchiveFile)binFile;
+                        break;
+
+                    case IDXLoadCommand.FileType.Archive_Unk0:
+                    case IDXLoadCommand.FileType.Archive_Unk4:
+                        // TODO: Save once parsed
+                        break;
+
+                    case IDXLoadCommand.FileType.Code:
+                    case IDXLoadCommand.FileType.Unknown:
+                    default:
+                        // Do nothing
                         break;
                 }
             });
@@ -117,7 +128,10 @@ namespace BinarySerializer.KlonoaDTP
 
             switch (cmd.FILE_Type)
             {
-                case IDXLoadCommand.FileType.Archive_TIM:
+                case IDXLoadCommand.FileType.Archive_TIM_Generic:
+                case IDXLoadCommand.FileType.Archive_TIM_SongsText:
+                case IDXLoadCommand.FileType.Archive_TIM_SaveText:
+                case IDXLoadCommand.FileType.Archive_TIM_SpriteSheets:
                     return Load_BINFile<TIM_ArchiveFile>(cmd, blockIndex, cmdIndex);
 
                 case IDXLoadCommand.FileType.OA05:
@@ -127,15 +141,8 @@ namespace BinarySerializer.KlonoaDTP
                     // TODO: Parse SEQ
                     return null;
 
-                case IDXLoadCommand.FileType.Code:
-                    // Ignore compiled code
-                    return null;
-
                 case IDXLoadCommand.FileType.Archive_BackgroundPack:
                     return Load_BINFile<BackgroundPack_ArchiveFile>(cmd, blockIndex, cmdIndex);
-
-                case IDXLoadCommand.FileType.Archive_Unk0:
-                    return Load_BINFile<Unk0_ArchiveFile>(cmd, blockIndex, cmdIndex);
 
                 case IDXLoadCommand.FileType.FixedSprites:
                     return Load_BINFile<Sprites_ArchiveFile>(cmd, blockIndex, cmdIndex);
@@ -146,8 +153,15 @@ namespace BinarySerializer.KlonoaDTP
                 case IDXLoadCommand.FileType.Archive_LevelPack:
                     return Load_BINFile<LevelPack_ArchiveFile>(cmd, blockIndex, cmdIndex);
 
+                case IDXLoadCommand.FileType.Archive_Unk0:
+                    return Load_BINFile<Unk0_ArchiveFile>(cmd, blockIndex, cmdIndex);
+
                 case IDXLoadCommand.FileType.Archive_Unk4:
                     return Load_BINFile<RawData_ArchiveFile>(cmd, blockIndex, cmdIndex);
+
+                case IDXLoadCommand.FileType.Code:
+                    // Ignore compiled code
+                    return null;
 
                 case IDXLoadCommand.FileType.Unknown:
                 default:

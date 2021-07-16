@@ -57,75 +57,67 @@ namespace BinarySerializer.KlonoaDTP
         // The game parses the files using the supplied function pointer, so we can use that to determine the file type
         public static Dictionary<uint, FileType> FileTypes { get; } = new Dictionary<uint, FileType>()
         {
-            [0x80016CF0] = FileType.Archive_TIM,
-            [0x80111E80] = FileType.Archive_TIM,
-            [0x8012311C] = FileType.Archive_TIM,
-            [0x8001F638] = FileType.Archive_TIM,
-            [0x80016F68] = FileType.Archive_TIM,
+            // Textures
+            [0x80016CF0] = FileType.Archive_TIM_Generic,
+            [0x80111E80] = FileType.Archive_TIM_SongsText,
+            [0x8001F638] = FileType.Archive_TIM_SaveText,
+            [0x80016F68] = FileType.Archive_TIM_SpriteSheets,
 
+            // Sounds
             [0x80034A88] = FileType.OA05,
             [0x80036ECC] = FileType.SEQ,
             [0x80034EB0] = FileType.SEQ,
 
+            // Backgrounds
             [0x8002304C] = FileType.Archive_BackgroundPack,
 
-            [0x800264d8] = FileType.Archive_Unk0,
+            // Sprites
             [0x80073930] = FileType.FixedSprites,
             [0x800737F4] = FileType.Archive_SpritePack,
+            
+            // Levels
             [0x8001845C] = FileType.Archive_LevelPack,
+            
+            // Unknown
+            [0x800264d8] = FileType.Archive_Unk0,
+            [0x80122B08] = FileType.Archive_Unk4,
 
+            // Code
             [0x8007825C] = FileType.Code,
             [0x80078274] = FileType.Code,
-            [0x00000000] = FileType.Code, // Hopefully all of these are code and not that some are data referenced in memory
-
-            [0x80122B08] = FileType.Archive_Unk4,
-        };
-
-        // These are just for clearer exports and don't match actual file extensions
-        public static Dictionary<FileType, string> FileExtensions { get; } = new Dictionary<FileType, string>()
-        {
-            [FileType.Unknown] = ".BIN",
-            [FileType.Archive_TIM] = ".TIM",
-            [FileType.OA05] = ".OA05",
-            [FileType.SEQ] = ".SEQ",
-            [FileType.Archive_BackgroundPack] = ".BGPACK",
-            [FileType.Archive_Unk0] = ".UNK0",
-            [FileType.FixedSprites] = ".FIXSPRITES",
-            [FileType.Archive_SpritePack] = ".SPRITEPACK",
-            [FileType.Archive_LevelPack] = ".LEV",
-            [FileType.Code] = ".CODE",
-            [FileType.Archive_Unk4] = ".UNK4",
-        };
-
-        public static Dictionary<FileType, int> ArchiveDepths { get; } = new Dictionary<FileType, int>()
-        {
-            [FileType.Unknown] = 0,
-            [FileType.Archive_TIM] = 1,
-            [FileType.OA05] = 0,
-            [FileType.SEQ] = 0,
-            [FileType.Archive_BackgroundPack] = 2,
-            [FileType.Archive_Unk0] = 1,
-            [FileType.FixedSprites] = 1,
-            [FileType.Archive_SpritePack] = 1,
-            [FileType.Archive_LevelPack] = 1,
-            [FileType.Code] = 0,
-            [FileType.Archive_Unk4] = 2,
+            [0x00000000] = FileType.Code,
         };
 
         public enum FileType
         {
             Unknown,
 
-            Archive_TIM, // Textures
-            OA05, // Sounds
-            SEQ, // Sound
+            // Textures
+            Archive_TIM_Generic, // Textures
+            Archive_TIM_SongsText, // Songs text, used in the menu
+            Archive_TIM_SaveText, // Memory card save text
+            Archive_TIM_SpriteSheets, // Sprite sheets, used in levels
+
+            // Sounds
+            OA05, // Sound bank
+            SEQ, // Sound (music?)
+
+            // Backgrounds
             Archive_BackgroundPack, // Backgrounds
-            Archive_Unk0,
+
+            // Sprites
             FixedSprites, // Fixed sprite descriptors
             Archive_SpritePack, // Sprites
+            
+            // Level
             Archive_LevelPack, // Level data
-            Code, // Compiled code
+            
+            // Unknown
+            Archive_Unk0,
             Archive_Unk4,
+            
+            // Code
+            Code, // Compiled code
         }
     }
 }
