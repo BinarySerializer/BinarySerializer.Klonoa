@@ -9,6 +9,6 @@ namespace BinarySerializer.KlonoaDTP
         public virtual int BLOCK_FirstLevel => 3;
 
         public abstract Dictionary<uint, uint> FileAddresses { get; }
-        public abstract uint LevelTableFunctionAddress { get; }
+        public abstract uint CodeLevelDataFunctionAddress { get; }
     }
 }

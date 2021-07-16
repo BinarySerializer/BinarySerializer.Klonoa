@@ -108,6 +108,11 @@ namespace BinarySerializer.KlonoaDTP
         /// </summary>
         public LevelPack_ArchiveFile LevelPack { get; set; }
 
+        /// <summary>
+        /// The hard-coded level data
+        /// </summary>
+        public CodeLevelData CodeLevelData { get; set; }
+
         #endregion
 
         #region Public Methods
@@ -355,28 +360,79 @@ namespace BinarySerializer.KlonoaDTP
         }
 
         /// <summary>
-        /// Process the hard-coded level table from the processed code files
+        /// Process the hard-coded level data from the processed code files
         /// </summary>
-        public void ProcessLevelTable()
+        public void ProcessCodeLevelData()
         {
             var s = Context.Deserializer;
-            var funcAddr = Config.LevelTableFunctionAddress;
+            var funcAddr = Config.CodeLevelDataFunctionAddress;
 
-            // Find the file for the pointer
-            var files = Context.MemoryMap.Files.OfType<MemoryMappedByteArrayFile>().ToList();
-            files.Sort((a, b) => b.BaseAddress.CompareTo(a.BaseAddress));
-            var file = files.FirstOrDefault(f => funcAddr >= f.BaseAddress && funcAddr <= f.BaseAddress + f.Length);
-
-            if (file == null)
-                throw new Exception($"Code file for parsing the level table has not been loaded");
-
-            var funcPointer = new Pointer(funcAddr, file);
-
-            s.DoAt(funcPointer, () =>
+            // Helper for finding the file the pointer points to
+            BinaryFile findFile(uint addr)
             {
-                // TODO: Parse the MIPS instructions and get the pointer for the level table. Hopefully this function is always structured the same.
-                var instructions = s.SerializeArrayUntil<uint>(default, x => x == 0, name: $"MIPS");
+                var files = Context.MemoryMap.Files.OfType<MemoryMappedByteArrayFile>().ToList();
+                files.Sort((a, b) => b.BaseAddress.CompareTo(a.BaseAddress));
+                var file = files.FirstOrDefault(f => addr >= f.BaseAddress && addr <= f.BaseAddress + f.Length);
+
+                if (file == null)
+                    throw new Exception($"Code file for parsing the code level data has not been loaded");
+
+                return file;
+            }
+
+            var funcPointer = new Pointer(funcAddr, findFile(funcAddr));
+
+            var dataAddr = s.DoAt(funcPointer, () =>
+            {
+                // Parse the MIPS instructions and get the pointer for the level data. Hopefully this function is always structured the same.
+                var instructions = s.SerializeObjectArrayUntil<MIPS_Instruction>(default, x => x.Mnemonic == MIPS_Instruction.InstructionMnemonic.jr, name: $"CodeLevelDataFunction");
+
+                if (instructions.Length != 5)
+                    throw new Exception($"Unknown function structure. Expected 5 instructions, got {instructions.Length}.");
+
+                var registers = new uint[32];
+
+                foreach (var instr in instructions)
+                {
+                    if (instr.Mnemonic == MIPS_Instruction.InstructionMnemonic.jr)
+                        break;
+
+                    switch (instr.Mnemonic)
+                    {
+                        case MIPS_Instruction.InstructionMnemonic.sll:
+                            registers[instr.RD] = registers[instr.RT] << instr.Shift;
+                            s.Log($"R{instr.RD}: 0x{registers[instr.RD]:X8}");
+                            break;
+
+                        case MIPS_Instruction.InstructionMnemonic.addu:
+                            registers[instr.RD] = registers[instr.RS] + registers[instr.RT];
+                            s.Log($"R{instr.RD}: 0x{registers[instr.RD]:X8}");
+                            break;
+
+                        case MIPS_Instruction.InstructionMnemonic.lui:
+                            registers[instr.RT] = (uint)(instr.IMM << 16);
+                            s.Log($"R{instr.RT}: 0x{registers[instr.RT]:X8}");
+                            break;
+
+                        case MIPS_Instruction.InstructionMnemonic.lw:
+                            registers[instr.RT] = (uint)(instr.IMM + registers[instr.RS]);
+                            s.Log($"R{instr.RT}: 0x{registers[instr.RT]:X8}");
+                            break;
+
+                        case MIPS_Instruction.InstructionMnemonic.Unknown:
+                        default:
+                            throw new ArgumentOutOfRangeException();
+                    }
+                }
+
+                // The address will be stored in r2
+                return registers[2];
             });
+
+            var dataPointer = new Pointer(dataAddr, findFile(dataAddr));
+
+            // Read the data
+            CodeLevelData = s.DoAt(dataPointer, () => s.SerializeObject<CodeLevelData>(default, name: nameof(CodeLevelData)));
         }
 
         /// <summary>
