@@ -48,6 +48,9 @@
                     }, name: $"{nameof(Data1)}[{i}]");
                 }
             });
+
+            // Got to the end of the file
+            s.Goto(Offset + Pre_FileSize);
         }
 
         public class Data1Entry : BinarySerializable
