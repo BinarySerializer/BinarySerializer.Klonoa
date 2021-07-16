@@ -70,11 +70,41 @@ namespace BinarySerializer.KlonoaDTP
         }
         public class File_2_Data : BaseFile
         {
-            public short[] Data { get; set; }
+            public ushort Data1Count { get; set; }
+            public ushort Data1ItemLength { get; set; }
+            public ushort Ushort_04 { get; set; }
+
+            public short Short_08 { get; set; }
+            public short Short_0A { get; set; }
+            public short Short_0C { get; set; }
+
+            public ushort Offset1 { get; set; }
+            public ushort Offset2 { get; set; }
+            public ushort Offset3 { get; set; }
+
+            public ushort[][] Data1 { get; set; } // Offsets to Offset3
 
             public override void SerializeImpl(SerializerObject s)
             {
-                Data = s.SerializeArray<short>(Data, Pre_FileSize / 2, name: nameof(Data));
+                Data1Count = s.Serialize<ushort>(Data1Count, name: nameof(Data1Count));
+                Data1ItemLength = s.Serialize<ushort>(Data1ItemLength, name: nameof(Data1ItemLength));
+                Ushort_04 = s.Serialize<ushort>(Ushort_04, name: nameof(Ushort_04));
+                s.SerializePadding(2, logIfNotNull: true);
+                Short_08 = s.Serialize<short>(Short_08, name: nameof(Short_08));
+                Short_0A = s.Serialize<short>(Short_0A, name: nameof(Short_0A));
+                Short_0C = s.Serialize<short>(Short_0C, name: nameof(Short_0C));
+                s.SerializePadding(2, logIfNotNull: true);
+                Offset1 = s.Serialize<ushort>(Offset1, name: nameof(Offset1));
+                Offset2 = s.Serialize<ushort>(Offset2, name: nameof(Offset2));
+                Offset3 = s.Serialize<ushort>(Offset3, name: nameof(Offset3));
+
+                s.DoAt(Offset + Offset1 * 2, () =>
+                {
+                    Data1 ??= new ushort[Data1Count][];
+
+                    for (int i = 0; i < Data1.Length; i++)
+                        Data1[i] = s.SerializeArray<ushort>(Data1[i], Data1ItemLength, name: $"{nameof(Data1)}[{i}]");
+                });
             }
         }
         public class File_3_Data : BaseFile
