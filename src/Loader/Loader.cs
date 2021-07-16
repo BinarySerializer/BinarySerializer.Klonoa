@@ -25,35 +25,97 @@ namespace BinarySerializer.KlonoaDTP
 
         #region Constants
 
+        /// <summary>
+        /// The key in the context for the current loader
+        /// </summary>
         private const string Key = "KLONOA_LOADER";
 
+        /// <summary>
+        /// The file path for the BIN file
+        /// </summary>
         public const string FilePath_BIN = "FILE.BIN";
+
+        /// <summary>
+        /// The file path for the IDX file
+        /// </summary>
         public const string FilePath_IDX = "FILE.IDX";
 
         #endregion
 
         #region Public Properties
 
-        // The currently loaded data
-        public PS1_VRAM VRAM { get; }
-        public Sprites_ArchiveFile[] SpriteFrames { get; }
-        public BackgroundPack_ArchiveFile BackgroundPack { get; set; }
-        public OA05_File OA05 { get; set; }
-        public LevelPack_ArchiveFile LevelPack { get; set; }
-
-        // Properties
+        /// <summary>
+        /// The context
+        /// </summary>
         public Context Context { get; }
+        
+        /// <summary>
+        /// The serialized IDX
+        /// </summary>
         public IDX IDX { get; }
+        
+        /// <summary>
+        /// The loader config, used for version specific properties and functionality
+        /// </summary>
         public LoaderConfiguration Config { get; }
+
+        /// <summary>
+        /// The current IDX entry, determined by the <see cref="BINBlock"/>
+        /// </summary>
         public IDXEntry IDXEntry => IDX.Entries[BINBlock];
+
+        /// <summary>
+        /// The current BIN block being loaded
+        /// </summary>
         public int BINBlock { get; protected set; }
-        public bool IsLevel => BINBlock >= 3;
+        
+        /// <summary>
+        /// Indicates if the current BIN block is a level
+        /// </summary>
+        public bool IsLevel => BINBlock >= Config.BLOCK_FirstLevel;
+        
+        /// <summary>
+        /// Indicates if the current BIN block is a boss level
+        /// </summary>
         public bool IsBossFight => IsLevel && BINBlock % 3 == 2;
+
+        #endregion
+
+        #region Loaded Data
+
+        /// <summary>
+        /// The VRAM. This gets allocated to when processing TIM files.
+        /// </summary>
+        public PS1_VRAM VRAM { get; }
+
+        /// <summary>
+        /// The sprite frames array
+        /// </summary>
+        public Sprites_ArchiveFile[] SpriteFrames { get; }
+
+        /// <summary>
+        /// The backgrounds
+        /// </summary>
+        public BackgroundPack_ArchiveFile BackgroundPack { get; set; }
+
+        /// <summary>
+        /// The sound bank
+        /// </summary>
+        public OA05_File OA05 { get; set; }
+
+        /// <summary>
+        /// The level pack
+        /// </summary>
+        public LevelPack_ArchiveFile LevelPack { get; set; }
 
         #endregion
 
         #region Public Methods
 
+        /// <summary>
+        /// Changes which block is currently being loaded
+        /// </summary>
+        /// <param name="blockIndex">The new block to load</param>
         public void SwitchBlocks(int blockIndex)
         {
             if (blockIndex >= IDX.Entries.Length)
@@ -62,6 +124,10 @@ namespace BinarySerializer.KlonoaDTP
             BINBlock = blockIndex;
         }
 
+        /// <summary>
+        /// Loads and processes every file in the current BIN block
+        /// </summary>
+        /// <param name="logAction">An optional action for logging</param>
         public void LoadAndProcessBINBlock(Action<string> logAction = null)
         {
             // Null out previous data. This should get overwritten below when loading the new level block, but if a menu is loaded instead they will not.
@@ -77,6 +143,11 @@ namespace BinarySerializer.KlonoaDTP
             });
         }
 
+        /// <summary>
+        /// Loads and processes every file in the current BIN block, with async logging
+        /// </summary>
+        /// <param name="logAction">An optional action for logging</param>
+        /// <returns>The task</returns>
         public async Task LoadAndProcessBINBlockAsync(Func<string, Task> logAction = null)
         {
             // Null out previous data. This should get overwritten below when loading the new level block, but if a menu is loaded instead they will not.
@@ -93,6 +164,10 @@ namespace BinarySerializer.KlonoaDTP
             });
         }
 
+        /// <summary>
+        /// Processes the BIN file in the current BIN block
+        /// </summary>
+        /// <param name="fileIndex">The file to process</param>
         public void ProcessBINFile(int fileIndex)
         {
             // Load the file
@@ -165,6 +240,11 @@ namespace BinarySerializer.KlonoaDTP
             }
         }
 
+        /// <summary>
+        /// Loads the BIN file in the current BIN block
+        /// </summary>
+        /// <param name="fileIndex">The file to load</param>
+        /// <returns>The loaded file</returns>
         public BaseFile LoadBINFile(int fileIndex)
         {
             var cmd = IDXEntry.LoadCommands[fileIndex];
@@ -212,6 +292,12 @@ namespace BinarySerializer.KlonoaDTP
             }
         }
 
+        /// <summary>
+        /// Loads the BIN file of a generic type in the current BIN block
+        /// </summary>
+        /// <typeparam name="T">The type of file to load</typeparam>
+        /// <param name="fileIndex">The file to load</param>
+        /// <returns>The loaded file</returns>
         public T LoadBINFile<T>(int fileIndex)
             where T : BaseFile, new()
         {
@@ -225,6 +311,10 @@ namespace BinarySerializer.KlonoaDTP
             }, name: $"BIN_File_{BINBlock}_{fileIndex}");
         }
 
+        /// <summary>
+        /// Load the BIN files in the current BIN block
+        /// </summary>
+        /// <param name="loadAction">The action used to load each BIN file</param>
         public void LoadBINFiles(Action<IDXLoadCommand, int> loadAction)
         {
             var s = Context.Deserializer;
@@ -242,6 +332,11 @@ namespace BinarySerializer.KlonoaDTP
             }
         }
 
+        /// <summary>
+        /// Load the BIN files in the current BIN block with the load action being async
+        /// </summary>
+        /// <param name="loadAction">The action used to load each BIN file</param>
+        /// <returns>The task</returns>
         public async Task LoadBINFilesAsync(Func<IDXLoadCommand, int, Task> loadAction)
         {
             var s = Context.Deserializer;
@@ -259,6 +354,9 @@ namespace BinarySerializer.KlonoaDTP
             }
         }
 
+        /// <summary>
+        /// Process the hard-coded level table from the processed code files
+        /// </summary>
         public void ProcessLevelTable()
         {
             var s = Context.Deserializer;
@@ -281,6 +379,10 @@ namespace BinarySerializer.KlonoaDTP
             });
         }
 
+        /// <summary>
+        /// Adds the TIM file data to the VRAM
+        /// </summary>
+        /// <param name="tim">The TIM file to add</param>
         public void AddToVRAM(PS1_TIM tim)
         {
             // Add the palette if available
@@ -296,7 +398,20 @@ namespace BinarySerializer.KlonoaDTP
 
         #region Public Static Methods
 
+        /// <summary>
+        /// Gets the loader associated with the specified context
+        /// </summary>
+        /// <param name="context">The context the loader was created for</param>
+        /// <returns>The loader</returns>
         public static Loader GetLoader(Context context) => context.GetStoredObject<Loader>(Key);
+        
+        /// <summary>
+        /// Creates a new loader for a specific context
+        /// </summary>
+        /// <param name="context">The context to create the loader for</param>
+        /// <param name="idx">The serialized IDX</param>
+        /// <param name="config">The loader configuration</param>
+        /// <returns>The loader</returns>
         public static Loader Create(Context context, IDX idx, LoaderConfiguration config)
         {
             // Create the loader
