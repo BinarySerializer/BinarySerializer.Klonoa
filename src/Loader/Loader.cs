@@ -79,6 +79,11 @@ namespace BinarySerializer.KlonoaDTP
         /// </summary>
         public bool IsBossFight => IsLevel && BINBlock % 3 == 2;
 
+        /// <summary>
+        /// The sector to serialize when serializing the level data, or -1 to serialize all of them
+        /// </summary>
+        public int SectorToParse { get; set; } = -1;
+
         #endregion
 
         #region Loaded Data

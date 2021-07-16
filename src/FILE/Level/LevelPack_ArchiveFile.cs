@@ -37,8 +37,13 @@
 
             Sectors ??= new Sector_ArchiveFile[sectorsCount];
 
+            var sectorToParse = Loader.GetLoader(s.Context).SectorToParse;
+
             for (int i = 0; i < sectorsCount; i++)
-                Sectors[i] = SerializeFile<Sector_ArchiveFile>(s, Sectors[i], 8 + i, name: $"{Sectors}[{i}]");
+            {
+                if (sectorToParse == -1 || sectorToParse == i)
+                    Sectors[i] = SerializeFile<Sector_ArchiveFile>(s, Sectors[i], 8 + i, name: $"{Sectors}[{i}]");
+            }
         }
     }
 }
