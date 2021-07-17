@@ -20,9 +20,9 @@
             Short_02 = s.Serialize<short>(Short_02, name: nameof(Short_02));
             Short_04 = s.Serialize<short>(Short_04, name: nameof(Short_04));
             Short_06 = s.Serialize<short>(Short_06, name: nameof(Short_06));
-            XPos = s.SerializeObject<FixedPointInt32>(XPos, x => x.Pre_PointPosition = 10, name: nameof(XPos));
-            ZPos = s.SerializeObject<FixedPointInt32>(ZPos, x => x.Pre_PointPosition = 10, name: nameof(ZPos));
-            YPos = s.SerializeObject<FixedPointInt32>(YPos, x => x.Pre_PointPosition = 10, name: nameof(YPos));
+            XPos = s.SerializeObject<FixedPointInt32>(XPos, x => x.Pre_PointPosition = 9, name: nameof(XPos));
+            ZPos = s.SerializeObject<FixedPointInt32>(ZPos, x => x.Pre_PointPosition = 9, name: nameof(ZPos));
+            YPos = s.SerializeObject<FixedPointInt32>(YPos, x => x.Pre_PointPosition = 9, name: nameof(YPos));
             Short_14 = s.Serialize<short>(Short_14, name: nameof(Short_14));
             Short_16 = s.Serialize<short>(Short_16, name: nameof(Short_16));
             Short_18 = s.Serialize<short>(Short_18, name: nameof(Short_18));
