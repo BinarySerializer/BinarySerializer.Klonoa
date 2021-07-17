@@ -1,4 +1,6 @@
-﻿namespace BinarySerializer.KlonoaDTP
+﻿using System;
+
+namespace BinarySerializer.KlonoaDTP
 {
     public class LevelPack_ArchiveFile : BaseArchiveFile
     {
@@ -24,7 +26,16 @@
         {
             ObjectModels = SerializeFile<RawData_ArchiveFile>(s, ObjectModels, 0, name: nameof(ObjectModels));
             File_1 = SerializeFile<ArchiveFile<RawData_File>>(s, File_1, 1, name: nameof(File_1));
-            CutscenePack = SerializeFile<CutscenePack_ArchiveFile>(s, CutscenePack, 2, name: nameof(CutscenePack));
+
+            // TODO: Why is the cutscene pack file different for some levels???
+            try
+            {
+                CutscenePack = SerializeFile<CutscenePack_ArchiveFile>(s, CutscenePack, 2, name: nameof(CutscenePack));
+            }
+            catch (Exception ex)
+            {
+                s.LogWarning($"Error parsing cutscene pack: {ex}");
+            }
 
             File_3 = SerializeFile<RawData_File>(s, File_3, 3, name: nameof(File_3));
             File_4 = SerializeFile<RawData_File>(s, File_4, 4, name: nameof(File_4));
