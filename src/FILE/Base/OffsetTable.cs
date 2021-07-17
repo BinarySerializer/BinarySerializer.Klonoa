@@ -1,4 +1,6 @@
-﻿namespace BinarySerializer.KlonoaDTP
+﻿using System.Linq;
+
+namespace BinarySerializer.KlonoaDTP
 {
     /// <summary>
     /// An offset table used for archives
@@ -16,6 +18,9 @@
                 FilesCount = 0;
 
             FilePointers = s.SerializePointerArray(FilePointers, FilesCount, anchor: Offset, name: nameof(FilePointers));
+
+            if (FilePointers.Any(x => x == Offset))
+                s.LogWarning($"Offset table contains nulled out offset");
         }
     }
 }
