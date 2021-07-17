@@ -8,7 +8,7 @@
         // TODO: Parse this - Seems to be a bunch of stuff like sprites etc., some models too. Seems to be unused though?
         public ArchiveFile<RawData_File> File_1 { get; set; }
         
-        public AnimationPack_ArchiveFile AnimationPack { get; set; }
+        public CutscenePack_ArchiveFile CutscenePack { get; set; }
 
         // TODO: Parse these - not available in all levels
         public RawData_File File_3 { get; set; }
@@ -24,7 +24,7 @@
         {
             ObjectModels = SerializeFile<RawData_ArchiveFile>(s, ObjectModels, 0, name: nameof(ObjectModels));
             File_1 = SerializeFile<ArchiveFile<RawData_File>>(s, File_1, 1, name: nameof(File_1));
-            AnimationPack = SerializeFile<AnimationPack_ArchiveFile>(s, AnimationPack, 2, name: nameof(AnimationPack));
+            CutscenePack = SerializeFile<CutscenePack_ArchiveFile>(s, CutscenePack, 2, name: nameof(CutscenePack));
 
             File_3 = SerializeFile<RawData_File>(s, File_3, 3, name: nameof(File_3));
             File_4 = SerializeFile<RawData_File>(s, File_4, 4, name: nameof(File_4));
