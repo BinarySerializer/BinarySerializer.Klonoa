@@ -240,6 +240,7 @@ namespace BinarySerializer.KlonoaDTP
 
                 case IDXLoadCommand.FileType.Archive_Unk0:
                 case IDXLoadCommand.FileType.Archive_Unk4:
+                case IDXLoadCommand.FileType.Archive_Unk5:
                     // TODO: Save once parsed
                     break;
 
@@ -290,6 +291,7 @@ namespace BinarySerializer.KlonoaDTP
                     return LoadBINFile<Unk0_ArchiveFile>(fileIndex);
 
                 case IDXLoadCommand.FileType.Archive_Unk4:
+                case IDXLoadCommand.FileType.Archive_Unk5:
                     return LoadBINFile<RawData_ArchiveFile>(fileIndex);
 
                 case IDXLoadCommand.FileType.Code:

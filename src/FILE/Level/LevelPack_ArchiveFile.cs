@@ -5,7 +5,7 @@
         // TODO: Parse this - most files are TMD, but not all
         public RawData_ArchiveFile ObjectModels { get; set; }
 
-        // TODO: Parse this - Seems to be a bunch of stuff like sprites etc., some models too
+        // TODO: Parse this - Seems to be a bunch of stuff like sprites etc., some models too. Seems to be unused though?
         public ArchiveFile<RawData_File> File_1 { get; set; }
         
         public AnimationPack_ArchiveFile AnimationPack { get; set; }
