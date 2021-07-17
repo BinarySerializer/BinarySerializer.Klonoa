@@ -21,7 +21,7 @@ namespace BinarySerializer.KlonoaDTP
         public Pointer GetFileEndPointer(int index)
         {
             var start = OffsetTable.FilePointers[index];
-            var end = OffsetTable.FilePointers.OrderBy(x => x.FileOffset).FirstOrDefault(x => x.FileOffset > start.FileOffset);
+            var end = OffsetTable.FilePointers.Where(x => x != null).OrderBy(x => x.FileOffset).FirstOrDefault(x => x.FileOffset > start.FileOffset);
 
             if (end == null)
                 end = OffsetTable.Offset + Pre_FileSize;
