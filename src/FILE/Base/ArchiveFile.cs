@@ -101,6 +101,8 @@ namespace BinarySerializer.KlonoaDTP
                 {
                     var fileSize = isCompressed ? s.CurrentLength : Pre_EndPointer - s.CurrentPointer;
 
+                    s.Log($"FileSize: {fileSize}");
+
                     FileData = s.SerializeObject<File>(FileData, x =>
                     {
                         if (x is BaseFile f)
