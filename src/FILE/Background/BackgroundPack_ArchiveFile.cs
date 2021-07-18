@@ -5,7 +5,7 @@ namespace BinarySerializer.KlonoaDTP
     /// <summary>
     /// The backgrounds in a level
     /// </summary>
-    public class BackgroundPack_ArchiveFile : BaseArchiveFile
+    public class BackgroundPack_ArchiveFile : ArchiveFile
     {
         public ArchiveFile<PS1_TIM> TIMFiles { get; set; } // Tilesets
         public ArchiveFile<PS1_CEL> CELFiles { get; set; } // Tiles

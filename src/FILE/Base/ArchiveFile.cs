@@ -6,7 +6,7 @@ namespace BinarySerializer.KlonoaDTP
     /// <summary>
     /// A file which contains multiple files. The files can be compressed and of different types.
     /// </summary>
-    public abstract class BaseArchiveFile : BaseFile
+    public class ArchiveFile : BaseFile
     {
         /// <summary>
         /// The offset table for the contained files
@@ -72,7 +72,7 @@ namespace BinarySerializer.KlonoaDTP
             s.Goto(Offset + Pre_FileSize);
         }
 
-        protected abstract void SerializeFiles(SerializerObject s);
+        protected virtual void SerializeFiles(SerializerObject s) { }
 
         /// <summary>
         /// A file wrapper when serializing files from an archive to fix files not being cached when compressed
@@ -117,7 +117,7 @@ namespace BinarySerializer.KlonoaDTP
     /// A file which contains multiple files of the same type. All the contained files will automatically be serialized.
     /// </summary>
     /// <typeparam name="T">The type of file</typeparam>
-    public class ArchiveFile<T> : BaseArchiveFile
+    public class ArchiveFile<T> : ArchiveFile
         where T : BinarySerializable, new()
     {
         /// <summary>

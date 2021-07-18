@@ -2,7 +2,7 @@
 
 namespace BinarySerializer.KlonoaDTP
 {
-    public class LevelPack_ArchiveFile : BaseArchiveFile
+    public class LevelPack_ArchiveFile : ArchiveFile
     {
         // TODO: Parse this - most files are TMD, but not all
         public RawData_ArchiveFile ObjectModelsDataPack { get; set; }

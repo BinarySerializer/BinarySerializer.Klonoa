@@ -1,6 +1,6 @@
 ﻿namespace BinarySerializer.KlonoaDTP
 {
-    public class LevelSpritePack_ArchiveFile : BaseArchiveFile
+    public class LevelSpritePack_ArchiveFile : ArchiveFile
     {
         // The game does this:
         // - Modify all offsets to pointers

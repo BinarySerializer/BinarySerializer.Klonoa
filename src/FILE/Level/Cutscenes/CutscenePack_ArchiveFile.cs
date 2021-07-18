@@ -1,6 +1,6 @@
 ﻿namespace BinarySerializer.KlonoaDTP
 {
-    public class CutscenePack_ArchiveFile : BaseArchiveFile
+    public class CutscenePack_ArchiveFile : ArchiveFile
     {
         public SpriteAnimations_File SpriteAnimations { get; set; }
         public Sprites_ArchiveFile Sprites { get; set; } // TODO: What is this?
@@ -38,7 +38,7 @@
 
         public class Cutscene : BinarySerializable
         {
-            public BaseArchiveFile Pre_Archive { get; set; }
+            public ArchiveFile Pre_Archive { get; set; }
             public int Pre_ArchiveFileIndex { get; set; }
 
             // TODO: Why are there two sets of instructions? Second one always seems smaller, maybe the version when you skip the cutscene?

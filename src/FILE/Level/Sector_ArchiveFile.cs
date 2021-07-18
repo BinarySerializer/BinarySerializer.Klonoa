@@ -5,7 +5,7 @@ namespace BinarySerializer.KlonoaDTP
     /// <summary>
     /// A sector of a level
     /// </summary>
-    public class Sector_ArchiveFile : BaseArchiveFile
+    public class Sector_ArchiveFile : ArchiveFile
     {
         public PS1_TMD LevelModel { get; set; }
         // TODO: Parse
