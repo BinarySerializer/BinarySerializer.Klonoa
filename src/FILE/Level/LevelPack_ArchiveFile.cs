@@ -5,7 +5,7 @@ namespace BinarySerializer.KlonoaDTP
     public class LevelPack_ArchiveFile : BaseArchiveFile
     {
         // TODO: Parse this - most files are TMD, but not all
-        public RawData_ArchiveFile ObjectModels { get; set; }
+        public RawData_ArchiveFile ObjectModelsDataPack { get; set; }
 
         // TODO: Parse this - Seems to be a bunch of stuff like sprites etc., some models too. Seems to be unused though?
         public ArchiveFile<RawData_File> File_1 { get; set; }
@@ -24,7 +24,7 @@ namespace BinarySerializer.KlonoaDTP
 
         protected override void SerializeFiles(SerializerObject s)
         {
-            ObjectModels = SerializeFile<RawData_ArchiveFile>(s, ObjectModels, 0, name: nameof(ObjectModels));
+            ObjectModelsDataPack = SerializeFile<RawData_ArchiveFile>(s, ObjectModelsDataPack, 0, name: nameof(ObjectModelsDataPack));
             File_1 = SerializeFile<ArchiveFile<RawData_File>>(s, File_1, 1, name: nameof(File_1));
 
             // TODO: Why is the cutscene pack file different for some levels???
