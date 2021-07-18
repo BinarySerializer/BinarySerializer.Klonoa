@@ -439,7 +439,11 @@ namespace BinarySerializer.KlonoaDTP
             var dataPointer = new Pointer(dataAddr, findFile(dataAddr));
 
             // Read the data
-            CodeLevelData = s.DoAt(dataPointer, () => s.SerializeObject<CodeLevelData>(default, x => x.Pre_SectorsCount = LevelPack?.Sectors?.Length ?? 0, name: nameof(CodeLevelData)));
+            CodeLevelData = s.DoAt(dataPointer, () => s.SerializeObject<CodeLevelData>(default, x =>
+            {
+                x.Pre_SectorsCount = LevelPack?.Sectors?.Length ?? 0;
+                x.Pre_ObjectModelsDataPack = LevelPack?.ObjectModelsDataPack;
+            }, name: nameof(CodeLevelData)));
         }
 
         /// <summary>

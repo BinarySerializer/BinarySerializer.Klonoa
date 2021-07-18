@@ -51,7 +51,7 @@ namespace BinarySerializer.KlonoaDTP
 
         protected override void SerializeFiles(SerializerObject s)
         {
-            LevelModel = SerializeFile<PS1_TMD>(s, LevelModel, 0, name: nameof(LevelModel));
+            LevelModel = SerializeFile<PS1_TMD>(s, LevelModel, 0, logIfNotFullyParsed: false, name: nameof(LevelModel));
             File_1 = SerializeFile<File_1_Data>(s, File_1, 1, name: nameof(File_1));
             ModelAnimations = SerializeFile<ModelAnimations_File>(s, ModelAnimations, 2, name: nameof(ModelAnimations));
             ModelAnimationFrames = SerializeFile<ModelAnimationFrames_File>(s, ModelAnimationFrames, 3, name: nameof(ModelAnimationFrames));

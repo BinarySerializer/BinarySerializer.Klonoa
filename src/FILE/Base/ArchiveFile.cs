@@ -36,9 +36,10 @@ namespace BinarySerializer.KlonoaDTP
         /// <param name="s">The serializer object</param>
         /// <param name="obj">The object</param>
         /// <param name="index">The file index</param>
+        /// <param name="logIfNotFullyParsed">Indicates if a warning log should be created if not fully parsed</param>
         /// <param name="name">The name</param>
         /// <returns>The serialized object</returns>
-        public T SerializeFile<T>(SerializerObject s, T obj, int index, string name = null)
+        public T SerializeFile<T>(SerializerObject s, T obj, int index, bool logIfNotFullyParsed = true, string name = null)
             where T : BinarySerializable, new()
         {
             if (index >= OffsetTable.FilePointers.Length)
@@ -52,7 +53,11 @@ namespace BinarySerializer.KlonoaDTP
                 var endPointer = GetFileEndPointer(index);
 
                 // TODO: Allow writing back the same object again
-                var file = s.SerializeObject<FileWrapper<T>>(default, x => x.Pre_EndPointer = endPointer, name: name);
+                var file = s.SerializeObject<FileWrapper<T>>(default, x =>
+                {
+                    x.Pre_EndPointer = endPointer;
+                    x.Pre_LogIfNotFullyParsed = logIfNotFullyParsed;
+                }, name: name);
 
                 obj = file.FileData;
             });
@@ -82,6 +87,7 @@ namespace BinarySerializer.KlonoaDTP
             where File : BinarySerializable, new()
         {
             public Pointer Pre_EndPointer { get; set; }
+            public bool Pre_LogIfNotFullyParsed { get; set; }
 
             public File FileData { get; set; }
 
@@ -107,7 +113,7 @@ namespace BinarySerializer.KlonoaDTP
 
                 s.Align();
 
-                if (s.CurrentPointer != Pre_EndPointer)
+                if (Pre_LogIfNotFullyParsed && s.CurrentPointer != Pre_EndPointer)
                     s.LogWarning($"Archived file of type {typeof(File).Name} at {Offset} was not fully serialized. {s.CurrentPointer} != {Pre_EndPointer}");
             }
         }
