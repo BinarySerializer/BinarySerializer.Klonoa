@@ -9,7 +9,7 @@ namespace BinarySerializer.KlonoaDTP
         public short Short_00 { get; set; }
         public short Short_02 { get; set; }
         public int Int_04 { get; set; }
-        public short Short_08 { get; set; } // If 40 then save the object in another array in memory - why?
+        public short Short_08 { get; set; } // If 40 then save the object in another array in memory - why? Seems to be for objects which move.
         public Object3DType Type { get; set; }
         public short Short_0C { get; set; }
         public short Short_0E { get; set; }
@@ -23,8 +23,8 @@ namespace BinarySerializer.KlonoaDTP
 
         // Serialized from data files
         public PS1_TMD Data_TMD { get; set; }
-        public Object3DPosition_File Data_Position { get; set; }
-        public ArchiveFile<Object3DPosition_File> Data_Positions { get; set; } // Always 3 positions
+        public Object3DPosition_File Data_Position { get; set; } // TODO: Objects which move have multiple positions
+        public Object3DTransform_ArchiveFile Data_Transform { get; set; }
         public PS1_TIM Data_TIM { get; set; }
 
         public override void SerializeImpl(SerializerObject s)
@@ -65,7 +65,7 @@ namespace BinarySerializer.KlonoaDTP
 
                 case Object3DType.Type_5:
                     Data_TMD = Pre_ObjectModelsDataPack.SerializeFile<PS1_TMD>(s, Data_TMD, DataFileIndices[0], logIfNotFullyParsed: false, name: nameof(Data_TMD));
-                    Data_Positions = Pre_ObjectModelsDataPack.SerializeFile<ArchiveFile<Object3DPosition_File>>(s, Data_Positions, DataFileIndices[1], name: nameof(Data_Positions));
+                    Data_Transform = Pre_ObjectModelsDataPack.SerializeFile<Object3DTransform_ArchiveFile>(s, Data_Transform, DataFileIndices[1], name: nameof(Data_Transform));
 
                     if (DataFileIndices[2] != 0)
                         s.LogWarning($"Object3D of type {Type} has additional referenced files");
@@ -74,7 +74,7 @@ namespace BinarySerializer.KlonoaDTP
 
                 case Object3DType.Type_6:
                     Data_TMD = Pre_ObjectModelsDataPack.SerializeFile<PS1_TMD>(s, Data_TMD, DataFileIndices[0], logIfNotFullyParsed: false, name: nameof(Data_TMD));
-                    Data_Positions = Pre_ObjectModelsDataPack.SerializeFile<ArchiveFile<Object3DPosition_File>>(s, Data_Positions, DataFileIndices[1], name: nameof(Data_Positions));
+                    Data_Transform = Pre_ObjectModelsDataPack.SerializeFile<Object3DTransform_ArchiveFile>(s, Data_Transform, DataFileIndices[1], name: nameof(Data_Transform));
                     Data_TIM = Pre_ObjectModelsDataPack.SerializeFile<PS1_TIM>(s, Data_TIM, DataFileIndices[2], name: nameof(Data_TIM));
 
                     if (DataFileIndices[3] != 0)
