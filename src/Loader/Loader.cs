@@ -1,5 +1,6 @@
 ﻿using BinarySerializer.PS1;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -17,6 +18,7 @@ namespace BinarySerializer.KlonoaDTP
             Context = context;
             IDX = idx;
             Config = config;
+            MemoryFiles = new HashSet<MemoryMappedByteArrayFile>();
             VRAM = new PS1_VRAM();
             SpriteFrames = new Sprites_ArchiveFile[70];
         }
@@ -39,6 +41,12 @@ namespace BinarySerializer.KlonoaDTP
         /// The file path for the IDX file
         /// </summary>
         public const string FilePath_IDX = "FILE.IDX";
+
+        #endregion
+
+        #region Protected Properties
+
+        protected HashSet<MemoryMappedByteArrayFile> MemoryFiles { get; }
 
         #endregion
 
@@ -132,6 +140,16 @@ namespace BinarySerializer.KlonoaDTP
                 throw new Exception($"Block index {blockIndex} is out of range. Should be between 0-{IDX.Entries.Length - 1}");
 
             BINBlock = blockIndex;
+
+            // Null out previous data. This should get overwritten below when loading the new level block, but if a menu is loaded instead they will not.
+            BackgroundPack = null;
+            OA05 = null;
+            LevelPack = null;
+
+            // Remove memory mapped code files
+            foreach (var f in MemoryFiles)
+                Context.RemoveFile(f);
+            MemoryFiles.Clear();
         }
 
         /// <summary>
@@ -160,11 +178,6 @@ namespace BinarySerializer.KlonoaDTP
         /// <returns>The task</returns>
         public async Task LoadAndProcessBINBlockAsync(Func<string, Task> logAction = null)
         {
-            // Null out previous data. This should get overwritten below when loading the new level block, but if a menu is loaded instead they will not.
-            BackgroundPack = null;
-            OA05 = null;
-            LevelPack = null;
-
             await LoadBINFilesAsync(async (cmd, i) =>
             {
                 if (logAction != null)
@@ -236,6 +249,7 @@ namespace BinarySerializer.KlonoaDTP
                     var rawData = ((RawData_File)binFile).Data;
                     var f = new MemoryMappedByteArrayFile(Context, $"CODE_{BINBlock}_{fileIndex}", cmd.GetFileDestinationAddress(this), rawData);
                     Context.AddFile(f);
+                    MemoryFiles.Add(f);
                     break;
 
                 case IDXLoadCommand.FileType.Archive_Unk0:
