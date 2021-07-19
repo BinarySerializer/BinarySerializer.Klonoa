@@ -458,6 +458,16 @@ namespace BinarySerializer.KlonoaDTP
                 x.Pre_SectorsCount = LevelPack?.Sectors?.Length ?? 0;
                 x.Pre_ObjectModelsDataPack = LevelPack?.ObjectModelsDataPack;
             }, name: nameof(CodeLevelData)));
+
+            // Process the data only if we're loading a specific sector
+            if (SectorToParse != -1)
+            {
+                foreach (var obj3D in CodeLevelData.Objects3D[SectorToParse].Objects)
+                {
+                    if (obj3D.Type == Object3D.Object3DType.Type_6)
+                        AddToVRAM(obj3D.Data_TIM);
+                }
+            }
         }
 
         /// <summary>
