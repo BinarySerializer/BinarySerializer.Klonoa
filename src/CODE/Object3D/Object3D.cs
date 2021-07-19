@@ -26,7 +26,7 @@ namespace BinarySerializer.KlonoaDTP
         public Object3DPosition_File Data_Position { get; set; } // TODO: Objects which move have multiple positions
         public Object3DTransform_ArchiveFile Data_Transform { get; set; }
         public PS1_TIM Data_TIM { get; set; }
-        public TIM_ArchiveFile Data_TIMFiles { get; set; }
+        public TIM_ArchiveFile Data_TextureAnimFrames { get; set; }
         
         public Object3DType3Data_File Data_Type3 { get; set; }
         public Object3DType7Data_File Data_Type7 { get; set; }
@@ -109,8 +109,8 @@ namespace BinarySerializer.KlonoaDTP
 
                     break;
 
-                case Object3DType.Type_10:
-                    Data_TIMFiles = dataPack.SerializeFile<TIM_ArchiveFile>(s, Data_TIMFiles, DataFileIndices[0], name: nameof(Data_TIMFiles));
+                case Object3DType.TextureAnimation:
+                    Data_TextureAnimFrames = dataPack.SerializeFile<TIM_ArchiveFile>(s, Data_TextureAnimFrames, DataFileIndices[0], name: nameof(Data_TextureAnimFrames));
 
                     if (DataFileIndices[1] != 0)
                         s.LogWarning($"Object3D of type {Type} has additional referenced files");
@@ -145,7 +145,7 @@ namespace BinarySerializer.KlonoaDTP
             Type_7 = 7,
             Type_8 = 8,
             Type_9 = 9,
-            Type_10 = 10,
+            TextureAnimation = 10, // Swaps out data in VRAM to cause textures to animate
 
             Type_21 = 21,
         }
