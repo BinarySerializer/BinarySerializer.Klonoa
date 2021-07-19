@@ -1,10 +1,8 @@
-﻿using System;
-
-namespace BinarySerializer.KlonoaDTP
+﻿namespace BinarySerializer.KlonoaDTP
 {
     public class LevelPack_ArchiveFile : ArchiveFile
     {
-        public ArchiveFile ObjectModelsDataPack { get; set; }
+        public ArchiveFile AdditionalLevelFilePack { get; set; } // Referenced from objects
 
         // TODO: Parse this - Seems to be a bunch of stuff like sprites etc., some models too. Seems to be unused though?
         public ArchiveFile<RawData_File> File_1 { get; set; }
@@ -23,7 +21,7 @@ namespace BinarySerializer.KlonoaDTP
 
         protected override void SerializeFiles(SerializerObject s)
         {
-            ObjectModelsDataPack = SerializeFile<ArchiveFile>(s, ObjectModelsDataPack, 0, name: nameof(ObjectModelsDataPack));
+            AdditionalLevelFilePack = SerializeFile<ArchiveFile>(s, AdditionalLevelFilePack, 0, name: nameof(AdditionalLevelFilePack));
             File_1 = SerializeFile<ArchiveFile<RawData_File>>(s, File_1, 1, name: nameof(File_1));
 
             // TODO: Why is the cutscene pack file different for some levels??? Game seems to handle it the same.

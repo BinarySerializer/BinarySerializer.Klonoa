@@ -37,9 +37,10 @@ namespace BinarySerializer.KlonoaDTP
         /// <param name="obj">The object</param>
         /// <param name="index">The file index</param>
         /// <param name="logIfNotFullyParsed">Indicates if a warning log should be created if not fully parsed</param>
+        /// <param name="onPreSerialize">Optional action to call before serializing</param>
         /// <param name="name">The name</param>
         /// <returns>The serialized object</returns>
-        public T SerializeFile<T>(SerializerObject s, T obj, int index, bool logIfNotFullyParsed = true, string name = null)
+        public T SerializeFile<T>(SerializerObject s, T obj, int index, bool logIfNotFullyParsed = true, Action<T> onPreSerialize = null, string name = null)
             where T : BinarySerializable, new()
         {
             if (index >= OffsetTable.FilePointers.Length)
@@ -57,6 +58,7 @@ namespace BinarySerializer.KlonoaDTP
                 {
                     x.Pre_EndPointer = endPointer;
                     x.Pre_LogIfNotFullyParsed = logIfNotFullyParsed;
+                    x.Pre_OnPreSerialize = onPreSerialize;
                 }, name: name);
 
                 obj = file.FileData;
@@ -88,6 +90,7 @@ namespace BinarySerializer.KlonoaDTP
         {
             public Pointer Pre_EndPointer { get; set; }
             public bool Pre_LogIfNotFullyParsed { get; set; }
+            public Action<File> Pre_OnPreSerialize { get; set; }
 
             public File FileData { get; set; }
 
@@ -110,6 +113,8 @@ namespace BinarySerializer.KlonoaDTP
                             f.Pre_FileSize = fileSize;
                             f.Pre_IsCompressed = isCompressed;
                         }
+
+                        Pre_OnPreSerialize?.Invoke(x);
                     }, name: nameof(FileData));
                 });
 

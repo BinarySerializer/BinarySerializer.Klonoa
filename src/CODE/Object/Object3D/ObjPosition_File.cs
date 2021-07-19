@@ -1,6 +1,6 @@
 ﻿namespace BinarySerializer.KlonoaDTP
 {
-    public class Object3DPosition_File : BaseFile
+    public class ObjPosition_File : BaseFile
     {
         public short XPos { get; set; }
         public short YPos { get; set; }

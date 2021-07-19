@@ -3,33 +3,33 @@
     public class CodeLevelData : BinarySerializable
     {
         public int Pre_SectorsCount { get; set; }
-        public ArchiveFile Pre_ObjectModelsDataPack { get; set; }
+        public ArchiveFile Pre_AdditionalLevelFilePack { get; set; }
 
-        public Pointer Objects3DPointer { get; set; }
+        public Pointer SectorModifiersPointer { get; set; }
         public Pointer Pointer_1 { get; set; }
         public Pointer Pointer_2 { get; set; }
         public Pointer Pointer_3 { get; set; }
 
         // Serialized from pointers
-        public Object3DCollection[] Objects3D { get; set; } // One for each sector
+        public SectorModifiers[] SectorModifiers { get; set; } // One for each sector
         public Data1Structs Data1 { get; set; }
         public Data2Structs[] Data2 { get; set; } // One for each sector
         public Data3Structs[] Data3 { get; set; } // One for each sector
 
         public override void SerializeImpl(SerializerObject s)
         {
-            Objects3DPointer = s.SerializePointer(Objects3DPointer, name: nameof(Objects3DPointer));
+            SectorModifiersPointer = s.SerializePointer(SectorModifiersPointer, name: nameof(SectorModifiersPointer));
             Pointer_1 = s.SerializePointer(Pointer_1, name: nameof(Pointer_1));
             Pointer_2 = s.SerializePointer(Pointer_2, name: nameof(Pointer_2));
             Pointer_3 = s.SerializePointer(Pointer_3, name: nameof(Pointer_3));
 
-            s.DoAt(Objects3DPointer, () =>
+            s.DoAt(SectorModifiersPointer, () =>
             {
-                Objects3D = s.SerializeObjectArrayUntil<Object3DCollection>(
-                    obj: Objects3D, 
-                    conditionCheckFunc: x => x.Objects[0].Short_0E == -1, 
-                    onPreSerialize: x => x.Pre_ObjectModelsDataPack = Pre_ObjectModelsDataPack,
-                    name: nameof(Objects3D));
+                SectorModifiers = s.SerializeObjectArrayUntil<SectorModifiers>(
+                    obj: SectorModifiers, 
+                    conditionCheckFunc: x => x.Modifiers[0].Short_0E == -1, 
+                    onPreSerialize: x => x.Pre_AdditionalLevelFilePack = Pre_AdditionalLevelFilePack,
+                    name: nameof(SectorModifiers));
             });
             s.DoAt(Pointer_1, () => Data1 = s.SerializeObject<Data1Structs>(Data1, x => x.Pre_SectorsCount = Pre_SectorsCount, name: nameof(Data1)));
             s.DoAt(Pointer_2, () => Data2 = s.SerializeObjectArrayUntil<Data2Structs>(Data2, x => x.Entries[0].Values[1] == -1, name: nameof(Data2)));

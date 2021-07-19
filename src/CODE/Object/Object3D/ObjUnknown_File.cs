@@ -1,6 +1,6 @@
 ﻿namespace BinarySerializer.KlonoaDTP
 {
-    public class Object3DUnknown_File : BaseFile
+    public class ObjUnknown_File : BaseFile
     {
         public short Short_00 { get; set; }
         public short Short_02 { get; set; }

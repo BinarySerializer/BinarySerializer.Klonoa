@@ -456,16 +456,19 @@ namespace BinarySerializer.KlonoaDTP
             CodeLevelData = s.DoAt(dataPointer, () => s.SerializeObject<CodeLevelData>(default, x =>
             {
                 x.Pre_SectorsCount = LevelPack?.Sectors?.Length ?? 0;
-                x.Pre_ObjectModelsDataPack = LevelPack?.ObjectModelsDataPack;
+                x.Pre_AdditionalLevelFilePack = LevelPack?.AdditionalLevelFilePack;
             }, name: nameof(CodeLevelData)));
 
             // Process the data only if we're loading a specific sector
             if (SectorToParse != -1)
             {
-                foreach (var obj3D in CodeLevelData.Objects3D[SectorToParse].Objects)
+                // Add TIM data to VRAM for each modifier which references a single TIM file. If there are multiple then it's animated and should get added later.
+                foreach (var modifier in CodeLevelData.SectorModifiers[SectorToParse].Modifiers.Where(x => x.PrimaryType == PrimaryObjectType.Modifier_41))
                 {
-                    if (obj3D.PrimaryType == PrimaryObjectType.Object3D && obj3D.SecondaryType41 == Object3D.Object3DType41.Type_6 && obj3D.Data_TIM != null)
-                        AddToVRAM(obj3D.Data_TIM);
+                    foreach (var file in modifier.DataFiles.Where(x => x.TIM != null))
+                    {
+                        AddToVRAM(file.TIM);
+                    }
                 }
             }
         }

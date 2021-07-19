@@ -1,6 +1,6 @@
 ﻿namespace BinarySerializer.KlonoaDTP
 {
-    public class Object3DRotation_File : BaseFile
+    public class ObjRotation_File : BaseFile
     {
         public short RotationX { get; set; }
         public short RotationY { get; set; }
