@@ -464,7 +464,7 @@ namespace BinarySerializer.KlonoaDTP
             {
                 foreach (var obj3D in CodeLevelData.Objects3D[SectorToParse].Objects)
                 {
-                    if (obj3D.Type == Object3D.Object3DType.Type_6)
+                    if (obj3D.PrimaryType == PrimaryObjectType.Object3D && obj3D.SecondaryType41 == Object3D.Object3DType41.Type_6)
                         AddToVRAM(obj3D.Data_TIM);
                 }
             }

@@ -6,7 +6,7 @@
         public Sprites_ArchiveFile Sprites { get; set; } // TODO: What is this?
         public ArchiveFile<CutsceneRawTextureData> File_2 { get; set; } // TODO: What is this? Seems to be Klonoa frames (and other characters?)
         public RawData_File CharacterNamesImgData { get; set; } // Raw image data, gets loaded at (0x3f4, 0x180, 0xc, 0x50)
-        public RawData_ArchiveFile File_4 { get; set; } // TODO: Parse
+        public RawData_ArchiveFile File_4 { get; set; } // TODO: Parse - seems to be raw image data
         public Cutscene[] Cutscenes { get; set; }
 
         protected override void SerializeFiles(SerializerObject s)

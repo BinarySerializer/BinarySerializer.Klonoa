@@ -26,15 +26,8 @@ namespace BinarySerializer.KlonoaDTP
             ObjectModelsDataPack = SerializeFile<ArchiveFile>(s, ObjectModelsDataPack, 0, name: nameof(ObjectModelsDataPack));
             File_1 = SerializeFile<ArchiveFile<RawData_File>>(s, File_1, 1, name: nameof(File_1));
 
-            // TODO: Why is the cutscene pack file different for some levels???
-            try
-            {
-                CutscenePack = SerializeFile<CutscenePack_ArchiveFile>(s, CutscenePack, 2, name: nameof(CutscenePack));
-            }
-            catch (Exception ex)
-            {
-                s.LogWarning($"Error parsing cutscene pack: {ex}");
-            }
+            // TODO: Why is the cutscene pack file different for some levels??? Game seems to handle it the same.
+            //CutscenePack = SerializeFile<CutscenePack_ArchiveFile>(s, CutscenePack, 2, name: nameof(CutscenePack));
 
             File_3 = SerializeFile<RawData_File>(s, File_3, 3, name: nameof(File_3));
             File_4 = SerializeFile<RawData_File>(s, File_4, 4, name: nameof(File_4));
