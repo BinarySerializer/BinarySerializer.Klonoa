@@ -1,4 +1,6 @@
-﻿using BinarySerializer.PS1;
+﻿using System.Linq;
+using System.Text;
+using BinarySerializer.PS1;
 
 namespace BinarySerializer.KlonoaDTP
 {
@@ -65,6 +67,23 @@ namespace BinarySerializer.KlonoaDTP
             if (Pointer_14 == null)
             {
                 s.LogWarning($"Object3D of primary type {PrimaryType} and secondary type {SecondaryType41} has no data");
+                return;
+            }
+
+            if (_logToStringBuilder)
+            {
+                for (int i = 0; i < DataFileIndices.Length; i++)
+                {
+                    // Assume repeated file 0 are padding
+                    if (i > 0 && DataFileIndices[i] == 0)
+                        break;
+
+                    // Read as raw data
+                    var rawFileData = Pre_ObjectModelsDataPack.SerializeFile<RawData_File>(s, default, DataFileIndices[i]);
+
+                    DebugStringBuilder.AppendLine($"Type {SecondaryType:00} | File[{i}] {DataFileIndices[i]:00} | Length 0x{rawFileData.Pre_FileSize:X8} | Header {rawFileData.Data.ToHexString(align: 16, maxLines: 1)}");
+                }
+
                 return;
             }
 
@@ -142,6 +161,10 @@ namespace BinarySerializer.KlonoaDTP
                     break;
             }
         }
+
+        // Used for debugging obj types
+        public static StringBuilder DebugStringBuilder = new StringBuilder();
+        private bool _logToStringBuilder = false;
 
         public enum Object3DType41 : short
         {
