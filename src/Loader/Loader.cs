@@ -88,6 +88,11 @@ namespace BinarySerializer.KlonoaDTP
         public bool IsBossFight => IsLevel && BINBlock % 3 == 2;
 
         /// <summary>
+        /// The global sector index, or -1 if not available
+        /// </summary>
+        public int GlobalSectorIndex => !IsLevel || SectorToParse == -1 ? -1 : 8 + (10 * BINBlock) + SectorToParse;
+
+        /// <summary>
         /// The sector to serialize when serializing the level data, or -1 to serialize all of them
         /// </summary>
         public int SectorToParse { get; set; } = -1;
@@ -386,7 +391,7 @@ namespace BinarySerializer.KlonoaDTP
         public void ProcessCodeLevelData()
         {
             var s = Context.Deserializer;
-            var funcAddr = Config.CodeLevelDataFunctionAddress;
+            var funcAddr = Config.Address_CodeLevelDataFunction;
 
             // Helper for finding the file the pointer points to
             BinaryFile findFile(uint addr)
