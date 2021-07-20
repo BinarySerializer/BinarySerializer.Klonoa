@@ -97,7 +97,7 @@ namespace BinarySerializer.KlonoaDTP
             }
 
             // Position
-            if (Pre_FileIndex == 2 && Pre_FileSize == 0x08)
+            if ((Pre_FileIndex == 1 || Pre_FileIndex == 2) && Pre_FileSize == 0x08)
             {
                 Position = s.SerializeObject<ObjPosition_File>(Position, onPreSerialize: onPreSerialize, name: nameof(Position));
                 return;
