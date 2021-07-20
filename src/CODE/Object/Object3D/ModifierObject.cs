@@ -40,10 +40,13 @@ namespace BinarySerializer.KlonoaDTP
             Short_1A = s.Serialize<short>(Short_1A, name: nameof(Short_1A));
 
             s.DoAt(DataFileIndicesPointer, () => DataFileIndices = s.SerializeArray<ushort>(DataFileIndices, 8, name: nameof(DataFileIndices)));
+        }
 
-            if (PrimaryType == PrimaryObjectType.Invalid || 
-                PrimaryType == PrimaryObjectType.None || 
-                SecondaryType == -1 || 
+        public void SerializeDataFiles(SerializerObject s)
+        {
+            if (PrimaryType == PrimaryObjectType.Invalid ||
+                PrimaryType == PrimaryObjectType.None ||
+                SecondaryType == -1 ||
                 SecondaryType == 0)
                 return;
 

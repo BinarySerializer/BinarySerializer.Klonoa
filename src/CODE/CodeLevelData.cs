@@ -30,6 +30,16 @@
                     conditionCheckFunc: x => x.Modifiers[0].Short_0E == -1, 
                     onPreSerialize: x => x.Pre_AdditionalLevelFilePack = Pre_AdditionalLevelFilePack,
                     name: nameof(SectorModifiers));
+
+                var sectorToParse = Loader.GetLoader(s.Context).SectorToParse;
+                for (int i = 0; i < SectorModifiers.Length; i++)
+                {
+                    if (sectorToParse == -1 || sectorToParse == i)
+                    {
+                        foreach (var m in SectorModifiers[i].Modifiers)
+                            m.SerializeDataFiles(s);
+                    }
+                }
             });
             s.DoAt(Pointer_1, () => Data1 = s.SerializeObject<Data1Structs>(Data1, x => x.Pre_SectorsCount = Pre_SectorsCount, name: nameof(Data1)));
             s.DoAt(Pointer_2, () => Data2 = s.SerializeObjectArrayUntil<Data2Structs>(Data2, x => x.Entries[0].Values[1] == -1, name: nameof(Data2)));
