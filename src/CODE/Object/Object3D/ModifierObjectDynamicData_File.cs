@@ -1,11 +1,12 @@
-﻿using System.Linq;
-using BinarySerializer.PS1;
+﻿using BinarySerializer.PS1;
+using System.Linq;
 
 namespace BinarySerializer.KlonoaDTP
 {
     public class ModifierObjectDynamicData_File : BaseFile
     {
         public int Pre_FileIndex { get; set; }
+        public FileType Pre_FileType { get; set; }
 
         public PS1_TMD TMD { get; set; }
         public ObjTransform_ArchiveFile Transform { get; set; }
@@ -18,6 +19,63 @@ namespace BinarySerializer.KlonoaDTP
 
         public override void SerializeImpl(SerializerObject s)
         {
+            void onPreSerialize(BaseFile f)
+            {
+                f.Pre_FileSize = Pre_FileSize;
+                f.Pre_IsCompressed = Pre_IsCompressed;
+            }
+
+            switch (GetFileType(s))
+            {
+                case FileType.TMD:
+                    TMD = s.SerializeObject<PS1_TMD>(TMD, name: nameof(TMD));
+                    s.Goto(Offset + Pre_FileSize);
+                    break;
+
+                case FileType.Transform:
+                    Transform = s.SerializeObject<ObjTransform_ArchiveFile>(Transform, onPreSerialize: onPreSerialize, name: nameof(Transform));
+                    break;
+
+                case FileType.Position:
+                    Position = s.SerializeObject<ObjPosition_File>(Position, onPreSerialize: onPreSerialize, name: nameof(Position));
+                    break;
+
+                case FileType.TIM:
+                    TIM = s.SerializeObject<PS1_TIM>(TIM, name: nameof(TIM));
+                    break;
+
+                case FileType.TIMFiles:
+                    TIMFiles = s.SerializeObject<TIM_ArchiveFile>(TIMFiles, onPreSerialize: onPreSerialize, name: nameof(TIMFiles));
+                    break;
+
+                case FileType.Unknown_0:
+                    Unknown_0 = s.SerializeObject<ModifierObjectUnkownData1_File>(Unknown_0, onPreSerialize: onPreSerialize, name: nameof(Unknown_0));
+                    break;
+
+                case FileType.Unknown_1:
+                    Unknown_1 = s.SerializeObject<ModifierObjectUnkownData0_File>(Unknown_1, onPreSerialize: onPreSerialize, name: nameof(Unknown_1));
+                    break;
+
+                case FileType.UnknownArchive:
+                    s.SerializeObject<RawData_ArchiveFile>(default, onPreSerialize: onPreSerialize);
+                    break;
+
+                case FileType.UnknownArchiveArchive:
+                    s.SerializeObject<ArchiveFile<RawData_ArchiveFile>>(default, onPreSerialize: onPreSerialize);
+                    break;
+
+                case FileType.Unknown:
+                default:
+                    Raw = s.SerializeArray<byte>(Raw, Pre_FileSize, name: nameof(Raw));
+                    break;
+            }
+        }
+
+        protected FileType GetFileType(SerializerObject s)
+        {
+            if (Pre_FileType != FileType.Unknown)
+                return Pre_FileType;
+
             // The game defines 24 secondary types by using the type as an index in a function table. This table is located in the code files
             // for each level block and thus will differ. For Vision 1-1 NTSC the function pointer table is at 0x80110808. A lot of the pointers
             // are nulled out, so you would believe the actual indices themselves will be globally the same, with each level only implementing
@@ -29,29 +87,13 @@ namespace BinarySerializer.KlonoaDTP
             var int_00 = s.DoAt(s.CurrentPointer, () => s.Serialize<int>(default, name: "Check"));
             var int_04 = s.DoAt(s.CurrentPointer + 4, () => s.Serialize<int>(default, name: "Check"));
 
-            void onPreSerialize(BaseFile f)
-            {
-                f.Pre_FileSize = Pre_FileSize;
-                f.Pre_IsCompressed = Pre_IsCompressed;
-            }
-
             // TMD (ID is 0x41, flags are always 0 in the file data)
             if (int_00 == 0x41 && int_04 == 0x00)
-            {
-                TMD = s.SerializeObject<PS1_TMD>(TMD, name: nameof(TMD));
-
-                // Go to the end of the file
-                s.Goto(Offset + Pre_FileSize);
-
-                return;
-            }
+                return FileType.TMD;
 
             // Transform (an archive with 3 files, first file is always at 0x10 and the file size is always 0x28)
             if (int_00 == 0x03 && int_04 == 0x10 && Pre_FileSize == 0x28)
-            {
-                Transform = s.SerializeObject<ObjTransform_ArchiveFile>(Transform, onPreSerialize: onPreSerialize, name: nameof(Transform));
-                return;
-            }
+                return FileType.Transform;
 
             // TIM (ID is 0x10)
             if (int_00 == 0x10)
@@ -62,10 +104,7 @@ namespace BinarySerializer.KlonoaDTP
                 var height = s.DoAt(s.CurrentPointer + 18, () => s.Serialize<ushort>(default, name: "Check"));
 
                 if (length - 12 == width * height * 2)
-                {
-                    TIM = s.SerializeObject<PS1_TIM>(TIM, name: nameof(TIM));
-                    return;
-                }
+                    return FileType.TIM;
             }
 
             // TODO: This fails
@@ -82,26 +121,17 @@ namespace BinarySerializer.KlonoaDTP
                     var height = s.DoAt(s.CurrentPointer + int_04 + 18, () => s.Serialize<ushort>(default, name: "Check"));
 
                     if (length - 12 == width * height * 2)
-                    {
-                        TIMFiles = s.SerializeObject<TIM_ArchiveFile>(TIMFiles, onPreSerialize: onPreSerialize, name: nameof(TIMFiles));
-                        return;
-                    }
+                        return FileType.TIMFiles;
                 }
             }
 
             // Unknown_0
             if ((int_00 & 0xFFFF) * 6 + 4 == Pre_FileSize)
-            {
-                Unknown_0 = s.SerializeObject<ModifierObjectUnkownData1_File>(Unknown_0, onPreSerialize: onPreSerialize, name: nameof(Unknown_0));
-                return;
-            }
+                return FileType.Unknown_0;
 
             // Position
             if ((Pre_FileIndex == 1 || Pre_FileIndex == 2) && Pre_FileSize == 0x08)
-            {
-                Position = s.SerializeObject<ObjPosition_File>(Position, onPreSerialize: onPreSerialize, name: nameof(Position));
-                return;
-            }
+                return FileType.Position;
 
             var int_last = s.DoAt(s.CurrentPointer + Pre_FileSize - 4, () => s.Serialize<int>(default, name: "Check"));
 
@@ -113,15 +143,12 @@ namespace BinarySerializer.KlonoaDTP
                 var isValid = ints.Select((x, i) => new { x, i }).Take(ints.Length - 1).Skip(1).All(x => x.x > ints[x.i - 1]);
 
                 if (isValid)
-                {
-                    Unknown_1 = s.SerializeObject<ModifierObjectUnkownData0_File>(Unknown_1, onPreSerialize: onPreSerialize, name: nameof(Unknown_1));
-                    return;
-                }
+                    return FileType.Unknown_1;
             }
 
             s.LogWarning($"Could not determine modifier file data at {Offset}");
 
-            Raw = s.SerializeArray<byte>(Raw, Pre_FileSize, name: nameof(Raw));
+            return FileType.Unknown;
         }
 
         // TODO: Name and move to files
@@ -160,6 +187,20 @@ namespace BinarySerializer.KlonoaDTP
                     Short_04 = s.Serialize<short>(Short_04, name: nameof(Short_04));
                 }
             }
+        }
+
+        public enum FileType
+        {
+            Unknown,
+            UnknownArchive,
+            UnknownArchiveArchive,
+            TMD,
+            Transform,
+            Position,
+            TIM,
+            TIMFiles,
+            Unknown_0,
+            Unknown_1,
         }
     }
 }
