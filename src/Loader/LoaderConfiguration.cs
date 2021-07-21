@@ -9,11 +9,11 @@ namespace BinarySerializer.KlonoaDTP
         public virtual int BLOCK_FirstLevel => 3;
 
         public virtual string FilePath_EXE => "KLONOA.BIN";
-        public virtual uint Address_EXE => 0x8000b070;
+        public virtual uint Address_EXE => 0x80011000;
 
         public abstract Dictionary<uint, uint> FileAddresses { get; }
 
-        public abstract uint Address_CodeLevelDataFunction { get; }
-        public abstract uint Address_LevelPointerTable { get; }
+        public abstract uint Address_LevelData3DFunction { get; }
+        public abstract uint Address_LevelData2DPointerTable { get; }
     }
 }

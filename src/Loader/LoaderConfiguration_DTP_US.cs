@@ -10,7 +10,7 @@ namespace BinarySerializer.KlonoaDTP
             [0x2000000] = 0x801100b8,
             [0x3000000] = 0x8016a790,
         };
-        public override uint Address_CodeLevelDataFunction => 0x80110488;
-        public override uint Address_LevelPointerTable => 0x800b6328;
+        public override uint Address_LevelData3DFunction => 0x80110488;
+        public override uint Address_LevelData2DPointerTable => 0x800b6328;
     }
 }

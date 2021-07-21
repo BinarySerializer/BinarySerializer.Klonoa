@@ -90,12 +90,22 @@ namespace BinarySerializer.KlonoaDTP
         /// <summary>
         /// The global sector index, or -1 if not available
         /// </summary>
-        public int GlobalSectorIndex => !IsLevel || SectorToParse == -1 ? -1 : 8 + (10 * BINBlock) + SectorToParse;
+        public int GlobalSectorIndex => !IsLevel ? -1 : 8 + (10 * (BINBlock - Config.BLOCK_FirstLevel)) + (LevelSector == -1 ? 0 : LevelSector);
+
+        /// <summary>
+        /// The global level index, or -1 if not available
+        /// </summary>
+        public int GlobalLevelIndex => !IsLevel ? -1 : (GlobalSectorIndex - 8) / 10;
+
+        /// <summary>
+        /// The amount of available levels
+        /// </summary>
+        public int LevelsCount => IDX.Entries.Length - Config.BLOCK_FirstLevel;
 
         /// <summary>
         /// The sector to serialize when serializing the level data, or -1 to serialize all of them
         /// </summary>
-        public int SectorToParse { get; set; } = -1;
+        public int LevelSector { get; set; } = -1;
 
         #endregion
 
@@ -127,9 +137,14 @@ namespace BinarySerializer.KlonoaDTP
         public LevelPack_ArchiveFile LevelPack { get; set; }
 
         /// <summary>
-        /// The hard-coded level data
+        /// The hard-coded level data (3D)
         /// </summary>
-        public CodeLevelData CodeLevelData { get; set; }
+        public LevelData3D LevelData3D { get; set; }
+
+        /// <summary>
+        /// The hard-coded level data (2D)
+        /// </summary>
+        public LevelData2D LevelData2D { get; set; }
 
         #endregion
 
@@ -388,10 +403,10 @@ namespace BinarySerializer.KlonoaDTP
         /// <summary>
         /// Process the hard-coded level data from the processed code files
         /// </summary>
-        public void ProcessCodeLevelData()
+        public void ProcessLevelData()
         {
             var s = Context.Deserializer;
-            var funcAddr = Config.Address_CodeLevelDataFunction;
+            var funcAddr = Config.Address_LevelData3DFunction;
 
             // Helper for finding the file the pointer points to
             BinaryFile findFile(uint addr)
@@ -401,7 +416,7 @@ namespace BinarySerializer.KlonoaDTP
                 var file = files.FirstOrDefault(f => addr >= f.BaseAddress && addr <= f.BaseAddress + f.Length);
 
                 if (file == null)
-                    throw new Exception($"Code file for parsing the code level data has not been loaded");
+                    throw new Exception($"Code BIN file for parsing the hard-coded level data has not been loaded");
 
                 return file;
             }
@@ -411,7 +426,7 @@ namespace BinarySerializer.KlonoaDTP
             var dataAddr = s.DoAt(funcPointer, () =>
             {
                 // Parse the MIPS instructions and get the pointer for the level data. Hopefully this function is always structured the same.
-                var instructions = s.SerializeObjectArrayUntil<MIPS_Instruction>(default, x => x.Mnemonic == MIPS_Instruction.InstructionMnemonic.jr, name: $"CodeLevelDataFunction");
+                var instructions = s.SerializeObjectArrayUntil<MIPS_Instruction>(default, x => x.Mnemonic == MIPS_Instruction.InstructionMnemonic.jr, name: $"LevelData2DFunction");
 
                 if (instructions.Length != 5)
                     throw new Exception($"Unknown function structure. Expected 5 instructions, got {instructions.Length}.");
@@ -458,23 +473,31 @@ namespace BinarySerializer.KlonoaDTP
             var dataPointer = new Pointer(dataAddr, findFile(dataAddr));
 
             // Read the data
-            CodeLevelData = s.DoAt(dataPointer, () => s.SerializeObject<CodeLevelData>(default, x =>
+            LevelData3D = s.DoAt(dataPointer, () => s.SerializeObject<LevelData3D>(default, x =>
             {
                 x.Pre_SectorsCount = LevelPack?.Sectors?.Length ?? 0;
                 x.Pre_AdditionalLevelFilePack = LevelPack?.AdditionalLevelFilePack;
-            }, name: nameof(CodeLevelData)));
+            }, name: nameof(LevelData3D)));
 
             // Process the data only if we're loading a specific sector
-            if (SectorToParse != -1)
+            if (LevelSector != -1)
             {
                 // Add TIM data to VRAM for each modifier which references a single TIM file. If there are multiple then it's animated and should get added later.
-                foreach (var modifier in CodeLevelData.SectorModifiers[SectorToParse].Modifiers.Where(x => x.PrimaryType == PrimaryObjectType.Modifier_41))
+                foreach (var modifier in LevelData3D.SectorModifiers[LevelSector].Modifiers.Where(x => x.PrimaryType == PrimaryObjectType.Modifier_41))
                 {
                     foreach (var file in modifier.DataFiles.Where(x => x?.TIM != null))
                     {
                         AddToVRAM(file.TIM);
                     }
                 }
+            }
+
+            // Serialize level data 2D if a level index is specified
+            if (GlobalLevelIndex != -1)
+            {
+                var pointerTablePointer = new Pointer(Config.Address_LevelData2DPointerTable, Context.GetFile(Config.FilePath_EXE));
+                var levelDataPointer = s.DoAt(pointerTablePointer + (GlobalLevelIndex * 4), () => s.SerializePointer(default, name: "LevelData2DPointer"));
+                LevelData2D = s.DoAt(levelDataPointer, () => s.SerializeObject<LevelData2D>(default, name: nameof(LevelData2D)));
             }
         }
 

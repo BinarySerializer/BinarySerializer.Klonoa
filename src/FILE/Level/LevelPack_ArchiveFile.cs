@@ -38,7 +38,7 @@
 
             Sectors ??= new Sector_ArchiveFile[sectorsCount];
 
-            var sectorToParse = Loader.GetLoader(s.Context).SectorToParse;
+            var sectorToParse = Loader.GetLoader(s.Context).LevelSector;
 
             for (int i = 0; i < sectorsCount; i++)
             {
