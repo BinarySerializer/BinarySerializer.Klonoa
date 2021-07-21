@@ -10,7 +10,7 @@
         public short Short_0C { get; set; }
         public short Short_0E { get; set; }
         public short Short_10 { get; set; }
-        public short Short_12 { get; set; } // Is 1 when the pointer is valid, otherwise 0 - a bool?
+        public short Short_12 { get; set; } // Is 1 when the pointer is valid
         public Pointer Pointer_14 { get; set; }
 
         // Serialized from pointers
@@ -27,7 +27,7 @@
             Short_0E = s.Serialize<short>(Short_0E, name: nameof(Short_0E));
             Short_10 = s.Serialize<short>(Short_10, name: nameof(Short_10));
             Short_12 = s.Serialize<short>(Short_12, name: nameof(Short_12));
-            Pointer_14 = s.SerializePointer(Pointer_14, name: nameof(Pointer_14));
+            Pointer_14 = s.SerializePointer(Pointer_14, allowInvalid: true, name: nameof(Pointer_14));
 
             s.DoAt(Pointer_14, () => Structs = s.SerializeObjectArray<UnknownStruct>(Structs, 2, name: nameof(Structs)));
         }
