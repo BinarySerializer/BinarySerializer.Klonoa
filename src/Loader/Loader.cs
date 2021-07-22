@@ -483,7 +483,7 @@ namespace BinarySerializer.KlonoaDTP
             if (LevelSector != -1)
             {
                 // Add TIM data to VRAM for each modifier which references a single TIM file. If there are multiple then it's animated and should get added later.
-                foreach (var modifier in LevelData3D.SectorModifiers[LevelSector].Modifiers.Where(x => x.PrimaryType == PrimaryObjectType.Modifier_41))
+                foreach (var modifier in LevelData3D.SectorModifiers[LevelSector].Modifiers.Where(x => x.PrimaryType == PrimaryObjectType.Modifier_3D_41))
                 {
                     foreach (var file in modifier.DataFiles.Where(x => x?.TIM != null))
                     {

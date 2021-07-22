@@ -76,7 +76,7 @@ namespace BinarySerializer.KlonoaDTP
                 return;
             }
 
-            if (PrimaryType == PrimaryObjectType.Modifier_41)
+            if (PrimaryType == PrimaryObjectType.Modifier_3D_41)
             {
                 // Start by getting the amount of referenced data. We assume file 0 is never the last file. Unused files are always padded with 0.
                 var count = DataFileIndices.Select((x, i) => new { x, i }).ToList().FindIndex(x => x.x == 0 && x.i > 0);

@@ -4,9 +4,10 @@
     {
         Invalid = -1,
         None = 0,
-        Object2D = 1,
+        
+        Enemy_2D = 1,
 
-        Modifier_40 = 40,
-        Modifier_41 = 41,
+        Modifier_3D_40 = 40,
+        Modifier_3D_41 = 41,
     }
 }

@@ -6,7 +6,7 @@
         public int Int_00 { get; set; } // Game only initialized the object if some value is within 0x19 of this - perhaps how far along the path the object is? The path can be -1 though...
         public int Int_04 { get; set; } // Usually -1 when enemy comes from background/foreground
 
-        public ushort Ushort_08 { get; set; }
+        public short SecondaryType { get; set; } // Primary type is 1 for enemies
         public ushort Ushort_0A { get; set; }
         public int XPos { get; set; }
         public int ZPos { get; set; }
@@ -14,7 +14,7 @@
         public int ActualXPos => (XPos << 0xC) / 512;
         public int ActualZPos => (ZPos << 0xC) / 512;
         public int ActualYPos => (YPos << 0xC) / 512;
-        public short Short_18 { get; set; } // Type?
+        public short Short_18 { get; set; }
         public short Short_1A { get; set; } // Movement path?
         public short SectorIndex { get; set; }
         public ushort Ushort_1E { get; set; }
@@ -26,7 +26,7 @@
         {
             Int_00 = s.Serialize<int>(Int_00, name: nameof(Int_00));
             Int_04 = s.Serialize<int>(Int_04, name: nameof(Int_04));
-            Ushort_08 = s.Serialize<ushort>(Ushort_08, name: nameof(Ushort_08));
+            SecondaryType = s.Serialize<short>(SecondaryType, name: nameof(SecondaryType));
             Ushort_0A = s.Serialize<ushort>(Ushort_0A, name: nameof(Ushort_0A));
 
             XPos = s.Serialize<int>(XPos, name: nameof(XPos));
