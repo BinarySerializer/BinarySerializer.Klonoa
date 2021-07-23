@@ -1,8 +1,8 @@
 ﻿namespace BinarySerializer.KlonoaDTP
 {
-    public class ModelAnimationFrame : BinarySerializable
+    public class LevelCollisionItem : BinarySerializable
     {
-        // TODO: Parse this. Contains rotation matrix values, used for light matrix and sprite clipping.
+        // TODO: Parse this. Contains rotation matrix values, used for light matrix and sprite clipping (?)
 
         public int Int_00 { get; set; }
         public int Int_04 { get; set; }
