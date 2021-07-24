@@ -2,11 +2,11 @@
 {
     public class LevelCollisionItems_File : BaseFile
     {
-        public LevelCollisionItem[] Items { get; set; }
+        public LevelCollisionItem[] CollisionItems { get; set; }
 
         public override void SerializeImpl(SerializerObject s)
         {
-            Items = s.SerializeObjectArray<LevelCollisionItem>(Items, Pre_FileSize / 28, name: nameof(Items));
+            CollisionItems = s.SerializeObjectArray<LevelCollisionItem>(CollisionItems, Pre_FileSize / 28, name: nameof(CollisionItems));
         }
     }
 }

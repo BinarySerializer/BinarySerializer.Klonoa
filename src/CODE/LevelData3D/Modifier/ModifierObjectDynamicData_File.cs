@@ -1,18 +1,29 @@
 ﻿using BinarySerializer.PS1;
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 namespace BinarySerializer.KlonoaDTP
 {
+    // The game defines 24 secondary types by using the type as an index in a function table. This table is located in the code files
+    // for each level block and thus will differ. For Vision 1-1 NTSC the function pointer table is at 0x80110808. A lot of the pointers
+    // are nulled out, so you would believe the actual indices themselves will be globally the same, with each level only implementing
+    // functions for the used ones, but oddly enough the indices differ between levels.
+    // Thus we have two options here, either we match the types with their global types for each level (a lot of work) or we dynamically
+    // determine the referenced data for the object. The latter if the option I went with as it will allow the same code to be reused for
+    // all versions of the game, such as demos and prototypes where the types might yet again differ.
+
     public class ModifierObjectDynamicData_File : BaseFile
     {
         public int Pre_FileIndex { get; set; }
-        public FileType Pre_FileType { get; set; }
+        public FileType[] Pre_Files { get; set; }
 
         public FileType DeterminedType { get; set; }
 
         public PS1_TMD TMD { get; set; }
         public ObjTransform_ArchiveFile Transform { get; set; }
         public ObjPosition_File Position { get; set; }
+        public ObjCollisionItems_File Collision { get; set; }
         public PS1_TIM TIM { get; set; }
         public TIM_ArchiveFile TextureAnimation { get; set; }
         public ScenerySprites_File ScenerySprites { get; set; }
@@ -40,6 +51,10 @@ namespace BinarySerializer.KlonoaDTP
 
                 case FileType.Position:
                     Position = s.SerializeObject<ObjPosition_File>(Position, onPreSerialize: onPreSerialize, name: nameof(Position));
+                    break;
+
+                case FileType.Collision:
+                    Collision = s.SerializeObject<ObjCollisionItems_File>(Collision, onPreSerialize: onPreSerialize, name: nameof(Collision));
                     break;
 
                 case FileType.TIM:
@@ -75,81 +90,60 @@ namespace BinarySerializer.KlonoaDTP
 
         protected FileType GetFileType(SerializerObject s)
         {
-            if (Pre_FileType != FileType.Unknown)
-                return Pre_FileType;
-
-            // The game defines 24 secondary types by using the type as an index in a function table. This table is located in the code files
-            // for each level block and thus will differ. For Vision 1-1 NTSC the function pointer table is at 0x80110808. A lot of the pointers
-            // are nulled out, so you would believe the actual indices themselves will be globally the same, with each level only implementing
-            // functions for the used ones, but oddly enough the indices differ between levels.
-            // Thus we have two options here, either we match the types with their global types for each level (a lot of work) or we dynamically
-            // determine the referenced data for the object. The latter if the option I went with as it will allow the same code to be reused for
-            // all versions of the game, such as demos and prototypes where the types might yet again differ.
-
+            // Start by reading the first two values. We will need these for most of the match checks.
             var int_00 = s.DoAt(s.CurrentPointer, () => s.Serialize<int>(default, name: "Check"));
             var int_04 = s.DoAt(s.CurrentPointer + 4, () => s.Serialize<int>(default, name: "Check"));
 
-            // TMD (ID is 0x41, flags are always 0 in the file data)
-            if (int_00 == 0x41 && int_04 == 0x00)
-                return FileType.TMD;
+            var possibleTypes = new HashSet<FileType>();
 
-            // Transform (an archive with 3 files, first file is always at 0x10 and the file size is always 0x28)
-            if (int_00 == 0x03 && int_04 == 0x10 && Pre_FileSize == 0x28)
-                return FileType.Transform;
-
-            // TIM (ID is 0x10)
-            if (int_00 == 0x10)
+            // Enumerate every possible file type based on the matching structures
+            foreach (var structure in FileTypeStructures)
             {
-                // Verify that length - 12 = width * height * 2
-                var length = s.DoAt(s.CurrentPointer + 8, () => s.Serialize<int>(default, name: "Check"));
-                var width = s.DoAt(s.CurrentPointer + 16, () => s.Serialize<ushort>(default, name: "Check"));
-                var height = s.DoAt(s.CurrentPointer + 18, () => s.Serialize<ushort>(default, name: "Check"));
+                // Make sure the files count matches
+                if (structure.Length != Pre_Files.Length)
+                    continue;
 
-                if (length - 12 == width * height * 2)
-                    return FileType.TIM;
-            }
-
-            // TIMFiles (archive with compressed TIM files)
-            if (int_00 * 4 + 4 == int_04)
-            {
-                var file_0 = s.DoAt(s.CurrentPointer + int_04, () => s.Serialize<uint>(default, name: "Check"));
-
-                if (file_0 == 0x10)
+                // Make sure previously parsed files match
+                var matches = true;
+                for (int i = 0; i < Pre_FileIndex; i++)
                 {
-                    // Verify that length - 12 = width * height * 2
-                    var length = s.DoAt(s.CurrentPointer + int_04 + 8, () => s.Serialize<int>(default, name: "Check"));
-                    var width = s.DoAt(s.CurrentPointer + int_04 + 16, () => s.Serialize<ushort>(default, name: "Check"));
-                    var height = s.DoAt(s.CurrentPointer + int_04 + 18, () => s.Serialize<ushort>(default, name: "Check"));
+                    if (!matches)
+                        break;
 
-                    if (length - 12 == width * height * 2)
-                        return FileType.TextureAnimation;
+                    if (Pre_Files[i] != structure[i])
+                        matches = false;
                 }
+
+                if (!matches)
+                    continue;
+
+                // Add the type
+                possibleTypes.Add(structure[Pre_FileIndex]);
             }
 
-            // Unknown_0
-            if ((int_00 & 0xFFFF) * 6 + 4 == Pre_FileSize)
-                return FileType.ScenerySprites;
+            var type = FileType.Unknown;
 
-            // Position
-            if ((Pre_FileIndex == 1 || Pre_FileIndex == 2) && Pre_FileSize == 0x08)
-                return FileType.Position;
-
-            var int_last = s.DoAt(s.CurrentPointer + Pre_FileSize - 4, () => s.Serialize<int>(default, name: "Check"));
-
-            // Unknown_1
-            if (Pre_FileIndex == 0 && int_last == -1)
+            if (possibleTypes.Count != 0)
             {
-                var ints = s.DoAt(s.CurrentPointer, () => s.SerializeArray<int>(default, Pre_FileSize / 4, "Check"));
+                // Check each possible type
+                foreach (var fileTypeMatchFunc in FileTypeMatchFuncs.Where(x => possibleTypes.Contains(x.Key)))
+                {
+                    if (fileTypeMatchFunc.Value(s, int_00, int_04, Pre_FileSize))
+                    {
+                        type = fileTypeMatchFunc.Key;
+                        break;
+                    }
+                }
 
-                var isValid = ints.Select((x, i) => new { x, i }).Take(ints.Length - 1).Skip(1).All(x => x.x > ints[x.i - 1]);
-
-                if (isValid)
-                    return FileType.UVScrollAnimation;
+                if (type == FileType.Unknown)
+                    s.LogWarning($"Could not determine modifier file data at {Offset}");
+            }
+            else
+            {
+                s.LogWarning($"No matching file structure for modifier file data at {Offset}");
             }
 
-            s.LogWarning($"Could not determine modifier file data at {Offset}");
-
-            return FileType.Unknown;
+            return type;
         }
 
         // TODO: Move to files
@@ -189,10 +183,109 @@ namespace BinarySerializer.KlonoaDTP
             TMD,
             Transform,
             Position,
+            Collision,
             TIM,
             TextureAnimation,
             ScenerySprites,
             UVScrollAnimation,
         }
+
+        private static FileType[][] FileTypeStructures { get; } = new FileType[][]
+        {
+            new FileType[] { FileType.UVScrollAnimation },
+            new FileType[] { FileType.TextureAnimation },
+            new FileType[] { FileType.ScenerySprites },
+            new FileType[] { FileType.TMD, FileType.Transform },
+            new FileType[] { FileType.TMD, FileType.Unknown },
+            new FileType[] { FileType.TMD, FileType.Transform, FileType.TIM },
+            new FileType[] { FileType.TMD, FileType.TMD, FileType.Position },
+            new FileType[] { FileType.TMD, FileType.Collision, FileType.Unknown, FileType.Unknown },
+            new FileType[] { FileType.TMD, FileType.UnknownArchiveArchive, FileType.Unknown, FileType.Unknown, FileType.Unknown, FileType.UnknownArchive, FileType.UnknownArchive, },
+        };
+
+        [SuppressMessage("ReSharper", "ConvertToLambdaExpression")]
+        private static KeyValuePair<FileType, FileTypeMatchCheck>[] FileTypeMatchFuncs { get; } = new KeyValuePair<FileType, FileTypeMatchCheck>[]
+        {
+            new KeyValuePair<FileType, FileTypeMatchCheck>(FileType.TMD, (s, int_00, int_04, fileSize) =>
+            {
+                // TMD (ID is 0x41, flags are always 0 in the file data)
+                return int_00 == 0x41 && int_04 == 0x00;
+            }),
+            new KeyValuePair<FileType, FileTypeMatchCheck>(FileType.Transform, (s, int_00, int_04, fileSize) =>
+            {
+                // Transform (an archive with 3 files, first file is always at 0x10 and the file size is always 0x28)
+                return int_00 == 0x03 && int_04 == 0x10 && fileSize == 0x28;
+            }),
+            new KeyValuePair<FileType, FileTypeMatchCheck>(FileType.TIM, (s, int_00, int_04, fileSize) =>
+            {
+                // TIM (ID is 0x10)
+                if (int_00 == 0x10)
+                {
+                    // Verify that length - 12 = width * height * 2
+                    var length = s.DoAt(s.CurrentPointer + 8, () => s.Serialize<int>(default, name: "Check"));
+                    var width = s.DoAt(s.CurrentPointer + 16, () => s.Serialize<ushort>(default, name: "Check"));
+                    var height = s.DoAt(s.CurrentPointer + 18, () => s.Serialize<ushort>(default, name: "Check"));
+
+                    if (length - 12 == width * height * 2)
+                        return true;
+                }
+
+                return false;
+            }),
+            new KeyValuePair<FileType, FileTypeMatchCheck>(FileType.TextureAnimation, (s, int_00, int_04, fileSize) =>
+            {
+                // TextureAnimation (archive with compressed TIM files)
+                if (int_00 * 4 + 4 == int_04)
+                {
+                    var file_0 = s.DoAt(s.CurrentPointer + int_04, () => s.Serialize<uint>(default, name: "Check"));
+
+                    if (file_0 == 0x10)
+                    {
+                        // Verify that length - 12 = width * height * 2
+                        var length = s.DoAt(s.CurrentPointer + int_04 + 8, () => s.Serialize<int>(default, name: "Check"));
+                        var width = s.DoAt(s.CurrentPointer + int_04 + 16, () => s.Serialize<ushort>(default, name: "Check"));
+                        var height = s.DoAt(s.CurrentPointer + int_04 + 18, () => s.Serialize<ushort>(default, name: "Check"));
+
+                        if (length - 12 == width * height * 2)
+                            return true;
+                    }
+                }
+
+                return false;
+            }),
+            new KeyValuePair<FileType, FileTypeMatchCheck>(FileType.ScenerySprites, (s, int_00, int_04, fileSize) =>
+            {
+                // ScenerySprites
+                return (int_00 & 0xFFFF) * 6 + 4 == fileSize;
+            }),
+            new KeyValuePair<FileType, FileTypeMatchCheck>(FileType.Position, (s, int_00, int_04, fileSize) =>
+            {
+                // Position
+                return fileSize == 0x08;
+            }),
+            new KeyValuePair<FileType, FileTypeMatchCheck>(FileType.Collision, (s, int_00, int_04, fileSize) =>
+            {
+                return int_00 * 28 + 4 == fileSize;
+            }),
+            new KeyValuePair<FileType, FileTypeMatchCheck>(FileType.UVScrollAnimation, (s, int_00, int_04, fileSize) =>
+            {
+                var int_last = s.DoAt(s.CurrentPointer + fileSize - 4, () => s.Serialize<int>(default, name: "Check"));
+
+                // UVScrollAnimation
+                if (int_last == -1)
+                {
+                    var ints = s.DoAt(s.CurrentPointer, () => s.SerializeArray<int>(default, fileSize / 4, "Check"));
+
+                    var isValid = ints.Select((x, i) => new { x, i }).Take(ints.Length - 1).Skip(1).All(x => x.x > ints[x.i - 1]);
+
+                    if (isValid)
+                        return true;
+                }
+
+                return false;
+            }),
+        };
+
+        private delegate bool FileTypeMatchCheck(SerializerObject s, int int_00, int int_04, long fileSize);
     }
 }

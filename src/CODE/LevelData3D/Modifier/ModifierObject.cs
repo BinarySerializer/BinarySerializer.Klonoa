@@ -76,7 +76,7 @@ namespace BinarySerializer.KlonoaDTP
                 return;
             }
 
-            if (PrimaryType == PrimaryObjectType.Modifier_3D_41)
+            if (PrimaryType == PrimaryObjectType.Modifier_3D_40 || PrimaryType == PrimaryObjectType.Modifier_3D_41)
             {
                 // Start by getting the amount of referenced data. We assume file 0 is never the last file. Unused files are always padded with 0.
                 var count = DataFileIndices.Select((x, i) => new { x, i }).ToList().FindIndex(x => x.x == 0 && x.i > 0);
@@ -85,32 +85,17 @@ namespace BinarySerializer.KlonoaDTP
                     s.LogWarning($"A data reference got skipped!");
 
                 DataFiles ??= new ModifierObjectDynamicData_File[count];
+                var files = new ModifierObjectDynamicData_File.FileType[count];
 
-                // If the count is 7 we assume it's an animated model
-                if (count == 7)
+                for (int i = 0; i < count; i++)
                 {
-                    serializeFile(0, ModifierObjectDynamicData_File.FileType.TMD);
-                    serializeFile(1, ModifierObjectDynamicData_File.FileType.UnknownArchiveArchive); // TODO: What is this?
-                    serializeFile(2); // TODO: What is this?
-                    serializeFile(3); // TODO: What is this?
-                    serializeFile(4); // TODO: What is this?
-                    serializeFile(5, ModifierObjectDynamicData_File.FileType.UnknownArchive); // TODO: What is this?
-                    serializeFile(6, ModifierObjectDynamicData_File.FileType.UnknownArchive); // TODO: What is this - palettes?
-                }
-                else
-                {
-                    for (int i = 0; i < count; i++)
-                        serializeFile(i);
-                }
-
-                // Helper for serializing a data file
-                void serializeFile(int index, ModifierObjectDynamicData_File.FileType type = ModifierObjectDynamicData_File.FileType.Unknown)
-                {
-                    DataFiles[index] = filePack.SerializeFile(s, DataFiles[index], DataFileIndices[index], onPreSerialize: x =>
+                    DataFiles[i] = filePack.SerializeFile(s, DataFiles[i], DataFileIndices[i], onPreSerialize: x =>
                     {
-                        x.Pre_FileIndex = index;
-                        x.Pre_FileType = type;
-                    }, name: $"{nameof(DataFiles)}[{index}]");
+                        x.Pre_FileIndex = i;
+                        x.Pre_Files = files;
+                    }, name: $"{nameof(DataFiles)}[{i}]");
+
+                    files[i] = DataFiles[i].DeterminedType;
                 }
             }
             else
