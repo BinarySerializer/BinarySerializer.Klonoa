@@ -22,7 +22,8 @@ namespace BinarySerializer.KlonoaDTP
 
         public PS1_TMD TMD { get; set; }
         public ObjTransform_ArchiveFile Transform { get; set; }
-        public ObjPosition_File Position { get; set; }
+        public ObjMultiTransform_ArchiveFile MultiTransform { get; set; }
+        public ObjPosition Position { get; set; }
         public ObjCollisionItems_File Collision { get; set; }
         public PS1_TIM TIM { get; set; }
         public TIM_ArchiveFile TextureAnimation { get; set; }
@@ -42,6 +43,10 @@ namespace BinarySerializer.KlonoaDTP
             {
                 case FileType.TMD:
                     TMD = s.SerializeObject<PS1_TMD>(TMD, name: nameof(TMD));
+
+                    if (TMD.ObjectsCount > 1)
+                        s.LogWarning($"TMD in modifier data has multiple objects. Multiple positions needs to be parsed!");
+
                     s.Goto(Offset + Pre_FileSize);
                     break;
 
@@ -49,8 +54,12 @@ namespace BinarySerializer.KlonoaDTP
                     Transform = s.SerializeObject<ObjTransform_ArchiveFile>(Transform, onPreSerialize: onPreSerialize, name: nameof(Transform));
                     break;
 
+                case FileType.MultiTransform:
+                    MultiTransform = s.SerializeObject<ObjMultiTransform_ArchiveFile>(MultiTransform, onPreSerialize: onPreSerialize, name: nameof(MultiTransform));
+                    break;
+
                 case FileType.Position:
-                    Position = s.SerializeObject<ObjPosition_File>(Position, onPreSerialize: onPreSerialize, name: nameof(Position));
+                    Position = s.SerializeObject<ObjPosition>(Position, name: nameof(Position));
                     break;
 
                 case FileType.Collision:
@@ -123,7 +132,11 @@ namespace BinarySerializer.KlonoaDTP
 
             var type = FileType.Unknown;
 
-            if (possibleTypes.Count != 0)
+            if (possibleTypes.Count == 1)
+            {
+                type = possibleTypes.First();
+            }
+            else if (possibleTypes.Count != 0)
             {
                 // Check each possible type
                 foreach (var fileTypeMatchFunc in FileTypeMatchFuncs.Where(x => possibleTypes.Contains(x.Key)))
@@ -146,35 +159,6 @@ namespace BinarySerializer.KlonoaDTP
             return type;
         }
 
-        // TODO: Move to files
-        public class ScenerySprites_File : BaseFile
-        {
-            public short EntriesCount { get; set; }
-            public short Short_02 { get; set; }
-            public Entry[] Entries { get; set; }
-
-            public override void SerializeImpl(SerializerObject s)
-            {
-                EntriesCount = s.Serialize<short>(EntriesCount, name: nameof(EntriesCount));
-                Short_02 = s.Serialize<short>(Short_02, name: nameof(Short_02));
-                Entries = s.SerializeObjectArray<Entry>(Entries, EntriesCount, name: nameof(Entries));
-            }
-
-            public class Entry : BinarySerializable
-            {
-                public short Short_00 { get; set; }
-                public short Short_02 { get; set; }
-                public short Short_04 { get; set; }
-
-                public override void SerializeImpl(SerializerObject s)
-                {
-                    Short_00 = s.Serialize<short>(Short_00, name: nameof(Short_00));
-                    Short_02 = s.Serialize<short>(Short_02, name: nameof(Short_02));
-                    Short_04 = s.Serialize<short>(Short_04, name: nameof(Short_04));
-                }
-            }
-        }
-
         public enum FileType
         {
             Unknown,
@@ -182,6 +166,7 @@ namespace BinarySerializer.KlonoaDTP
             UnknownArchiveArchive,
             TMD,
             Transform,
+            MultiTransform,
             Position,
             Collision,
             TIM,
@@ -199,7 +184,7 @@ namespace BinarySerializer.KlonoaDTP
             new FileType[] { FileType.TMD, FileType.Unknown },
             new FileType[] { FileType.TMD, FileType.Transform, FileType.TIM },
             new FileType[] { FileType.TMD, FileType.TMD, FileType.Position },
-            new FileType[] { FileType.TMD, FileType.Collision, FileType.Unknown, FileType.Unknown },
+            new FileType[] { FileType.TMD, FileType.Collision, FileType.Unknown, FileType.MultiTransform },
             new FileType[] { FileType.TMD, FileType.UnknownArchiveArchive, FileType.Unknown, FileType.Unknown, FileType.Unknown, FileType.UnknownArchive, FileType.UnknownArchive, },
         };
 
