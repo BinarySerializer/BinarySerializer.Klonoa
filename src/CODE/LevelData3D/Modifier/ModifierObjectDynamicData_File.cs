@@ -14,9 +14,9 @@ namespace BinarySerializer.KlonoaDTP
         public ObjTransform_ArchiveFile Transform { get; set; }
         public ObjPosition_File Position { get; set; }
         public PS1_TIM TIM { get; set; }
-        public TIM_ArchiveFile TIMFiles { get; set; }
+        public TIM_ArchiveFile TextureAnimation { get; set; }
         public ScenerySprites_File ScenerySprites { get; set; }
-        public ScrollAnimation_File ScrollAnimation { get; set; }
+        public UVScrollAnimation_File UVScrollAnimation { get; set; }
         public byte[] Raw { get; set; }
 
         public override void SerializeImpl(SerializerObject s)
@@ -46,16 +46,16 @@ namespace BinarySerializer.KlonoaDTP
                     TIM = s.SerializeObject<PS1_TIM>(TIM, name: nameof(TIM));
                     break;
 
-                case FileType.TIMFiles:
-                    TIMFiles = s.SerializeObject<TIM_ArchiveFile>(TIMFiles, onPreSerialize: onPreSerialize, name: nameof(TIMFiles));
+                case FileType.TextureAnimation:
+                    TextureAnimation = s.SerializeObject<TIM_ArchiveFile>(TextureAnimation, onPreSerialize: onPreSerialize, name: nameof(TextureAnimation));
                     break;
 
                 case FileType.ScenerySprites:
                     ScenerySprites = s.SerializeObject<ScenerySprites_File>(ScenerySprites, onPreSerialize: onPreSerialize, name: nameof(ScenerySprites));
                     break;
 
-                case FileType.ScrollAnimation:
-                    ScrollAnimation = s.SerializeObject<ScrollAnimation_File>(ScrollAnimation, onPreSerialize: onPreSerialize, name: nameof(ScrollAnimation));
+                case FileType.UVScrollAnimation:
+                    UVScrollAnimation = s.SerializeObject<UVScrollAnimation_File>(UVScrollAnimation, onPreSerialize: onPreSerialize, name: nameof(UVScrollAnimation));
                     break;
 
                 case FileType.UnknownArchive:
@@ -122,7 +122,7 @@ namespace BinarySerializer.KlonoaDTP
                     var height = s.DoAt(s.CurrentPointer + int_04 + 18, () => s.Serialize<ushort>(default, name: "Check"));
 
                     if (length - 12 == width * height * 2)
-                        return FileType.TIMFiles;
+                        return FileType.TextureAnimation;
                 }
             }
 
@@ -144,7 +144,7 @@ namespace BinarySerializer.KlonoaDTP
                 var isValid = ints.Select((x, i) => new { x, i }).Take(ints.Length - 1).Skip(1).All(x => x.x > ints[x.i - 1]);
 
                 if (isValid)
-                    return FileType.ScrollAnimation;
+                    return FileType.UVScrollAnimation;
             }
 
             s.LogWarning($"Could not determine modifier file data at {Offset}");
@@ -153,15 +153,6 @@ namespace BinarySerializer.KlonoaDTP
         }
 
         // TODO: Move to files
-        public class ScrollAnimation_File : BaseFile
-        {
-            public int[] Offsets { get; set; } // Groups of four. Each is an offset to an array. Handles scroll animations in models.
-
-            public override void SerializeImpl(SerializerObject s)
-            {
-                Offsets = s.SerializeArrayUntil(Offsets, x => x == -1, () => -1, name: nameof(Offsets));
-            }
-        }
         public class ScenerySprites_File : BaseFile
         {
             public short EntriesCount { get; set; }
@@ -199,9 +190,9 @@ namespace BinarySerializer.KlonoaDTP
             Transform,
             Position,
             TIM,
-            TIMFiles,
+            TextureAnimation,
             ScenerySprites,
-            ScrollAnimation,
+            UVScrollAnimation,
         }
     }
 }
