@@ -8,13 +8,15 @@ namespace BinarySerializer.KlonoaDTP
         public int Pre_FileIndex { get; set; }
         public FileType Pre_FileType { get; set; }
 
+        public FileType DeterminedType { get; set; }
+
         public PS1_TMD TMD { get; set; }
         public ObjTransform_ArchiveFile Transform { get; set; }
         public ObjPosition_File Position { get; set; }
         public PS1_TIM TIM { get; set; }
         public TIM_ArchiveFile TIMFiles { get; set; }
-        public ModifierObjectUnkownData1_File Unknown_0 { get; set; }
-        public ModifierObjectUnkownData0_File Unknown_1 { get; set; }
+        public ScenerySprites_File ScenerySprites { get; set; }
+        public ScrollAnimation_File ScrollAnimation { get; set; }
         public byte[] Raw { get; set; }
 
         public override void SerializeImpl(SerializerObject s)
@@ -25,7 +27,7 @@ namespace BinarySerializer.KlonoaDTP
                 f.Pre_IsCompressed = Pre_IsCompressed;
             }
 
-            switch (GetFileType(s))
+            switch (DeterminedType = GetFileType(s))
             {
                 case FileType.TMD:
                     TMD = s.SerializeObject<PS1_TMD>(TMD, name: nameof(TMD));
@@ -48,12 +50,12 @@ namespace BinarySerializer.KlonoaDTP
                     TIMFiles = s.SerializeObject<TIM_ArchiveFile>(TIMFiles, onPreSerialize: onPreSerialize, name: nameof(TIMFiles));
                     break;
 
-                case FileType.Unknown_0:
-                    Unknown_0 = s.SerializeObject<ModifierObjectUnkownData1_File>(Unknown_0, onPreSerialize: onPreSerialize, name: nameof(Unknown_0));
+                case FileType.ScenerySprites:
+                    ScenerySprites = s.SerializeObject<ScenerySprites_File>(ScenerySprites, onPreSerialize: onPreSerialize, name: nameof(ScenerySprites));
                     break;
 
-                case FileType.Unknown_1:
-                    Unknown_1 = s.SerializeObject<ModifierObjectUnkownData0_File>(Unknown_1, onPreSerialize: onPreSerialize, name: nameof(Unknown_1));
+                case FileType.ScrollAnimation:
+                    ScrollAnimation = s.SerializeObject<ScrollAnimation_File>(ScrollAnimation, onPreSerialize: onPreSerialize, name: nameof(ScrollAnimation));
                     break;
 
                 case FileType.UnknownArchive:
@@ -107,7 +109,6 @@ namespace BinarySerializer.KlonoaDTP
                     return FileType.TIM;
             }
 
-            // TODO: This fails
             // TIMFiles (archive with compressed TIM files)
             if (int_00 * 4 + 4 == int_04)
             {
@@ -127,7 +128,7 @@ namespace BinarySerializer.KlonoaDTP
 
             // Unknown_0
             if ((int_00 & 0xFFFF) * 6 + 4 == Pre_FileSize)
-                return FileType.Unknown_0;
+                return FileType.ScenerySprites;
 
             // Position
             if ((Pre_FileIndex == 1 || Pre_FileIndex == 2) && Pre_FileSize == 0x08)
@@ -143,7 +144,7 @@ namespace BinarySerializer.KlonoaDTP
                 var isValid = ints.Select((x, i) => new { x, i }).Take(ints.Length - 1).Skip(1).All(x => x.x > ints[x.i - 1]);
 
                 if (isValid)
-                    return FileType.Unknown_1;
+                    return FileType.ScrollAnimation;
             }
 
             s.LogWarning($"Could not determine modifier file data at {Offset}");
@@ -151,17 +152,17 @@ namespace BinarySerializer.KlonoaDTP
             return FileType.Unknown;
         }
 
-        // TODO: Name and move to files
-        public class ModifierObjectUnkownData0_File : BaseFile
+        // TODO: Move to files
+        public class ScrollAnimation_File : BaseFile
         {
-            public int[] Offsets { get; set; }
+            public int[] Offsets { get; set; } // Groups of four. Each is an offset to an array. Handles scroll animations in models.
 
             public override void SerializeImpl(SerializerObject s)
             {
                 Offsets = s.SerializeArrayUntil(Offsets, x => x == -1, () => -1, name: nameof(Offsets));
             }
         }
-        public class ModifierObjectUnkownData1_File : BaseFile
+        public class ScenerySprites_File : BaseFile
         {
             public short EntriesCount { get; set; }
             public short Short_02 { get; set; }
@@ -199,8 +200,8 @@ namespace BinarySerializer.KlonoaDTP
             Position,
             TIM,
             TIMFiles,
-            Unknown_0,
-            Unknown_1,
+            ScenerySprites,
+            ScrollAnimation,
         }
     }
 }
