@@ -148,7 +148,7 @@ namespace BinarySerializer.KlonoaDTP
                     }
                 }
 
-                if (type == FileType.Unknown)
+                if (type == FileType.Unknown || type == FileType.UnknownArchive || type == FileType.UnknownArchiveArchive)
                     s.LogWarning($"Could not determine modifier file data at {Offset}");
             }
             else
@@ -180,10 +180,11 @@ namespace BinarySerializer.KlonoaDTP
             new FileType[] { FileType.UVScrollAnimation },
             new FileType[] { FileType.TextureAnimation },
             new FileType[] { FileType.ScenerySprites },
+            new FileType[] { FileType.UnknownArchive },
             new FileType[] { FileType.TMD },
             new FileType[] { FileType.TMD, FileType.Transform },
             new FileType[] { FileType.TMD, FileType.Position },
-            new FileType[] { FileType.TMD, FileType.Unknown },
+            new FileType[] { FileType.TMD, FileType.Unknown }, // TODO: The unknown here is same as File_5 in sector archive
             new FileType[] { FileType.TMD, FileType.Transform, FileType.TIM },
             new FileType[] { FileType.TMD, FileType.TMD, FileType.Position },
             new FileType[] { FileType.TMD, FileType.Collision, FileType.Unknown, FileType.MultiTransform },
@@ -242,8 +243,13 @@ namespace BinarySerializer.KlonoaDTP
             }),
             new KeyValuePair<FileType, FileTypeMatchCheck>(FileType.ScenerySprites, (s, int_00, int_04, fileSize) =>
             {
+                var size = (int_00 & 0xFFFF) * 6 + 4;
+
+                if ((size % 4) != 0)
+                    size += 4 - (size % 4);
+
                 // ScenerySprites
-                return (int_00 & 0xFFFF) * 6 + 4 == fileSize;
+                return size == fileSize;
             }),
             new KeyValuePair<FileType, FileTypeMatchCheck>(FileType.Position, (s, int_00, int_04, fileSize) =>
             {
@@ -270,6 +276,11 @@ namespace BinarySerializer.KlonoaDTP
                 }
 
                 return false;
+            }),
+            new KeyValuePair<FileType, FileTypeMatchCheck>(FileType.UnknownArchive, (s, int_00, int_04, fileSize) =>
+            {
+                // UnknownArchive
+                return int_00 * 4 + 4 == int_04;
             }),
         };
 

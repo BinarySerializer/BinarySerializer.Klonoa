@@ -2,28 +2,32 @@
 {
     public class ScenerySprites_File : BaseFile
     {
-        public short EntriesCount { get; set; }
+        public short PositionsCount { get; set; }
         public short Short_02 { get; set; }
-        public Entry[] Entries { get; set; }
+        public Position[] Positions { get; set; }
 
         public override void SerializeImpl(SerializerObject s)
         {
-            EntriesCount = s.Serialize<short>(EntriesCount, name: nameof(EntriesCount));
+            PositionsCount = s.Serialize<short>(PositionsCount, name: nameof(PositionsCount));
             Short_02 = s.Serialize<short>(Short_02, name: nameof(Short_02));
-            Entries = s.SerializeObjectArray<Entry>(Entries, EntriesCount, name: nameof(Entries));
+            Positions = s.SerializeObjectArray<Position>(Positions, PositionsCount, name: nameof(Positions));
         }
 
-        public class Entry : BinarySerializable
+        public class Position : BinarySerializable
         {
-            public short Short_00 { get; set; }
-            public short Short_02 { get; set; }
-            public short Short_04 { get; set; }
+            public short XPos { get; set; }
+            public short ZPos { get; set; }
+            public short YPos { get; set; }
+
+            public int ActualXPos => (XPos << 0xC) / 512;
+            public int ActualZPos => (ZPos << 0xC) / 512;
+            public int ActualYPos => (YPos << 0xC) / 512;
 
             public override void SerializeImpl(SerializerObject s)
             {
-                Short_00 = s.Serialize<short>(Short_00, name: nameof(Short_00));
-                Short_02 = s.Serialize<short>(Short_02, name: nameof(Short_02));
-                Short_04 = s.Serialize<short>(Short_04, name: nameof(Short_04));
+                XPos = s.Serialize<short>(XPos, name: nameof(XPos));
+                ZPos = s.Serialize<short>(ZPos, name: nameof(ZPos));
+                YPos = s.Serialize<short>(YPos, name: nameof(YPos));
             }
         }
     }

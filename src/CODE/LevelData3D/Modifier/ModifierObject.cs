@@ -53,7 +53,7 @@ namespace BinarySerializer.KlonoaDTP
             if (DataFileIndicesPointer == null)
             {
                 DataFiles = new ModifierObjectDynamicData_File[0];
-                s.LogWarning($"Modifier of primary type {PrimaryType} and secondary type {SecondaryType} has no data");
+                //s.LogWarning($"Modifier of primary type {PrimaryType} and secondary type {SecondaryType} has no data");
                 return;
             }
 
