@@ -135,6 +135,9 @@ namespace BinarySerializer.KlonoaDTP
             if (possibleTypes.Count == 1)
             {
                 type = possibleTypes.First();
+
+                if (type == FileType.Unknown || type == FileType.UnknownArchive || type == FileType.UnknownArchiveArchive)
+                    s.LogWarning($"Could not determine modifier file data at {Offset}");
             }
             else if (possibleTypes.Count != 0)
             {

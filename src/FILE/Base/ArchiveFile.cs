@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace BinarySerializer.KlonoaDTP
@@ -8,6 +9,9 @@ namespace BinarySerializer.KlonoaDTP
     /// </summary>
     public class ArchiveFile : BaseFile
     {
+        public static bool AddToParsedArchiveFiles { get; set; } = false;
+        public static Dictionary<ArchiveFile, bool[]> ParsedArchiveFiles { get; } = new Dictionary<ArchiveFile, bool[]>();
+
         /// <summary>
         /// The offset table for the contained files
         /// </summary>
@@ -62,15 +66,31 @@ namespace BinarySerializer.KlonoaDTP
                 }, name: name);
 
                 obj = file.FileData;
+
+                FlagAsParsed(index);
             });
 
             return obj;
+        }
+
+        public void FlagAsParsed(int index)
+        {
+            if (!AddToParsedArchiveFiles) 
+                return;
+            
+            if (!ParsedArchiveFiles.ContainsKey(this))
+                ParsedArchiveFiles[this] = new bool[OffsetTable.FilesCount];
+
+            ParsedArchiveFiles[this][index] = true;
         }
 
         public override void SerializeImpl(SerializerObject s)
         {
             // Serialize the offset table
             OffsetTable = s.SerializeObject<OffsetTable>(OffsetTable, name: nameof(OffsetTable));
+
+            if (AddToParsedArchiveFiles)
+                ParsedArchiveFiles[this] = new bool[OffsetTable.FilesCount];
 
             // Serialize the files
             SerializeFiles(s);

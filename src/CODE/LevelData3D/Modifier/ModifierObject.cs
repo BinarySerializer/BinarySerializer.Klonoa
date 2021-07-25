@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using System.Text;
 
 namespace BinarySerializer.KlonoaDTP
 {
@@ -59,23 +58,6 @@ namespace BinarySerializer.KlonoaDTP
 
             var filePack = Pre_AdditionalLevelFilePack;
 
-            if (_logToStringBuilder)
-            {
-                for (int i = 0; i < DataFileIndices.Length; i++)
-                {
-                    // Assume repeated file 0 are padding
-                    if (i > 0 && DataFileIndices[i] == 0)
-                        break;
-
-                    // Read as raw data
-                    var rawFileData = filePack.SerializeFile<RawData_File>(s, default, DataFileIndices[i]);
-
-                    DebugStringBuilder.AppendLine($"Type {SecondaryType:00} | File[{i}] {DataFileIndices[i]:00} | Length 0x{rawFileData.Pre_FileSize:X8} | Header {rawFileData.Data.ToHexString(align: 16, maxLines: 1)}");
-                }
-
-                return;
-            }
-
             if (PrimaryType == PrimaryObjectType.Modifier_3D_40 || PrimaryType == PrimaryObjectType.Modifier_3D_41)
             {
                 // Start by getting the amount of referenced data. We assume file 0 is never the last file. Unused files are always padded with 0.
@@ -103,9 +85,5 @@ namespace BinarySerializer.KlonoaDTP
                 s.LogWarning($"Modifier has unsupported primary type {PrimaryType}");
             }
         }
-
-        // Used for debugging obj types
-        public static StringBuilder DebugStringBuilder = new StringBuilder();
-        private bool _logToStringBuilder = false;
     }
 }

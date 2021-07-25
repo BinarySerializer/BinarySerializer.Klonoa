@@ -29,7 +29,10 @@
             {
                 // Ignore dummy files
                 if (OffsetTable.FilePointers[2 + i] == OffsetTable.FilePointers[0])
+                {
+                    FlagAsParsed(2 + i);
                     continue;
+                }
 
                 Sprites[i] = SerializeFile<Sprites_ArchiveFile>(s, Sprites[i], 2 + i, name: $"{nameof(Sprites)}[{i}]");
             }
