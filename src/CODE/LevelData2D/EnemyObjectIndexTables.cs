@@ -15,7 +15,7 @@
             IndexTables ??= new short[TablePointers.Length][];
 
             for (int i = 0; i < IndexTables.Length; i++)
-                s.DoAt(TablePointers[i], () => IndexTables[i] = s.SerializeArrayUntil<short>(IndexTables[i], x => x == -1, name: $"{nameof(IndexTables)}[{i}]"));
+                s.DoAt(TablePointers[i], () => IndexTables[i] = s.SerializeArrayUntil<short>(IndexTables[i], x => x == -1, () => -1, name: $"{nameof(IndexTables)}[{i}]"));
         }
     }
 }
