@@ -43,7 +43,7 @@
             });
             s.DoAt(MovementPathCamerasPointer, () => MovementPathCameras = s.SerializeObject<MovementPathCameras>(MovementPathCameras, x => x.Pre_SectorsCount = Pre_SectorsCount, name: nameof(MovementPathCameras)));
             s.DoAt(Pointer_2, () => Data2 = s.SerializeObjectArrayUntil<Data2Structs>(Data2, x => x.Entries[0].Values[1] == -1, name: nameof(Data2)));
-            s.DoAt(MovementPathFOVsPointer, () => MovementPathFOVs = s.SerializeObjectArrayUntil<MovementPathFOVs>(MovementPathFOVs, x => x.PathFOVs[0].FOVs[0].PathOffset == -2, name: nameof(MovementPathFOVs)));
+            s.DoAt(MovementPathFOVsPointer, () => MovementPathFOVs = s.SerializeObjectArrayUntil<MovementPathFOVs>(MovementPathFOVs, x => x.PathFOVs[0].FOVs[0].MovementPathPosition == -2, name: nameof(MovementPathFOVs)));
         }
 
         // TODO: Name and move to separate files

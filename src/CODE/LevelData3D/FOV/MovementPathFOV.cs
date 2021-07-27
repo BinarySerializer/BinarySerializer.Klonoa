@@ -6,7 +6,7 @@
 
         public override void SerializeImpl(SerializerObject s)
         {
-            FOVs = s.SerializeObjectArrayUntil<FOV>(FOVs, x => x.PathOffset == -1 || x.PathOffset == -2, name: nameof(FOVs));
+            FOVs = s.SerializeObjectArrayUntil<FOV>(FOVs, x => x.MovementPathPosition == -1 || x.MovementPathPosition == -2, name: nameof(FOVs));
         }
     }
 }
