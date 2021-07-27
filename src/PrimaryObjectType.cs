@@ -7,6 +7,8 @@
         
         Enemy_2D = 1,
 
+        Collectible_2D = 4,
+
         Modifier_3D_40 = 40,
         Modifier_3D_41 = 41,
     }

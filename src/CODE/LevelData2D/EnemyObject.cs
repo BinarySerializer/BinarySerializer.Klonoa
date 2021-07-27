@@ -6,7 +6,7 @@
         public int Int_00 { get; set; } // Game only initialized the object if some value is within 0x19 of this - perhaps how far along the path the object is? The path can be -1 though...
         public int Int_04 { get; set; } // Usually -1 when enemy comes from background/foreground
 
-        public short PrimaryType => 1;
+        public PrimaryObjectType PrimaryType => PrimaryObjectType.Enemy_2D;
         public short SecondaryType { get; set; }
         public ushort Ushort_0A { get; set; }
         public KlonoaInt20 XPos { get; set; }

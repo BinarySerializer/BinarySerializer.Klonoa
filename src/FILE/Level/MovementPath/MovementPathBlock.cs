@@ -2,7 +2,9 @@
 {
     public class MovementPathBlock : BinarySerializable
     {
-        public ObjRotation Rotation { get; set; }
+        public FixedPointInt16 DirectionX { get; set; }
+        public FixedPointInt16 DirectionY { get; set; }
+        public FixedPointInt16 DirectionZ { get; set; }
         public short Short_06 { get; set; }
         public FixedPointInt32 XPos { get; set; }
         public FixedPointInt32 YPos { get; set; }
@@ -15,7 +17,9 @@
 
         public override void SerializeImpl(SerializerObject s)
         {
-            Rotation = s.SerializeObject<ObjRotation>(Rotation, name: nameof(Rotation));
+            DirectionX = s.SerializeObject<FixedPointInt16>(DirectionX, x => x.Pre_PointPosition = 0x0C, name: nameof(DirectionX));
+            DirectionY = s.SerializeObject<FixedPointInt16>(DirectionY, x => x.Pre_PointPosition = 0x0C, name: nameof(DirectionY));
+            DirectionZ = s.SerializeObject<FixedPointInt16>(DirectionZ, x => x.Pre_PointPosition = 0x0C, name: nameof(DirectionZ));
             Short_06 = s.Serialize<short>(Short_06, name: nameof(Short_06));
             XPos = s.SerializeObject<FixedPointInt32>(XPos, x => x.Pre_PointPosition = 0x0C, name: nameof(XPos));
             YPos = s.SerializeObject<FixedPointInt32>(YPos, x => x.Pre_PointPosition = 0x0C, name: nameof(YPos));
