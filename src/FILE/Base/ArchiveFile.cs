@@ -136,7 +136,7 @@ namespace BinarySerializer.KlonoaDTP
 
                         Pre_OnPreSerialize?.Invoke(x);
                     }, name: nameof(FileData));
-                });
+                }, allowLocalPointers: true);
 
                 s.Align();
 

@@ -87,13 +87,15 @@ namespace BinarySerializer.KlonoaDTP
             [0x80073930] = FileType.FixedSprites,
             [0x800737F4] = FileType.Archive_SpritePack,
             
+            // World map
+            [0x8003B254] = FileType.Archive_WorldMap,
+
             // Levels
             [0x8001845C] = FileType.Archive_LevelPack,
             
             // Unknown
             [0x800264d8] = FileType.Archive_Unk0,
             [0x80122B08] = FileType.Archive_Unk4,
-            [0x8003B254] = FileType.Archive_Unk5,
 
             // Code
             [0x8007825C] = FileType.Code,
@@ -122,13 +124,15 @@ namespace BinarySerializer.KlonoaDTP
             FixedSprites, // Fixed sprite descriptors
             Archive_SpritePack, // Sprites
             
+            // World map
+            Archive_WorldMap, // World map graphics
+
             // Level
             Archive_LevelPack, // Level data
-            
+
             // Unknown
             Archive_Unk0,
             Archive_Unk4,
-            Archive_Unk5,
             
             // Code
             Code, // Compiled code

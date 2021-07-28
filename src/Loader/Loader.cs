@@ -132,6 +132,11 @@ namespace BinarySerializer.KlonoaDTP
         public OA05_File OA05 { get; set; }
 
         /// <summary>
+        /// The world map
+        /// </summary>
+        public WorldMap_ArchiveFile WorldMap { get; set; }
+
+        /// <summary>
         /// The level pack
         /// </summary>
         public LevelPack_ArchiveFile LevelPack { get; set; }
@@ -259,6 +264,16 @@ namespace BinarySerializer.KlonoaDTP
                         SpriteFrames[j] = ((LevelSpritePack_ArchiveFile)binFile).Sprites[j];
                     break;
 
+                // Copy to VRAM and save for later
+                case IDXLoadCommand.FileType.Archive_WorldMap:
+                    WorldMap = (WorldMap_ArchiveFile)binFile;
+                    
+                    foreach (var tim in WorldMap.SpriteSheets.Files)
+                        AddToVRAM(tim);
+                    
+                    AddToVRAM(WorldMap.Palette1);
+                    break;
+
                 // Save for later
                 case IDXLoadCommand.FileType.Archive_LevelPack:
                     LevelPack = (LevelPack_ArchiveFile)binFile;
@@ -274,7 +289,6 @@ namespace BinarySerializer.KlonoaDTP
 
                 case IDXLoadCommand.FileType.Archive_Unk0:
                 case IDXLoadCommand.FileType.Archive_Unk4:
-                case IDXLoadCommand.FileType.Archive_Unk5:
                     // TODO: Save once parsed
                     break;
 
@@ -325,8 +339,10 @@ namespace BinarySerializer.KlonoaDTP
                     return LoadBINFile<Unk0_ArchiveFile>(fileIndex);
 
                 case IDXLoadCommand.FileType.Archive_Unk4:
-                case IDXLoadCommand.FileType.Archive_Unk5:
                     return LoadBINFile<RawData_ArchiveFile>(fileIndex);
+
+                case IDXLoadCommand.FileType.Archive_WorldMap:
+                    return LoadBINFile<WorldMap_ArchiveFile>(fileIndex);
 
                 case IDXLoadCommand.FileType.Code:
                     return LoadBINFile<RawData_File>(fileIndex);
