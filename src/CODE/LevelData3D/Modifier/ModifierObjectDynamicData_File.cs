@@ -186,6 +186,7 @@ namespace BinarySerializer.KlonoaDTP
             new FileType[] { FileType.UnknownArchive },
             new FileType[] { FileType.TMD },
             new FileType[] { FileType.TMD, FileType.Transform },
+            new FileType[] { FileType.TMD, FileType.MultiTransform },
             new FileType[] { FileType.TMD, FileType.Position },
             new FileType[] { FileType.TMD, FileType.Unknown }, // TODO: The unknown here is same as File_5 in sector archive
             new FileType[] { FileType.TMD, FileType.Transform, FileType.TIM },
@@ -270,7 +271,7 @@ namespace BinarySerializer.KlonoaDTP
                 // UVScrollAnimation
                 if (int_last == -1)
                 {
-                    var ints = s.DoAt(s.CurrentPointer, () => s.SerializeArray<int>(default, fileSize / 4, "Check"));
+                    var ints = s.DoAt(s.CurrentPointer, () => s.SerializeArray<int>(default, fileSize / 4, name: "Check"));
 
                     var isValid = ints.Select((x, i) => new { x, i }).Take(ints.Length - 1).Skip(1).All(x => x.x > ints[x.i - 1]);
 
@@ -279,6 +280,28 @@ namespace BinarySerializer.KlonoaDTP
                 }
 
                 return false;
+            }),
+            new KeyValuePair<FileType, FileTypeMatchCheck>(FileType.MultiTransform, (s, int_00, int_04, fileSize) =>
+            {
+                if (int_00 != 3)
+                    return false;
+
+                if (int_04 != 16)
+                    return false;
+
+                var offsets = s.DoAt(s.CurrentPointer + 4, () => s.SerializeArray<int>(default, 3, name: "Check"));
+
+                var file1Length = offsets[2] - offsets[1];
+                var file1_ushort_02 = s.DoAt(s.CurrentPointer + offsets[1] + 2, () => s.Serialize<ushort>(default, name: "Check"));
+
+                var size = file1_ushort_02 * 6 + 4;
+
+                if ((size % 4) != 0)
+                    size += 4 - (size % 4);
+
+                // MultiTransform
+                return size == file1Length;
+
             }),
             new KeyValuePair<FileType, FileTypeMatchCheck>(FileType.UnknownArchive, (s, int_00, int_04, fileSize) =>
             {
