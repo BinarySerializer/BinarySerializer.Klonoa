@@ -20,14 +20,15 @@ namespace BinarySerializer.KlonoaDTP
 
             s.DoAt(DataPointers[0], () => EnemyObjectIndexTables = s.SerializeObject<EnemyObjectIndexTables>(EnemyObjectIndexTables, name: nameof(EnemyObjectIndexTables)));
 
-            var enemyObjsCount = EnemyObjectIndexTables.IndexTables.SelectMany(x => x).Max() + 1;
+            var enemyIndices = EnemyObjectIndexTables.IndexTables.SelectMany(x => x).ToArray();
+            var enemyObjsCount = enemyIndices.Any() ? enemyIndices.Max() + 1 : 0;
             s.DoAt(DataPointers[40], () => EnemyObjects = s.SerializeObjectArray<EnemyObject>(EnemyObjects, enemyObjsCount, name: nameof(EnemyObjects)));
 
-            s.DoAt(DataPointers[43], () => CollectibleSectorIndices = s.SerializeArray<ushort>(CollectibleSectorIndices, 10, name: nameof(CollectibleSectorIndices)));
+            s.DoAt(DataPointers[43], () => CollectibleSectorIndices = s.SerializeArray<ushort>(CollectibleSectorIndices, 11, name: nameof(CollectibleSectorIndices)));
 
             s.DoAt(DataPointers[44], () => DreamStonesCollectibleInfos = s.SerializeObjectArray<DreamStonesCollectiblesInfo>(DreamStonesCollectibleInfos, 10, name: nameof(DreamStonesCollectibleInfos)));
 
-            var collectibleObjsCount = DreamStonesCollectibleInfos.Max(x => x.Index + x.DreamStonesCount);
+            var collectibleObjsCount = CollectibleSectorIndices[10];
 
             s.DoAt(DataPointers[42], () => CollectibleObjects = s.SerializeObjectArray<CollectibleObject>(CollectibleObjects, collectibleObjsCount, name: nameof(CollectibleObjects)));
         }
