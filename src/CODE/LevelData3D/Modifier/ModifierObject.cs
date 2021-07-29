@@ -67,17 +67,14 @@ namespace BinarySerializer.KlonoaDTP
                     s.LogWarning($"A data reference got skipped!");
 
                 DataFiles ??= new ModifierObjectDynamicData_File[count];
-                var files = new ModifierObjectDynamicData_File.FileType[count];
 
                 for (int i = 0; i < count; i++)
                 {
                     DataFiles[i] = filePack.SerializeFile(s, DataFiles[i], DataFileIndices[i], onPreSerialize: x =>
                     {
                         x.Pre_FileIndex = i;
-                        x.Pre_Files = files;
+                        x.Pre_Files = DataFiles;
                     }, name: $"{nameof(DataFiles)}[{i}]");
-
-                    files[i] = DataFiles[i].DeterminedType;
                 }
             }
             else

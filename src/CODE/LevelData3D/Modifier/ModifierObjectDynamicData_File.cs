@@ -16,7 +16,7 @@ namespace BinarySerializer.KlonoaDTP
     public class ModifierObjectDynamicData_File : BaseFile
     {
         public int Pre_FileIndex { get; set; }
-        public FileType[] Pre_Files { get; set; }
+        public ModifierObjectDynamicData_File[] Pre_Files { get; set; }
 
         public FileType DeterminedType { get; set; }
 
@@ -29,6 +29,7 @@ namespace BinarySerializer.KlonoaDTP
         public TIM_ArchiveFile TextureAnimation { get; set; }
         public ScenerySprites_File ScenerySprites { get; set; }
         public UVScrollAnimation_File UVScrollAnimation { get; set; }
+        public UnknownModelObjectsData_File UnknownModelObjectsData { get; set; }
         public byte[] Raw { get; set; }
 
         public override void SerializeImpl(SerializerObject s)
@@ -82,6 +83,14 @@ namespace BinarySerializer.KlonoaDTP
                     UVScrollAnimation = s.SerializeObject<UVScrollAnimation_File>(UVScrollAnimation, onPreSerialize: onPreSerialize, name: nameof(UVScrollAnimation));
                     break;
 
+                case FileType.UnknownModelObjectsData:
+                    UnknownModelObjectsData = s.SerializeObject<UnknownModelObjectsData_File>(UnknownModelObjectsData, onPreSerialize: x =>
+                    {
+                        onPreSerialize(x);
+                        x.Pre_ObjsCount = Pre_Files[0].TMD.ObjectsCount;
+                    }, name: nameof(UnknownModelObjectsData));
+                    break;
+
                 case FileType.UnknownArchive:
                     s.SerializeObject<RawData_ArchiveFile>(default, onPreSerialize: onPreSerialize);
                     break;
@@ -119,7 +128,7 @@ namespace BinarySerializer.KlonoaDTP
                     if (!matches)
                         break;
 
-                    if (Pre_Files[i] != structure[i])
+                    if (Pre_Files[i].DeterminedType != structure[i])
                         matches = false;
                 }
 
@@ -132,19 +141,20 @@ namespace BinarySerializer.KlonoaDTP
 
             var type = FileType.Unknown;
 
-            if (possibleTypes.Count == 1)
-            {
-                type = possibleTypes.First();
+            //if (possibleTypes.Count == 1)
+            //{
+            //    type = possibleTypes.First();
 
-                if (type == FileType.Unknown || type == FileType.UnknownArchive || type == FileType.UnknownArchiveArchive)
-                    s.LogWarning($"Could not determine modifier file data at {Offset}");
-            }
-            else if (possibleTypes.Count != 0)
+            //    if (type == FileType.Unknown || type == FileType.UnknownArchive || type == FileType.UnknownArchiveArchive)
+            //        s.LogWarning($"Could not determine modifier file data at {Offset}");
+            //}
+            //else if (possibleTypes.Count != 0)
+            if (possibleTypes.Count != 0)
             {
                 // Check each possible type
                 foreach (var fileTypeMatchFunc in FileTypeMatchFuncs.Where(x => possibleTypes.Contains(x.Key)))
                 {
-                    if (fileTypeMatchFunc.Value(s, int_00, int_04, Pre_FileSize))
+                    if (fileTypeMatchFunc.Value(s, int_00, int_04, Pre_FileSize, Pre_Files))
                     {
                         type = fileTypeMatchFunc.Key;
                         break;
@@ -176,6 +186,7 @@ namespace BinarySerializer.KlonoaDTP
             TextureAnimation,
             ScenerySprites,
             UVScrollAnimation,
+            UnknownModelObjectsData,
         }
 
         private static FileType[][] FileTypeStructures { get; } = new FileType[][]
@@ -188,27 +199,35 @@ namespace BinarySerializer.KlonoaDTP
             new FileType[] { FileType.TMD, FileType.Transform },
             new FileType[] { FileType.TMD, FileType.MultiTransform },
             new FileType[] { FileType.TMD, FileType.Position },
-            new FileType[] { FileType.TMD, FileType.Unknown }, // TODO: The unknown here is same as File_5 in sector archive
+            new FileType[] { FileType.TMD, FileType.UnknownModelObjectsData },
             new FileType[] { FileType.TMD, FileType.Transform, FileType.TIM },
             new FileType[] { FileType.TMD, FileType.TMD, FileType.Position },
+
+            // TODO: Unknown has 56 unknown bytes (28 + 28). Appears in level 3-2.
             new FileType[] { FileType.TMD, FileType.Collision, FileType.Unknown, FileType.MultiTransform },
-            new FileType[] { FileType.TMD, FileType.UnknownArchiveArchive, FileType.Unknown, FileType.Unknown, FileType.Unknown, FileType.UnknownArchive, FileType.UnknownArchive, },
+
+            // TODO: First unknown has 84 unknown bytes (28 + 28 + 28). Appears in level 4-2.
+            // TODO: Second unknown has 564 bytes
+            new FileType[] { FileType.TMD, FileType.Collision, FileType.Unknown, FileType.MultiTransform, FileType.Unknown },
+            
+            new FileType[] { FileType.TMD, FileType.Unknown, FileType.Unknown, FileType.UnknownArchiveArchive, FileType.Unknown, FileType.UnknownArchive },
+            //new FileType[] { FileType.TMD, FileType.UnknownArchiveArchive, FileType.Unknown, FileType.Unknown, FileType.Unknown, FileType.UnknownArchive, FileType.UnknownArchive, },
         };
 
         [SuppressMessage("ReSharper", "ConvertToLambdaExpression")]
         private static KeyValuePair<FileType, FileTypeMatchCheck>[] FileTypeMatchFuncs { get; } = new KeyValuePair<FileType, FileTypeMatchCheck>[]
         {
-            new KeyValuePair<FileType, FileTypeMatchCheck>(FileType.TMD, (s, int_00, int_04, fileSize) =>
+            new KeyValuePair<FileType, FileTypeMatchCheck>(FileType.TMD, (s, int_00, int_04, fileSize, files) =>
             {
                 // TMD (ID is 0x41, flags are always 0 in the file data)
                 return int_00 == 0x41 && int_04 == 0x00;
             }),
-            new KeyValuePair<FileType, FileTypeMatchCheck>(FileType.Transform, (s, int_00, int_04, fileSize) =>
+            new KeyValuePair<FileType, FileTypeMatchCheck>(FileType.Transform, (s, int_00, int_04, fileSize, files) =>
             {
                 // Transform (an archive with 3 files, first file is always at 0x10 and the file size is always 0x28)
                 return int_00 == 0x03 && int_04 == 0x10 && fileSize == 0x28;
             }),
-            new KeyValuePair<FileType, FileTypeMatchCheck>(FileType.TIM, (s, int_00, int_04, fileSize) =>
+            new KeyValuePair<FileType, FileTypeMatchCheck>(FileType.TIM, (s, int_00, int_04, fileSize, files) =>
             {
                 // TIM (ID is 0x10)
                 if (int_00 == 0x10)
@@ -224,7 +243,7 @@ namespace BinarySerializer.KlonoaDTP
 
                 return false;
             }),
-            new KeyValuePair<FileType, FileTypeMatchCheck>(FileType.TextureAnimation, (s, int_00, int_04, fileSize) =>
+            new KeyValuePair<FileType, FileTypeMatchCheck>(FileType.TextureAnimation, (s, int_00, int_04, fileSize, files) =>
             {
                 // TextureAnimation (archive with compressed TIM files)
                 if (int_00 * 4 + 4 == int_04)
@@ -245,7 +264,7 @@ namespace BinarySerializer.KlonoaDTP
 
                 return false;
             }),
-            new KeyValuePair<FileType, FileTypeMatchCheck>(FileType.ScenerySprites, (s, int_00, int_04, fileSize) =>
+            new KeyValuePair<FileType, FileTypeMatchCheck>(FileType.ScenerySprites, (s, int_00, int_04, fileSize, files) =>
             {
                 var size = (int_00 & 0xFFFF) * 6 + 4;
 
@@ -255,16 +274,16 @@ namespace BinarySerializer.KlonoaDTP
                 // ScenerySprites
                 return size == fileSize;
             }),
-            new KeyValuePair<FileType, FileTypeMatchCheck>(FileType.Position, (s, int_00, int_04, fileSize) =>
+            new KeyValuePair<FileType, FileTypeMatchCheck>(FileType.Position, (s, int_00, int_04, fileSize, files) =>
             {
                 // Position
                 return fileSize == 0x08;
             }),
-            new KeyValuePair<FileType, FileTypeMatchCheck>(FileType.Collision, (s, int_00, int_04, fileSize) =>
+            new KeyValuePair<FileType, FileTypeMatchCheck>(FileType.Collision, (s, int_00, int_04, fileSize, files) =>
             {
                 return int_00 * 28 + 4 == fileSize;
             }),
-            new KeyValuePair<FileType, FileTypeMatchCheck>(FileType.UVScrollAnimation, (s, int_00, int_04, fileSize) =>
+            new KeyValuePair<FileType, FileTypeMatchCheck>(FileType.UVScrollAnimation, (s, int_00, int_04, fileSize, files) =>
             {
                 var int_last = s.DoAt(s.CurrentPointer + fileSize - 4, () => s.Serialize<int>(default, name: "Check"));
 
@@ -281,7 +300,7 @@ namespace BinarySerializer.KlonoaDTP
 
                 return false;
             }),
-            new KeyValuePair<FileType, FileTypeMatchCheck>(FileType.MultiTransform, (s, int_00, int_04, fileSize) =>
+            new KeyValuePair<FileType, FileTypeMatchCheck>(FileType.MultiTransform, (s, int_00, int_04, fileSize, files) =>
             {
                 if (int_00 != 3)
                     return false;
@@ -303,13 +322,18 @@ namespace BinarySerializer.KlonoaDTP
                 return size == file1Length;
 
             }),
-            new KeyValuePair<FileType, FileTypeMatchCheck>(FileType.UnknownArchive, (s, int_00, int_04, fileSize) =>
+            new KeyValuePair<FileType, FileTypeMatchCheck>(FileType.UnknownArchive, (s, int_00, int_04, fileSize, files) =>
             {
                 // UnknownArchive
                 return int_00 * 4 + 4 == int_04;
             }),
+            new KeyValuePair<FileType, FileTypeMatchCheck>(FileType.UnknownModelObjectsData, (s, int_00, int_04, fileSize, files) =>
+            {
+                // UnknownModelObjectsData
+                return files[0].TMD != null && fileSize == files[0].TMD.ObjectsCount * 8 * 4;
+            }),
         };
 
-        private delegate bool FileTypeMatchCheck(SerializerObject s, int int_00, int int_04, long fileSize);
+        private delegate bool FileTypeMatchCheck(SerializerObject s, int int_00, int int_04, long fileSize, ModifierObjectDynamicData_File[] files);
     }
 }
