@@ -2,20 +2,32 @@
 {
     public class ObjRotations_File : BaseFile
     {
+        public uint? Pre_OverrideCount { get; set; }
+
         public ushort Ushort_00 { get; set; } // Objects count?
         public ushort RotationsCount { get; set; }
         public ObjRotation[] Rotations { get; set; }
 
         public override void SerializeImpl(SerializerObject s)
         {
-            Ushort_00 = s.Serialize<ushort>(Ushort_00, name: nameof(Ushort_00));
+            uint count;
 
-            if (Ushort_00 != 1)
-                s.LogWarning($"Unknown value for {nameof(Ushort_00)} in {nameof(ObjPositions_File)}");
+            if (Pre_OverrideCount == null)
+            {
+                Ushort_00 = s.Serialize<ushort>(Ushort_00, name: nameof(Ushort_00));
 
-            RotationsCount = s.Serialize<ushort>(RotationsCount, name: nameof(RotationsCount));
+                if (Ushort_00 != 1)
+                    s.LogWarning($"Unknown value for {nameof(Ushort_00)} in {nameof(ObjPositions_File)}");
 
-            Rotations = s.SerializeObjectArray<ObjRotation>(Rotations, RotationsCount, name: nameof(Rotations));
+                RotationsCount = s.Serialize<ushort>(RotationsCount, name: nameof(RotationsCount));
+                count = RotationsCount;
+            }
+            else
+            {
+                count = Pre_OverrideCount.Value;
+            }
+
+            Rotations = s.SerializeObjectArray<ObjRotation>(Rotations, count, name: nameof(Rotations));
         }
     }
 }

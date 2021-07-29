@@ -44,15 +44,15 @@ namespace BinarySerializer.KlonoaDTP
             {
                 case FileType.TMD:
                     TMD = s.SerializeObject<PS1_TMD>(TMD, name: nameof(TMD));
-
-                    if (TMD.ObjectsCount > 1)
-                        s.LogWarning($"TMD in modifier data has multiple objects. Multiple positions needs to be parsed!");
-
                     s.Goto(Offset + Pre_FileSize);
                     break;
 
                 case FileType.Transform:
-                    Transform = s.SerializeObject<ObjTransform_ArchiveFile>(Transform, onPreSerialize: onPreSerialize, name: nameof(Transform));
+                    Transform = s.SerializeObject<ObjTransform_ArchiveFile>(Transform, onPreSerialize: x =>
+                    {
+                        onPreSerialize(x);
+                        x.Pre_ObjsCount = Pre_Files[0].TMD.ObjectsCount;
+                    }, name: nameof(Transform));
                     break;
 
                 case FileType.MultiTransform:
@@ -210,7 +210,12 @@ namespace BinarySerializer.KlonoaDTP
             // TODO: Second unknown has 564 bytes
             new FileType[] { FileType.TMD, FileType.Collision, FileType.Unknown, FileType.MultiTransform, FileType.Unknown },
             
-            new FileType[] { FileType.TMD, FileType.Unknown, FileType.Unknown, FileType.UnknownArchiveArchive, FileType.Unknown, FileType.UnknownArchive },
+            // Mine-cart (4-4)
+            // TODO: First unknown has 56 unknown bytes (28 + 28)
+            // TODO: Second unknown is same structure as second in previous
+            // TODO: Third unknown is some form of multi transform
+            new FileType[] { FileType.TMD, FileType.Collision, FileType.Unknown, FileType.UnknownArchiveArchive, FileType.Unknown, FileType.Transform },
+
             //new FileType[] { FileType.TMD, FileType.UnknownArchiveArchive, FileType.Unknown, FileType.Unknown, FileType.Unknown, FileType.UnknownArchive, FileType.UnknownArchive, },
         };
 
@@ -224,8 +229,16 @@ namespace BinarySerializer.KlonoaDTP
             }),
             new KeyValuePair<FileType, FileTypeMatchCheck>(FileType.Transform, (s, int_00, int_04, fileSize, files) =>
             {
-                // Transform (an archive with 3 files, first file is always at 0x10 and the file size is always 0x28)
-                return int_00 == 0x03 && int_04 == 0x10 && fileSize == 0x28;
+                // Transform (an archive with 3 files, first file is always at 0x10)
+                if (int_00 == 0x03 && int_04 == 0x10)
+                {
+                    if (files[0].TMD.ObjectsCount == 1)
+                        return fileSize == 0x28;
+                    else
+                        return true;
+                }
+
+                return false; 
             }),
             new KeyValuePair<FileType, FileTypeMatchCheck>(FileType.TIM, (s, int_00, int_04, fileSize, files) =>
             {
@@ -326,6 +339,22 @@ namespace BinarySerializer.KlonoaDTP
             {
                 // UnknownArchive
                 return int_00 * 4 + 4 == int_04;
+            }),
+            new KeyValuePair<FileType, FileTypeMatchCheck>(FileType.UnknownArchiveArchive, (s, int_00, int_04, fileSize, files) =>
+            {
+                var isArchive = int_00 * 4 + 4 == int_04;
+
+                if (!isArchive)
+                    return false;
+
+                // UnknownArchiveArchive
+                return s.DoAt(s.CurrentPointer + int_04, () =>
+                {
+                    var count = s.Serialize<int>(default, "Check");
+                    var offset0 = s.Serialize<int>(default, "Check");
+
+                    return count * 4 + 4 == offset0;
+                });
             }),
             new KeyValuePair<FileType, FileTypeMatchCheck>(FileType.UnknownModelObjectsData, (s, int_00, int_04, fileSize, files) =>
             {
