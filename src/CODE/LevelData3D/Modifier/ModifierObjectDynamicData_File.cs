@@ -22,7 +22,7 @@ namespace BinarySerializer.KlonoaDTP
 
         public PS1_TMD TMD { get; set; }
         public ObjTransform_ArchiveFile Transform { get; set; }
-        public ObjMultiTransform_ArchiveFile MultiTransform { get; set; }
+        public ArchiveFile<ObjTransform_ArchiveFile> Transforms { get; set; }
         public ObjPosition Position { get; set; }
         public ObjCollisionItems_File Collision { get; set; }
         public PS1_TIM TIM { get; set; }
@@ -47,16 +47,28 @@ namespace BinarySerializer.KlonoaDTP
                     s.Goto(Offset + Pre_FileSize);
                     break;
 
-                case FileType.Transform:
+                case FileType.Transform_WithInfo:
                     Transform = s.SerializeObject<ObjTransform_ArchiveFile>(Transform, onPreSerialize: x =>
                     {
                         onPreSerialize(x);
-                        x.Pre_ObjsCount = Pre_Files[0].TMD.ObjectsCount;
+                        x.Pre_UsesTransformInfo = true;
                     }, name: nameof(Transform));
                     break;
 
-                case FileType.MultiTransform:
-                    MultiTransform = s.SerializeObject<ObjMultiTransform_ArchiveFile>(MultiTransform, onPreSerialize: onPreSerialize, name: nameof(MultiTransform));
+                case FileType.Transform_WithoutInfo:
+                    Transform = s.SerializeObject<ObjTransform_ArchiveFile>(Transform, onPreSerialize: x =>
+                    {
+                        onPreSerialize(x);
+                        x.Pre_UsesTransformInfo = false;
+                    }, name: nameof(Transform));
+                    break;
+
+                case FileType.Transforms_WithInfo:
+                    Transforms = s.SerializeObject<ArchiveFile<ObjTransform_ArchiveFile>>(Transforms, onPreSerialize: x =>
+                    {
+                        onPreSerialize(x);
+                        x.Pre_OnPreSerializeAction = obj => obj.Pre_UsesTransformInfo = true;
+                    }, name: nameof(Transforms));
                     break;
 
                 case FileType.Position:
@@ -178,8 +190,9 @@ namespace BinarySerializer.KlonoaDTP
             UnknownArchive,
             UnknownArchiveArchive,
             TMD,
-            Transform,
-            MultiTransform,
+            Transform_WithInfo,
+            Transform_WithoutInfo,
+            Transforms_WithInfo,
             Position,
             Collision,
             TIM,
@@ -196,25 +209,24 @@ namespace BinarySerializer.KlonoaDTP
             new FileType[] { FileType.ScenerySprites },
             new FileType[] { FileType.UnknownArchive },
             new FileType[] { FileType.TMD },
-            new FileType[] { FileType.TMD, FileType.Transform },
-            new FileType[] { FileType.TMD, FileType.MultiTransform },
+            new FileType[] { FileType.TMD, FileType.Transform_WithInfo },
+            new FileType[] { FileType.TMD, FileType.Transform_WithoutInfo },
             new FileType[] { FileType.TMD, FileType.Position },
             new FileType[] { FileType.TMD, FileType.UnknownModelObjectsData },
-            new FileType[] { FileType.TMD, FileType.Transform, FileType.TIM },
+            new FileType[] { FileType.TMD, FileType.Transform_WithInfo, FileType.TIM },
             new FileType[] { FileType.TMD, FileType.TMD, FileType.Position },
 
             // TODO: Unknown has 56 unknown bytes (28 + 28). Appears in level 3-2.
-            new FileType[] { FileType.TMD, FileType.Collision, FileType.Unknown, FileType.MultiTransform },
+            new FileType[] { FileType.TMD, FileType.Collision, FileType.Unknown, FileType.Transform_WithoutInfo },
 
             // TODO: First unknown has 84 unknown bytes (28 + 28 + 28). Appears in level 4-2.
             // TODO: Second unknown has 564 bytes
-            new FileType[] { FileType.TMD, FileType.Collision, FileType.Unknown, FileType.MultiTransform, FileType.Unknown },
+            new FileType[] { FileType.TMD, FileType.Collision, FileType.Unknown, FileType.Transform_WithoutInfo, FileType.Unknown },
             
             // Mine-cart (4-4)
             // TODO: First unknown has 56 unknown bytes (28 + 28)
             // TODO: Second unknown is same structure as second in previous
-            // TODO: Third unknown is some form of multi transform
-            new FileType[] { FileType.TMD, FileType.Collision, FileType.Unknown, FileType.UnknownArchiveArchive, FileType.Unknown, FileType.Transform },
+            new FileType[] { FileType.TMD, FileType.Collision, FileType.Unknown, FileType.Transforms_WithInfo, FileType.Unknown, FileType.Transform_WithInfo },
 
             //new FileType[] { FileType.TMD, FileType.UnknownArchiveArchive, FileType.Unknown, FileType.Unknown, FileType.Unknown, FileType.UnknownArchive, FileType.UnknownArchive, },
         };
@@ -227,9 +239,9 @@ namespace BinarySerializer.KlonoaDTP
                 // TMD (ID is 0x41, flags are always 0 in the file data)
                 return int_00 == 0x41 && int_04 == 0x00;
             }),
-            new KeyValuePair<FileType, FileTypeMatchCheck>(FileType.Transform, (s, int_00, int_04, fileSize, files) =>
+            new KeyValuePair<FileType, FileTypeMatchCheck>(FileType.Transform_WithInfo, (s, int_00, int_04, fileSize, files) =>
             {
-                // Transform (an archive with 3 files, first file is always at 0x10)
+                // Transform_WithInfo (an archive with 3 files, first file is always at 0x10)
                 if (int_00 == 0x03 && int_04 == 0x10)
                 {
                     if (files[0].TMD.ObjectsCount == 1)
@@ -313,7 +325,7 @@ namespace BinarySerializer.KlonoaDTP
 
                 return false;
             }),
-            new KeyValuePair<FileType, FileTypeMatchCheck>(FileType.MultiTransform, (s, int_00, int_04, fileSize, files) =>
+            new KeyValuePair<FileType, FileTypeMatchCheck>(FileType.Transform_WithoutInfo, (s, int_00, int_04, fileSize, files) =>
             {
                 if (int_00 != 3)
                     return false;
@@ -331,7 +343,7 @@ namespace BinarySerializer.KlonoaDTP
                 if ((size % 4) != 0)
                     size += 4 - (size % 4);
 
-                // MultiTransform
+                // Transform_WithoutInfo
                 return size == file1Length;
 
             }),
@@ -360,6 +372,11 @@ namespace BinarySerializer.KlonoaDTP
             {
                 // UnknownModelObjectsData
                 return files[0].TMD != null && fileSize == files[0].TMD.ObjectsCount * 8 * 4;
+            }),
+            new KeyValuePair<FileType, FileTypeMatchCheck>(FileType.Transforms_WithInfo, (s, int_00, int_04, fileSize, files) =>
+            {
+                // Transforms_WithInfo
+                return int_00 * 4 + 4 == int_04;
             }),
         };
 

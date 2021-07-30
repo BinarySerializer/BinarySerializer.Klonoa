@@ -153,19 +153,24 @@ namespace BinarySerializer.KlonoaDTP
     public class ArchiveFile<T> : ArchiveFile
         where T : BinarySerializable, new()
     {
+        public Action<T> Pre_OnPreSerializeAction { get; set; }
+
         /// <summary>
         /// The files
         /// </summary>
         public T[] Files { get; set; }
 
-        protected virtual void OnPreSerialize(T obj, long fileSize) { }
+        protected virtual void OnPreSerialize(T obj)
+        {
+            Pre_OnPreSerializeAction?.Invoke(obj);
+        }
 
         protected override void SerializeFiles(SerializerObject s)
         {
             Files ??= new T[OffsetTable.FilesCount];
 
             for (int i = 0; i < Files.Length; i++)
-                Files[i] = SerializeFile<T>(s, Files[i], i, name: $"{nameof(Files)}[{i}]");
+                Files[i] = SerializeFile<T>(s, Files[i], i, onPreSerialize: OnPreSerialize, name: $"{nameof(Files)}[{i}]");
         }
     }
 }

@@ -2,32 +2,29 @@
 {
     public class ObjPositions_File : BaseFile
     {
-        public uint? Pre_OverrideCount { get; set; }
+        public ObjTransformInfo_File Pre_Info { get; set; }
 
-        public ushort Ushort_00 { get; set; } // Objects count?
-        public ushort PositionsCount { get; set; }
-        public ObjPosition[] Positions { get; set; }
+        public ushort ObjectsCount { get; set; }
+        public ushort FramesCount { get; set; }
+        public ObjPosition[][] Positions { get; set; }
 
         public override void SerializeImpl(SerializerObject s)
         {
-            uint count;
-
-            if (Pre_OverrideCount == null)
+            if (Pre_Info == null)
             {
-                Ushort_00 = s.Serialize<ushort>(Ushort_00, name: nameof(Ushort_00));
-
-                if (Ushort_00 != 1)
-                    s.LogWarning($"Unknown value for {nameof(Ushort_00)} in {nameof(ObjPositions_File)}");
-
-                PositionsCount = s.Serialize<ushort>(PositionsCount, name: nameof(PositionsCount));
-                count = PositionsCount;
+                ObjectsCount = s.Serialize<ushort>(ObjectsCount, name: nameof(ObjectsCount));
+                FramesCount = s.Serialize<ushort>(FramesCount, name: nameof(FramesCount));
             }
             else
             {
-                count = Pre_OverrideCount.Value;
+                ObjectsCount = Pre_Info.ObjectsCount;
+                FramesCount = Pre_Info.FramesCount;
             }
 
-            Positions = s.SerializeObjectArray<ObjPosition>(Positions, count, name: nameof(Positions));
+            Positions ??= new ObjPosition[FramesCount][];
+
+            for (int i = 0; i < Positions.Length; i++)
+                Positions[i] = s.SerializeObjectArray<ObjPosition>(Positions[i], ObjectsCount, name: $"{nameof(Positions)}[{i}]");
         }
     }
 }
