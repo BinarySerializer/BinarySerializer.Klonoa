@@ -2,12 +2,14 @@
 {
     public class EnemyObject : BinarySerializable
     {
+        public Pointer[] Pre_DataPointers { get; set; }
+
         public int MovementPathSpawnPosition { get; set; } // The position on the movement path which spawns the object. This is relative to the movement path the object is read from rather than the path it's set to using the MovementPath property.
         public int MovementPathPosition { get; set; } // Only set if MovementPath is not -1. This gets the same position as the position values.
 
         public PrimaryObjectType PrimaryType => PrimaryObjectType.Enemy_2D;
         public short SecondaryType { get; set; }
-        public ushort Ushort_0A { get; set; }
+        public ushort DataIndex { get; set; }
 
         public KlonoaInt20 XPos { get; set; }
         public KlonoaInt20 YPos { get; set; }
@@ -21,12 +23,15 @@
         public ushort Flags { get; set; } // Has flip flags?
         public short Short_24 { get; set; } // Usually -1
 
+        // Additional data
+        public BaseEnemyData Data { get; set; }
+
         public override void SerializeImpl(SerializerObject s)
         {
             MovementPathSpawnPosition = s.Serialize<int>(MovementPathSpawnPosition, name: nameof(MovementPathSpawnPosition));
             MovementPathPosition = s.Serialize<int>(MovementPathPosition, name: nameof(MovementPathPosition));
             SecondaryType = s.Serialize<short>(SecondaryType, name: nameof(SecondaryType));
-            Ushort_0A = s.Serialize<ushort>(Ushort_0A, name: nameof(Ushort_0A));
+            DataIndex = s.Serialize<ushort>(DataIndex, name: nameof(DataIndex));
             XPos = s.SerializeObject<KlonoaInt20>(XPos, name: nameof(XPos));
             YPos = s.SerializeObject<KlonoaInt20>(YPos, name: nameof(YPos));
             ZPos = s.SerializeObject<KlonoaInt20>(ZPos, name: nameof(ZPos));
@@ -38,6 +43,19 @@
             Flags = s.Serialize<ushort>(Flags, name: nameof(Flags));
             Short_24 = s.Serialize<short>(Short_24, name: nameof(Short_24));
             s.SerializePadding(2, logIfNotNull: true);
+
+            switch (SecondaryType)
+            {
+                case 1: SerializeData<EnemyData_01>(s, 3, 0x24); break;
+                case 2: SerializeData<EnemyData_02>(s, 13, 0x24); break;
+                default: s.LogWarning($"Enemy data not parsed for enemy of type {SecondaryType}"); break;
+            }
+        }
+
+        private void SerializeData<T>(SerializerObject s, int blockIndex, int dataLength)
+            where T : BaseEnemyData, new()
+        {
+            s.DoAt(Pre_DataPointers[blockIndex] + DataIndex * dataLength, () => Data = s.SerializeObject<T>((T)Data, x => x.Pre_DataPointers = Pre_DataPointers, name: nameof(Data)));
         }
     }
 }
