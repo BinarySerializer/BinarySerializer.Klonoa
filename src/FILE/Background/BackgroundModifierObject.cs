@@ -12,6 +12,7 @@
         public bool UnknownFlag1 { get; set; }
         public bool UnknownFlag2 { get; set; }
 
+        public BackgroundModifierData_20 Data_20 { get; set; }
         public BackgroundModifierData_23 Data_23 { get; set; }
         public byte[] Data_Raw { get; set; }
 
@@ -32,16 +33,21 @@
 
             switch (Type)
             {
-                //case BackgroundModifierType.BackgroundLayer_19:
-                //    break;
+                case BackgroundModifierType.HUD:
+                case BackgroundModifierType.Reset:
+                    // Do nothing
+                    break;
 
-                //case BackgroundModifierType.BackgroundLayer_22:
-                //    break;
+                case BackgroundModifierType.Clear:
+                    Data_20 = s.SerializeObject<BackgroundModifierData_20>(Data_20, name: nameof(Data_20));
+                    break;
 
                 case BackgroundModifierType.PaletteScroll:
                     Data_23 = s.SerializeObject<BackgroundModifierData_23>(Data_23, name: nameof(Data_23));
                     break;
 
+                case BackgroundModifierType.BackgroundLayer_19:
+                case BackgroundModifierType.BackgroundLayer_22:
                 default:
                     Data_Raw = s.SerializeArray<byte>(Data_Raw, 56, name: nameof(Data_Raw));
                     break;
@@ -52,12 +58,45 @@
 
         public enum BackgroundModifierType : short
         {
+            HUD = 11, // The game HUD
+
+            Reset = 18, // Resets some values, seems to always be the first modifier
             BackgroundLayer_19 = 19, // Used when CEL index is 1?
-            
+            Clear = 20, // Handles background clearing each frame
+
             BackgroundLayer_22 = 22,
             PaletteScroll = 23,
         }
 
+        public class BackgroundModifierData_20 : BinarySerializable
+        {
+            public Entry[] Entries { get; set; }
+
+            public override void SerializeImpl(SerializerObject s)
+            {
+                Entries = s.SerializeObjectArray<Entry>(Entries, 4, name: nameof(Entries));
+            }
+
+            public class Entry : BinarySerializable
+            {
+                public short XPos { get; set; }
+                public short XPos_RelativeObj { get; set; } // An index to a background modifier, can be -1
+
+                public short YPos { get; set; }
+                public short YPos_RelativeObj { get; set; } // An index to a background modifier, can be -1
+
+                public RGBA8888Color Color { get; set; }
+
+                public override void SerializeImpl(SerializerObject s)
+                {
+                    XPos = s.Serialize<short>(XPos, name: nameof(XPos));
+                    XPos_RelativeObj = s.Serialize<short>(XPos_RelativeObj, name: nameof(XPos_RelativeObj));
+                    YPos = s.Serialize<short>(YPos, name: nameof(YPos));
+                    YPos_RelativeObj = s.Serialize<short>(YPos_RelativeObj, name: nameof(YPos_RelativeObj));
+                    Color = s.SerializeObject<RGBA8888Color>(Color, name: nameof(Color));
+                }
+            }
+        }
         public class BackgroundModifierData_23 : BinarySerializable
         {
             public int XPosition { get; set; }
