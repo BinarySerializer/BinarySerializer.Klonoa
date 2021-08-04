@@ -46,10 +46,15 @@
                     Data_23 = s.SerializeObject<BackgroundModifierData_23>(Data_23, name: nameof(Data_23));
                     break;
 
+                // TODO: Parse
                 case BackgroundModifierType.BackgroundLayer_19:
                 case BackgroundModifierType.BackgroundLayer_22:
+                    Data_Raw = s.SerializeArray<byte>(Data_Raw, 56, name: nameof(Data_Raw));
+                    break;
+
                 default:
                     Data_Raw = s.SerializeArray<byte>(Data_Raw, 56, name: nameof(Data_Raw));
+                    s.LogWarning($"Unknown background modifier type {Type}");
                     break;
             }
 
