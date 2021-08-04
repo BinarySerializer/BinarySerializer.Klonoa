@@ -5,6 +5,7 @@
         public short XPos { get; set; }
         public short YPos { get; set; }
         public BackgroundModifierType Type { get; set; }
+        public bool IsLayer => Type == BackgroundModifierType.BackgroundLayer_19 || Type == BackgroundModifierType.BackgroundLayer_22;
 
         public int BGDIndex { get; set; }
         public int UnknownValues { get; set; }
