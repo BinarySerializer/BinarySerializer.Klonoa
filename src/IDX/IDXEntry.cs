@@ -5,6 +5,7 @@ namespace BinarySerializer.KlonoaDTP
     public class IDXEntry : BinarySerializable
     {
         public int Pre_BlockIndex { get; set; }
+        public LoaderConfiguration Pre_LoaderConfig { get; set; }
 
         public uint DestinationPointer { get; set; } // The game copies the load commands pointer to this location
         public Pointer LoadCommandsPointer { get; set; }
@@ -20,7 +21,7 @@ namespace BinarySerializer.KlonoaDTP
             s.DoAt(LoadCommandsPointer, () =>
             {
                 // Serialize load commands
-                LoadCommands = s.SerializeObjectArrayUntil(LoadCommands, x => x.Type == 0, name: nameof(LoadCommands));
+                LoadCommands = s.SerializeObjectArrayUntil(LoadCommands, x => x.Type == 0, onPreSerialize: x => x.Pre_LoaderConfig = Pre_LoaderConfig, name: nameof(LoadCommands));
 
                 // Set the file pointers
                 Pointer p = null;

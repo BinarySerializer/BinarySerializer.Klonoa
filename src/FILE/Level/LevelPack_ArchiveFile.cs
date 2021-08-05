@@ -1,5 +1,6 @@
 ﻿namespace BinarySerializer.KlonoaDTP
 {
+    // According to the prototype the source extensions for the data in this file were .TIA and .NAK
     public class LevelPack_ArchiveFile : ArchiveFile
     {
         public ArchiveFile AdditionalLevelFilePack { get; set; } // Referenced from objects

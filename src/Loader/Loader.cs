@@ -322,7 +322,7 @@ namespace BinarySerializer.KlonoaDTP
                 // Memory map code files
                 case IDXLoadCommand.FileType.Code:
                     var rawData = ((RawData_File)binFile).Data;
-                    var f = new MemoryMappedByteArrayFile(Context, $"CODE_{BINBlock}_{fileIndex}", cmd.GetFileDestinationAddress(this), rawData);
+                    var f = new MemoryMappedByteArrayFile(Context, $"CODE_{BINBlock}_{fileIndex}", cmd.FILE_Destination, rawData);
                     Context.AddFile(f);
                     MemoryFiles.Add(f);
                     break;

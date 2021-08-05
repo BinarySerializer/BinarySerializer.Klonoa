@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
-
-namespace BinarySerializer.KlonoaDTP
+﻿namespace BinarySerializer.KlonoaDTP
 {
     public class IDXLoadCommand : BinarySerializable
     {
         private const uint SectorSize = 2048;
+
+        public LoaderConfiguration Pre_LoaderConfig { get; set; } // Pass in the config as a pre-serialize value as the loader will not have been created yet
 
         public int Type { get; set; }
 
@@ -19,19 +19,10 @@ namespace BinarySerializer.KlonoaDTP
         // Type 2
         public uint FILE_Length { get; set; }
         public uint FILE_DestinationValue { get; set; }
+        public uint FILE_Destination { get; set; }
         public uint FILE_FunctionPointer { get; set; }
         public FileType FILE_Type { get; set; }
         public Pointer FILE_Pointer { get; set; }
-
-        public uint GetFileDestinationAddress(Loader loader)
-        {
-            var fileAddr = loader.Config.FileAddresses;
-
-            if (fileAddr.ContainsKey(FILE_DestinationValue))
-                return fileAddr[FILE_DestinationValue];
-            else
-                return FILE_DestinationValue;
-        }
 
         public override void SerializeImpl(SerializerObject s)
         {
@@ -53,63 +44,24 @@ namespace BinarySerializer.KlonoaDTP
                 FILE_Length = s.Serialize<uint>(FILE_Length, name: nameof(FILE_Length));
 
                 FILE_DestinationValue = s.Serialize<uint>(FILE_DestinationValue, name: nameof(FILE_DestinationValue));
-                s.Log($"{nameof(FILE_DestinationValue)}: 0x{FILE_DestinationValue:X8}");
+
+                if (Pre_LoaderConfig != null)
+                {
+                    FILE_Destination = Pre_LoaderConfig.FileAddresses.TryGetValue(FILE_DestinationValue, out uint value) ? value : FILE_DestinationValue;
+                    s.Log($"{nameof(FILE_Destination)}: 0x{FILE_Destination:X8}");
+                }
 
                 FILE_FunctionPointer = s.Serialize<uint>(FILE_FunctionPointer, name: nameof(FILE_FunctionPointer));
                 s.Log($"{nameof(FILE_FunctionPointer)}: 0x{FILE_FunctionPointer:X8}");
 
-                if (FileTypes.ContainsKey(FILE_FunctionPointer))
+                // The game parses the files using the supplied function pointer, so we can use that to determine the file type
+                if (Pre_LoaderConfig?.FileTypes.ContainsKey(FILE_FunctionPointer) == true)
                 {
-                    FILE_Type = FileTypes[FILE_FunctionPointer];
+                    FILE_Type = Pre_LoaderConfig.FileTypes[FILE_FunctionPointer];
                     s.Log($"{nameof(FILE_Type)}: {FILE_Type}");
                 }
             }
         }
-
-        // The game parses the files using the supplied function pointer, so we can use that to determine the file type
-        public static Dictionary<uint, FileType> FileTypes { get; } = new Dictionary<uint, FileType>()
-        {
-            // Textures
-            [0x80016CF0] = FileType.Archive_TIM_Generic,
-            [0x80111E80] = FileType.Archive_TIM_SongsText,
-            [0x8001F638] = FileType.Archive_TIM_SaveText,
-            [0x80016F68] = FileType.Archive_TIM_SpriteSheets,
-
-            // Sounds
-            [0x80034A88] = FileType.OA05,
-            [0x80036ECC] = FileType.SEQ,
-            [0x80034EB0] = FileType.SEQ,
-            [0x80036E58] = FileType.SEQ,
-
-            // Backgrounds
-            [0x8002304C] = FileType.Archive_BackgroundPack,
-
-            // Sprites
-            [0x80073930] = FileType.FixedSprites,
-            [0x800737F4] = FileType.Archive_SpritePack,
-            [0x8008B3A4] = FileType.Archive_LevelMenuSprites,
-            
-            // World map
-            [0x8003B254] = FileType.Archive_WorldMap,
-
-            // Menu
-            [0x80123D00] = FileType.Archive_MenuSprites,
-            [0x8012311C] = FileType.Font,
-            [0x80122B08] = FileType.Archive_MenuBackgrounds,
-
-            // Levels
-            [0x8001845C] = FileType.Archive_LevelPack,
-            
-            // Unknown
-            [0x800264d8] = FileType.Archive_Unk0,
-            [0x80022FD0] = FileType.Unk1,
-
-            // Code
-            [0x8007825C] = FileType.Code,
-            [0x80078274] = FileType.Code,
-            [0x00000000] = FileType.Code,
-            [0x8007820C] = FileType.CodeNoDest,
-        };
 
         public enum FileType
         {
