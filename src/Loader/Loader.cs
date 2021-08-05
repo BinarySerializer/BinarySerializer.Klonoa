@@ -122,6 +122,11 @@ namespace BinarySerializer.KlonoaDTP
         public Sprites_ArchiveFile[] SpriteFrames { get; }
 
         /// <summary>
+        /// The menu sprites for the level
+        /// </summary>
+        public LevelMenuSprites_ArchiveFile LevelMenuSprites { get; set; }
+
+        /// <summary>
         /// The backgrounds
         /// </summary>
         public BackgroundPack_ArchiveFile BackgroundPack { get; set; }
@@ -181,10 +186,13 @@ namespace BinarySerializer.KlonoaDTP
 
             BINBlock = blockIndex;
 
-            // Null out previous data. This should get overwritten below when loading the new level block, but if a menu is loaded instead they will not.
+            // Null out previous data
+            LevelMenuSprites = null;
             BackgroundPack = null;
             OA05 = null;
             LevelPack = null;
+            LevelData3D = null;
+            LevelData2D = null;
 
             // Remove memory mapped code files
             foreach (var f in MemoryFiles)
@@ -279,6 +287,10 @@ namespace BinarySerializer.KlonoaDTP
                         SpriteFrames[j] = ((LevelSpritePack_ArchiveFile)binFile).Sprites[j];
                     break;
 
+                case IDXLoadCommand.FileType.Archive_LevelMenuSprites:
+                    LevelMenuSprites = (LevelMenuSprites_ArchiveFile)binFile;
+                    break;
+
                 // Save for later
                 case IDXLoadCommand.FileType.Archive_LevelPack:
                     LevelPack = (LevelPack_ArchiveFile)binFile;
@@ -358,6 +370,9 @@ namespace BinarySerializer.KlonoaDTP
 
                 case IDXLoadCommand.FileType.Archive_SpritePack:
                     return LoadBINFile<LevelSpritePack_ArchiveFile>(fileIndex);
+
+                case IDXLoadCommand.FileType.Archive_LevelMenuSprites:
+                    return LoadBINFile<LevelMenuSprites_ArchiveFile>(fileIndex);
 
                 case IDXLoadCommand.FileType.Archive_LevelPack:
                     return LoadBINFile<LevelPack_ArchiveFile>(fileIndex);

@@ -86,6 +86,7 @@ namespace BinarySerializer.KlonoaDTP
             // Sprites
             [0x80073930] = FileType.FixedSprites,
             [0x800737F4] = FileType.Archive_SpritePack,
+            [0x8008B3A4] = FileType.Archive_LevelMenuSprites,
             
             // World map
             [0x8003B254] = FileType.Archive_WorldMap,
@@ -127,7 +128,8 @@ namespace BinarySerializer.KlonoaDTP
             // Sprites
             FixedSprites, // Fixed sprite descriptors
             Archive_SpritePack, // Sprites
-            
+            Archive_LevelMenuSprites,
+
             // World map
             Archive_WorldMap, // World map graphics
 
