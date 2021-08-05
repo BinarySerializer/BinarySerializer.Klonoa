@@ -93,13 +93,13 @@ namespace BinarySerializer.KlonoaDTP
             // Menu
             [0x80123D00] = FileType.Archive_MenuSprites,
             [0x8012311C] = FileType.Font,
+            [0x80122B08] = FileType.Archive_MenuBackgrounds,
 
             // Levels
             [0x8001845C] = FileType.Archive_LevelPack,
             
             // Unknown
             [0x800264d8] = FileType.Archive_Unk0,
-            [0x80122B08] = FileType.Archive_Unk4,
 
             // Code
             [0x8007825C] = FileType.Code,
@@ -134,13 +134,13 @@ namespace BinarySerializer.KlonoaDTP
             // Menu
             Archive_MenuSprites, // Menu graphics
             Font, // Menu font
+            Archive_MenuBackgrounds, // Menu backgrounds
             
             // Level
             Archive_LevelPack, // Level data
 
             // Unknown
             Archive_Unk0,
-            Archive_Unk4,
             
             // Code
             Code, // Compiled code

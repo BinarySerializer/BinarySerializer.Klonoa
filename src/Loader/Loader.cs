@@ -147,6 +147,11 @@ namespace BinarySerializer.KlonoaDTP
         public Font_File MenuFont { get; set; }
 
         /// <summary>
+        /// The menu backgrounds
+        /// </summary>
+        public ArchiveFile<TIM_ArchiveFile> MenuBackgrounds { get; set; }
+
+        /// <summary>
         /// The level pack
         /// </summary>
         public LevelPack_ArchiveFile LevelPack { get; set; }
@@ -298,6 +303,10 @@ namespace BinarySerializer.KlonoaDTP
                     MenuFont = (Font_File)binFile;
                     break;
 
+                case IDXLoadCommand.FileType.Archive_MenuBackgrounds:
+                    MenuBackgrounds = (ArchiveFile<TIM_ArchiveFile>)binFile;
+                    break;
+
                 // Memory map code files
                 case IDXLoadCommand.FileType.Code:
                     var rawData = ((RawData_File)binFile).Data;
@@ -307,7 +316,6 @@ namespace BinarySerializer.KlonoaDTP
                     break;
 
                 case IDXLoadCommand.FileType.Archive_Unk0:
-                case IDXLoadCommand.FileType.Archive_Unk4:
                     // TODO: Save once parsed
                     break;
 
@@ -363,11 +371,11 @@ namespace BinarySerializer.KlonoaDTP
                 case IDXLoadCommand.FileType.Font:
                     return LoadBINFile<Font_File>(fileIndex);
 
+                case IDXLoadCommand.FileType.Archive_MenuBackgrounds:
+                    return LoadBINFile<ArchiveFile<TIM_ArchiveFile>>(fileIndex);
+
                 case IDXLoadCommand.FileType.Archive_Unk0:
                     return LoadBINFile<Unk0_ArchiveFile>(fileIndex);
-
-                case IDXLoadCommand.FileType.Archive_Unk4:
-                    return LoadBINFile<RawData_ArchiveFile>(fileIndex);
 
                 case IDXLoadCommand.FileType.Code:
                     return LoadBINFile<RawData_File>(fileIndex);
