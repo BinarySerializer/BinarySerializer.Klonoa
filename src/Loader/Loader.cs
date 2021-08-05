@@ -327,7 +327,13 @@ namespace BinarySerializer.KlonoaDTP
                     MemoryFiles.Add(f);
                     break;
 
+                // Memory map code files
+                case IDXLoadCommand.FileType.CodeNoDest:
+                    // TODO: Load to memory. In the NTSC version it gets loaded to 0x8016a790 with pointer at 0x80011808.
+                    break;
+
                 case IDXLoadCommand.FileType.Archive_Unk0:
+                case IDXLoadCommand.FileType.Unk1:
                     // TODO: Save once parsed
                     break;
 
@@ -392,7 +398,11 @@ namespace BinarySerializer.KlonoaDTP
                 case IDXLoadCommand.FileType.Archive_Unk0:
                     return LoadBINFile<Unk0_ArchiveFile>(fileIndex);
 
+                case IDXLoadCommand.FileType.Unk1:
+                    return LoadBINFile<RawData_File>(fileIndex);
+
                 case IDXLoadCommand.FileType.Code:
+                case IDXLoadCommand.FileType.CodeNoDest:
                     return LoadBINFile<RawData_File>(fileIndex);
 
                 case IDXLoadCommand.FileType.Unknown:

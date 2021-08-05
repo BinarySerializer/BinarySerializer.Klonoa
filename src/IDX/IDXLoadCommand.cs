@@ -79,6 +79,7 @@ namespace BinarySerializer.KlonoaDTP
             [0x80034A88] = FileType.OA05,
             [0x80036ECC] = FileType.SEQ,
             [0x80034EB0] = FileType.SEQ,
+            [0x80036E58] = FileType.SEQ,
 
             // Backgrounds
             [0x8002304C] = FileType.Archive_BackgroundPack,
@@ -101,11 +102,13 @@ namespace BinarySerializer.KlonoaDTP
             
             // Unknown
             [0x800264d8] = FileType.Archive_Unk0,
+            [0x80022FD0] = FileType.Unk1,
 
             // Code
             [0x8007825C] = FileType.Code,
             [0x80078274] = FileType.Code,
             [0x00000000] = FileType.Code,
+            [0x8007820C] = FileType.CodeNoDest,
         };
 
         public enum FileType
@@ -143,9 +146,11 @@ namespace BinarySerializer.KlonoaDTP
 
             // Unknown
             Archive_Unk0,
+            Unk1,
             
             // Code
             Code, // Compiled code
+            CodeNoDest, // Compiled code (with a hard-coded destination)
         }
     }
 }
