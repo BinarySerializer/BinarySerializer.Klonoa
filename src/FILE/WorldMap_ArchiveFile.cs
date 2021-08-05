@@ -11,7 +11,7 @@ namespace BinarySerializer.KlonoaDTP
         public PS1_TIM Palette1 { get; set; }
         public PS1_TIM Palette2 { get; set; }
 
-        public WorldMapGraphics_ArchiveFile Graphics { get; set; }
+        public AnimatedSprites_ArchiveFile AnimatedSprites { get; set; }
 
         protected override void SerializeFiles(SerializerObject s)
         {
@@ -19,7 +19,7 @@ namespace BinarySerializer.KlonoaDTP
             File_1 = SerializeFile<RawData_ArchiveFile>(s, File_1, 1, name: nameof(File_1));
             Palette1 = SerializeFile<PS1_TIM>(s, Palette1, 2, name: nameof(Palette1));
             Palette2 = SerializeFile<PS1_TIM>(s, Palette2, 3, name: nameof(Palette2));
-            Graphics = SerializeFile<WorldMapGraphics_ArchiveFile>(s, Graphics, 4, name: nameof(Graphics));
+            AnimatedSprites = SerializeFile<AnimatedSprites_ArchiveFile>(s, AnimatedSprites, 4, name: nameof(AnimatedSprites));
         }
     }
 }

@@ -96,7 +96,7 @@ namespace BinarySerializer.KlonoaDTP
             // Unknown
             [0x800264d8] = FileType.Archive_Unk0,
             [0x80122B08] = FileType.Archive_Unk4,
-            [0x80123D00] = FileType.Archive_Unk6,
+            [0x80123D00] = FileType.Archive_MenuSprites,
 
             // Code
             [0x8007825C] = FileType.Code,
@@ -134,7 +134,7 @@ namespace BinarySerializer.KlonoaDTP
             // Unknown
             Archive_Unk0,
             Archive_Unk4,
-            Archive_Unk6,
+            Archive_MenuSprites,
             
             // Code
             Code, // Compiled code

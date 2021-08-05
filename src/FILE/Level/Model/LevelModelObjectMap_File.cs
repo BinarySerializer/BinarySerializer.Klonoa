@@ -6,11 +6,9 @@
         public ushort Height { get; set; }
         public ushort Depth { get; set; }
 
-        // Pivot?
-        public short Short_08 { get; set; }
-        public short Short_0A { get; set; }
-        public short Short_0C { get; set; }
-        public short Short_0E { get; set; } // Padding?
+        public short PivotX { get; set; }
+        public short PivotY { get; set; }
+        public short PivotZ { get; set; }
 
         public short[] ObjIndices { get; set; } // Indices to level model objects
 
@@ -21,10 +19,10 @@
             Depth = s.Serialize<ushort>(Depth, name: nameof(Depth));
             s.SerializePadding(2, logIfNotNull: true);
 
-            Short_08 = s.Serialize<short>(Short_08, name: nameof(Short_08));
-            Short_0A = s.Serialize<short>(Short_0A, name: nameof(Short_0A));
-            Short_0C = s.Serialize<short>(Short_0C, name: nameof(Short_0C));
-            Short_0E = s.Serialize<short>(Short_0E, name: nameof(Short_0E));
+            PivotX = s.Serialize<short>(PivotX, name: nameof(PivotX));
+            PivotY = s.Serialize<short>(PivotY, name: nameof(PivotY));
+            PivotZ = s.Serialize<short>(PivotZ, name: nameof(PivotZ));
+            s.SerializePadding(2, logIfNotNull: true);
 
             ObjIndices = s.SerializeArray<short>(ObjIndices, Width * Height * Depth, name: nameof(ObjIndices));
         }

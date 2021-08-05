@@ -137,6 +137,11 @@ namespace BinarySerializer.KlonoaDTP
         public WorldMap_ArchiveFile WorldMap { get; set; }
 
         /// <summary>
+        /// The menu sprites
+        /// </summary>
+        public MenuSprites_ArchiveFile MenuSprites { get; set; }
+
+        /// <summary>
         /// The level pack
         /// </summary>
         public LevelPack_ArchiveFile LevelPack { get; set; }
@@ -273,6 +278,10 @@ namespace BinarySerializer.KlonoaDTP
                     
                     AddToVRAM(WorldMap.Palette1);
                     break;
+                
+                case IDXLoadCommand.FileType.Archive_MenuSprites:
+                    MenuSprites = (MenuSprites_ArchiveFile)binFile;
+                    break;
 
                 // Save for later
                 case IDXLoadCommand.FileType.Archive_LevelPack:
@@ -289,7 +298,6 @@ namespace BinarySerializer.KlonoaDTP
 
                 case IDXLoadCommand.FileType.Archive_Unk0:
                 case IDXLoadCommand.FileType.Archive_Unk4:
-                case IDXLoadCommand.FileType.Archive_Unk6:
                     // TODO: Save once parsed
                     break;
 
@@ -336,15 +344,17 @@ namespace BinarySerializer.KlonoaDTP
                 case IDXLoadCommand.FileType.Archive_LevelPack:
                     return LoadBINFile<LevelPack_ArchiveFile>(fileIndex);
 
+                case IDXLoadCommand.FileType.Archive_WorldMap:
+                    return LoadBINFile<WorldMap_ArchiveFile>(fileIndex);
+
+                case IDXLoadCommand.FileType.Archive_MenuSprites:
+                    return LoadBINFile<MenuSprites_ArchiveFile>(fileIndex);
+
                 case IDXLoadCommand.FileType.Archive_Unk0:
                     return LoadBINFile<Unk0_ArchiveFile>(fileIndex);
 
                 case IDXLoadCommand.FileType.Archive_Unk4:
-                case IDXLoadCommand.FileType.Archive_Unk6:
                     return LoadBINFile<RawData_ArchiveFile>(fileIndex);
-
-                case IDXLoadCommand.FileType.Archive_WorldMap:
-                    return LoadBINFile<WorldMap_ArchiveFile>(fileIndex);
 
                 case IDXLoadCommand.FileType.Code:
                     return LoadBINFile<RawData_File>(fileIndex);
