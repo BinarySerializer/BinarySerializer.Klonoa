@@ -90,13 +90,16 @@ namespace BinarySerializer.KlonoaDTP
             // World map
             [0x8003B254] = FileType.Archive_WorldMap,
 
+            // Menu
+            [0x80123D00] = FileType.Archive_MenuSprites,
+            [0x8012311C] = FileType.Font,
+
             // Levels
             [0x8001845C] = FileType.Archive_LevelPack,
             
             // Unknown
             [0x800264d8] = FileType.Archive_Unk0,
             [0x80122B08] = FileType.Archive_Unk4,
-            [0x80123D00] = FileType.Archive_MenuSprites,
 
             // Code
             [0x8007825C] = FileType.Code,
@@ -128,13 +131,16 @@ namespace BinarySerializer.KlonoaDTP
             // World map
             Archive_WorldMap, // World map graphics
 
+            // Menu
+            Archive_MenuSprites, // Menu graphics
+            Font, // Menu font
+            
             // Level
             Archive_LevelPack, // Level data
 
             // Unknown
             Archive_Unk0,
             Archive_Unk4,
-            Archive_MenuSprites,
             
             // Code
             Code, // Compiled code

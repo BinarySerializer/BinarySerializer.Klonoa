@@ -142,6 +142,11 @@ namespace BinarySerializer.KlonoaDTP
         public MenuSprites_ArchiveFile MenuSprites { get; set; }
 
         /// <summary>
+        /// The menu font
+        /// </summary>
+        public Font_File MenuFont { get; set; }
+
+        /// <summary>
         /// The level pack
         /// </summary>
         public LevelPack_ArchiveFile LevelPack { get; set; }
@@ -269,6 +274,11 @@ namespace BinarySerializer.KlonoaDTP
                         SpriteFrames[j] = ((LevelSpritePack_ArchiveFile)binFile).Sprites[j];
                     break;
 
+                // Save for later
+                case IDXLoadCommand.FileType.Archive_LevelPack:
+                    LevelPack = (LevelPack_ArchiveFile)binFile;
+                    break;
+
                 // Copy to VRAM and save for later
                 case IDXLoadCommand.FileType.Archive_WorldMap:
                     WorldMap = (WorldMap_ArchiveFile)binFile;
@@ -279,13 +289,13 @@ namespace BinarySerializer.KlonoaDTP
                     AddToVRAM(WorldMap.Palette1);
                     break;
                 
+                // Save for later
                 case IDXLoadCommand.FileType.Archive_MenuSprites:
                     MenuSprites = (MenuSprites_ArchiveFile)binFile;
                     break;
 
-                // Save for later
-                case IDXLoadCommand.FileType.Archive_LevelPack:
-                    LevelPack = (LevelPack_ArchiveFile)binFile;
+                case IDXLoadCommand.FileType.Font:
+                    MenuFont = (Font_File)binFile;
                     break;
 
                 // Memory map code files
@@ -349,6 +359,9 @@ namespace BinarySerializer.KlonoaDTP
 
                 case IDXLoadCommand.FileType.Archive_MenuSprites:
                     return LoadBINFile<MenuSprites_ArchiveFile>(fileIndex);
+
+                case IDXLoadCommand.FileType.Font:
+                    return LoadBINFile<Font_File>(fileIndex);
 
                 case IDXLoadCommand.FileType.Archive_Unk0:
                     return LoadBINFile<Unk0_ArchiveFile>(fileIndex);
