@@ -50,23 +50,5 @@
                 }
             }
         }
-
-        public class Cutscene : BinarySerializable
-        {
-            public ArchiveFile Pre_Archive { get; set; }
-            public int Pre_ArchiveFileIndex { get; set; }
-
-            // TODO: Why are there two sets of instructions? Second one always seems smaller, maybe the version when you skip the cutscene?
-            public Cutscene_File Cutscene_0 { get; set; }
-            public Cutscene_File Cutscene_1 { get; set; }
-            public RawData_File File_2 { get; set; } // TODO: Parse - if this is null the font is not loaded, so text related?
-
-            public override void SerializeImpl(SerializerObject s)
-            {
-                Cutscene_0 = Pre_Archive.SerializeFile<Cutscene_File>(s, Cutscene_0, Pre_ArchiveFileIndex + 0, name: $"{nameof(Cutscene_0)}");
-                Cutscene_1 = Pre_Archive.SerializeFile<Cutscene_File>(s, Cutscene_1, Pre_ArchiveFileIndex + 1, name: $"{nameof(Cutscene_1)}");
-                File_2 = Pre_Archive.SerializeFile<RawData_File>(s, File_2, Pre_ArchiveFileIndex + 2, name: $"{nameof(File_2)}");
-            }
-        }
     }
 }
