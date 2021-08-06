@@ -24,10 +24,7 @@
         {
             AdditionalLevelFilePack = SerializeFile<ArchiveFile>(s, AdditionalLevelFilePack, 0, name: nameof(AdditionalLevelFilePack));
             File_1 = SerializeFile<ArchiveFile<RawData_File>>(s, File_1, 1, name: nameof(File_1));
-
-            // TODO: Why is the cutscene pack file different for some levels??? Game seems to handle it the same.
-            //CutscenePack = SerializeFile<CutscenePack_ArchiveFile>(s, CutscenePack, 2, name: nameof(CutscenePack));
-
+            CutscenePack = SerializeFile<CutscenePack_ArchiveFile>(s, CutscenePack, 2, name: nameof(CutscenePack));
             File_3 = SerializeFile<RawData_File>(s, File_3, 3, name: nameof(File_3));
             File_4 = SerializeFile<RawData_File>(s, File_4, 4, name: nameof(File_4));
             File_5 = SerializeFile<RawData_File>(s, File_5, 5, name: nameof(File_5));
