@@ -4,6 +4,8 @@ namespace BinarySerializer.KlonoaDTP
 {
     public class LoaderConfiguration_DTP_US : LoaderConfiguration
     {
+        public override GameVersion Version => GameVersion.DTP;
+
         public override Dictionary<uint, uint> FileAddresses { get; } = new Dictionary<uint, uint>()
         {
             [0x1000000] = 0x801108f8,

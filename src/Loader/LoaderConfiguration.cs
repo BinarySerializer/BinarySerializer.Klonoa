@@ -4,6 +4,8 @@ namespace BinarySerializer.KlonoaDTP
 {
     public abstract class LoaderConfiguration
     {
+        public abstract GameVersion Version { get; }
+
         public virtual int BLOCK_Fix => 0;
         public virtual int BLOCK_Menu => 1;
         public virtual int BLOCK_FirstLevel => 3;
@@ -16,5 +18,11 @@ namespace BinarySerializer.KlonoaDTP
 
         public abstract uint Address_LevelData3DFunction { get; }
         public abstract uint Address_LevelData2DPointerTable { get; }
+
+        public enum GameVersion
+        {
+            DTP_Prototype_19970717,
+            DTP
+        }
     }
 }

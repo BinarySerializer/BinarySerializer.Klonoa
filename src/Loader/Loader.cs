@@ -311,6 +311,24 @@ namespace BinarySerializer.KlonoaDTP
                     MenuSprites = (MenuSprites_ArchiveFile)binFile;
                     break;
 
+                // Save for later
+                case IDXLoadCommand.FileType.Proto_Archive_MenuSprites_0:
+                    MenuSprites ??= new MenuSprites_ArchiveFile();
+                    MenuSprites.Sprites_0 = (Sprites_ArchiveFile)binFile;
+                    break;
+
+                // Save for later
+                case IDXLoadCommand.FileType.Proto_Archive_MenuSprites_1:
+                    MenuSprites ??= new MenuSprites_ArchiveFile();
+                    MenuSprites.Sprites_1 = (Sprites_ArchiveFile)binFile;
+                    break;
+
+                // Save for later
+                case IDXLoadCommand.FileType.Proto_Archive_MenuSprites_2:
+                    MenuSprites ??= new MenuSprites_ArchiveFile();
+                    MenuSprites.Sprites_2 = (Sprites_ArchiveFile)binFile;
+                    break;
+
                 case IDXLoadCommand.FileType.Font:
                     MenuFont = (Font_File)binFile;
                     break;
@@ -388,6 +406,11 @@ namespace BinarySerializer.KlonoaDTP
 
                 case IDXLoadCommand.FileType.Archive_MenuSprites:
                     return LoadBINFile<MenuSprites_ArchiveFile>(fileIndex);
+
+                case IDXLoadCommand.FileType.Proto_Archive_MenuSprites_0:
+                case IDXLoadCommand.FileType.Proto_Archive_MenuSprites_1:
+                case IDXLoadCommand.FileType.Proto_Archive_MenuSprites_2:
+                    return LoadBINFile<Sprites_ArchiveFile>(fileIndex);
 
                 case IDXLoadCommand.FileType.Font:
                     return LoadBINFile<Font_File>(fileIndex);

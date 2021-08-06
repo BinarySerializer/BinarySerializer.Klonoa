@@ -12,14 +12,23 @@ namespace BinarySerializer.KlonoaDTP
         public PS1_TIM Palette2 { get; set; }
 
         public AnimatedSprites_ArchiveFile AnimatedSprites { get; set; }
+        public Sprites_ArchiveFile Proto_Sprites { get; set; }
 
         protected override void SerializeFiles(SerializerObject s)
         {
             SpriteSheets = SerializeFile<TIM_ArchiveFile>(s, SpriteSheets, 0, name: nameof(SpriteSheets));
             File_1 = SerializeFile<RawData_ArchiveFile>(s, File_1, 1, name: nameof(File_1));
-            Palette1 = SerializeFile<PS1_TIM>(s, Palette1, 2, name: nameof(Palette1));
-            Palette2 = SerializeFile<PS1_TIM>(s, Palette2, 3, name: nameof(Palette2));
-            AnimatedSprites = SerializeFile<AnimatedSprites_ArchiveFile>(s, AnimatedSprites, 4, name: nameof(AnimatedSprites));
+
+            if (Loader.GetLoader(s.Context).Config.Version == LoaderConfiguration.GameVersion.DTP_Prototype_19970717)
+            {
+                Proto_Sprites = SerializeFile<Sprites_ArchiveFile>(s, Proto_Sprites, 2, name: nameof(Proto_Sprites));
+            }
+            else
+            {
+                Palette1 = SerializeFile<PS1_TIM>(s, Palette1, 2, name: nameof(Palette1));
+                Palette2 = SerializeFile<PS1_TIM>(s, Palette2, 3, name: nameof(Palette2));
+                AnimatedSprites = SerializeFile<AnimatedSprites_ArchiveFile>(s, AnimatedSprites, 4, name: nameof(AnimatedSprites));
+            }
         }
     }
 }

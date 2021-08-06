@@ -55,7 +55,7 @@
                 s.Log($"{nameof(FILE_FunctionPointer)}: 0x{FILE_FunctionPointer:X8}");
 
                 // The game parses the files using the supplied function pointer, so we can use that to determine the file type
-                if (Pre_LoaderConfig?.FileTypes.ContainsKey(FILE_FunctionPointer) == true)
+                if (Type == 2 && Pre_LoaderConfig?.FileTypes.ContainsKey(FILE_FunctionPointer) == true)
                 {
                     FILE_Type = Pre_LoaderConfig.FileTypes[FILE_FunctionPointer];
                     s.Log($"{nameof(FILE_Type)}: {FILE_Type}");
@@ -90,6 +90,9 @@
 
             // Menu
             Archive_MenuSprites, // Menu graphics
+            Proto_Archive_MenuSprites_0, // Menu graphics
+            Proto_Archive_MenuSprites_1, // Menu graphics
+            Proto_Archive_MenuSprites_2, // Menu graphics
             Font, // Menu font
             Archive_MenuBackgrounds, // Menu backgrounds
             
