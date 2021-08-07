@@ -229,7 +229,7 @@ namespace BinarySerializer.KlonoaDTP
                     {
                         int iVar4 = iVar9 << 0x10;
                         iVar9++;
-                        buffer2[iVar4 >> 0xf] = uVar3;
+                        buffer2[(iVar4 >> 0xf) / 2] = uVar3;
                     } while (iVar9 * 0x10000 >> 0x10 < 0x100);
                 }
                 else
