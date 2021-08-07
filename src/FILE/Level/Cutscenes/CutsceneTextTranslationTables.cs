@@ -67,7 +67,7 @@ namespace BinarySerializer.KlonoaDTP
             ["iZNuH162Ncgkqd1ghijWORNhafM="] = '”',
         };
 
-        public static string CutsceneToText(Cutscene cutscene, Dictionary<string, char> translationTable, bool includeInstructionIndex = false)
+        public static string CutsceneToText(Cutscene cutscene, Dictionary<string, char> translationTable, bool includeInstructionIndex = false, bool normalCutscene = true)
         {
             var str = new StringBuilder();
 
@@ -103,11 +103,11 @@ namespace BinarySerializer.KlonoaDTP
             string[] fontHashes;
 
             using (SHA1CryptoServiceProvider sha1 = new SHA1CryptoServiceProvider())
-                fontHashes = cutscene.Font.CharactersImgData.Select(x => Convert.ToBase64String(sha1.ComputeHash(x))).ToArray();
+                fontHashes = cutscene.Font?.CharactersImgData.Select(x => Convert.ToBase64String(sha1.ComputeHash(x))).ToArray();
 
             var instructionIndex = 0;
 
-            foreach (var instruction in cutscene.Cutscene_Normal.Instructions)
+            foreach (var instruction in normalCutscene ? cutscene.Cutscene_Normal.Instructions : cutscene.Cutscene_Skip.Instructions)
             {
                 if (includeInstructionIndex)
                     write($"{$"[{instructionIndex}] ",-7}");

@@ -17,6 +17,9 @@
 
         protected override void SerializeFiles(SerializerObject s)
         {
+            if (OffsetTable.FilesCount == 0)
+                return;
+
             if (OffsetTable.FilesCount == 3)
             {
                 Transition_File_0 = SerializeFile<RawData_File>(s, Transition_File_0, 0, name: nameof(Transition_File_0));
@@ -31,13 +34,21 @@
                 CharacterNamesImgData = SerializeFile<RawData_File>(s, CharacterNamesImgData, 3, name: nameof(CharacterNamesImgData));
                 File_4 = SerializeFile<RawData_ArchiveFile>(s, File_4, 4, name: nameof(File_4));
 
-                var count = (OffsetTable.FilesCount - 5) / 3;
+                var cutsceneFilesCount = Loader.GetLoader(s.Context).Config.Version == LoaderConfiguration.GameVersion.DTP_Prototype_19970717 ? 5 : 3;
+
+                if ((OffsetTable.FilesCount - 5) % cutsceneFilesCount != 0)
+                {
+                    s.LogWarning($"Cutscene pack is invalid. Files count is {OffsetTable.FilesCount}");
+                    return;
+                }
+
+                var count = (OffsetTable.FilesCount - 5) / cutsceneFilesCount;
 
                 Cutscenes ??= new Cutscene[count];
 
                 for (int i = 0; i < count; i++)
                 {
-                    var fileIndex = 5 + i * 3;
+                    var fileIndex = 5 + i * cutsceneFilesCount;
 
                     // Goto to avoid caching
                     s.Goto(OffsetTable.FilePointers[fileIndex]);
