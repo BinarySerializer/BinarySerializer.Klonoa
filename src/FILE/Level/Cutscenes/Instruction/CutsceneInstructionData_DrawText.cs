@@ -2,14 +2,14 @@
 {
     public class CutsceneInstructionData_DrawText : BaseCutsceneInstructionData
     {
-        public byte Byte_00 { get; set; }
+        public byte CharacterName { get; set; }
         public byte Byte_01 { get; set; }
         
         public TextCommand[] TextCommands { get; set; }
 
         public override void SerializeImpl(SerializerObject s)
         {
-            Byte_00 = s.Serialize<byte>(Byte_00, name: nameof(Byte_00));
+            CharacterName = s.Serialize<byte>(CharacterName, name: nameof(CharacterName));
             Byte_01 = s.Serialize<byte>(Byte_01, name: nameof(Byte_01));
             ParamsBufferOffset = s.Serialize<uint>(ParamsBufferOffset, name: nameof(ParamsBufferOffset));
             DoAtParams(s, () =>
@@ -40,7 +40,7 @@
                 Type = (CommandType)~Command;
                 s.Log($"{nameof(Type)}: {Type}");
 
-                if (Type == CommandType.CMD_0 || Type == CommandType.CMD_2 || Type == CommandType.Delay || Type == CommandType.CMD_7)
+                if (Type == CommandType.CMD_0 || Type == CommandType.Blank || Type == CommandType.Delay || Type == CommandType.PlaySound)
                     CommandParam = s.Serialize<short>(CommandParam, name: nameof(CommandParam));
             }
 
@@ -50,12 +50,12 @@
 
                 CMD_0 = 0,
                 LineBreak = 1,
-                CMD_2 = 2,
+                Blank = 2,
                 Delay = 3, // Param is number of frames to delay
                 End = 4,
                 WaitForInput = 5, // Waits for input before continuing, then waits a frame
-                CMD_6 = 6,
-                CMD_7 = 7,
+                Clear = 6,
+                PlaySound = 7,
             }
         }
     }

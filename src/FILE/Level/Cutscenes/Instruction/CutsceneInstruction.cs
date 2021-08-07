@@ -27,10 +27,15 @@
                     serializeData<CutsceneInstructionData_CreateObj>();
                     break;
 
+                case InstructionType.ChangeSector:
+                    serializeData<CutsceneInstructionData_ChangeSector>();
+                    break;
+
                 case InstructionType.SetObjPos:
                     serializeData<CutsceneInstructionData_SetObjPos>();
                     break;
 
+                case InstructionType.CreateBackgroundObjects:
                 case InstructionType.Terminator:
                 case InstructionType.Special:
                 default:
@@ -54,6 +59,7 @@
 
             CreateBackgroundObjects = 10, // Creates two background objects for the cutscene of type 0xC (text and text border)
 
+            ChangeSector = 16,
             SetObjPos = 17,
 
             Terminator = 777,

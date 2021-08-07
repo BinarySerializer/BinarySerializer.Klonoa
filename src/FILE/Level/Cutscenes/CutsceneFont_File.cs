@@ -1,6 +1,6 @@
 ﻿namespace BinarySerializer.KlonoaDTP
 {
-    public class CutsceneFont_File : BinarySerializable
+    public class CutsceneFont_File : BaseFile
     {
         public uint CharactersCount { get; set; }
         public uint Offset_0 { get; set; }
@@ -35,6 +35,8 @@
                 for (int i = 0; i < CharactersImgData.Length; i++)
                     CharactersImgData[i] = s.SerializeArray<byte>(CharactersImgData[i], 0x40, name: $"{nameof(CharactersImgData)}[{i}]");
             });
+
+            s.Goto(Offset + Pre_FileSize);
         }
     }
 }

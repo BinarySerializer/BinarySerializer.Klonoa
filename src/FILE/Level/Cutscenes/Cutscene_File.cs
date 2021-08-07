@@ -7,6 +7,8 @@
         public override void SerializeImpl(SerializerObject s)
         {
             Instructions = s.SerializeObjectArrayUntil(Instructions, x => x.Type == CutsceneInstruction.InstructionType.Terminator, onPreSerialize: x => x.Pre_ParamsBufferBaseOffset = Offset, name: nameof(Instructions));
+
+            s.Goto(Offset + Pre_FileSize);
         }
     }
 }
