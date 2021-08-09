@@ -4,10 +4,10 @@
     {
         // Normal cutscene
         public SpriteAnimations_File SpriteAnimations { get; set; }
-        public Sprites_ArchiveFile Sprites { get; set; } // TODO: What is this?
-        public ArchiveFile<CutsceneRawTextureData> File_2 { get; set; } // TODO: What is this? Seems to be Klonoa frames (and other characters?)
+        public Sprites_ArchiveFile Sprites { get; set; } // Cutscene sprites
+        public ArchiveFile<CutsceneRawTextureData> PlayerFramesImgData { get; set; } // Klonoa sprites
         public RawData_File CharacterNamesImgData { get; set; } // Raw image data, gets loaded at (0x3f4, 0x180, 0xc, 0x50)
-        public RawData_ArchiveFile File_4 { get; set; } // TODO: Parse - seems to be raw image data
+        public RawData_ArchiveFile CutsceneAssets { get; set; } // Used by hard-coded functions for each cutscene. Contains obj models etc.
         public Cutscene[] Cutscenes { get; set; }
 
         // Transition cutscene
@@ -30,9 +30,9 @@
             {
                 SpriteAnimations = SerializeFile<SpriteAnimations_File>(s, SpriteAnimations, 0, name: nameof(SpriteAnimations));
                 Sprites = SerializeFile<Sprites_ArchiveFile>(s, Sprites, 1, name: nameof(Sprites));
-                File_2 = SerializeFile<ArchiveFile<CutsceneRawTextureData>>(s, File_2, 2, name: nameof(File_2));
+                PlayerFramesImgData = SerializeFile<ArchiveFile<CutsceneRawTextureData>>(s, PlayerFramesImgData, 2, name: nameof(PlayerFramesImgData));
                 CharacterNamesImgData = SerializeFile<RawData_File>(s, CharacterNamesImgData, 3, name: nameof(CharacterNamesImgData));
-                File_4 = SerializeFile<RawData_ArchiveFile>(s, File_4, 4, name: nameof(File_4));
+                CutsceneAssets = SerializeFile<RawData_ArchiveFile>(s, CutsceneAssets, 4, name: nameof(CutsceneAssets));
 
                 var cutsceneFilesCount = Loader.GetLoader(s.Context).Config.Version == LoaderConfiguration.GameVersion.DTP_Prototype_19970717 ? 5 : 3;
 
