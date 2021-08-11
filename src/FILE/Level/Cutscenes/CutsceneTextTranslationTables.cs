@@ -183,7 +183,7 @@ namespace BinarySerializer.KlonoaDTP
                         var data_SetObjAnimation = (CutsceneInstructionData_SetObjAnimation)instruction.Data;
                         writeLine($"Object = {data_SetObjAnimation.ObjIndex}");
                         writeLine($"Unknown = {data_SetObjAnimation.Byte_01}");
-                        writeLine($"Animation = {data_SetObjAnimation.Short_02}");
+                        writeLine($"Animation = {data_SetObjAnimation.AnimIndex}");
                         break;
 
                     case CutsceneInstruction.InstructionType.CreateObj:
