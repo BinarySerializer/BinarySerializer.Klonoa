@@ -1,6 +1,4 @@
-﻿using UnityEngine;
-
-namespace BinarySerializer.KlonoaDTP
+﻿namespace BinarySerializer.KlonoaDTP
 {
     public class MIPS_Instruction : BinarySerializable
     {
@@ -39,14 +37,14 @@ namespace BinarySerializer.KlonoaDTP
                 else if (Funct == 0x08)
                     Mnemonic = InstructionMnemonic.jr;
                 else
-                    Debug.LogWarning($"Unknown MIPS instruction with opcode {Opcode} and funt {Funct}");
+                    s.LogWarning($"Unknown MIPS instruction with opcode {Opcode} and funt {Funct}");
             }
             else if (Opcode == 0x0F)
                 Mnemonic = InstructionMnemonic.lui;
             else if (Opcode == 0x23)
                 Mnemonic = InstructionMnemonic.lw;
             else
-                Debug.LogWarning($"Unknown MIPS instruction with opcode {Opcode}");
+                s.LogWarning($"Unknown MIPS instruction with opcode {Opcode}");
 
             s.Log($"{nameof(Mnemonic)}: {Mnemonic}");
 
