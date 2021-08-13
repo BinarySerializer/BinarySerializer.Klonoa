@@ -1,7 +1,10 @@
 # BinarySerializer.KlonoaDTP
 BinarySerializer.KlonoaDTP is an extension library to [BinarySerializer](https://github.com/RayCarrot/BinarySerializer) for serializing the BIN file data in Klonoa: Door to Phantomile. This can be used for reverse engineering and to read any of its files, export the data (such as the graphics, models, sounds etc.) and more.
 
-*Note*: This library is not complete. A lot of data is currently not parsed and only the retail NTSC version is currently supported.
+*Note*: This library is not complete with some data not being parsed.
+
+![Map Example](img/map_example.png)
+Example image is from this library being used in [Ray1Map](https://github.com/Adsolution/Ray1Map) to display the maps
 
 # Get Started
 To use this library in your own project you must first reference [BinarySerializer](https://github.com/RayCarrot/BinarySerializer) and [BinarySerializer.PS1](https://github.com/RayCarrot/BinarySerializer.PS1) as it relies on these libraries. After that you can quickly get started using the `Loader` class.
@@ -10,25 +13,34 @@ To use this library in your own project you must first reference [BinarySerializ
 // First create a context for the data serialization
 using Context context = new Context(basePath);
 
-// Add the IDX and BIN to the context. The BIN gets added as a linear file while the IDX has to be memory mapped.
-context.AddFile(new LinearSerializedFile(context, Loader.FilePath_BIN));
+// Add the IDX and BIN to the context. The BIN gets added as a linear file while the IDX has to be memory mapped. If the level data will be parsed then the exe needs to be added too.
+context.AddFile(new LinearFile(context, Loader.FilePath_BIN));
 context.AddFile(new MemoryMappedFile(context, Loader.FilePath_IDX, 0x80010000));
 
-// Load the IDX
-IDX idx = Load_IDX(context);
+// Create a configuration
+LoaderConfiguration_DTP_US config = new LoaderConfiguration_DTP_US();
 
-// Create the loader
-Loader loader = Loader.Create(context, idx);
+// Load the IDX and pass in the configuration to it
+IDX idx = FileFactory.Read<IDX>(Loader.FilePath_IDX, context, (s, idxObj) => idxObj.Pre_LoaderConfig = config);
 
-// Switch to the BIN block you want to load. Block 3 is Vision 1-1 for example.
+// Create the loader, passing in the context, IDX and configuration
+Loader loader = Loader.Create(context, idx, config);
+
+// Switch to the BIN block you want to load. Block 3 is Vision 1-1 for example, while block 0 is the fixed block.
 loader.SwitchBlocks(3);
 
-// Load the BIN block
+// Load and process the BIN block
 loader.LoadAndProcessBINBlock();
 
 // The data is now stored in the loader and can be accessed
 LevelPack_ArchiveFile level = loader.LevelPack;
-Sprites_ArchiveFile[] spriteFrames = loader.SpriteFrames;
+Sprites_ArchiveFile[] spriteSets = loader.SpriteSets;
+
+// For example the level model can be accessed in the level pack
+PS1_TMD levelModel = level.Sectors[0].LevelModel;
+
+// The textures and palettes are stored in the virtual VRAM in the loader
+PS1_VRAM vram = loader.VRAM;
 
 ```
 
@@ -80,7 +92,7 @@ The sprites for the 2D animations used in the level.
 The primary level data. Contains the object models, sector data (such as the level models and movement paths) and more.
 
 As an example, here are all the files in Vision 1-1:
-- 1: OA05 (sounds)
+- 1: OA05 (sound bank)
 - 2: TIM (sprite sheets)
 - 3: TIM (textures)
 - 4: Backgrounds
