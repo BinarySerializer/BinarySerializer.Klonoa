@@ -35,6 +35,10 @@
                     serializeData<CutsceneInstructionData_SetObjPos>();
                     break;
 
+                case InstructionType.SetCutsceneState:
+                    serializeData<CutsceneInstructionData_SetCutsceneState>();
+                    break;
+
                 case InstructionType.CreateBackgroundObjects:
                 case InstructionType.Terminator:
                 case InstructionType.Special:
@@ -61,6 +65,8 @@
 
             ChangeSector = 16,
             SetObjPos = 17,
+
+            SetCutsceneState = 31,
 
             Terminator = 777,
             Special = 999, // TODO: What does this do?

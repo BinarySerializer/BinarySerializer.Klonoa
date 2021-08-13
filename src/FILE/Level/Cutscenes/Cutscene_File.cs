@@ -2,6 +2,7 @@
 {
     public class Cutscene_File : BaseFile
     {
+        // TODO: First instruction seems to be something else? The game parses it differently.
         public CutsceneInstruction[] Instructions { get; set; }
 
         public override void SerializeImpl(SerializerObject s)

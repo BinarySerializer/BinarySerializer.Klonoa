@@ -12,7 +12,7 @@
         public override void SerializeImpl(SerializerObject s)
         {
             ObjIndex = s.Serialize<byte>(ObjIndex, name: nameof(ObjIndex));
-            s.SerializePadding(1, logIfNotNull: true);
+            s.SerializePadding(1, logIfNotNull: false);
             ParamsBufferOffset = s.Serialize<uint>(ParamsBufferOffset, name: nameof(ParamsBufferOffset));
             DoAtParams(s, () =>
             {

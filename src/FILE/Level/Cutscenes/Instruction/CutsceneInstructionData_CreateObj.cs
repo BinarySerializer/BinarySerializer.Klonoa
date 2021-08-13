@@ -8,7 +8,7 @@
         public override void SerializeImpl(SerializerObject s)
         {
             ObjIndex = s.Serialize<byte>(ObjIndex, name: nameof(ObjIndex));
-            s.SerializePadding(1, logIfNotNull: true);
+            s.SerializePadding(1, logIfNotNull: false);
             Int_02 = s.Serialize<int>(Int_02, name: nameof(Int_02));
         }
     }

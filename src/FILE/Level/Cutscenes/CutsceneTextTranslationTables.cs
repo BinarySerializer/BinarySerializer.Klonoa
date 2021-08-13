@@ -182,7 +182,6 @@ namespace BinarySerializer.KlonoaDTP
                     case CutsceneInstruction.InstructionType.SetObjAnimation:
                         var data_SetObjAnimation = (CutsceneInstructionData_SetObjAnimation)instruction.Data;
                         writeLine($"Object = {data_SetObjAnimation.ObjIndex}");
-                        writeLine($"Unknown = {data_SetObjAnimation.Byte_01}");
                         writeLine($"Animation = {data_SetObjAnimation.AnimIndex}");
                         break;
 
@@ -195,7 +194,6 @@ namespace BinarySerializer.KlonoaDTP
                     case CutsceneInstruction.InstructionType.ChangeSector:
                         var data_ChangeSector = (CutsceneInstructionData_ChangeSector)instruction.Data;
                         writeLine($"Sector = {data_ChangeSector.SectorIndex}");
-                        writeLine($"Unknown = {data_ChangeSector.Int_02}");
                         break;
 
                     case CutsceneInstruction.InstructionType.SetObjPos:
@@ -203,6 +201,11 @@ namespace BinarySerializer.KlonoaDTP
                         writeLine($"Object = {data_SetObjPos.ObjIndex}");
                         writeLine($"RelativeObject = {data_SetObjPos.PositionRelativeObjIndex}");
                         writeLine($"Position = ({data_SetObjPos.XPos}, {data_SetObjPos.YPos}, {data_SetObjPos.ZPos})");
+                        break;
+
+                    case CutsceneInstruction.InstructionType.SetCutsceneState:
+                        var data_SetCutsceneState = (CutsceneInstructionData_SetCutsceneState)instruction.Data;
+                        writeLine($"State = {data_SetCutsceneState.State}");
                         break;
 
                     case CutsceneInstruction.InstructionType.Terminator:
