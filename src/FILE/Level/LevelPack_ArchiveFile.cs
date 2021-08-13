@@ -12,8 +12,8 @@
 
         // TODO: Parse these - not available in all levels
         public RawData_File File_3 { get; set; }
-        public RawData_File File_4 { get; set; }
-        public RawData_File File_5 { get; set; } // Archive?
+        public RawData_ArchiveFile File_4 { get; set; }
+        public RawData_ArchiveFile File_5 { get; set; }
         public RawData_File File_6 { get; set; }
         public RawData_File File_7 { get; set; }
 
@@ -26,8 +26,8 @@
             File_1 = SerializeFile<ArchiveFile<RawData_File>>(s, File_1, 1, name: nameof(File_1));
             CutscenePack = SerializeFile<CutscenePack_ArchiveFile>(s, CutscenePack, 2, name: nameof(CutscenePack));
             File_3 = SerializeFile<RawData_File>(s, File_3, 3, name: nameof(File_3));
-            File_4 = SerializeFile<RawData_File>(s, File_4, 4, name: nameof(File_4));
-            File_5 = SerializeFile<RawData_File>(s, File_5, 5, name: nameof(File_5));
+            File_4 = SerializeFile<RawData_ArchiveFile>(s, File_4, 4, name: nameof(File_4));
+            File_5 = SerializeFile<RawData_ArchiveFile>(s, File_5, 5, name: nameof(File_5));
             File_6 = SerializeFile<RawData_File>(s, File_6, 6, name: nameof(File_6));
             File_7 = SerializeFile<RawData_File>(s, File_7, 7, name: nameof(File_7));
 
