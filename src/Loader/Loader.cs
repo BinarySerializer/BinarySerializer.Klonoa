@@ -288,7 +288,7 @@ namespace BinarySerializer.KlonoaDTP
 
                 case IDXLoadCommand.FileType.SEQ:
                     // TODO: Parse SEQ
-                    return null;
+                    return LoadBINFile<RawData_File>(fileIndex);
 
                 case IDXLoadCommand.FileType.Archive_BackgroundPack:
                     return LoadBINFile<BackgroundPack_ArchiveFile>(fileIndex);
@@ -335,7 +335,7 @@ namespace BinarySerializer.KlonoaDTP
                 case IDXLoadCommand.FileType.Unknown:
                 default:
                     Context.Logger.LogWarning($"Unsupported file format for file {fileIndex} parsed at 0x{cmd.FILE_FunctionPointer:X8}");
-                    return null;
+                    return LoadBINFile<RawData_File>(fileIndex);
             }
         }
 
@@ -350,6 +350,8 @@ namespace BinarySerializer.KlonoaDTP
         {
             var s = Context.Deserializer;
             var cmd = IDXEntry.LoadCommands[fileIndex];
+
+            s.Goto(cmd.FILE_Pointer);
 
             // Serialize the file
             var file = s.SerializeObject<T>(null, x =>
@@ -379,10 +381,7 @@ namespace BinarySerializer.KlonoaDTP
                 var cmd = IDXEntry.LoadCommands[cmdIndex];
 
                 if (cmd.Type == 2)
-                {
-                    s.Goto(cmd.FILE_Pointer);
                     loadAction(cmd, cmdIndex);
-                }
             }
         }
 
@@ -401,10 +400,7 @@ namespace BinarySerializer.KlonoaDTP
                 var cmd = IDXEntry.LoadCommands[cmdIndex];
 
                 if (cmd.Type == 2)
-                {
-                    s.Goto(cmd.FILE_Pointer);
                     await loadAction(cmd, cmdIndex);
-                }
             }
         }
 
