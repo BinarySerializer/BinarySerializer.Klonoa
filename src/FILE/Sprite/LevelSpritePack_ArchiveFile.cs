@@ -30,7 +30,7 @@
                 // Ignore dummy files
                 if (OffsetTable.FilePointers[2 + i] == OffsetTable.FilePointers[0])
                 {
-                    FlagAsParsed(2 + i);
+                    FlagAsParsed(2 + i, DummyFile, name: nameof(DummyFile));
                     continue;
                 }
 

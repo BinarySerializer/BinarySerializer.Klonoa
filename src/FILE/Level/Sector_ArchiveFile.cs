@@ -32,6 +32,11 @@ namespace BinarySerializer.KlonoaDTP
                     // Serialize the offset table
                     OffsetTable = s.SerializeObject<OffsetTable>(OffsetTable, name: nameof(OffsetTable));
 
+                    ParsedFiles = new (BinarySerializable, string)[OffsetTable.FilesCount];
+
+                    if (AddToParsedArchiveFiles)
+                        ParsedArchiveFiles[this] = new bool[OffsetTable.FilesCount];
+
                     // Serialize the files
                     SerializeFiles(s);
 

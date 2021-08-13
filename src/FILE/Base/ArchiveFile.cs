@@ -13,6 +13,11 @@ namespace BinarySerializer.KlonoaDTP
         public static Dictionary<ArchiveFile, bool[]> ParsedArchiveFiles { get; } = new Dictionary<ArchiveFile, bool[]>();
 
         /// <summary>
+        /// The parsed files and their names, if any
+        /// </summary>
+        public (BinarySerializable, string)[] ParsedFiles { get; set; }
+
+        /// <summary>
         /// The offset table for the contained files
         /// </summary>
         public OffsetTable OffsetTable { get; set; }
@@ -67,14 +72,16 @@ namespace BinarySerializer.KlonoaDTP
 
                 obj = file.FileData;
 
-                FlagAsParsed(index);
+                FlagAsParsed(index, obj, name);
             });
 
             return obj;
         }
 
-        public void FlagAsParsed(int index)
+        public void FlagAsParsed(int index, BinarySerializable file, string name)
         {
+            ParsedFiles[index] = (file, name);
+
             if (!AddToParsedArchiveFiles) 
                 return;
             
@@ -88,6 +95,8 @@ namespace BinarySerializer.KlonoaDTP
         {
             // Serialize the offset table
             OffsetTable = s.SerializeObject<OffsetTable>(OffsetTable, name: nameof(OffsetTable));
+
+            ParsedFiles = new (BinarySerializable, string)[OffsetTable.FilesCount];
 
             if (AddToParsedArchiveFiles)
                 ParsedArchiveFiles[this] = new bool[OffsetTable.FilesCount];
