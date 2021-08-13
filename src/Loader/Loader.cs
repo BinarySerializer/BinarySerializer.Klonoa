@@ -368,13 +368,26 @@ namespace BinarySerializer.KlonoaDTP
         }
 
         /// <summary>
+        /// Prepares to read the files in the current block by filling the cache for it
+        /// </summary>
+        /// <returns>The task</returns>
+        public async Task FillCacheForBlockReadAsync()
+        {
+            var s = Context.Deserializer;
+
+            foreach (IDXLoadCommand loadCmd in IDXEntry.LoadCommands.Where(x => x.Type == 1))
+            {
+                s.Goto(loadCmd.BIN_Pointer);
+                await s.FillCacheForReadAsync(loadCmd.BIN_Length);
+            }
+        }
+
+        /// <summary>
         /// Load the BIN files in the current BIN block
         /// </summary>
         /// <param name="loadAction">The action used to load each BIN file</param>
         public void LoadBINFiles(Action<IDXLoadCommand, int> loadAction)
         {
-            var s = Context.Deserializer;
-
             // Enumerate every load command
             for (int cmdIndex = 0; cmdIndex < IDXEntry.LoadCommands.Length; cmdIndex++)
             {
