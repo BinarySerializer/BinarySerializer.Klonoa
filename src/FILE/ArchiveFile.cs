@@ -125,9 +125,14 @@ namespace BinarySerializer.Klonoa
 
             public override void SerializeImpl(SerializerObject s)
             {
-                var header = s.DoAt(s.CurrentPointer, () => s.Serialize<uint>(default, "HeaderCheck"));
+                bool isCompressed = false;
 
-                var isCompressed = header == ULZEncoder.Header;
+                if (Loader.GetConfiguration(s.Context)?.Version == LoaderConfiguration.GameVersion.DTP_Prototype_19970717 ||
+                    Loader.GetConfiguration(s.Context)?.Version == LoaderConfiguration.GameVersion.DTP)
+                {
+                    uint header = s.DoAt(s.CurrentPointer, () => s.Serialize<uint>(default, "HeaderCheck"));
+                    isCompressed = header == ULZEncoder.Header;
+                }
 
                 s.DoEncodedIf(new ULZEncoder(), isCompressed, () =>
                 {
@@ -147,7 +152,10 @@ namespace BinarySerializer.Klonoa
                     }, name: nameof(FileData));
                 }, allowLocalPointers: true);
 
-                s.Align();
+                if (Loader.GetConfiguration(s.Context)?.Version == LoaderConfiguration.GameVersion.LV)
+                    s.Align(alignBytes: 16);
+                else
+                    s.Align(alignBytes: 4);
 
                 if (Pre_LogIfNotFullyParsed && s.CurrentPointer != Pre_EndPointer)
                     s.LogWarning($"Archived file of type {typeof(File).Name} at {Offset} was not fully serialized. {s.CurrentPointer} != {Pre_EndPointer}");

@@ -14,21 +14,6 @@ namespace BinarySerializer.Klonoa
 
         #endregion
 
-        #region Constants
-
-        /// <summary>
-        /// The key in the context for the current loader
-        /// </summary>
-        private const string Key = "KLONOA_LV_LOADER";
-
-        #endregion
-
-        #region Protected Properties
-
-        protected override string LoaderKey => Key;
-
-        #endregion
-
         #region Public Properties
 
         public HeadPack_ArchiveFile HeadPack { get; }

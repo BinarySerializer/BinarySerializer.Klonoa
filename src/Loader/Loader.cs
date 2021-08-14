@@ -9,6 +9,11 @@
         }
 
         /// <summary>
+        /// The key in the context for the current loader
+        /// </summary>
+        protected const string Key = "KLONOA_LOADER";
+
+        /// <summary>
         /// The context
         /// </summary>
         public Context Context { get; }
@@ -25,11 +30,6 @@
         /// </summary>
         public BinaryDeserializer Deserializer => Context.Deserializer;
 
-        /// <summary>
-        /// The key in the context for the current loader
-        /// </summary>
-        protected abstract string LoaderKey { get; }
-
         protected abstract void InitializeBIN();
 
         /// <summary>
@@ -38,10 +38,12 @@
         protected void Initialize()
         {
             // Store in the context so it can be accessed
-            Context.StoreObject(LoaderKey, this);
+            Context.StoreObject(Key, this);
 
             // Initialize the BIN files
             InitializeBIN();
         }
+
+        public static LoaderConfiguration GetConfiguration(Context context) => context.GetStoredObject<Loader>(Key)?.LoaderConfig;
     }
 }

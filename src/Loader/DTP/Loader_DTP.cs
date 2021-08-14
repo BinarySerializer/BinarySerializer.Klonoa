@@ -28,18 +28,7 @@ namespace BinarySerializer.Klonoa
 
         #endregion
 
-        #region Constants
-
-        /// <summary>
-        /// The key in the context for the current loader
-        /// </summary>
-        private const string Key = "KLONOA_DTP_LOADER";
-
-        #endregion
-
         #region Protected Properties
-
-        protected override string LoaderKey => Key;
 
         protected HashSet<MemoryMappedByteArrayFile> MemoryFiles { get; }
 
