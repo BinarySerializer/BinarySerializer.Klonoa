@@ -1,10 +1,21 @@
-# BinarySerializer.KlonoaDTP
-BinarySerializer.KlonoaDTP is an extension library to [BinarySerializer](https://github.com/RayCarrot/BinarySerializer) for serializing the BIN file data in Klonoa: Door to Phantomile. This can be used for reverse engineering and to read any of its files, export the data (such as the graphics, models, sounds etc.) and more.
+# BinarySerializer.Klonoa
+BinarySerializer.Klonoa is an extension library to [BinarySerializer](https://github.com/RayCarrot/BinarySerializer) for serializing the game data in the console Klonoa games. This can be used for reverse engineering and to read any of its files, export the data (such as the graphics, models, sounds etc.) and more.
 
 *Note*: This library is not complete with some data not being parsed.
 
 ![Map Example](img/map_example.png)
 Example image is from this library being used in [Ray1Map](https://github.com/Adsolution/Ray1Map) to display the maps
+
+# Supported Games and Versions
+## Currently Supported Versions
+* Klonoa: Door to Phantomile (Prototype 1997/07/17)
+* Klonoa: Door to Phantomile (NTSC)
+
+## Planned Versions
+* Klonoa: Door to Phantomile (Prototype 1997/12/18)
+* Klonoa: Door to Phantomile (NTSC-J)
+* Klonoa: Door to Phantomile (PAL)
+* Klonoa: Door to Phantomile (Demo)
 
 # Get Started
 To use this library in your own project you must first reference [BinarySerializer](https://github.com/RayCarrot/BinarySerializer) and [BinarySerializer.PS1](https://github.com/RayCarrot/BinarySerializer.PS1) as it relies on these libraries. After that you can quickly get started using the `Loader` class.
@@ -44,7 +55,7 @@ PS1_VRAM vram = loader.VRAM;
 
 ```
 
-# Documentation
+# Documentation (Door to Phantomile)
 All of the data for the game is stored in the `FILE.BIN` file with the `FILE.IDX` telling us how to parse it. The BIN is split into 25 blocks, each representing a level (except the first 3).
 
 Why is everything stored in a single file? Well, primarily it's for performance when loading. Now when the game wants to load a level all of its data gets read from the same place, thus is doesn't need to seek around to different sectors on the disc! This inevitably means data gets duplicated across levels, but that's not an issue since discs can store a lot of data (a lot more than the PS1 can store in memory).
