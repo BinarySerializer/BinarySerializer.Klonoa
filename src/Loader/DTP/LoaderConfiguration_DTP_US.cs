@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
-using BinarySerializer.Klonoa.DTP;
 
 namespace BinarySerializer.Klonoa.DTP
 {
-    public class LoaderConfiguration_DTP_US : LoaderConfiguration
+    public class LoaderConfiguration_DTP_US : LoaderConfiguration_DTP
     {
         public override GameVersion Version => GameVersion.DTP;
 

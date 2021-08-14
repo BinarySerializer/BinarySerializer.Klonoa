@@ -31,7 +31,7 @@
                     onPreSerialize: x => x.Pre_AdditionalLevelFilePack = Pre_AdditionalLevelFilePack,
                     name: nameof(SectorModifiers));
 
-                var sectorToParse = Loader.GetLoader(s.Context).LevelSector;
+                var sectorToParse = Loader_DTP.GetLoader(s.Context).LevelSector;
                 for (int i = 0; i < SectorModifiers.Length; i++)
                 {
                     if (sectorToParse == -1 || sectorToParse == i)

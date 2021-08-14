@@ -4,14 +4,14 @@
     {
         private const uint SectorSize = 2048;
 
-        public LoaderConfiguration Pre_LoaderConfig { get; set; } // Pass in the config as a pre-serialize value as the loader will not have been created yet
+        public LoaderConfiguration_DTP Pre_LoaderConfig { get; set; } // Pass in the config as a pre-serialize value as the loader will not have been created yet
 
         public int Type { get; set; }
 
         // Type 1
         public uint BIN_LBA { get; set; } // The LBA offset relative to the LBA of the BIN
         public uint BIN_Offset => BIN_LBA * SectorSize;
-        public Pointer BIN_Pointer => new Pointer(BIN_Offset, Context.GetFile(Loader.FilePath_BIN));
+        public Pointer BIN_Pointer => new Pointer(BIN_Offset, Context.GetFile(Pre_LoaderConfig.FilePath_BIN));
         public uint BIN_UnknownPointerValue { get; set; }
         public uint BIN_LengthValue { get; set; }
         public uint BIN_Length => BIN_LengthValue * SectorSize;

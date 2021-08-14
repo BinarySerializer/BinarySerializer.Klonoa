@@ -18,7 +18,7 @@
             Cutscene_Skip = Pre_Archive.SerializeFile<Cutscene_File>(s, Cutscene_Skip, Pre_ArchiveFileIndex + 1, name: $"{nameof(Cutscene_Skip)}");
             Font = Pre_Archive.SerializeFile<CutsceneFont_File>(s, Font, Pre_ArchiveFileIndex + 2, name: $"{nameof(Font)}");
 
-            if (Loader.GetLoader(s.Context).Config.Version == LoaderConfiguration.GameVersion.DTP_Prototype_19970717)
+            if (Loader_DTP.GetLoader(s.Context).GameVersion == LoaderConfiguration.GameVersion.DTP_Prototype_19970717)
             {
                 Proto_File_3 = Pre_Archive.SerializeFile<RawData_File>(s, Proto_File_3, Pre_ArchiveFileIndex + 3, name: $"{nameof(Proto_File_3)}");
                 Proto_File_4 = Pre_Archive.SerializeFile<RawData_File>(s, Proto_File_4, Pre_ArchiveFileIndex + 4, name: $"{nameof(Proto_File_4)}");

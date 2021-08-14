@@ -34,7 +34,7 @@
                 CharacterNamesImgData = SerializeFile<RawData_File>(s, CharacterNamesImgData, 3, name: nameof(CharacterNamesImgData));
                 CutsceneAssets = SerializeFile<RawData_ArchiveFile>(s, CutsceneAssets, 4, name: nameof(CutsceneAssets));
 
-                var cutsceneFilesCount = Loader.GetLoader(s.Context).Config.Version == LoaderConfiguration.GameVersion.DTP_Prototype_19970717 ? 5 : 3;
+                var cutsceneFilesCount = Loader_DTP.GetLoader(s.Context).GameVersion == LoaderConfiguration.GameVersion.DTP_Prototype_19970717 ? 5 : 3;
 
                 if ((OffsetTable.FilesCount - 5) % cutsceneFilesCount != 0)
                 {

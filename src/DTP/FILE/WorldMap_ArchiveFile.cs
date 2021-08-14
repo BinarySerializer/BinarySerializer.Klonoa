@@ -19,7 +19,7 @@ namespace BinarySerializer.Klonoa.DTP
             SpriteSheets = SerializeFile<TIM_ArchiveFile>(s, SpriteSheets, 0, name: nameof(SpriteSheets));
             File_1 = SerializeFile<RawData_ArchiveFile>(s, File_1, 1, name: nameof(File_1));
 
-            if (Loader.GetLoader(s.Context).Config.Version == LoaderConfiguration.GameVersion.DTP_Prototype_19970717)
+            if (Loader_DTP.GetLoader(s.Context).GameVersion == LoaderConfiguration.GameVersion.DTP_Prototype_19970717)
             {
                 Proto_Sprites = SerializeFile<Sprites_ArchiveFile>(s, Proto_Sprites, 2, name: nameof(Proto_Sprites));
             }

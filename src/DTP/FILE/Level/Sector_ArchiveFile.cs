@@ -17,7 +17,7 @@ namespace BinarySerializer.Klonoa.DTP
         public override void SerializeImpl(SerializerObject s)
         {
             // Every third level (every boss) is not compressed
-            var isCompressed = !Loader.GetLoader(s.Context).IsBossFight;
+            var isCompressed = !Loader_DTP.GetLoader(s.Context).IsBossFight;
 
             if (isCompressed)
             {

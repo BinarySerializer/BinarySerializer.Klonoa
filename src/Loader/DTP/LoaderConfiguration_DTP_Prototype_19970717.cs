@@ -3,7 +3,7 @@ using BinarySerializer.Klonoa.DTP;
 
 namespace BinarySerializer.Klonoa
 {
-    public class LoaderConfiguration_DTP_Prototype_19970717 : LoaderConfiguration
+    public class LoaderConfiguration_DTP_Prototype_19970717 : LoaderConfiguration_DTP
     {
         public override GameVersion Version => GameVersion.DTP_Prototype_19970717;
 

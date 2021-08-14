@@ -1,11 +1,8 @@
-﻿using System;
-
-namespace BinarySerializer.Klonoa.DTP
+﻿namespace BinarySerializer.Klonoa.DTP
 {
     public class IDXEntry : BinarySerializable
     {
-        public int Pre_BlockIndex { get; set; }
-        public LoaderConfiguration Pre_LoaderConfig { get; set; }
+        public LoaderConfiguration_DTP Pre_LoaderConfig { get; set; }
 
         public uint DestinationPointer { get; set; } // The game copies the load commands pointer to this location
         public Pointer LoadCommandsPointer { get; set; }
@@ -22,36 +19,6 @@ namespace BinarySerializer.Klonoa.DTP
             {
                 // Serialize load commands
                 LoadCommands = s.SerializeObjectArrayUntil(LoadCommands, x => x.Type == 0, onPreSerialize: x => x.Pre_LoaderConfig = Pre_LoaderConfig, name: nameof(LoadCommands));
-
-                // Set the file pointers
-                Pointer p = null;
-                var binFile = s.Context.GetFile(Loader.FilePath_BIN);
-
-                for (var i = 0; i < LoadCommands.Length; i++)
-                {
-                    var cmd = LoadCommands[i];
-
-                    // Seek
-                    if (cmd.Type == 1)
-                    {
-                        p = cmd.BIN_Pointer;
-                    }
-                    // File
-                    else if (cmd.Type == 2)
-                    {
-                        if (p == null)
-                            throw new Exception($"File load command can not appear before a seek commands");
-
-                        // Set the pointer
-                        cmd.FILE_Pointer = p;
-
-                        // Add a region for nicer pointer logging
-                        binFile.AddRegion(p.FileOffset, cmd.FILE_Length, $"File_{Pre_BlockIndex}_{i}");
-
-                        // Increment pointer by the file size
-                        p += cmd.FILE_Length;
-                    }
-                }
             });
         }
     }
