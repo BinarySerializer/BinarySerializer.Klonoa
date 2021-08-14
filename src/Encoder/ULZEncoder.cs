@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace BinarySerializer.KlonoaDTP
+namespace BinarySerializer.Klonoa
 {
     public class ULZEncoder : IStreamEncoder
     {

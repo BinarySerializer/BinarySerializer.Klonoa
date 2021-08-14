@@ -3,9 +3,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BinarySerializer.Klonoa.DTP;
 
-namespace BinarySerializer.KlonoaDTP
+namespace BinarySerializer.Klonoa
 {
+    // TODO: Split up into BaseLoader -> DTPLoader
+
     /// <summary>
     /// Handles loading data from the game BIN
     /// </summary>

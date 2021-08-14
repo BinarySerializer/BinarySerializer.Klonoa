@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace BinarySerializer.KlonoaDTP
+namespace BinarySerializer.Klonoa
 {
     // I have no clue what compression type this actually is. With this ugly code, copied from Ghidra, it at least works...
     public class LevelSectorEncoder : IStreamEncoder

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
+using BinarySerializer.Klonoa.DTP;
 
-namespace BinarySerializer.KlonoaDTP
+namespace BinarySerializer.Klonoa.DTP
 {
     public class LoaderConfiguration_DTP_US : LoaderConfiguration
     {

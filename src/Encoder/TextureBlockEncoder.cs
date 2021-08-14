@@ -1,6 +1,6 @@
 ﻿using System.IO;
 
-namespace BinarySerializer.KlonoaDTP
+namespace BinarySerializer.Klonoa
 {
     public class TextureBlockEncoder : IStreamEncoder
     {
