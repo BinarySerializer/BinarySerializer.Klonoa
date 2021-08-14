@@ -7,7 +7,7 @@ namespace BinarySerializer.Klonoa
         public virtual int LanguagesCount => 1;
         public bool HasMultipleLanguages => LanguagesCount > 1;
 
-        public virtual string FilePath_KL => "BGMPACK.BIN";
+        public virtual string FilePath_HEAD => "HEADPACK.BIN";
 
         public virtual string GetFilePath(Loader_LV.BINType bin, int languageIndex = 0)
         {

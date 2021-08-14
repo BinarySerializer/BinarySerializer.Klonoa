@@ -47,40 +47,54 @@ namespace BinarySerializer.Klonoa
             if (Config.HasMultipleLanguages)
             {
                 for (int langIndex = 0; langIndex < HeadPack.KLDATA_Multi.OffsetTable.FilesCount; langIndex++)
-                    InitializeBIN(BINType.KL, HeadPack.KLDATA_Multi.Files[langIndex], langIndex);
+                    InitializeBIN(BINType.KL, HeadPack.KLDATA_Multi.Files[langIndex].FileDescriptors, langIndex);
             }
             else
             {
-                InitializeBIN(BINType.KL, HeadPack.KLDATA_Single);
+                InitializeBIN(BINType.KL, HeadPack.KLDATA_Single.FileDescriptors);
             }
 
-            InitializeBIN(BINType.BGM, HeadPack.BGMPACK);
-            InitializeBIN(BINType.PPT, HeadPack.PPTPACK);
+            InitializeBIN(BINType.BGM, HeadPack.BGMPACK.FileDescriptors);
+            InitializeBIN(BINType.PPT, HeadPack.PPTPACK.FileDescriptors);
         }
 
-        protected void InitializeBIN(BINType bin, BINHeader_File header, int languageIndex = 0)
+        protected void InitializeBIN<T>(BINType bin, T[] files, int languageIndex = 0)
+            where T : BINHeader_BaseFileDescriptor
         {
             var binFile = Context.GetFile(Config.GetFilePath(bin, languageIndex));
 
             if (binFile == null)
                 return;
 
-            for (int fileIndex = 0; fileIndex < header.FilesCount; fileIndex++)
+            for (int fileIndex = 0; fileIndex < files.Length; fileIndex++)
             {
-                var fileDescriptor = header.FileDescriptors[fileIndex];
+                var fileDescriptor = files[fileIndex];
 
                 // Set the pointer
-                fileDescriptor.FilePointer = new Pointer(fileDescriptor.FileOffset, binFile);
+                fileDescriptor.FilePointer = new Pointer(fileDescriptor.FILE_Offset, binFile);
 
                 // Add a region for nicer pointer logging
                 var regionName = $"File_{bin}{(Config.HasMultipleLanguages ? languageIndex.ToString() : null)}_{fileIndex}";
-                binFile.AddRegion(fileDescriptor.FileOffset, fileDescriptor.FileLength, regionName);
+                binFile.AddRegion(fileDescriptor.FILE_Offset, fileDescriptor.FILE_Length, regionName);
             }
         }
 
         #endregion
 
         #region Public Methods
+
+        public BINHeader_File GetBINHeader(BINType bin, int languageIndex = 0)
+        {
+            return bin switch
+            {
+                BINType.KL => Config.HasMultipleLanguages ? HeadPack.KLDATA_Multi.Files[languageIndex] : HeadPack.KLDATA_Single,
+                BINType.BGM => throw new Exception($"The BGM pack does not use {nameof(BINHeader_File)}"),
+                BINType.PPT => HeadPack.PPTPACK,
+                _ => throw new ArgumentOutOfRangeException(nameof(bin), bin, null)
+            };
+        }
+
+        public BINHeader_BGM_File GetBINHeader_BGM() => HeadPack.BGMPACK;
 
         /// <summary>
         /// Loads the BIN file of a generic type in the specified BIN
@@ -89,28 +103,34 @@ namespace BinarySerializer.Klonoa
         /// <param name="bin">The BIN to load from</param>
         /// <param name="fileIndex">The BIN file to load</param>
         /// <param name="languageIndex">The language index</param>
+        /// <param name="bgmIndex">The BGM index if a BGM bin</param>
         /// <returns>The loaded file</returns>
-        public T LoadBINFile<T>(BINType bin, int fileIndex, int languageIndex = 0)
+        public T LoadBINFile<T>(BINType bin, int fileIndex, int languageIndex = 0, int bgmIndex = 0)
             where T : BaseFile, new()
         {
             var s = Deserializer;
 
-            var header = bin switch
+            long length;
+
+            if (bin == BINType.BGM)
             {
-                BINType.KL => Config.HasMultipleLanguages ? HeadPack.KLDATA_Multi.Files[languageIndex] : HeadPack.KLDATA_Single,
-                BINType.BGM => HeadPack.BGMPACK,
-                BINType.PPT => HeadPack.PPTPACK,
-                _ => throw new ArgumentOutOfRangeException(nameof(bin), bin, null)
-            };
-
-            var fileDescriptor = header.FileDescriptors[fileIndex];
-
-            s.Goto(fileDescriptor.FilePointer);
+                var header = GetBINHeader_BGM();
+                var fileDescriptor = header.FileDescriptors[fileIndex];
+                s.Goto(fileDescriptor.FilePointer + fileDescriptor.FileAbsoluteLength * bgmIndex);
+                length = fileDescriptor.FileLength;
+            }
+            else
+            {
+                var header = GetBINHeader(bin, languageIndex);
+                var fileDescriptor = header.FileDescriptors[fileIndex];
+                s.Goto(fileDescriptor.FilePointer);
+                length = fileDescriptor.FILE_Length;
+            }
 
             // Serialize the file
             var file = s.SerializeObject<T>(null, x =>
             {
-                x.Pre_FileSize = fileDescriptor.FileLength;
+                x.Pre_FileSize = length;
                 x.Pre_IsCompressed = false;
             }, name: $"{bin}_{fileIndex}");
 

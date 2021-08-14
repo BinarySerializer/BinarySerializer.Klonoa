@@ -1,21 +1,18 @@
 ﻿namespace BinarySerializer.Klonoa.LV
 {
-    public class BINFileDescriptor : BinarySerializable
+    public class BINHeader_FileDescriptor : BINHeader_BaseFileDescriptor
     {
-        private const uint SectorSize = 2048;
-
         public uint FileOffsetValue { get; set; }
-        public uint FileOffset => FileOffsetValue * SectorSize;
-        public Pointer FilePointer { get; set; }
+        public override uint FILE_Offset => FileOffsetValue * SectorSize;
         public uint FileLengthValue { get; set; }
-        public uint FileLength => FileLengthValue * SectorSize;
+        public override uint FILE_Length => FileLengthValue * SectorSize;
 
         public override void SerializeImpl(SerializerObject s)
         {
             FileOffsetValue = s.Serialize<uint>(FileOffsetValue, name: nameof(FileOffsetValue));
-            s.Log($"{nameof(FileOffset)}: {FileOffset}");
+            s.Log($"{nameof(FILE_Offset)}: {FILE_Offset}");
             FileLengthValue = s.Serialize<uint>(FileLengthValue, name: nameof(FileLengthValue));
-            s.Log($"{nameof(FileLength)}: {FileLength}");
+            s.Log($"{nameof(FILE_Length)}: {FILE_Length}");
         }
     }
 }

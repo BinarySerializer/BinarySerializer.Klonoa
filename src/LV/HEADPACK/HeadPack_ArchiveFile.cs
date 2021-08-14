@@ -16,7 +16,7 @@
 
         public BINHeaders_ArchiveFile KLDATA_Multi { get; set; }
         public BINHeader_File KLDATA_Single { get; set; }
-        public BINHeader_File BGMPACK { get; set; }
+        public BINHeader_BGM_File BGMPACK { get; set; }
         public BINHeader_File PPTPACK { get; set; }
 
         protected override void SerializeFiles(SerializerObject s)
@@ -26,7 +26,7 @@
             else
                 KLDATA_Single = SerializeFile<BINHeader_File>(s, KLDATA_Single, 0, name: nameof(KLDATA_Single));
 
-            BGMPACK = SerializeFile<BINHeader_File>(s, BGMPACK, 1, name: nameof(BGMPACK));
+            BGMPACK = SerializeFile<BINHeader_BGM_File>(s, BGMPACK, 1, name: nameof(BGMPACK));
             PPTPACK = SerializeFile<BINHeader_File>(s, PPTPACK, 2, name: nameof(PPTPACK));
         }
     }
