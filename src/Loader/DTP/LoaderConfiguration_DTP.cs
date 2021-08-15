@@ -12,6 +12,7 @@ namespace BinarySerializer.Klonoa
         public virtual string FilePath_BIN => "FILE.BIN";
         public virtual string FilePath_IDX => "FILE.IDX";
         public virtual string FilePath_EXE => "KLONOA.BIN";
+        public virtual uint Address_IDX => 0x80010000;
         public virtual uint Address_EXE => 0x80011000;
 
         public abstract Dictionary<uint, uint> FileAddresses { get; }
