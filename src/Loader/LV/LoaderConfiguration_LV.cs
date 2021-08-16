@@ -13,7 +13,7 @@ namespace BinarySerializer.Klonoa
         {
             return bin switch
             {
-                Loader_LV.BINType.KL => HasMultipleLanguages ? $"KLDATA{languageIndex}.BIN" : "KLDATA.BIN",
+                Loader_LV.BINType.KL => HasMultipleLanguages ? $"KLDATA{languageIndex + 1}.BIN" : "KLDATA.BIN",
                 Loader_LV.BINType.BGM => "BGMPACK.BIN",
                 Loader_LV.BINType.PPT => "PPTPACK.BIN",
                 _ => throw new ArgumentOutOfRangeException(nameof(bin), bin, null)
