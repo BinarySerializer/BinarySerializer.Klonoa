@@ -14,7 +14,6 @@ namespace BinarySerializer.Klonoa.DTP
     {
         public static Dictionary<string, char> US { get; } = new Dictionary<string, char>()
         {
-            // TODO: Fill out remaining characters
             ["yNfQ7w7t+oLS6hqlkoRbmm1LArc="] = ' ',
             ["Q3T2C7GGMs2ogZzrxN66invX+7U="] = '!',
             ["QQMGKwEGnyKlaZrqXktlSdvExkk="] = '\'',
