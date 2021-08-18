@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
+using System.Reflection;
 
 namespace BinarySerializer.Klonoa.DTP
 {
@@ -23,6 +25,10 @@ namespace BinarySerializer.Klonoa.DTP
 
         // Serialized from data files
         public ModifierObjectDynamicData_File[] DataFiles { get; set; }
+        
+        // Custom
+        public GlobalModifierType GlobalModifierType { get; set; }
+        public ModifierRotationAttribute RotationAttribute { get; set; }
 
         public override void SerializeImpl(SerializerObject s)
         {
@@ -49,38 +55,67 @@ namespace BinarySerializer.Klonoa.DTP
                 SecondaryType == 0)
                 return;
 
-            if (DataFileIndicesPointer == null)
+            var loader = Loader_DTP.GetLoader(s.Context);
+            GlobalModifierType = loader.Config.GetGlobalModifierType(loader.BINBlock, (int)PrimaryType, SecondaryType);
+
+            if (GlobalModifierType == GlobalModifierType.Unknown)
             {
-                DataFiles = new ModifierObjectDynamicData_File[0];
-                //s.LogWarning($"Modifier of primary type {PrimaryType} and secondary type {SecondaryType} has no data");
+                var count = DataFileIndices.Select((x, i) => new { x, i }).ToList().FindIndex(x => x.x == 0 && x.i > 0);
+                s.LogWarning($"Unknown modifier at {Offset} with {count} data files");
+                
+                DataFiles ??= new ModifierObjectDynamicData_File[count];
+
+                for (int i = 0; i < DataFiles.Length; i++)
+                {
+                    DataFiles[i] = Pre_AdditionalLevelFilePack.SerializeFile(s, DataFiles[i], DataFileIndices[i], onPreSerialize: x =>
+                    {
+                        x.Pre_FileType = GlobalModifierFileType.Unknown;
+                    }, name: $"{nameof(DataFiles)}[{i}]");
+                }
+
                 return;
             }
 
-            var filePack = Pre_AdditionalLevelFilePack;
+            var modifierFiles = GetAttribute<ModifierFilesAttribute>(GlobalModifierType);
 
-            if (PrimaryType == PrimaryObjectType.Modifier_3D_40 || PrimaryType == PrimaryObjectType.Modifier_3D_41)
+            if (modifierFiles == null)
+                return;
+
+            var files = modifierFiles.GetFiles().ToArray();
+
+            DataFiles ??= new ModifierObjectDynamicData_File[files.Length];
+
+            uint modelObjsCount = 0;
+
+            for (int i = 0; i < DataFiles.Length; i++)
             {
-                // Start by getting the amount of referenced data. We assume file 0 is never the last file. Unused files are always padded with 0.
-                var count = DataFileIndices.Select((x, i) => new { x, i }).ToList().FindIndex(x => x.x == 0 && x.i > 0);
-
-                if (DataFileIndices.Skip(count).Any(x => x != 0))
-                    s.LogWarning($"A data reference got skipped!");
-
-                DataFiles ??= new ModifierObjectDynamicData_File[count];
-
-                for (int i = 0; i < count; i++)
+                DataFiles[i] = Pre_AdditionalLevelFilePack.SerializeFile(s, DataFiles[i], DataFileIndices[i], onPreSerialize: x =>
                 {
-                    DataFiles[i] = filePack.SerializeFile(s, DataFiles[i], DataFileIndices[i], onPreSerialize: x =>
-                    {
-                        x.Pre_FileIndex = i;
-                        x.Pre_Files = DataFiles;
-                    }, name: $"{nameof(DataFiles)}[{i}]");
-                }
+                    x.Pre_FileType = files[i];
+                    x.Pre_ModelObjsCount = modelObjsCount;
+                }, name: $"{nameof(DataFiles)}[{i}]");
+
+                if (i == 0 && DataFiles[i].Pre_FileType == GlobalModifierFileType.TMD)
+                    modelObjsCount = DataFiles[i].TMD.ObjectsCount;
             }
-            else
-            {
-                s.LogWarning($"Modifier has unsupported primary type {PrimaryType}");
-            }
+
+            RotationAttribute = GetAttribute<ModifierRotationAttribute>(GlobalModifierType);
+        }
+
+        private static T GetAttribute<T>(Enum value) 
+            where T : Attribute
+        {
+            if (value == null)
+                return null;
+
+            // Get the member info for the value
+            var memberInfo = value.GetType().GetMember(value.ToString());
+
+            // Get the attribute
+            var attributes = memberInfo.FirstOrDefault<MemberInfo>()?.GetCustomAttributes<T>(false);
+
+            // Return the first attribute
+            return attributes?.FirstOrDefault<T>();
         }
     }
 }

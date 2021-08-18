@@ -20,5 +20,40 @@ namespace BinarySerializer.Klonoa
 
         public abstract uint Address_LevelData3DFunction { get; }
         public abstract uint Address_LevelData2DPointerTable { get; }
+
+        public Dictionary<int, Dictionary<int, GlobalModifierType>> GlobalModifierTypes { get; } = new Dictionary<int, Dictionary<int, GlobalModifierType>>()
+        {
+            [3] = new Dictionary<int, GlobalModifierType>()
+            {
+                [4001] = GlobalModifierType.MovingPlatform,
+                [4101] = GlobalModifierType.WindSwirl,
+                [4103] = GlobalModifierType.ScrollAnimation,
+                [4105] = GlobalModifierType.SmallWindmill,
+                [4106] = GlobalModifierType.BigWindmill,
+                [4107] = GlobalModifierType.ScenerySprites,
+                [4108] = GlobalModifierType.RoadSign,
+                [4109] = GlobalModifierType.ScenerySprites,
+                [4110] = GlobalModifierType.TextureAnimation,
+                [4120] = GlobalModifierType.Special,
+                [4121] = GlobalModifierType.LevelModelSection,
+            },
+            [4] = new Dictionary<int, GlobalModifierType>()
+            {
+                [4104] = GlobalModifierType.ScenerySprites,
+                [4108] = GlobalModifierType.Object,
+            },
+        };
+        public GlobalModifierType GetGlobalModifierType(int binBlock, int primaryType, int secondaryType)
+        {
+            if (!GlobalModifierTypes.ContainsKey(binBlock))
+                return GlobalModifierType.Unknown;
+
+            var typeKey = primaryType * 100 + secondaryType;
+
+            if (!GlobalModifierTypes[binBlock].ContainsKey(typeKey))
+                return GlobalModifierType.Unknown;
+
+            return GlobalModifierTypes[binBlock][typeKey];
+        }
     }
 }
