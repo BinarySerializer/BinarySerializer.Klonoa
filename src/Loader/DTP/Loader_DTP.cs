@@ -439,20 +439,7 @@ namespace BinarySerializer.Klonoa
             var s = Deserializer;
             var funcAddr = Config.Address_LevelData3DFunction;
 
-            // Helper for finding the file the pointer points to
-            BinaryFile findFile(uint addr)
-            {
-                var files = Context.MemoryMap.Files.OfType<MemoryMappedByteArrayFile>().ToList();
-                files.Sort((a, b) => b.BaseAddress.CompareTo(a.BaseAddress));
-                var file = files.FirstOrDefault(f => addr >= f.BaseAddress && addr <= f.BaseAddress + f.Length);
-
-                if (file == null)
-                    throw new Exception($"Code BIN file for parsing the hard-coded level data has not been loaded");
-
-                return file;
-            }
-
-            var funcPointer = new Pointer(funcAddr, findFile(funcAddr));
+            var funcPointer = new Pointer(funcAddr, FindCodeFile(funcAddr));
 
             var dataAddr = s.DoAt(funcPointer, () =>
             {
@@ -501,7 +488,7 @@ namespace BinarySerializer.Klonoa
                 return registers[2];
             });
 
-            var dataPointer = new Pointer(dataAddr, findFile(dataAddr));
+            var dataPointer = new Pointer(dataAddr, FindCodeFile(dataAddr));
 
             // Read the data
             LevelData3D = s.DoAt(dataPointer, () => s.SerializeObject<LevelData3D>(default, x =>
@@ -559,6 +546,18 @@ namespace BinarySerializer.Klonoa
             binBlock ??= BINBlock;
 
             return LoadedFiles[binBlock.Value].OfType<T>().FirstOrDefault();
+        }
+
+        public BinaryFile FindCodeFile(uint address)
+        {
+            var files = Context.MemoryMap.Files.OfType<MemoryMappedByteArrayFile>().ToList();
+            files.Sort((a, b) => b.BaseAddress.CompareTo(a.BaseAddress));
+            var file = files.FirstOrDefault(f => address >= f.BaseAddress && address <= f.BaseAddress + f.Length);
+
+            if (file == null)
+                throw new Exception($"No code BIN file loaded at the specified address of 0x{address:X8}");
+
+            return file;
         }
 
         #endregion

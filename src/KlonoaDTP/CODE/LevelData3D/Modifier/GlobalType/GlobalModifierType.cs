@@ -37,6 +37,9 @@
         [ModifierFiles(GlobalModifierFileType.TextureAnimation)]
         TextureAnimation,
 
+        [ModifierFiles(GlobalModifierFileType.PaletteAnimation)]
+        PaletteAnimation,
+
         [ModifierFiles]
         Special,
     }

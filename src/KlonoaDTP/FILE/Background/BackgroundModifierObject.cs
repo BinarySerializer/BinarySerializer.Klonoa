@@ -13,8 +13,9 @@
         public bool UnknownFlag1 { get; set; }
         public bool UnknownFlag2 { get; set; }
 
-        public BackgroundModifierData_20 Data_20 { get; set; }
-        public BackgroundModifierData_23 Data_23 { get; set; }
+        public BackgroundModifierData_Clear Data_Clear { get; set; }
+        public BackgroundModifierData_PaletteScroll Data_PaletteScroll { get; set; }
+        public BackgroundModifierData_SetLightState Data_SetLightState { get; set; }
         public byte[] Data_Raw { get; set; }
 
         public override void SerializeImpl(SerializerObject s)
@@ -34,17 +35,26 @@
 
             switch (Type)
             {
+                case BackgroundModifierType.Unknown_1:
+                    // There is no data to parse
+                    break;
+
                 case BackgroundModifierType.HUD:
                 case BackgroundModifierType.Reset:
                     // Do nothing
                     break;
 
                 case BackgroundModifierType.Clear:
-                    Data_20 = s.SerializeObject<BackgroundModifierData_20>(Data_20, name: nameof(Data_20));
+                case BackgroundModifierType.Clear_Gradient:
+                    Data_Clear = s.SerializeObject<BackgroundModifierData_Clear>(Data_Clear, name: nameof(Data_Clear));
                     break;
 
                 case BackgroundModifierType.PaletteScroll:
-                    Data_23 = s.SerializeObject<BackgroundModifierData_23>(Data_23, name: nameof(Data_23));
+                    Data_PaletteScroll = s.SerializeObject<BackgroundModifierData_PaletteScroll>(Data_PaletteScroll, name: nameof(Data_PaletteScroll));
+                    break;
+
+                case BackgroundModifierType.SetLightState:
+                    Data_SetLightState = s.SerializeObject<BackgroundModifierData_SetLightState>(Data_SetLightState, name: nameof(Data_SetLightState));
                     break;
 
                 // TODO: Parse
@@ -64,61 +74,81 @@
 
         public enum BackgroundModifierType : short
         {
+            Unknown_1 = 1,
+
             HUD = 11, // The game HUD
 
             Reset = 18, // Resets some values, seems to always be the first modifier
             BackgroundLayer_19 = 19, // Used when CEL index is 1?
-            Clear = 20, // Handles background clearing each frame
-
+            Clear_Gradient = 20, // Handles background clearing each frame
+            Clear = 21,
             BackgroundLayer_22 = 22,
             PaletteScroll = 23,
+            SetLightState = 24,
+        }
+    }
+
+    public class BackgroundModifierData_Clear : BinarySerializable
+    {
+        public Entry[] Entries { get; set; }
+
+        public override void SerializeImpl(SerializerObject s)
+        {
+            Entries = s.SerializeObjectArray<Entry>(Entries, 4, name: nameof(Entries));
         }
 
-        public class BackgroundModifierData_20 : BinarySerializable
+        public class Entry : BinarySerializable
         {
-            public Entry[] Entries { get; set; }
+            public short XPos { get; set; }
+            public short XPos_RelativeObj { get; set; } // An index to a background modifier, can be -1
+
+            public short YPos { get; set; }
+            public short YPos_RelativeObj { get; set; } // An index to a background modifier, can be -1
+
+            public RGBA8888Color Color { get; set; }
 
             public override void SerializeImpl(SerializerObject s)
             {
-                Entries = s.SerializeObjectArray<Entry>(Entries, 4, name: nameof(Entries));
-            }
-
-            public class Entry : BinarySerializable
-            {
-                public short XPos { get; set; }
-                public short XPos_RelativeObj { get; set; } // An index to a background modifier, can be -1
-
-                public short YPos { get; set; }
-                public short YPos_RelativeObj { get; set; } // An index to a background modifier, can be -1
-
-                public RGBA8888Color Color { get; set; }
-
-                public override void SerializeImpl(SerializerObject s)
-                {
-                    XPos = s.Serialize<short>(XPos, name: nameof(XPos));
-                    XPos_RelativeObj = s.Serialize<short>(XPos_RelativeObj, name: nameof(XPos_RelativeObj));
-                    YPos = s.Serialize<short>(YPos, name: nameof(YPos));
-                    YPos_RelativeObj = s.Serialize<short>(YPos_RelativeObj, name: nameof(YPos_RelativeObj));
-                    Color = s.SerializeObject<RGBA8888Color>(Color, name: nameof(Color));
-                }
+                XPos = s.Serialize<short>(XPos, name: nameof(XPos));
+                XPos_RelativeObj = s.Serialize<short>(XPos_RelativeObj, name: nameof(XPos_RelativeObj));
+                YPos = s.Serialize<short>(YPos, name: nameof(YPos));
+                YPos_RelativeObj = s.Serialize<short>(YPos_RelativeObj, name: nameof(YPos_RelativeObj));
+                Color = s.SerializeObject<RGBA8888Color>(Color, name: nameof(Color));
             }
         }
-        public class BackgroundModifierData_23 : BinarySerializable
-        {
-            public int XPosition { get; set; }
-            public int YPosition { get; set; }
-            public int StartIndex { get; set; }
-            public int Length { get; set; }
-            public int Speed { get; set; } // In frames
+    }
+    public class BackgroundModifierData_PaletteScroll : BinarySerializable
+    {
+        public int XPosition { get; set; }
+        public int YPosition { get; set; }
+        public int StartIndex { get; set; }
+        public int Length { get; set; }
+        public int Speed { get; set; } // In frames
 
-            public override void SerializeImpl(SerializerObject s)
-            {
-                XPosition = s.Serialize<int>(XPosition, name: nameof(XPosition));
-                YPosition = s.Serialize<int>(YPosition, name: nameof(YPosition));
-                StartIndex = s.Serialize<int>(StartIndex, name: nameof(StartIndex));
-                Length = s.Serialize<int>(Length, name: nameof(Length));
-                Speed = s.Serialize<int>(Speed, name: nameof(Speed));
-            }
+        public override void SerializeImpl(SerializerObject s)
+        {
+            XPosition = s.Serialize<int>(XPosition, name: nameof(XPosition));
+            YPosition = s.Serialize<int>(YPosition, name: nameof(YPosition));
+            StartIndex = s.Serialize<int>(StartIndex, name: nameof(StartIndex));
+            Length = s.Serialize<int>(Length, name: nameof(Length));
+            Speed = s.Serialize<int>(Speed, name: nameof(Speed));
+        }
+    }
+    public class BackgroundModifierData_SetLightState : BinarySerializable
+    {
+        public int Int_00 { get; set; }
+        public int Int_04 { get; set; }
+        public int Int_08 { get; set; }
+        public int Int_0C { get; set; }
+        public int Int_10 { get; set; }
+
+        public override void SerializeImpl(SerializerObject s)
+        {
+            Int_00 = s.Serialize<int>(Int_00, name: nameof(Int_00));
+            Int_04 = s.Serialize<int>(Int_04, name: nameof(Int_04));
+            Int_08 = s.Serialize<int>(Int_08, name: nameof(Int_08));
+            Int_0C = s.Serialize<int>(Int_0C, name: nameof(Int_0C));
+            Int_10 = s.Serialize<int>(Int_10, name: nameof(Int_10));
         }
     }
 }

@@ -21,7 +21,7 @@ namespace BinarySerializer.Klonoa
         public abstract uint Address_LevelData3DFunction { get; }
         public abstract uint Address_LevelData2DPointerTable { get; }
 
-        public Dictionary<int, Dictionary<int, GlobalModifierType>> GlobalModifierTypes { get; } = new Dictionary<int, Dictionary<int, GlobalModifierType>>()
+        public virtual Dictionary<int, Dictionary<int, GlobalModifierType>> GlobalModifierTypes { get; } = new Dictionary<int, Dictionary<int, GlobalModifierType>>()
         {
             [3] = new Dictionary<int, GlobalModifierType>()
             {
@@ -40,8 +40,13 @@ namespace BinarySerializer.Klonoa
             [4] = new Dictionary<int, GlobalModifierType>()
             {
                 [4104] = GlobalModifierType.ScenerySprites,
+                [4105] = GlobalModifierType.PaletteAnimation,
                 [4108] = GlobalModifierType.Object,
             },
+        };
+        public virtual Dictionary<int, PaletteAnimationInfo> PaletteAnimationInfos { get; } = new Dictionary<int, PaletteAnimationInfo>()
+        {
+            [4] = new PaletteAnimationInfo(0x80125c58, 8),
         };
         public GlobalModifierType GetGlobalModifierType(int binBlock, int primaryType, int secondaryType)
         {
@@ -54,6 +59,18 @@ namespace BinarySerializer.Klonoa
                 return GlobalModifierType.Unknown;
 
             return GlobalModifierTypes[binBlock][typeKey];
+        }
+
+        public class PaletteAnimationInfo
+        {
+            public PaletteAnimationInfo(uint addressRegions, int animSpeed)
+            {
+                Address_Regions = addressRegions;
+                AnimSpeed = animSpeed;
+            }
+
+            public uint Address_Regions { get; }
+            public int AnimSpeed { get; }
         }
     }
 }

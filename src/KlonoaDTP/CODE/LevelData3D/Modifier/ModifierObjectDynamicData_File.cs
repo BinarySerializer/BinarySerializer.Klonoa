@@ -12,17 +12,24 @@ namespace BinarySerializer.Klonoa.DTP
         public uint Pre_ModelObjsCount { get; set; }
         public GlobalModifierFileType Pre_FileType { get; set; }
 
+        public byte[] Unknown { get; set; }
+        public RawData_ArchiveFile UnknownArchive { get; set; }
+        public ArchiveFile<RawData_ArchiveFile> UnknownArchiveArchive { get; set; }
+
         public PS1_TMD TMD { get; set; }
+        public ObjCollisionItems_File Collision { get; set; }
+        public UnknownModelObjectsData_File UnknownModelObjectsData { get; set; }
+        public PS1_TIM TIM { get; set; }
+        
         public ObjTransform_ArchiveFile Transform { get; set; }
         public ArchiveFile<ObjTransform_ArchiveFile> Transforms { get; set; }
         public ObjPosition Position { get; set; }
-        public ObjCollisionItems_File Collision { get; set; }
-        public PS1_TIM TIM { get; set; }
+        
         public TIM_ArchiveFile TextureAnimation { get; set; }
-        public ScenerySprites_File ScenerySprites { get; set; }
+        public PaletteAnimation_ArchiveFile PaletteAnimation { get; set; }
         public UVScrollAnimation_File UVScrollAnimation { get; set; }
-        public UnknownModelObjectsData_File UnknownModelObjectsData { get; set; }
-        public byte[] Raw { get; set; }
+        
+        public ScenerySprites_File ScenerySprites { get; set; }
 
         public override void SerializeImpl(SerializerObject s)
         {
@@ -34,9 +41,41 @@ namespace BinarySerializer.Klonoa.DTP
 
             switch (Pre_FileType)
             {
+                case GlobalModifierFileType.None:
+                    throw new BinarySerializableException(this, "Attempted to serialize non-existing modifier data");
+
+                case GlobalModifierFileType.Unknown:
+                default:
+                    Unknown = s.SerializeArray<byte>(Unknown, Pre_FileSize, name: nameof(Unknown));
+                    break;
+
+                case GlobalModifierFileType.UnknownArchive:
+                    UnknownArchive = s.SerializeObject<RawData_ArchiveFile>(UnknownArchive, onPreSerialize: onPreSerialize, name: nameof(UnknownArchive));
+                    break;
+
+                case GlobalModifierFileType.UnknownArchiveArchive:
+                    UnknownArchiveArchive = s.SerializeObject<ArchiveFile<RawData_ArchiveFile>>(UnknownArchiveArchive, onPreSerialize: onPreSerialize, name: nameof(UnknownArchiveArchive));
+                    break;
+
                 case GlobalModifierFileType.TMD:
                     TMD = s.SerializeObject<PS1_TMD>(TMD, name: nameof(TMD));
                     s.Goto(Offset + Pre_FileSize);
+                    break;
+
+                case GlobalModifierFileType.Collision:
+                    Collision = s.SerializeObject<ObjCollisionItems_File>(Collision, onPreSerialize: onPreSerialize, name: nameof(Collision));
+                    break;
+
+                case GlobalModifierFileType.UnknownModelObjectsData:
+                    UnknownModelObjectsData = s.SerializeObject<UnknownModelObjectsData_File>(UnknownModelObjectsData, onPreSerialize: x =>
+                    {
+                        onPreSerialize(x);
+                        x.Pre_ObjsCount = Pre_ModelObjsCount;
+                    }, name: nameof(UnknownModelObjectsData));
+                    break;
+
+                case GlobalModifierFileType.TIM:
+                    TIM = s.SerializeObject<PS1_TIM>(TIM, name: nameof(TIM));
                     break;
 
                 case GlobalModifierFileType.Transform_WithInfo:
@@ -67,46 +106,22 @@ namespace BinarySerializer.Klonoa.DTP
                     Position = s.SerializeObject<ObjPosition>(Position, name: nameof(Position));
                     break;
 
-                case GlobalModifierFileType.Collision:
-                    Collision = s.SerializeObject<ObjCollisionItems_File>(Collision, onPreSerialize: onPreSerialize, name: nameof(Collision));
-                    break;
-
-                case GlobalModifierFileType.TIM:
-                    TIM = s.SerializeObject<PS1_TIM>(TIM, name: nameof(TIM));
-                    break;
-
                 case GlobalModifierFileType.TextureAnimation:
                     TextureAnimation = s.SerializeObject<TIM_ArchiveFile>(TextureAnimation, onPreSerialize: onPreSerialize, name: nameof(TextureAnimation));
                     break;
 
-                case GlobalModifierFileType.ScenerySprites:
-                    ScenerySprites = s.SerializeObject<ScenerySprites_File>(ScenerySprites, onPreSerialize: onPreSerialize, name: nameof(ScenerySprites));
+                case GlobalModifierFileType.PaletteAnimation:
+                    PaletteAnimation = s.SerializeObject<PaletteAnimation_ArchiveFile>(PaletteAnimation, onPreSerialize: onPreSerialize, name: nameof(PaletteAnimation));
                     break;
 
                 case GlobalModifierFileType.UVScrollAnimation:
                     UVScrollAnimation = s.SerializeObject<UVScrollAnimation_File>(UVScrollAnimation, onPreSerialize: onPreSerialize, name: nameof(UVScrollAnimation));
                     break;
 
-                case GlobalModifierFileType.UnknownModelObjectsData:
-                    UnknownModelObjectsData = s.SerializeObject<UnknownModelObjectsData_File>(UnknownModelObjectsData, onPreSerialize: x =>
-                    {
-                        onPreSerialize(x);
-                        x.Pre_ObjsCount = Pre_ModelObjsCount;
-                    }, name: nameof(UnknownModelObjectsData));
+                case GlobalModifierFileType.ScenerySprites:
+                    ScenerySprites = s.SerializeObject<ScenerySprites_File>(ScenerySprites, onPreSerialize: onPreSerialize, name: nameof(ScenerySprites));
                     break;
 
-                case GlobalModifierFileType.UnknownArchive:
-                    s.SerializeObject<RawData_ArchiveFile>(default, onPreSerialize: onPreSerialize);
-                    break;
-
-                case GlobalModifierFileType.UnknownArchiveArchive:
-                    s.SerializeObject<ArchiveFile<RawData_ArchiveFile>>(default, onPreSerialize: onPreSerialize);
-                    break;
-
-                case GlobalModifierFileType.Unknown:
-                default:
-                    Raw = s.SerializeArray<byte>(Raw, Pre_FileSize, name: nameof(Raw));
-                    break;
             }
         }
     }
