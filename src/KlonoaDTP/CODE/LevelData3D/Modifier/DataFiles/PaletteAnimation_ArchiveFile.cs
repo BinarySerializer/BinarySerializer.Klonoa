@@ -22,11 +22,11 @@ namespace BinarySerializer.Klonoa.DTP
 
         public class Palette : BinarySerializable
         {
-            public RGBA5551Color[] Colors { get; set; }
+            public byte[] Colors { get; set; }
 
             public override void SerializeImpl(SerializerObject s)
             {
-                Colors = s.SerializeObjectArray<RGBA5551Color>(Colors, 16, name: nameof(Colors));
+                Colors = s.SerializeArray<byte>(Colors, 32, name: nameof(Colors));
             }
         }
     }
