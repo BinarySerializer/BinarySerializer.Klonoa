@@ -44,6 +44,10 @@ namespace BinarySerializer.Klonoa
                 [4108] = GlobalModifierType.Object,
             },
         };
+        public virtual Dictionary<int, int> TextureAnimationSpeeds { get; } = new Dictionary<int, int>()
+        {
+            [3] = 4,
+        };
         public virtual Dictionary<int, PaletteAnimationInfo> PaletteAnimationInfos { get; } = new Dictionary<int, PaletteAnimationInfo>()
         {
             [4] = new PaletteAnimationInfo(0x80125c58, 8),
