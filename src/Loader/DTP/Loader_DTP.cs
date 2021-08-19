@@ -243,8 +243,34 @@ namespace BinarySerializer.Klonoa
 
                 // Copy the TIM files data to VRAM
                 case IDXLoadCommand.FileType.Archive_BackgroundPack:
-                    foreach (PS1_TIM tim in ((BackgroundPack_ArchiveFile)binFile).TIMFiles.Files)
+                    var bg = (BackgroundPack_ArchiveFile)binFile;
+                    for (int tileSetIndex = 0; tileSetIndex < bg.TIMFiles.Files.Length; tileSetIndex++)
+                    {
+                        var tim = bg.TIMFiles.Files[tileSetIndex];
+
+                        // The game hard-codes this
+                        if (tileSetIndex == 0)
+                        {
+                            tim.Clut.Region.XPos = 0x130;
+                            tim.Clut.Region.YPos = 0x1F0;
+                            tim.Clut.Region.Width = 0x10;
+                            tim.Clut.Region.Height = 0x10;
+                        }
+                        else if (tileSetIndex == 1)
+                        {
+                            tim.Region.XPos = 0x1C0;
+                            tim.Region.YPos = 0x100;
+                            tim.Region.Width = 0x40;
+                            tim.Region.Height = 0x100;
+
+                            tim.Clut.Region.XPos = 0x120;
+                            tim.Clut.Region.YPos = 0x1F0;
+                            tim.Clut.Region.Width = 0x10;
+                            tim.Clut.Region.Height = 0x10;
+                        }
+
                         AddToVRAM(tim);
+                    }
                     break;
 
                 // The fixed sprites are always the last set of sprite frames
@@ -527,11 +553,11 @@ namespace BinarySerializer.Klonoa
         {
             // Add the palette if available
             if (tim.Clut != null)
-                VRAM.AddPalette(tim.Clut.Palette, 0, 0, tim.Clut.XPos * 2, tim.Clut.YPos, tim.Clut.Width * 2, tim.Clut.Height);
+                VRAM.AddPalette(tim.Clut.Palette, 0, 0, tim.Clut.Region.XPos * 2, tim.Clut.Region.YPos, tim.Clut.Region.Width * 2, tim.Clut.Region.Height);
 
             // Add the image data
-            if (!(tim.XPos == 0 && tim.YPos == 0) && tim.Width != 0 && tim.Height != 0)
-                VRAM.AddDataAt(0, 0, tim.XPos * 2, tim.YPos, tim.ImgData, tim.Width * 2, tim.Height);
+            if (!(tim.Region.XPos == 0 && tim.Region.YPos == 0) && tim.Region.Width != 0 && tim.Region.Height != 0)
+                VRAM.AddDataAt(0, 0, tim.Region.XPos * 2, tim.Region.YPos, tim.ImgData, tim.Region.Width * 2, tim.Region.Height);
         }
 
         /// <summary>
