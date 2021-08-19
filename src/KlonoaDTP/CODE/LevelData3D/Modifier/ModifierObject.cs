@@ -60,10 +60,13 @@ namespace BinarySerializer.Klonoa.DTP
 
             if (GlobalModifierType == GlobalModifierType.Unknown)
             {
-                var count = DataFileIndices.Select((x, i) => new { x, i }).ToList().FindIndex(x => x.x == 0 && x.i > 0);
+                var count = DataFileIndices?.Select((x, i) => new { x, i }).ToList().FindIndex(x => x.x == 0 && x.i > 0);
                 s.LogWarning($"Unknown modifier at {Offset} with {count} data files");
                 
-                DataFiles ??= new ModifierObjectDynamicData_File[count];
+                if (count == null)
+                    return;
+
+                DataFiles ??= new ModifierObjectDynamicData_File[count.Value];
 
                 for (int i = 0; i < DataFiles.Length; i++)
                 {
