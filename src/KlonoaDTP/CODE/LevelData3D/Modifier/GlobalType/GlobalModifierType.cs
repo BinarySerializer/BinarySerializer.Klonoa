@@ -16,11 +16,17 @@
         [ModifierRotation(ModifierRotationAttribute.RotAxis.Z, -24)]
         SmallWindmill,
 
-        [ModifierFiles(GlobalModifierFileType.TMD, GlobalModifierFileType.Collision, GlobalModifierFileType.Unknown, GlobalModifierFileType.Transform_WithoutInfo)]
+        [ModifierFiles(GlobalModifierFileType.TMD, GlobalModifierFileType.Collision, GlobalModifierFileType.MovementPaths, GlobalModifierFileType.Transform_WithoutInfo)]
         MovingPlatform,
 
         [ModifierFiles(GlobalModifierFileType.TMD, GlobalModifierFileType.Transform_WithInfo)]
         RoadSign,
+
+        [ModifierFiles(GlobalModifierFileType.TMD, GlobalModifierFileType.Collision, GlobalModifierFileType.MovementPaths, GlobalModifierFileType.Transform_WithoutInfo, GlobalModifierFileType.Unknown)]
+        TiltRock,
+
+        [ModifierFiles(GlobalModifierFileType.TMD, GlobalModifierFileType.Collision, GlobalModifierFileType.MovementPaths, GlobalModifierFileType.Transforms_WithInfo, GlobalModifierFileType.Unknown, GlobalModifierFileType.Transform_WithInfo)]
+        Minecart,
 
         [ModifierFiles(GlobalModifierFileType.UVScrollAnimation)]
         ScrollAnimation,

@@ -10,6 +10,7 @@
 
         TMD,
         Collision,
+        MovementPaths,
         UnknownModelObjectsData,
         TIM,
         

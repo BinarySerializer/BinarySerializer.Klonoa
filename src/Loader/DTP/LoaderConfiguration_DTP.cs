@@ -26,6 +26,7 @@ namespace BinarySerializer.Klonoa
             [3] = new Dictionary<int, GlobalModifierType>()
             {
                 [4001] = GlobalModifierType.MovingPlatform,
+
                 [4101] = GlobalModifierType.WindSwirl,
                 [4103] = GlobalModifierType.ScrollAnimation,
                 [4105] = GlobalModifierType.SmallWindmill,
@@ -39,8 +40,14 @@ namespace BinarySerializer.Klonoa
             },
             [4] = new Dictionary<int, GlobalModifierType>()
             {
+                [4001] = GlobalModifierType.Minecart,
+                [4002] = GlobalModifierType.TiltRock,
+
+                [4101] = GlobalModifierType.WindSwirl,
+                [4103] = GlobalModifierType.ScrollAnimation,
                 [4104] = GlobalModifierType.ScenerySprites,
                 [4105] = GlobalModifierType.PaletteAnimation,
+                [4107] = GlobalModifierType.Special, // Rain?
                 [4108] = GlobalModifierType.Object,
             },
         };

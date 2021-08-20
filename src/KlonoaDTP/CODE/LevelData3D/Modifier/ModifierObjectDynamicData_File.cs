@@ -18,6 +18,7 @@ namespace BinarySerializer.Klonoa.DTP
 
         public PS1_TMD TMD { get; set; }
         public ObjCollisionItems_File Collision { get; set; }
+        public MovementPath_File MovementPaths { get; set; }
         public UnknownModelObjectsData_File UnknownModelObjectsData { get; set; }
         public PS1_TIM TIM { get; set; }
         
@@ -64,6 +65,10 @@ namespace BinarySerializer.Klonoa.DTP
 
                 case GlobalModifierFileType.Collision:
                     Collision = s.SerializeObject<ObjCollisionItems_File>(Collision, onPreSerialize: onPreSerialize, name: nameof(Collision));
+                    break;
+
+                case GlobalModifierFileType.MovementPaths:
+                    MovementPaths = s.SerializeObject<MovementPath_File>(MovementPaths, onPreSerialize: onPreSerialize, name: nameof(MovementPaths));
                     break;
 
                 case GlobalModifierFileType.UnknownModelObjectsData:
