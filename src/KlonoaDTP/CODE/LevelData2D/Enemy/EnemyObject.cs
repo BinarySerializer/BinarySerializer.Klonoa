@@ -12,9 +12,7 @@
         public short SecondaryType { get; set; }
         public ushort DataIndex { get; set; }
 
-        public KlonoaInt20 XPos { get; set; }
-        public KlonoaInt20 YPos { get; set; }
-        public KlonoaInt20 ZPos { get; set; }
+        public KlonoaVector20 Position { get; set; }
 
         public short GraphicsIndex { get; set; } // This is an index to an array of functions which handles the graphics (NOTE: not always the case, depends on the type)
         public short MovementPath { get; set; } // -1 if not directly on a path
@@ -39,9 +37,7 @@
                 MovementPathPosition = s.Serialize<int>(MovementPathPosition, name: nameof(MovementPathPosition));
                 SecondaryType = s.Serialize<short>(SecondaryType, name: nameof(SecondaryType));
                 DataIndex = s.Serialize<ushort>(DataIndex, name: nameof(DataIndex));
-                XPos = s.SerializeObject<KlonoaInt20>(XPos, name: nameof(XPos));
-                YPos = s.SerializeObject<KlonoaInt20>(YPos, name: nameof(YPos));
-                ZPos = s.SerializeObject<KlonoaInt20>(ZPos, name: nameof(ZPos));
+                Position = s.SerializeObject<KlonoaVector20>(Position, name: nameof(Position));
                 GraphicsIndex = s.Serialize<short>(GraphicsIndex, name: nameof(GraphicsIndex));
                 MovementPath = s.Serialize<short>(MovementPath, name: nameof(MovementPath));
                 GlobalSectorIndex = s.Serialize<short>(GlobalSectorIndex, name: nameof(GlobalSectorIndex));

@@ -25,13 +25,13 @@ namespace BinarySerializer.Klonoa.DTP
         
         public ObjTransform_ArchiveFile Transform { get; set; }
         public ArchiveFile<ObjTransform_ArchiveFile> Transforms { get; set; }
-        public ObjPosition Position { get; set; }
+        public KlonoaVector16 Position { get; set; }
         
         public TIM_ArchiveFile TextureAnimation { get; set; }
         public PaletteAnimation_ArchiveFile PaletteAnimation { get; set; }
         public UVScrollAnimation_File UVScrollAnimation { get; set; }
         
-        public ScenerySprites_File ScenerySprites { get; set; }
+        public ObjPositions_File ScenerySprites { get; set; }
 
         public override void SerializeImpl(SerializerObject s)
         {
@@ -117,7 +117,7 @@ namespace BinarySerializer.Klonoa.DTP
                     break;
 
                 case GlobalModifierFileType.Position:
-                    Position = s.SerializeObject<ObjPosition>(Position, name: nameof(Position));
+                    Position = s.SerializeObject<KlonoaVector16>(Position, name: nameof(Position));
                     break;
 
                 case GlobalModifierFileType.TextureAnimation:
@@ -133,7 +133,7 @@ namespace BinarySerializer.Klonoa.DTP
                     break;
 
                 case GlobalModifierFileType.ScenerySprites:
-                    ScenerySprites = s.SerializeObject<ScenerySprites_File>(ScenerySprites, onPreSerialize: onPreSerialize, name: nameof(ScenerySprites));
+                    ScenerySprites = s.SerializeObject<ObjPositions_File>(ScenerySprites, onPreSerialize: onPreSerialize, name: nameof(ScenerySprites));
                     break;
 
             }

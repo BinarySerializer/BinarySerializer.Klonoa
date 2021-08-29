@@ -2,9 +2,7 @@
 {
     public class CollectibleObject : BinarySerializable
     {
-        public KlonoaInt20 XPos { get; set; }
-        public KlonoaInt20 YPos { get; set; }
-        public KlonoaInt20 ZPos { get; set; }
+        public KlonoaVector20 Position { get; set; }
 
         public PrimaryObjectType PrimaryType => PrimaryObjectType.Collectible_2D;
         public short SecondaryType { get; set; }
@@ -22,10 +20,7 @@
 
         public override void SerializeImpl(SerializerObject s)
         {
-            XPos = s.SerializeObject<KlonoaInt20>(XPos, name: nameof(XPos));
-            YPos = s.SerializeObject<KlonoaInt20>(YPos, name: nameof(YPos));
-            ZPos = s.SerializeObject<KlonoaInt20>(ZPos, name: nameof(ZPos));
-
+            Position = s.SerializeObject<KlonoaVector20>(Position, name: nameof(Position));
             SecondaryType = s.Serialize<short>(SecondaryType, name: nameof(SecondaryType));
             Short_0E = s.Serialize<short>(Short_0E, name: nameof(Short_0E));
             GlobalSectorIndex = s.Serialize<ushort>(GlobalSectorIndex, name: nameof(GlobalSectorIndex));

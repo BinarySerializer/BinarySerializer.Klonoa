@@ -6,7 +6,7 @@
 
         public ushort ObjectsCount { get; set; }
         public ushort FramesCount { get; set; }
-        public ObjPosition[][] Positions { get; set; }
+        public KlonoaVector16[][] Positions { get; set; }
 
         public override void SerializeImpl(SerializerObject s)
         {
@@ -21,10 +21,10 @@
                 FramesCount = Pre_Info.FramesCount;
             }
 
-            Positions ??= new ObjPosition[FramesCount][];
+            Positions ??= new KlonoaVector16[FramesCount][];
 
             for (int i = 0; i < Positions.Length; i++)
-                Positions[i] = s.SerializeObjectArray<ObjPosition>(Positions[i], ObjectsCount, name: $"{nameof(Positions)}[{i}]");
+                Positions[i] = s.SerializeObjectArray<KlonoaVector16>(Positions[i], ObjectsCount, name: $"{nameof(Positions)}[{i}]");
         }
     }
 }

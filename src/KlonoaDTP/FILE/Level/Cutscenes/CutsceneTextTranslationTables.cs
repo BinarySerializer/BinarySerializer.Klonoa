@@ -199,7 +199,7 @@ namespace BinarySerializer.Klonoa.DTP
                         var data_SetObjPos = (CutsceneInstructionData_SetObjPos)instruction.Data;
                         writeLine($"Object = {data_SetObjPos.ObjIndex}");
                         writeLine($"RelativeObject = {data_SetObjPos.PositionRelativeObjIndex}");
-                        writeLine($"Position = ({data_SetObjPos.XPos}, {data_SetObjPos.YPos}, {data_SetObjPos.ZPos})");
+                        writeLine($"Position = ({data_SetObjPos.Position.X}, {data_SetObjPos.Position.Y}, {data_SetObjPos.Position.Z})");
                         break;
 
                     case CutsceneInstruction.InstructionType.SetCutsceneState:

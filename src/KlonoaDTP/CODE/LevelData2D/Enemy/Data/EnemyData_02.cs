@@ -44,9 +44,7 @@
                 x.Pre_IsSpawnedObject = true;
 
                 // Copy properties
-                x.XPos = Pre_EnemyObj.XPos;
-                x.YPos = Pre_EnemyObj.YPos;
-                x.ZPos = Pre_EnemyObj.ZPos;
+                x.Position = Pre_EnemyObj.Position;
             }, name: nameof(SpawnObjects)));
         }
     }
