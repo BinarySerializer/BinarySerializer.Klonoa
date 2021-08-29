@@ -10,6 +10,10 @@
         {
             PositionsCount = s.Serialize<short>(PositionsCount, name: nameof(PositionsCount));
             Short_02 = s.Serialize<short>(Short_02, name: nameof(Short_02));
+
+            if (Short_02 != 1)
+                s.LogWarning($"Scenery sprites second value is {Short_02}");
+
             Positions = s.SerializeObjectArray<ObjPosition>(Positions, PositionsCount, name: nameof(Positions));
         }
     }

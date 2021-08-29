@@ -13,7 +13,8 @@
         MovementPaths,
         UnknownModelObjectsData,
         TIM,
-        
+        LightObject,
+
         Transform_WithInfo,
         Transform_WithoutInfo,
         Transforms_WithInfo,

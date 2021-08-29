@@ -61,7 +61,7 @@ namespace BinarySerializer.Klonoa.DTP
             if (GlobalModifierType == GlobalModifierType.Unknown)
             {
                 var count = DataFileIndices?.Select((x, i) => new { x, i }).ToList().FindIndex(x => x.x == 0 && x.i > 0);
-                s.LogWarning($"Unknown modifier at {Offset} with {count} data files");
+                s.LogWarning($"Unknown modifier at {Offset} with {count ?? 0} data files");
                 
                 if (count == null)
                     return;
@@ -88,18 +88,13 @@ namespace BinarySerializer.Klonoa.DTP
 
             DataFiles ??= new ModifierObjectDynamicData_File[files.Length];
 
-            uint modelObjsCount = 0;
-
             for (int i = 0; i < DataFiles.Length; i++)
             {
                 DataFiles[i] = Pre_AdditionalLevelFilePack.SerializeFile(s, DataFiles[i], DataFileIndices[i], onPreSerialize: x =>
                 {
                     x.Pre_FileType = files[i];
-                    x.Pre_ModelObjsCount = modelObjsCount;
+                    x.Pre_ModifierObject = this;
                 }, name: $"{nameof(DataFiles)}[{i}]");
-
-                if (i == 0 && DataFiles[i].Pre_FileType == GlobalModifierFileType.TMD)
-                    modelObjsCount = DataFiles[i].TMD.ObjectsCount;
             }
 
             RotationAttribute = GetAttribute<ModifierRotationAttribute>(GlobalModifierType);

@@ -28,6 +28,30 @@
         [ModifierFiles(GlobalModifierFileType.TMD, GlobalModifierFileType.Collision, GlobalModifierFileType.MovementPaths, GlobalModifierFileType.Transforms_WithInfo, GlobalModifierFileType.Unknown, GlobalModifierFileType.Transform_WithInfo)]
         Minecart,
 
+        [ModifierFiles(
+            GlobalModifierFileType.TMD, 
+            GlobalModifierFileType.UnknownArchiveArchive, // TODO: Parts
+            GlobalModifierFileType.Unknown, 
+            GlobalModifierFileType.Unknown, 
+            GlobalModifierFileType.Unknown, 
+            GlobalModifierFileType.UnknownArchive, 
+            GlobalModifierFileType.UnknownArchive)] // TODO: Palettes
+        RongoLango,
+
+        [ModifierFiles(GlobalModifierFileType.TMD, GlobalModifierFileType.Position)]
+        Bell,
+
+        [ModifierFiles(
+            GlobalModifierFileType.TMD, 
+            GlobalModifierFileType.Collision, 
+            GlobalModifierFileType.Transform_WithoutInfo, // Local
+            GlobalModifierFileType.Transform_WithoutInfo, // Absolute
+            GlobalModifierFileType.Unknown)]
+        LockedDoor,
+
+        [ModifierFiles(GlobalModifierFileType.LightObject)]
+        Light,
+
         [ModifierFiles(GlobalModifierFileType.UVScrollAnimation)]
         ScrollAnimation,
 
@@ -48,5 +72,8 @@
 
         [ModifierFiles]
         Special,
+
+        [ModifierFiles]
+        WeatherEffect,
     }
 }

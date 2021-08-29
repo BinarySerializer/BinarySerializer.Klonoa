@@ -9,7 +9,7 @@ namespace BinarySerializer.Klonoa.DTP
 
     public class ModifierObjectDynamicData_File : BaseFile
     {
-        public uint Pre_ModelObjsCount { get; set; }
+        public ModifierObject Pre_ModifierObject { get; set; }
         public GlobalModifierFileType Pre_FileType { get; set; }
 
         public byte[] Unknown { get; set; }
@@ -21,6 +21,7 @@ namespace BinarySerializer.Klonoa.DTP
         public MovementPath_File MovementPaths { get; set; }
         public UnknownModelObjectsData_File UnknownModelObjectsData { get; set; }
         public PS1_TIM TIM { get; set; }
+        public LightObject LightObject { get; set; }
         
         public ObjTransform_ArchiveFile Transform { get; set; }
         public ArchiveFile<ObjTransform_ArchiveFile> Transforms { get; set; }
@@ -75,12 +76,20 @@ namespace BinarySerializer.Klonoa.DTP
                     UnknownModelObjectsData = s.SerializeObject<UnknownModelObjectsData_File>(UnknownModelObjectsData, onPreSerialize: x =>
                     {
                         onPreSerialize(x);
-                        x.Pre_ObjsCount = Pre_ModelObjsCount;
+                        x.Pre_ObjsCount = Pre_ModifierObject.DataFiles[0].TMD.ObjectsCount;
                     }, name: nameof(UnknownModelObjectsData));
                     break;
 
                 case GlobalModifierFileType.TIM:
                     TIM = s.SerializeObject<PS1_TIM>(TIM, name: nameof(TIM));
+                    break;
+
+                case GlobalModifierFileType.LightObject:
+                    LightObject = s.SerializeObject<LightObject>(LightObject, onPreSerialize: x =>
+                    {
+                        onPreSerialize(x);
+                        x.Pre_ModifierObj = Pre_ModifierObject;
+                    }, name: nameof(LightObject));
                     break;
 
                 case GlobalModifierFileType.Transform_WithInfo:

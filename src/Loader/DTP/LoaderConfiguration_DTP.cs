@@ -47,8 +47,21 @@ namespace BinarySerializer.Klonoa
                 [4103] = GlobalModifierType.ScrollAnimation,
                 [4104] = GlobalModifierType.ScenerySprites,
                 [4105] = GlobalModifierType.PaletteAnimation,
-                [4107] = GlobalModifierType.Special, // Rain?
+                [4107] = GlobalModifierType.WeatherEffect,
                 [4108] = GlobalModifierType.Object,
+            },
+            [5] = new Dictionary<int, GlobalModifierType>()
+            {
+                [4101] = GlobalModifierType.RongoLango,
+                [4104] = GlobalModifierType.Bell,
+            },
+            [6] = new Dictionary<int, GlobalModifierType>()
+            {
+                [4001] = GlobalModifierType.MovingPlatform,
+                [4002] = GlobalModifierType.LockedDoor,
+                [4102] = GlobalModifierType.Light,
+                [4104] = GlobalModifierType.ScenerySprites,
+                [4120] = GlobalModifierType.Special,
             },
         };
         public virtual Dictionary<int, int> TextureAnimationSpeeds { get; } = new Dictionary<int, int>()
