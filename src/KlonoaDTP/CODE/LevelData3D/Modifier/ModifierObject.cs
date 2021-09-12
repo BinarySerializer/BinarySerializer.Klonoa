@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Reflection;
+using BinarySerializer.PS1;
 
 namespace BinarySerializer.Klonoa.DTP
 {
@@ -29,6 +30,12 @@ namespace BinarySerializer.Klonoa.DTP
         // Custom
         public GlobalModifierType GlobalModifierType { get; set; }
         public ModifierRotationAttribute RotationAttribute { get; set; }
+        public int TextureAnimationSpeed { get; set; }
+        public LoaderConfiguration_DTP.PaletteAnimationInfo PaletteAnimationInfo { get; set; }
+        public PS1_VRAMRegion[] PaletteAnimationVRAMRegions { get; set; }
+        public uint GeyserPlatformPositionsPointer { get; set; }
+        public GeyserPlatformPosition[] GeyserPlatformPositions { get; set; }
+        public LoaderConfiguration_DTP.VRAMScrollInfo[] VRAMScrollInfos { get; set; }
 
         public override void SerializeImpl(SerializerObject s)
         {
@@ -97,7 +104,36 @@ namespace BinarySerializer.Klonoa.DTP
                 }, name: $"{nameof(DataFiles)}[{i}]");
             }
 
+            // Get type specific data
             RotationAttribute = GetAttribute<ModifierRotationAttribute>(GlobalModifierType);
+            
+            if (GlobalModifierType == GlobalModifierType.TextureAnimation)
+                TextureAnimationSpeed = loader.Config.TextureAnimationSpeeds[loader.BINBlock];
+
+            if (GlobalModifierType == GlobalModifierType.PaletteAnimation)
+            {
+                PaletteAnimationInfo = loader.Config.PaletteAnimationInfos[loader.BINBlock];
+                s.DoAt(new Pointer(PaletteAnimationInfo.Address_Regions, loader.FindCodeFile(PaletteAnimationInfo.Address_Regions)), () =>
+                {
+                    var count = DataFiles[0].PaletteAnimation.OffsetTable.FilesCount;
+                    PaletteAnimationVRAMRegions = s.SerializeObjectArray<PS1_VRAMRegion>(PaletteAnimationVRAMRegions, count, name: nameof(PaletteAnimationVRAMRegions));
+                });
+            }
+
+            if (GlobalModifierType == GlobalModifierType.GeyserPlatform)
+            {
+                GeyserPlatformPositionsPointer = loader.Config.GeyserPlatformPositionsPointers[loader.GlobalSectorIndex];
+                s.DoAt(new Pointer(GeyserPlatformPositionsPointer, loader.FindCodeFile(GeyserPlatformPositionsPointer)), () =>
+                {
+                    GeyserPlatformPositions = s.SerializeObjectArrayUntil(GeyserPlatformPositions, x => x.Ushort_06 == 0, () => new GeyserPlatformPosition()
+                    {
+                        Position = new KlonoaVector16()
+                    }, name: nameof(GeyserPlatformPositions));
+                });
+            }
+
+            if (GlobalModifierType == GlobalModifierType.VRAMScrollAnimation)
+                VRAMScrollInfos = loader.Config.VRAMScrollInfos[loader.GlobalSectorIndex];
         }
 
         private static T GetAttribute<T>(Enum value) 
@@ -114,6 +150,18 @@ namespace BinarySerializer.Klonoa.DTP
 
             // Return the first attribute
             return attributes?.FirstOrDefault<T>();
+        }
+
+        public class GeyserPlatformPosition : BinarySerializable
+        {
+            public KlonoaVector16 Position { get; set; }
+            public ushort Ushort_06 { get; set; }
+
+            public override void SerializeImpl(SerializerObject s)
+            {
+                Position = s.SerializeObject<KlonoaVector16>(Position, name: nameof(Position));
+                Ushort_06 = s.Serialize<ushort>(Ushort_06, name: nameof(Ushort_06));
+            }
         }
     }
 }

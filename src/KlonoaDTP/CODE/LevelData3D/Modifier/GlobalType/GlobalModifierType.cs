@@ -52,8 +52,14 @@
         [ModifierFiles(GlobalModifierFileType.LightObject)]
         Light,
 
+        [ModifierFiles(GlobalModifierFileType.TMD, GlobalModifierFileType.Collision)]
+        GeyserPlatform,
+
         [ModifierFiles(GlobalModifierFileType.UVScrollAnimation)]
-        ScrollAnimation,
+        ScrollAnimation, // Scrolls the UVs for the level model
+
+        [ModifierFiles]
+        VRAMScrollAnimation, // Scrolls regions in VRAM
 
         [ModifierFiles(GlobalModifierFileType.TMD)]
         Object,

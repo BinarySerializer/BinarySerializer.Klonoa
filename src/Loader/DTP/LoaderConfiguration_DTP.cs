@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using BinarySerializer.Klonoa.DTP;
+using BinarySerializer.PS1;
 
 namespace BinarySerializer.Klonoa
 {
@@ -63,14 +64,68 @@ namespace BinarySerializer.Klonoa
                 [4104] = GlobalModifierType.ScenerySprites,
                 [4120] = GlobalModifierType.Special,
             },
+            [7] = new Dictionary<int, GlobalModifierType>()
+            {
+                [4101] = GlobalModifierType.GeyserPlatform,
+                // TODO: 4102 is archive of movement path files, seems to be for water drops in cave?
+                [4103] = GlobalModifierType.PaletteAnimation,
+                [4116] = GlobalModifierType.VRAMScrollAnimation,
+                [4120] = GlobalModifierType.Special,
+            },
         };
         public virtual Dictionary<int, int> TextureAnimationSpeeds { get; } = new Dictionary<int, int>()
         {
             [3] = 4,
         };
+
+        // TODO: Pointers will differ between each version, so these should be moved to the version specific configurations
         public virtual Dictionary<int, PaletteAnimationInfo> PaletteAnimationInfos { get; } = new Dictionary<int, PaletteAnimationInfo>()
         {
             [4] = new PaletteAnimationInfo(0x80125c58, 8),
+            [7] = new PaletteAnimationInfo(0x8012d3c0, 8),
+        };
+        public virtual Dictionary<int, uint> GeyserPlatformPositionsPointers { get; } = new Dictionary<int, uint>()
+        {
+            // Block 7
+            [8 + (10 * 4) + 0] = 0x8012f110,
+            [8 + (10 * 4) + 2] = 0x8012f120,
+            [8 + (10 * 4) + 3] = 0x8012f140,
+            [8 + (10 * 4) + 4] = 0x8012f150,
+        };
+        public virtual Dictionary<int, VRAMScrollInfo[]> VRAMScrollInfos { get; } = new Dictionary<int, VRAMScrollInfo[]>()
+        {
+            // FUN_7_8__80122274 (NTSC)
+            [7] = new VRAMScrollInfo[]
+            {
+                new VRAMScrollInfo(new PS1_VRAMRegion()
+                {
+                    XPos = 0x1A0,
+                    YPos = 0x102,
+                    Width = 0x10,
+                    Height = 0xFE,
+                }, 0x1A0, 0x100, 1),
+                new VRAMScrollInfo(new PS1_VRAMRegion()
+                {
+                    XPos = 0x1A0,
+                    YPos = 0x100,
+                    Width = 0x10,
+                    Height = 0x2,
+                }, 0x1A0, 0x1FE, 1),
+                new VRAMScrollInfo(new PS1_VRAMRegion()
+                {
+                    XPos = 0x190,
+                    YPos = 0x101,
+                    Width = 0x8,
+                    Height = 0x7F,
+                }, 0x190, 0x100, 1),
+                new VRAMScrollInfo(new PS1_VRAMRegion()
+                {
+                    XPos = 0x190,
+                    YPos = 0x100,
+                    Width = 0x8,
+                    Height = 0x1,
+                }, 0x190, 0x17F, 1),
+            }
         };
         public GlobalModifierType GetGlobalModifierType(int binBlock, int primaryType, int secondaryType)
         {
@@ -94,6 +149,22 @@ namespace BinarySerializer.Klonoa
             }
 
             public uint Address_Regions { get; }
+            public int AnimSpeed { get; }
+        }
+
+        public class VRAMScrollInfo
+        {
+            public VRAMScrollInfo(PS1_VRAMRegion region, int destinationX, int destinationY, int animSpeed)
+            {
+                Region = region;
+                DestinationX = destinationX;
+                DestinationY = destinationY;
+                AnimSpeed = animSpeed;
+            }
+
+            public PS1_VRAMRegion Region { get; }
+            public int DestinationX { get; }
+            public int DestinationY { get; }
             public int AnimSpeed { get; }
         }
     }
