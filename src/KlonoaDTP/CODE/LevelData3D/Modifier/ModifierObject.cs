@@ -133,7 +133,7 @@ namespace BinarySerializer.Klonoa.DTP
             }
 
             if (GlobalModifierType == GlobalModifierType.VRAMScrollAnimation)
-                VRAMScrollInfos = loader.Config.VRAMScrollInfos[loader.GlobalSectorIndex];
+                VRAMScrollInfos = loader.Config.VRAMScrollInfos[loader.BINBlock];
         }
 
         private static T GetAttribute<T>(Enum value) 
