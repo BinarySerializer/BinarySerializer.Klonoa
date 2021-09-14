@@ -30,7 +30,7 @@ namespace BinarySerializer.Klonoa.DTP
         // Custom
         public GlobalModifierType GlobalModifierType { get; set; }
         public ModifierRotationAttribute RotationAttribute { get; set; }
-        public int TextureAnimationSpeed { get; set; }
+        public LoaderConfiguration_DTP.TextureAnimationInfo TextureAnimationInfo { get; set; }
         public LoaderConfiguration_DTP.PaletteAnimationInfo PaletteAnimationInfo { get; set; }
         public PS1_VRAMRegion[] PaletteAnimationVRAMRegions { get; set; }
         public uint GeyserPlatformPositionsPointer { get; set; }
@@ -108,7 +108,7 @@ namespace BinarySerializer.Klonoa.DTP
             RotationAttribute = GetAttribute<ModifierRotationAttribute>(GlobalModifierType);
             
             if (GlobalModifierType == GlobalModifierType.TextureAnimation)
-                TextureAnimationSpeed = loader.Config.TextureAnimationSpeeds[loader.BINBlock];
+                TextureAnimationInfo = loader.Config.TextureAnimationInfos[loader.BINBlock];
 
             if (GlobalModifierType == GlobalModifierType.PaletteAnimation)
             {

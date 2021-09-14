@@ -49,6 +49,10 @@
             GlobalModifierFileType.Unknown)]
         LockedDoor,
 
+        [ModifierFiles(GlobalModifierFileType.TMD, GlobalModifierFileType.Transform_WithoutInfo)]
+        [ModifierRotation(ModifierRotationAttribute.RotAxis.Z, -2)]
+        WaterWheel,
+
         [ModifierFiles(GlobalModifierFileType.LightObject)]
         Light,
 

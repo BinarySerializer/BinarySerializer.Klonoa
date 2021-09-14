@@ -67,15 +67,18 @@ namespace BinarySerializer.Klonoa
             [7] = new Dictionary<int, GlobalModifierType>()
             {
                 [4101] = GlobalModifierType.GeyserPlatform,
-                // TODO: 4102 is archive of movement path files, seems to be for water drops in cave?
+                // TODO: 4102 is archive of movement path files, seems to be for water drops in cave
                 [4103] = GlobalModifierType.PaletteAnimation,
+                [4104] = GlobalModifierType.TextureAnimation,
                 [4116] = GlobalModifierType.VRAMScrollAnimation,
+                [4117] = GlobalModifierType.WaterWheel,
                 [4120] = GlobalModifierType.Special,
             },
         };
-        public virtual Dictionary<int, int> TextureAnimationSpeeds { get; } = new Dictionary<int, int>()
+        public virtual Dictionary<int, TextureAnimationInfo> TextureAnimationInfos { get; } = new Dictionary<int, TextureAnimationInfo>()
         {
-            [3] = 4,
+            [3] = new TextureAnimationInfo(true, 4),
+            [7] = new TextureAnimationInfo(false, 4),
         };
 
         // TODO: Pointers will differ between each version, so these should be moved to the version specific configurations
@@ -138,6 +141,18 @@ namespace BinarySerializer.Klonoa
                 return GlobalModifierType.Unknown;
 
             return GlobalModifierTypes[binBlock][typeKey];
+        }
+
+        public class TextureAnimationInfo
+        {
+            public TextureAnimationInfo(bool pingPong, int animSpeed)
+            {
+                PingPong = pingPong;
+                AnimSpeed = animSpeed;
+            }
+
+            public bool PingPong { get; }
+            public int AnimSpeed { get; }
         }
 
         public class PaletteAnimationInfo
