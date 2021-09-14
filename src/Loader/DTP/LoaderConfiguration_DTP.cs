@@ -74,6 +74,13 @@ namespace BinarySerializer.Klonoa
                 [4117] = GlobalModifierType.WaterWheel,
                 [4120] = GlobalModifierType.Special,
             },
+            [8] = new Dictionary<int, GlobalModifierType>()
+            {
+                [4101] = GlobalModifierType.Object,
+                [4102] = GlobalModifierType.Object,
+                [4103] = GlobalModifierType.VRAMScrollAnimation,
+                [4120] = GlobalModifierType.Special,
+            },
         };
         public virtual Dictionary<int, TextureAnimationInfo> TextureAnimationInfos { get; } = new Dictionary<int, TextureAnimationInfo>()
         {
@@ -128,7 +135,39 @@ namespace BinarySerializer.Klonoa
                     Width = 0x8,
                     Height = 0x1,
                 }, 0x190, 0x17F, 1),
-            }
+            },
+            // FUN_8_7__80116f48 (NTSC)
+            [8] = new VRAMScrollInfo[]
+            {
+                new VRAMScrollInfo(new PS1_VRAMRegion()
+                {
+                    XPos = 0x1F0,
+                    YPos = 0x2,
+                    Width = 0x10,
+                    Height = 0xFE,
+                }, 0x1F0, 0, 1),
+                new VRAMScrollInfo(new PS1_VRAMRegion()
+                {
+                    XPos = 0x1F0,
+                    YPos = 0x0,
+                    Width = 0x10,
+                    Height = 0x2,
+                }, 0x1F0, 0xFE, 1),
+                new VRAMScrollInfo(new PS1_VRAMRegion()
+                {
+                    XPos = 0x1D8,
+                    YPos = 0x1,
+                    Width = 0x8,
+                    Height = 0x7F,
+                }, 0x1D8, 0x0, 1),
+                new VRAMScrollInfo(new PS1_VRAMRegion()
+                {
+                    XPos = 0x1D8,
+                    YPos = 0x0,
+                    Width = 0x8,
+                    Height = 0x1,
+                }, 0x1D8, 0x7F, 1),
+            },
         };
         public GlobalModifierType GetGlobalModifierType(int binBlock, int primaryType, int secondaryType)
         {
