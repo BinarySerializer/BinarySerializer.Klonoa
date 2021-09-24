@@ -16,13 +16,19 @@ namespace BinarySerializer.Klonoa.DTP
         public short SecondaryType { get; set; }
         public short Short_0C { get; set; }
         public short Short_0E { get; set; }
-        public uint Uint_10 { get; set; }
+        public Pointer ParametersPointer { get; set; } // Pointer to object parameters. The data is different based on the type.
         public Pointer DataFileIndicesPointer { get; set; }
         public short Short_18 { get; set; }
         public short Short_1A { get; set; } // Seems to be used in memory to indicate if it's been loaded
 
+        public bool IsInvalid => PrimaryType == PrimaryObjectType.Invalid || PrimaryType == PrimaryObjectType.None ||
+                                 SecondaryType == -1 || SecondaryType == 0;
+
         // Serialized from pointers
         public ushort[] DataFileIndices { get; set; }
+
+        // Parameters
+        public ModifierObjectParams_Gondola Params_Gondola { get; set; }
 
         // Serialized from data files
         public ModifierObjectDynamicData_File[] DataFiles { get; set; }
@@ -46,24 +52,33 @@ namespace BinarySerializer.Klonoa.DTP
             SecondaryType = s.Serialize<short>(SecondaryType, name: nameof(SecondaryType));
             Short_0C = s.Serialize<short>(Short_0C, name: nameof(Short_0C));
             Short_0E = s.Serialize<short>(Short_0E, name: nameof(Short_0E));
-            Uint_10 = s.Serialize<uint>(Uint_10, name: nameof(Uint_10));
+            ParametersPointer = s.SerializePointer(ParametersPointer, name: nameof(ParametersPointer));
             DataFileIndicesPointer = s.SerializePointer(DataFileIndicesPointer, name: nameof(DataFileIndicesPointer));
             Short_18 = s.Serialize<short>(Short_18, name: nameof(Short_18));
             Short_1A = s.Serialize<short>(Short_1A, name: nameof(Short_1A));
 
             s.DoAt(DataFileIndicesPointer, () => DataFileIndices = s.SerializeArray<ushort>(DataFileIndices, 8, name: nameof(DataFileIndices)));
+
+            if (IsInvalid) 
+                return;
+            
+            // Determine the type
+            var loader = Loader_DTP.GetLoader(s.Context);
+            GlobalModifierType = loader.Config.GetGlobalModifierType(loader.BINBlock, (int)PrimaryType, SecondaryType);
+
+            // Serialize the parameters
+            switch (GlobalModifierType)
+            {
+                case GlobalModifierType.Gondola:
+                    s.DoAt(ParametersPointer, () => Params_Gondola = s.SerializeObject<ModifierObjectParams_Gondola>(Params_Gondola, name: nameof(Params_Gondola)));
+                    break;
+            }
         }
 
         public void SerializeDataFiles(SerializerObject s)
         {
-            if (PrimaryType == PrimaryObjectType.Invalid ||
-                PrimaryType == PrimaryObjectType.None ||
-                SecondaryType == -1 ||
-                SecondaryType == 0)
+            if (IsInvalid)
                 return;
-
-            var loader = Loader_DTP.GetLoader(s.Context);
-            GlobalModifierType = loader.Config.GetGlobalModifierType(loader.BINBlock, (int)PrimaryType, SecondaryType);
 
             if (GlobalModifierType == GlobalModifierType.Unknown)
             {
@@ -80,6 +95,7 @@ namespace BinarySerializer.Klonoa.DTP
                     DataFiles[i] = Pre_AdditionalLevelFilePack.SerializeFile(s, DataFiles[i], DataFileIndices[i], onPreSerialize: x =>
                     {
                         x.Pre_FileType = GlobalModifierFileType.Unknown;
+                        x.Pre_ModifierObject = this;
                     }, name: $"{nameof(DataFiles)}[{i}]");
                 }
 
@@ -92,16 +108,24 @@ namespace BinarySerializer.Klonoa.DTP
                 return;
 
             var files = modifierFiles.GetFiles().ToArray();
+            var loader = Loader_DTP.GetLoader(s.Context);
 
             DataFiles ??= new ModifierObjectDynamicData_File[files.Length];
 
-            for (int i = 0; i < DataFiles.Length; i++)
+            for (int i = 0; i < (DataFileIndices?.Length ?? 0); i++)
             {
-                DataFiles[i] = Pre_AdditionalLevelFilePack.SerializeFile(s, DataFiles[i], DataFileIndices[i], onPreSerialize: x =>
+                if (i < DataFiles.Length)
                 {
-                    x.Pre_FileType = files[i];
-                    x.Pre_ModifierObject = this;
-                }, name: $"{nameof(DataFiles)}[{i}]");
+                    DataFiles[i] = Pre_AdditionalLevelFilePack.SerializeFile(s, DataFiles[i], DataFileIndices[i], onPreSerialize: x =>
+                    {
+                        x.Pre_FileType = files[i];
+                        x.Pre_ModifierObject = this;
+                    }, name: $"{nameof(DataFiles)}[{i}]");
+                }
+                else if (DataFileIndices[i] != 0)
+                {
+                    s.LogWarning($"Modifier of type {GlobalModifierType} has an unexpected data file specified at index {i}");
+                }
             }
 
             // Get type specific data

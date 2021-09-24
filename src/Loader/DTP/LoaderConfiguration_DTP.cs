@@ -59,7 +59,7 @@ namespace BinarySerializer.Klonoa
             [6] = new Dictionary<int, GlobalModifierType>()
             {
                 [4001] = GlobalModifierType.MovingPlatform,
-                [4002] = GlobalModifierType.LockedDoor,
+                [4002] = GlobalModifierType.LockedDoor_0,
                 [4102] = GlobalModifierType.Light,
                 [4104] = GlobalModifierType.ScenerySprites,
                 [4120] = GlobalModifierType.Special,
@@ -79,6 +79,14 @@ namespace BinarySerializer.Klonoa
                 [4101] = GlobalModifierType.Object,
                 [4102] = GlobalModifierType.Object,
                 [4103] = GlobalModifierType.VRAMScrollAnimation,
+                [4120] = GlobalModifierType.Special,
+            },
+            [9] = new Dictionary<int, GlobalModifierType>()
+            {
+                [4002] = GlobalModifierType.Gondola,
+                [4004] = GlobalModifierType.Crate,
+                [4005] = GlobalModifierType.LockedDoor_1,
+                [4102] = GlobalModifierType.MultiWheel,
                 [4120] = GlobalModifierType.Special,
             },
         };

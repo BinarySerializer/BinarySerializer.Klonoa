@@ -47,11 +47,34 @@
             GlobalModifierFileType.Transform_WithoutInfo, // Local
             GlobalModifierFileType.Transform_WithoutInfo, // Absolute
             GlobalModifierFileType.Unknown)]
-        LockedDoor,
+        LockedDoor_0,
+
+        [ModifierFiles(
+            GlobalModifierFileType.TMD, 
+            GlobalModifierFileType.Collision, 
+            GlobalModifierFileType.Transform_WithoutInfo, // Local
+            GlobalModifierFileType.Transform_WithoutInfo)] // Absolute
+        LockedDoor_1,
 
         [ModifierFiles(GlobalModifierFileType.TMD, GlobalModifierFileType.Transform_WithoutInfo)]
         [ModifierRotation(ModifierRotationAttribute.RotAxis.Z, -2)]
         WaterWheel,
+
+        [ModifierFiles(GlobalModifierFileType.TMD, GlobalModifierFileType.Collision, GlobalModifierFileType.Transform_WithoutInfo)]
+        Crate,
+
+        [ModifierFiles(GlobalModifierFileType.TMD, GlobalModifierFileType.Transform_WithoutInfo)]
+        MultiWheel,
+
+        // TODO: Sometimes has two additional transforms
+        // FUN_9_8__80120d24
+        [ModifierFiles(
+            GlobalModifierFileType.TMD, 
+            GlobalModifierFileType.Collision,
+            GlobalModifierFileType.MovementPaths,
+            GlobalModifierFileType.Transform_WithoutInfo, // Local
+            GlobalModifierFileType.Transform_WithoutInfo)] // Absolute
+        Gondola,
 
         [ModifierFiles(GlobalModifierFileType.LightObject)]
         Light,
