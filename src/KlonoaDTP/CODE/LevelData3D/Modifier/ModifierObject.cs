@@ -59,9 +59,9 @@ namespace BinarySerializer.Klonoa.DTP
 
         // Custom
         public GlobalModifierType GlobalModifierType { get; set; }
-        public float ConstantRotationX { get; set; }
-        public float ConstantRotationY { get; set; }
-        public float ConstantRotationZ { get; set; }
+        public float? ConstantRotationX { get; set; }
+        public float? ConstantRotationY { get; set; }
+        public float? ConstantRotationZ { get; set; }
         public float AnimatedTransformSpeed { get; set; } = 1;
         public bool DoesAnimatedTransformPingPong { get; set; }
         public LoaderConfiguration_DTP.TextureAnimationInfo TextureAnimationInfo { get; set; }
@@ -136,7 +136,7 @@ namespace BinarySerializer.Klonoa.DTP
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
                     Data_TMD_Secondary = SerializeDataFile<PS1_TMD>(s, Data_TMD_Secondary, name: nameof(Data_TMD_Secondary));
                     Data_Position = SerializeDataFile<KlonoaVector16>(s, Data_Position, name: nameof(Data_Position));
-                    ConstantRotationZ = 128;
+                    ConstantRotationY = 128;
                     break;
                 
                 case GlobalModifierType.BigWindmill:
