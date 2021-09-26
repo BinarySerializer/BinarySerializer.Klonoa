@@ -116,6 +116,14 @@ namespace BinarySerializer.Klonoa.DTP
                     }, name: nameof(Transforms));
                     break;
 
+                case GlobalModifierFileType.Transforms_WithoutInfo:
+                    Transforms = s.SerializeObject<ArchiveFile<ObjTransform_ArchiveFile>>(Transforms, onPreSerialize: x =>
+                    {
+                        onPreSerialize(x);
+                        x.Pre_OnPreSerializeAction = obj => obj.Pre_UsesTransformInfo = false;
+                    }, name: nameof(Transforms));
+                    break;
+
                 case GlobalModifierFileType.Position:
                     Position = s.SerializeObject<KlonoaVector16>(Position, name: nameof(Position));
                     break;

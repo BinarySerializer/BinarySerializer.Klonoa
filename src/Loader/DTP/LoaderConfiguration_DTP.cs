@@ -60,6 +60,7 @@ namespace BinarySerializer.Klonoa
             {
                 [4001] = GlobalModifierType.MovingPlatform,
                 [4002] = GlobalModifierType.LockedDoor_0,
+
                 [4102] = GlobalModifierType.Light,
                 [4104] = GlobalModifierType.ScenerySprites,
                 [4120] = GlobalModifierType.Special,
@@ -84,10 +85,15 @@ namespace BinarySerializer.Klonoa
             [9] = new Dictionary<int, GlobalModifierType>()
             {
                 [4002] = GlobalModifierType.Gondola,
+                [4003] = GlobalModifierType.WoodenCart,
                 [4004] = GlobalModifierType.Crate,
                 [4005] = GlobalModifierType.LockedDoor_1,
+
                 [4102] = GlobalModifierType.MultiWheel,
+                [4103] = GlobalModifierType.ScenerySprites,
+                [4104] = GlobalModifierType.FallingTreePart,
                 [4120] = GlobalModifierType.Special,
+                [4121] = GlobalModifierType.LevelModelSection,
             },
         };
         public virtual Dictionary<int, TextureAnimationInfo> TextureAnimationInfos { get; } = new Dictionary<int, TextureAnimationInfo>()

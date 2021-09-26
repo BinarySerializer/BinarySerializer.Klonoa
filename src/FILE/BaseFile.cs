@@ -5,6 +5,8 @@
     /// </summary>
     public abstract class BaseFile : BinarySerializable
     {
+        public virtual bool DisableNotFullySerializedWarning => false;
+
         /// <summary>
         /// The file size, should be set before serializing
         /// </summary>

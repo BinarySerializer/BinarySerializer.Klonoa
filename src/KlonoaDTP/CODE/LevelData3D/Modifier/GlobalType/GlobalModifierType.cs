@@ -22,10 +22,22 @@
         [ModifierFiles(GlobalModifierFileType.TMD, GlobalModifierFileType.Transform_WithInfo)]
         RoadSign,
 
-        [ModifierFiles(GlobalModifierFileType.TMD, GlobalModifierFileType.Collision, GlobalModifierFileType.MovementPaths, GlobalModifierFileType.Transform_WithoutInfo, GlobalModifierFileType.Unknown)]
+        // FUN_4_8__8011fff8
+        [ModifierFiles(
+            GlobalModifierFileType.TMD, 
+            GlobalModifierFileType.Collision, 
+            GlobalModifierFileType.MovementPaths, 
+            GlobalModifierFileType.Transform_WithoutInfo, // Absolute
+            GlobalModifierFileType.Unknown)] // TODO: Camera related (parsed at 0x800816e8)
         TiltRock,
 
-        [ModifierFiles(GlobalModifierFileType.TMD, GlobalModifierFileType.Collision, GlobalModifierFileType.MovementPaths, GlobalModifierFileType.Transforms_WithInfo, GlobalModifierFileType.Unknown, GlobalModifierFileType.Transform_WithInfo)]
+        [ModifierFiles(
+            GlobalModifierFileType.TMD, 
+            GlobalModifierFileType.Collision, 
+            GlobalModifierFileType.MovementPaths, 
+            GlobalModifierFileType.Transforms_WithInfo, // Absolute
+            GlobalModifierFileType.Unknown, // TODO: Camera related (parsed at 0x800816e8)
+            GlobalModifierFileType.Transform_WithInfo)] // Local
         Minecart,
 
         [ModifierFiles(
@@ -41,12 +53,13 @@
         [ModifierFiles(GlobalModifierFileType.TMD, GlobalModifierFileType.Position)]
         Bell,
 
+        // FUN_800790e4
         [ModifierFiles(
             GlobalModifierFileType.TMD, 
             GlobalModifierFileType.Collision, 
             GlobalModifierFileType.Transform_WithoutInfo, // Local
             GlobalModifierFileType.Transform_WithoutInfo, // Absolute
-            GlobalModifierFileType.Unknown)]
+            GlobalModifierFileType.Unknown)] // Unused?
         LockedDoor_0,
 
         [ModifierFiles(
@@ -66,7 +79,7 @@
         [ModifierFiles(GlobalModifierFileType.TMD, GlobalModifierFileType.Transform_WithoutInfo)]
         MultiWheel,
 
-        // TODO: Sometimes has two additional transforms
+        // TODO: Sometimes has two additional transforms - unused?
         // FUN_9_8__80120d24
         [ModifierFiles(
             GlobalModifierFileType.TMD, 
@@ -75,6 +88,20 @@
             GlobalModifierFileType.Transform_WithoutInfo, // Local
             GlobalModifierFileType.Transform_WithoutInfo)] // Absolute
         Gondola,
+
+        // FUN_9_8__80122870
+        [ModifierFiles(GlobalModifierFileType.TMD, GlobalModifierFileType.Transform_WithoutInfo)]
+        FallingTreePart,
+
+        // FUN_9_8__80122cfc
+        [ModifierFiles(
+            GlobalModifierFileType.TMD,
+            GlobalModifierFileType.Collision,
+            GlobalModifierFileType.MovementPaths,
+            GlobalModifierFileType.Transforms_WithoutInfo, // Absolute
+            GlobalModifierFileType.Unknown, // TODO: Camera related (parsed at 0x800816e8)
+            GlobalModifierFileType.Transform_WithInfo)] // Local - NOTE: The positions file in here only has one entry. The game parses 3.
+        WoodenCart,
 
         [ModifierFiles(GlobalModifierFileType.LightObject)]
         Light,
@@ -91,7 +118,9 @@
         [ModifierFiles(GlobalModifierFileType.TMD)]
         Object,
 
-        [ModifierFiles(GlobalModifierFileType.TMD, GlobalModifierFileType.UnknownModelObjectsData)]
+        [ModifierFiles(
+            GlobalModifierFileType.TMD, 
+            GlobalModifierFileType.UnknownModelObjectsData)] // TODO: Parsed at FUN_8002692c
         LevelModelSection,
 
         [ModifierFiles(GlobalModifierFileType.ScenerySprites)]

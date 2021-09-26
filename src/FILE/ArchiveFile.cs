@@ -157,7 +157,7 @@ namespace BinarySerializer.Klonoa
                 else
                     s.Align(alignBytes: 4);
 
-                if (Pre_LogIfNotFullyParsed && s.CurrentPointer != Pre_EndPointer)
+                if (Pre_LogIfNotFullyParsed && s.CurrentPointer != Pre_EndPointer && !(FileData is BaseFile { DisableNotFullySerializedWarning: true }))
                     s.LogWarning($"Archived file of type {typeof(File).Name} at {Offset} was not fully serialized. {s.CurrentPointer} != {Pre_EndPointer}");
             }
         }

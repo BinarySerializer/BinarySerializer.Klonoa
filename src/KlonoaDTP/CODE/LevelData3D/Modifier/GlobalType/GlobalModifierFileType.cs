@@ -18,6 +18,7 @@
         Transform_WithInfo,
         Transform_WithoutInfo,
         Transforms_WithInfo,
+        Transforms_WithoutInfo,
         Position,
         
         TextureAnimation,

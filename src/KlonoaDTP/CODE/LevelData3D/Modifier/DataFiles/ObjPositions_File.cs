@@ -2,6 +2,9 @@
 {
     public class ObjPositions_File : BaseFile
     {
+        // One of these files in block 9 is shorter than what the game reads. The game corrects this by setting the values to 0 afterwards.
+        public override bool DisableNotFullySerializedWarning => Loader_DTP.GetLoader(Context).BINBlock == 9;
+
         public ObjTransformInfo_File Pre_Info { get; set; }
 
         public ushort ObjectsCount { get; set; }
