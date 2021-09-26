@@ -527,13 +527,8 @@ namespace BinarySerializer.Klonoa
             if (LevelSector != -1)
             {
                 // Add TIM data to VRAM for each modifier which references a single TIM file. If there are multiple then it's animated and should get added later.
-                foreach (var modifier in LevelData3D.SectorModifiers[LevelSector].Modifiers.Where(x => x.DataFiles != null))
-                {
-                    foreach (var file in modifier.DataFiles.Where(x => x?.TIM != null))
-                    {
-                        AddToVRAM(file.TIM);
-                    }
-                }
+                foreach (var tim in LevelData3D.SectorModifiers[LevelSector].Modifiers.Select(x => x.Data_TIM).Where(x => x != null))
+                    AddToVRAM(tim);
             }
 
             // Serialize level data 2D if a level index is specified

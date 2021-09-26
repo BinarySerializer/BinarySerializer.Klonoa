@@ -95,6 +95,17 @@ namespace BinarySerializer.Klonoa
                 [4120] = GlobalModifierType.Special,
                 [4121] = GlobalModifierType.LevelModelSection,
             },
+            [10] = new Dictionary<int, GlobalModifierType>()
+            {
+                [4001] = GlobalModifierType.WoodenMallet,
+                [4002] = GlobalModifierType.LockedDoor_2,
+                [4003] = GlobalModifierType.VerticallyMovingWoodenPlatform,
+
+                [4101] = GlobalModifierType.Cogwheel,
+                [4102] = GlobalModifierType.ScenerySprites,
+                [4103] = GlobalModifierType.ScenerySprites,
+                [4120] = GlobalModifierType.Special,
+            },
         };
         public virtual Dictionary<int, TextureAnimationInfo> TextureAnimationInfos { get; } = new Dictionary<int, TextureAnimationInfo>()
         {

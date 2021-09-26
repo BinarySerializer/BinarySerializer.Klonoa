@@ -1,6 +1,6 @@
 ﻿namespace BinarySerializer.Klonoa.DTP
 {
-    public class ModifierObjectParams_Gondola : BinarySerializable
+    public class ModifierObjectParams_MovingPlatform : BinarySerializable
     {
         public uint Flags { get; set; }
         public Pointer MovementPathIndicesPointer_0 { get; set; }
