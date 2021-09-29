@@ -30,15 +30,22 @@
         Ledge,
         UnstablePlatform,
         SwingingPlatform,
+        Bone,
+        GreenBoulder,
+        RedBoulder,
+        DestroyedHouse,
+        BlockingBoulder,
         Light,
         GeyserPlatform,
         ScrollAnimation, // Scrolls the UVs for the level model
         VRAMScrollAnimation, // Scrolls regions in VRAM
+        VRAMScrollAnimationWithTexture,
         Object,
         LevelModelSection,
         ScenerySprites,
         TextureAnimation,
         PaletteAnimation,
+        PaletteAnimations,
         Special,
         WeatherEffect,
     }

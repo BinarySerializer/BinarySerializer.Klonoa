@@ -47,7 +47,7 @@ namespace BinarySerializer.Klonoa
                 [4101] = GlobalModifierType.WindSwirl,
                 [4103] = GlobalModifierType.ScrollAnimation,
                 [4104] = GlobalModifierType.ScenerySprites,
-                [4105] = GlobalModifierType.PaletteAnimation,
+                [4105] = GlobalModifierType.PaletteAnimations,
                 [4107] = GlobalModifierType.WeatherEffect,
                 [4108] = GlobalModifierType.Object,
             },
@@ -69,7 +69,7 @@ namespace BinarySerializer.Klonoa
             {
                 [4101] = GlobalModifierType.GeyserPlatform,
                 // TODO: 4102 is archive of movement path files, seems to be for water drops in cave
-                [4103] = GlobalModifierType.PaletteAnimation,
+                [4103] = GlobalModifierType.PaletteAnimations,
                 [4104] = GlobalModifierType.TextureAnimation,
                 [4116] = GlobalModifierType.VRAMScrollAnimation,
                 [4117] = GlobalModifierType.WaterWheel,
@@ -120,11 +120,25 @@ namespace BinarySerializer.Klonoa
                 [4003] = GlobalModifierType.Ledge,
                 [4121] = GlobalModifierType.LevelModelSection,
             },
+            [13] = new Dictionary<int, GlobalModifierType>()
+            {
+                [4001] = GlobalModifierType.Bone,
+                [4002] = GlobalModifierType.RedBoulder,
+                [4003] = GlobalModifierType.GreenBoulder,
+                [4004] = GlobalModifierType.BlockingBoulder,
+                [4101] = GlobalModifierType.VRAMScrollAnimationWithTexture,
+                [4103] = GlobalModifierType.PaletteAnimation,
+                [4104] = GlobalModifierType.TextureAnimation,
+                [4105] = GlobalModifierType.DestroyedHouse,
+                [4107] = GlobalModifierType.ScenerySprites,
+                [4120] = GlobalModifierType.Special,
+            },
         };
         public virtual Dictionary<int, TextureAnimationInfo> TextureAnimationInfos { get; } = new Dictionary<int, TextureAnimationInfo>()
         {
             [3] = new TextureAnimationInfo(true, 4),
             [7] = new TextureAnimationInfo(false, 4),
+            [13] = new TextureAnimationInfo(false, 4),
         };
 
         // TODO: Pointers will differ between each version, so these should be moved to the version specific configurations
@@ -132,6 +146,7 @@ namespace BinarySerializer.Klonoa
         {
             [4] = new PaletteAnimationInfo(0x80125c58, 8),
             [7] = new PaletteAnimationInfo(0x8012d3c0, 8),
+            [13] = new PaletteAnimationInfo(0x80110aa4, 8),
         };
         public virtual Dictionary<int, uint> GeyserPlatformPositionsPointers { get; } = new Dictionary<int, uint>()
         {
@@ -206,6 +221,38 @@ namespace BinarySerializer.Klonoa
                     Width = 0x8,
                     Height = 0x1,
                 }, 0x1D8, 0x7F, 1),
+            },
+            // FUN_13_8__801205a4 (NTSC)
+            [13] = new VRAMScrollInfo[]
+            {
+                new VRAMScrollInfo(new PS1_VRAMRegion()
+                {
+                    XPos = 0x1B0,
+                    YPos = 0x102,
+                    Width = 0x10,
+                    Height = 0xFE,
+                }, 0x1b0, 0x100, 1),
+                new VRAMScrollInfo(new PS1_VRAMRegion()
+                {
+                    XPos = 0x1B0,
+                    YPos = 0x100,
+                    Width = 0x10,
+                    Height = 0x2,
+                }, 0x1b0, 0x1fe, 1),
+                new VRAMScrollInfo(new PS1_VRAMRegion()
+                {
+                    XPos = 0x198,
+                    YPos = 0x101,
+                    Width = 0x8,
+                    Height = 0x7F,
+                }, 0x198, 0x100, 1),
+                new VRAMScrollInfo(new PS1_VRAMRegion()
+                {
+                    XPos = 0x198,
+                    YPos = 0x100,
+                    Width = 0x8,
+                    Height = 0x1,
+                }, 0x198, 0x17f, 1),
             },
         };
         public GlobalModifierType GetGlobalModifierType(int binBlock, int primaryType, int secondaryType)

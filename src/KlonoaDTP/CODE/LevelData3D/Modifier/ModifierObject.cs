@@ -55,6 +55,7 @@ namespace BinarySerializer.Klonoa.DTP
         public KlonoaVector16 Data_Position { get; set; }
         public TIM_ArchiveFile Data_TextureAnimation { get; set; }
         public PaletteAnimation_ArchiveFile Data_PaletteAnimation { get; set; }
+        public PaletteAnimations_ArchiveFile Data_PaletteAnimations { get; set; }
         public UVScrollAnimation_File Data_UVScrollAnimation { get; set; }
         public ObjPositions_File Data_ScenerySprites { get; set; }
 
@@ -111,6 +112,8 @@ namespace BinarySerializer.Klonoa.DTP
         {
             if (IsInvalid)
                 return;
+
+            s.Log($"Serializing data files for type {GlobalModifierType}");
 
             if (GlobalModifierType == GlobalModifierType.Unknown)
             {
@@ -405,6 +408,41 @@ namespace BinarySerializer.Klonoa.DTP
                     AnimatedTransformSpeed = 0xb00 / (float)0x1000;
                     break;
 
+                case GlobalModifierType.Bone:
+                    Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
+                    Data_Collision = SerializeDataFile<ObjCollisionItems_File>(s, Data_Collision, name: nameof(Data_Collision));
+                    Data_AbsoluteTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform,
+                        onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_AbsoluteTransform));
+                    break;
+
+                case GlobalModifierType.GreenBoulder:
+                    Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
+                    Data_Collision = SerializeDataFile<ObjCollisionItems_File>(s, Data_Collision, name: nameof(Data_Collision));
+                    Data_AbsoluteTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform,
+                        onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_AbsoluteTransform));
+                    Data_TMD_Secondary = SerializeDataFile<PS1_TMD>(s, Data_TMD_Secondary, name: nameof(Data_TMD_Secondary));
+                    break;
+
+                case GlobalModifierType.RedBoulder:
+                    Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
+                    Data_TMD_Secondary = SerializeDataFile<PS1_TMD>(s, Data_TMD_Secondary, name: nameof(Data_TMD_Secondary));
+                    Data_Collision = SerializeDataFile<ObjCollisionItems_File>(s, Data_Collision, name: nameof(Data_Collision));
+                    Data_AbsoluteTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform,
+                        onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_AbsoluteTransform));
+                    break;
+
+                case GlobalModifierType.DestroyedHouse:
+                    Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
+                    Data_TMD_Secondary = SerializeDataFile<PS1_TMD>(s, Data_TMD_Secondary, name: nameof(Data_TMD_Secondary));
+                    break;
+
+                case GlobalModifierType.BlockingBoulder:
+                    Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
+                    Data_Collision = SerializeDataFile<ObjCollisionItems_File>(s, Data_Collision, name: nameof(Data_Collision));
+                    Data_AbsoluteTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform,
+                        onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_AbsoluteTransform));
+                    break;
+
                 case GlobalModifierType.Light:
                     if (Short_00 == 0x11)
                         Data_LightPositions = SerializeDataFile<ObjPositions_File>(s, Data_LightPositions, name: nameof(Data_LightPositions));
@@ -434,6 +472,11 @@ namespace BinarySerializer.Klonoa.DTP
                     VRAMScrollInfos = loader.Config.VRAMScrollInfos[loader.BINBlock];
                     break;
 
+                case GlobalModifierType.VRAMScrollAnimationWithTexture:
+                    Data_TIM = SerializeDataFile<PS1_TIM>(s, Data_TIM, name: nameof(Data_TIM));
+                    VRAMScrollInfos = loader.Config.VRAMScrollInfos[loader.BINBlock];
+                    break;
+
                 case GlobalModifierType.Object:
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
                     break;
@@ -455,12 +498,24 @@ namespace BinarySerializer.Klonoa.DTP
                     break;
 
                 case GlobalModifierType.PaletteAnimation:
-                    Data_PaletteAnimation = SerializeDataFile<PaletteAnimation_ArchiveFile>(s, Data_PaletteAnimation, name: nameof(Data_PaletteAnimation));
-                    
+                case GlobalModifierType.PaletteAnimations:
+                    if (GlobalModifierType == GlobalModifierType.PaletteAnimation)
+                        Data_PaletteAnimation = SerializeDataFile<PaletteAnimation_ArchiveFile>(s, Data_PaletteAnimation, name: nameof(Data_PaletteAnimation));
+                    else
+                        Data_PaletteAnimations = SerializeDataFile<PaletteAnimations_ArchiveFile>(s, Data_PaletteAnimations, name: nameof(Data_PaletteAnimations));
+
                     PaletteAnimationInfo = loader.Config.PaletteAnimationInfos[loader.BINBlock];
-                    s.DoAt(new Pointer(PaletteAnimationInfo.Address_Regions, loader.FindCodeFile(PaletteAnimationInfo.Address_Regions)), () =>
+
+                    Pointer p;
+
+                    if (GlobalModifierType == GlobalModifierType.PaletteAnimation)
+                        p = new Pointer(PaletteAnimationInfo.Address_Regions + (Short_02 * 8), loader.FindCodeFile(PaletteAnimationInfo.Address_Regions));
+                    else
+                        p = new Pointer(PaletteAnimationInfo.Address_Regions, loader.FindCodeFile(PaletteAnimationInfo.Address_Regions));
+
+                    s.DoAt(p, () =>
                     {
-                        var count = Data_PaletteAnimation.OffsetTable.FilesCount;
+                        var count = GlobalModifierType == GlobalModifierType.PaletteAnimation ? 1 : Data_PaletteAnimations.OffsetTable.FilesCount;
                         PaletteAnimationVRAMRegions = s.SerializeObjectArray<PS1_VRAMRegion>(PaletteAnimationVRAMRegions, count, name: nameof(PaletteAnimationVRAMRegions));
                     });
                     break;

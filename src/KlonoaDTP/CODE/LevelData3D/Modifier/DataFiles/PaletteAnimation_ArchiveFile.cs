@@ -1,6 +1,6 @@
 ﻿namespace BinarySerializer.Klonoa.DTP
 {
-    public class PaletteAnimation_ArchiveFile : ArchiveFile<ArchiveFile<PaletteAnimation_ArchiveFile.RawPalette>>
+    public class PaletteAnimation_ArchiveFile : ArchiveFile<PaletteAnimation_ArchiveFile.RawPalette>
     {
         public class RawPalette : BinarySerializable
         {
