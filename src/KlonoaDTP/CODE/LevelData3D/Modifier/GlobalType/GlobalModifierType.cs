@@ -24,6 +24,9 @@
         WoodenMallet,
         VerticallyMovingWoodenPlatform,
         Cogwheel,
+        SpinningWood,
+        SpinningWoodAttachedPlatform,
+        Ledge,
         Light,
         GeyserPlatform,
         ScrollAnimation, // Scrolls the UVs for the level model

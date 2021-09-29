@@ -62,6 +62,8 @@ namespace BinarySerializer.Klonoa.DTP
         public float? ConstantRotationX { get; set; }
         public float? ConstantRotationY { get; set; }
         public float? ConstantRotationZ { get; set; }
+        public float ConstantRotationMin { get; set; } = -0x800;
+        public float ConstantRotationLength { get; set; } = 0x1000;
         public float AnimatedTransformSpeed { get; set; } = 1;
         public bool DoesAnimatedTransformPingPong { get; set; }
         public LoaderConfiguration_DTP.TextureAnimationInfo TextureAnimationInfo { get; set; }
@@ -316,11 +318,58 @@ namespace BinarySerializer.Klonoa.DTP
                     DoesAnimatedTransformPingPong = true;
                     break;
 
-                case GlobalModifierType.Cogwheel:
+                case GlobalModifierType.Cogwheel: // FUN_10_8__8011f560
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
                     Data_AbsoluteTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform,
                         onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_AbsoluteTransform));
-                    // TODO: Constant rotation
+
+                    var sector = loader.GlobalSectorIndex;
+
+                    if (sector == 0x55)
+                        ConstantRotationX = 4;
+                    else if (sector == 0x50 || sector == 0x52)
+                        ConstantRotationZ = 4;
+
+                    ConstantRotationMin = -341;
+                    ConstantRotationLength = 340;
+
+                    break;
+
+                case GlobalModifierType.SpinningWood: // FUN_10_8__8012059c
+                    Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
+                    Data_Collision = SerializeDataFile<ObjCollisionItems_File>(s, Data_Collision, name: nameof(Data_Collision));
+                    Data_AbsoluteTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform,
+                        onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_AbsoluteTransform));
+
+                    if (Short_02 == 0)
+                    {
+                        AnimatedTransformSpeed = 0.5f;
+                        DoesAnimatedTransformPingPong = true;
+                    }
+                    else if (Short_02 == 1)
+                    {
+                        ConstantRotationZ = 24;
+                    }
+                    break;
+
+                case GlobalModifierType.SpinningWoodAttachedPlatform: // FUN_10_8__801201ec
+                    Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
+                    Data_Collision = SerializeDataFile<ObjCollisionItems_File>(s, Data_Collision, name: nameof(Data_Collision));
+                    Data_MovementPaths = SerializeDataFile<MovementPath_File>(s, Data_MovementPaths, name: nameof(Data_MovementPaths));
+                    Data_LocalTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform,
+                        onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_AbsoluteTransform));
+
+                    AnimatedTransformSpeed = 0.5f;
+                    DoesAnimatedTransformPingPong = true;
+                    break;
+
+                case GlobalModifierType.Ledge: // FUN_10_8__8011f198
+                    Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
+                    Data_Collision = SerializeDataFile<ObjCollisionItems_File>(s, Data_Collision, name: nameof(Data_Collision));
+                    Data_AbsoluteTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform,
+                        onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_AbsoluteTransform));
+
+                    AnimatedTransformSpeed = 1;
                     break;
 
                 case GlobalModifierType.Light:

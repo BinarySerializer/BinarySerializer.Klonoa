@@ -95,11 +95,14 @@ namespace BinarySerializer.Klonoa
                 [4120] = GlobalModifierType.Special,
                 [4121] = GlobalModifierType.LevelModelSection,
             },
-            [10] = new Dictionary<int, GlobalModifierType>()
+            [10] = new Dictionary<int, GlobalModifierType>() // Note: This level scroll the VRAM using an object of primary type 12 (FUN_10_8__80110c78)
             {
                 [4001] = GlobalModifierType.WoodenMallet,
                 [4002] = GlobalModifierType.LockedDoor_2,
                 [4003] = GlobalModifierType.VerticallyMovingWoodenPlatform,
+                [4004] = GlobalModifierType.SpinningWoodAttachedPlatform,
+                [4005] = GlobalModifierType.SpinningWood,
+                [4006] = GlobalModifierType.Ledge,
 
                 [4101] = GlobalModifierType.Cogwheel,
                 [4102] = GlobalModifierType.ScenerySprites,
