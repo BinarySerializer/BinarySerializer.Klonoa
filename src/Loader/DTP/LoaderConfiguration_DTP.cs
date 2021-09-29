@@ -102,12 +102,23 @@ namespace BinarySerializer.Klonoa
                 [4003] = GlobalModifierType.VerticallyMovingWoodenPlatform,
                 [4004] = GlobalModifierType.SpinningWoodAttachedPlatform,
                 [4005] = GlobalModifierType.SpinningWood,
-                [4006] = GlobalModifierType.Ledge,
+                [4006] = GlobalModifierType.MovingLedge,
 
                 [4101] = GlobalModifierType.Cogwheel,
                 [4102] = GlobalModifierType.ScenerySprites,
                 [4103] = GlobalModifierType.ScenerySprites,
                 [4120] = GlobalModifierType.Special,
+            },
+            [11] = new Dictionary<int, GlobalModifierType>()
+            {
+                // Nothing
+            },
+            [12] = new Dictionary<int, GlobalModifierType>()
+            {
+                [4001] = GlobalModifierType.UnstablePlatform,
+                [4002] = GlobalModifierType.SwingingPlatform,
+                [4003] = GlobalModifierType.Ledge,
+                [4121] = GlobalModifierType.LevelModelSection,
             },
         };
         public virtual Dictionary<int, TextureAnimationInfo> TextureAnimationInfos { get; } = new Dictionary<int, TextureAnimationInfo>()

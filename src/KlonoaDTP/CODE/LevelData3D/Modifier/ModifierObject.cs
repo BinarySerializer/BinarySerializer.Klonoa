@@ -48,6 +48,7 @@ namespace BinarySerializer.Klonoa.DTP
         public PS1_TIM Data_TIM { get; set; }
         public ObjPositions_File Data_LightPositions { get; set; } // Each light has two positions, source and destination
         public ObjTransform_ArchiveFile Data_LocalTransform { get; set; }
+        public ObjTransform_ArchiveFile Data_LocalTransform_Secondary { get; set; }
         public ObjTransform_ArchiveFile Data_AbsoluteTransform { get; set; }
         public ArchiveFile<ObjTransform_ArchiveFile> Data_LocalTransforms { get; set; }
         public ArchiveFile<ObjTransform_ArchiveFile> Data_AbsoluteTransforms { get; set; }
@@ -363,13 +364,45 @@ namespace BinarySerializer.Klonoa.DTP
                     DoesAnimatedTransformPingPong = true;
                     break;
 
-                case GlobalModifierType.Ledge: // FUN_10_8__8011f198
+                case GlobalModifierType.MovingLedge: // FUN_10_8__8011f198
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
                     Data_Collision = SerializeDataFile<ObjCollisionItems_File>(s, Data_Collision, name: nameof(Data_Collision));
                     Data_AbsoluteTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform,
                         onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_AbsoluteTransform));
 
                     AnimatedTransformSpeed = 1;
+                    break;
+
+                case GlobalModifierType.Ledge: // FUN_12_8__8011a74c
+                    Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
+                    Data_Collision = SerializeDataFile<ObjCollisionItems_File>(s, Data_Collision, name: nameof(Data_Collision));
+                    Data_AbsoluteTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform,
+                        onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_AbsoluteTransform));
+                    Data_TMD_Secondary = SerializeDataFile<PS1_TMD>(s, Data_TMD_Secondary, name: nameof(Data_TMD_Secondary));
+                    break;
+
+                case GlobalModifierType.UnstablePlatform: // FUN_12_8__8011b2f0
+                    Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
+                    Data_Collision = SerializeDataFile<ObjCollisionItems_File>(s, Data_Collision, name: nameof(Data_Collision));
+                    Data_MovementPaths = SerializeDataFile<MovementPath_File>(s, Data_MovementPaths, name: nameof(Data_MovementPaths));
+                    Data_LocalTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_LocalTransform,
+                        onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_LocalTransform));
+                    Data_LocalTransform_Secondary = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_LocalTransform_Secondary,
+                        onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_LocalTransform_Secondary));
+
+                    AnimatedTransformSpeed = 0.5f;
+                    break;
+
+                case GlobalModifierType.SwingingPlatform: // FUN_12_8__8011af80
+                    Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
+                    Data_Collision = SerializeDataFile<ObjCollisionItems_File>(s, Data_Collision, name: nameof(Data_Collision));
+                    Data_MovementPaths = SerializeDataFile<MovementPath_File>(s, Data_MovementPaths, name: nameof(Data_MovementPaths));
+                    Data_AbsoluteTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform,
+                        onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_AbsoluteTransform));
+                    Data_LocalTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_LocalTransform,
+                        onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_LocalTransform));
+
+                    AnimatedTransformSpeed = 0xb00 / (float)0x1000;
                     break;
 
                 case GlobalModifierType.Light:

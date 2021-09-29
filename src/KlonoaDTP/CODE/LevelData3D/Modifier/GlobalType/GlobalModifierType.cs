@@ -26,7 +26,10 @@
         Cogwheel,
         SpinningWood,
         SpinningWoodAttachedPlatform,
+        MovingLedge,
         Ledge,
+        UnstablePlatform,
+        SwingingPlatform,
         Light,
         GeyserPlatform,
         ScrollAnimation, // Scrolls the UVs for the level model
