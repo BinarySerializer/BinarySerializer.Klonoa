@@ -35,6 +35,9 @@
         RedBoulder,
         DestroyedHouse,
         BlockingBoulder,
+        SwingingWoodPlank,
+        Collision,
+        Rocks,
         Light,
         GeyserPlatform,
         ScrollAnimation, // Scrolls the UVs for the level model

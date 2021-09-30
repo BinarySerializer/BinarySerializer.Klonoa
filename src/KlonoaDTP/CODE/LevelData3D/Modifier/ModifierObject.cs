@@ -443,6 +443,26 @@ namespace BinarySerializer.Klonoa.DTP
                         onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_AbsoluteTransform));
                     break;
 
+                case GlobalModifierType.SwingingWoodPlank: // FUN_14_7__8011648c
+                    Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
+                    Data_Collision = SerializeDataFile<ObjCollisionItems_File>(s, Data_Collision, name: nameof(Data_Collision));
+                    Data_MovementPaths = SerializeDataFile<MovementPath_File>(s, Data_MovementPaths, name: nameof(Data_MovementPaths));
+                    break;
+
+                case GlobalModifierType.Collision: // FUN_14_7__801170a8
+                    Data_Collision = SerializeDataFile<ObjCollisionItems_File>(s, Data_Collision, name: nameof(Data_Collision));
+                    Data_AbsoluteTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform,
+                        onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_AbsoluteTransform));
+                    break;
+
+                case GlobalModifierType.Rocks: // FUN_14_7__8011724c
+                    Data_TMD_Secondary = SerializeDataFile<PS1_TMD>(s, Data_TMD_Secondary, name: nameof(Data_TMD_Secondary));
+                    Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
+                    Data_LocalTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_LocalTransform,
+                        onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_LocalTransform));
+                    SkipDataFile<RawData_File>(s, isUnused: true);
+                    break;
+
                 case GlobalModifierType.Light:
                     if (Short_00 == 0x11)
                         Data_LightPositions = SerializeDataFile<ObjPositions_File>(s, Data_LightPositions, name: nameof(Data_LightPositions));
@@ -549,11 +569,13 @@ namespace BinarySerializer.Klonoa.DTP
                 logIfNotFullyParsed: logIfNotFullyParsed, 
                 name: name);
         }
-        private void SkipDataFile<T>(SerializerObject s)
+        private void SkipDataFile<T>(SerializerObject s, bool isUnused = false)
             where T : BinarySerializable, new()
         {
-            s.LogWarning($"Data file skipped at index {_dataFileIndex} for object of type {GlobalModifierType}");
-            SerializeDataFile<T>(s, null, name: "Unknown");
+            if (!isUnused)
+                s.LogWarning($"Data file skipped at index {_dataFileIndex} for object of type {GlobalModifierType}");
+            
+            SerializeDataFile<T>(s, null, name: isUnused ? "Unused" : "Unknown");
         }
 
         public class GeyserPlatformPosition : BinarySerializable

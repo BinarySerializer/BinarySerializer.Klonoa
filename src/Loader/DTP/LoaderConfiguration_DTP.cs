@@ -118,6 +118,7 @@ namespace BinarySerializer.Klonoa
                 [4001] = GlobalModifierType.UnstablePlatform,
                 [4002] = GlobalModifierType.SwingingPlatform,
                 [4003] = GlobalModifierType.Ledge,
+
                 [4121] = GlobalModifierType.LevelModelSection,
             },
             [13] = new Dictionary<int, GlobalModifierType>()
@@ -126,11 +127,20 @@ namespace BinarySerializer.Klonoa
                 [4002] = GlobalModifierType.RedBoulder,
                 [4003] = GlobalModifierType.GreenBoulder,
                 [4004] = GlobalModifierType.BlockingBoulder,
+
                 [4101] = GlobalModifierType.VRAMScrollAnimationWithTexture,
                 [4103] = GlobalModifierType.PaletteAnimation,
                 [4104] = GlobalModifierType.TextureAnimation,
                 [4105] = GlobalModifierType.DestroyedHouse,
                 [4107] = GlobalModifierType.ScenerySprites,
+                [4120] = GlobalModifierType.Special,
+            },
+            [14] = new Dictionary<int, GlobalModifierType>()
+            {
+                [4001] = GlobalModifierType.SwingingWoodPlank,
+                [4002] = GlobalModifierType.Collision,
+
+                [4101] = GlobalModifierType.Rocks,
                 [4120] = GlobalModifierType.Special,
             },
         };
