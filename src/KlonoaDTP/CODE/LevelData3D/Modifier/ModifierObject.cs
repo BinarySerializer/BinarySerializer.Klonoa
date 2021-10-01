@@ -108,6 +108,8 @@ namespace BinarySerializer.Klonoa.DTP
                 case GlobalModifierType.VerticallyMovingWoodenPlatform:
                 case GlobalModifierType.MovingPlatformOnTrack:
                 case GlobalModifierType.MovingPlatformWithOptionalLocal:
+                case GlobalModifierType.ObjectWithPaletteAnimation:
+                case GlobalModifierType.MovingCavePlatform:
                     s.DoAt(ParametersPointer, () => Params_MovingPlatform = s.SerializeObject<ModifierObjectParams_MovingPlatform>(Params_MovingPlatform, name: nameof(Params_MovingPlatform)));
                     break;
             }
@@ -630,6 +632,59 @@ namespace BinarySerializer.Klonoa.DTP
                     ConstantRotationY = 8;
                     break;
 
+                case GlobalModifierType.TransparentGemPlatform: // FUN_18_8__8011eaec
+                    Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
+                    Data_Collision = SerializeDataFile<ObjCollisionItems_File>(s, Data_Collision, name: nameof(Data_Collision));
+                    Data_AbsoluteTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform,
+                        onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_AbsoluteTransform));
+                    SkipDataFile<RawData_File>(s); // Unused?
+                    break;
+
+                case GlobalModifierType.BirdStatueWithSwitch: // FUN_18_8__80121694
+                    Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
+                    Data_Collision = SerializeDataFile<ObjCollisionItems_File>(s, Data_Collision, name: nameof(Data_Collision));
+                    Data_AbsoluteTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform,
+                        onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_AbsoluteTransform));
+                    // NOTE: This loads a block into VRAM, seems to be for an effect only?
+                    break;
+
+                case GlobalModifierType.ObjectWithPaletteAnimation: // FUN_18_8__80123c18
+                    Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
+                    Data_Collision = SerializeDataFile<ObjCollisionItems_File>(s, Data_Collision, name: nameof(Data_Collision));
+                    Data_MovementPaths = SerializeDataFile<MovementPath_File>(s, Data_MovementPaths, name: nameof(Data_MovementPaths));
+                    Data_AbsoluteTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform,
+                        onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_AbsoluteTransform));
+                    Data_PaletteAnimation = SerializeDataFile<PaletteAnimation_ArchiveFile>(s, Data_PaletteAnimation, name: nameof(Data_PaletteAnimation));
+
+                    AnimatedAbsoluteTransformSpeed = Params_MovingPlatform.AnimSpeed;
+                    DoesAnimatedAbsoluteTransformPingPong = true;
+
+                    PaletteAnimationInfo = loader.Config.ObjectWithPaletteAnimationInfos[loader.BINBlock];
+
+                    s.DoAt(new Pointer(PaletteAnimationInfo.Address_Regions, loader.FindCodeFile(PaletteAnimationInfo.Address_Regions)), () =>
+                    {
+                        PaletteAnimationVRAMRegions = s.SerializeObjectArray<PS1_VRAMRegion>(PaletteAnimationVRAMRegions, 1, name: nameof(PaletteAnimationVRAMRegions));
+                    });
+                    break;
+
+                case GlobalModifierType.LightField: // FUN_18_8__801226ec
+                    Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
+                    Data_Collision = SerializeDataFile<ObjCollisionItems_File>(s, Data_Collision, name: nameof(Data_Collision));
+                    Data_AbsoluteTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform,
+                        onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_AbsoluteTransform));
+                    break;
+
+                case GlobalModifierType.MovingCavePlatform: // FUN_18_8__8012323c
+                    Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
+                    Data_Collision = SerializeDataFile<ObjCollisionItems_File>(s, Data_Collision, name: nameof(Data_Collision));
+                    Data_MovementPaths = SerializeDataFile<MovementPath_File>(s, Data_MovementPaths, name: nameof(Data_MovementPaths));
+                    Data_AbsoluteTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform,
+                        onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_AbsoluteTransform));
+
+                    AnimatedAbsoluteTransformSpeed = Params_MovingPlatform.AnimSpeed;
+                    DoesAnimatedAbsoluteTransformPingPong = true;
+                    break;
+
                 case GlobalModifierType.Light:
                     if (Short_00 == 0x11)
                         Data_LightPositions = SerializeDataFile<ObjPositions_File>(s, Data_LightPositions, name: nameof(Data_LightPositions));
@@ -695,7 +750,26 @@ namespace BinarySerializer.Klonoa.DTP
                     else
                         Data_PaletteAnimations = SerializeDataFile<PaletteAnimations_ArchiveFile>(s, Data_PaletteAnimations, name: nameof(Data_PaletteAnimations));
 
-                    PaletteAnimationInfo = loader.Config.PaletteAnimationInfos[loader.BINBlock];
+                    PaletteAnimationInfo = loader.Config.PaletteAnimationInfos[loader.BINBlock][SecondaryType];
+
+                    // Ugly hard-coding for one of the types...
+                    if (PaletteAnimationInfo.Address_Regions == 0xFFFFFFFF)
+                    {
+                        PaletteAnimationVRAMRegions = new PS1_VRAMRegion[]
+                        {
+                            new PS1_VRAMRegion(0xC0, 0x1E2, 0x10, 0x1),
+                            new PS1_VRAMRegion(0x70, 0x1E4, 0x10, 0x1),
+                            new PS1_VRAMRegion(0x80, 0x1E4, 0x10, 0x1),
+                            new PS1_VRAMRegion(0x90, 0x1E4, 0x10, 0x1),
+                            new PS1_VRAMRegion(0xA0, 0x1E4, 0x10, 0x1),
+                            new PS1_VRAMRegion(0xB0, 0x1E4, 0x10, 0x1),
+                            new PS1_VRAMRegion(0xC0, 0x1E4, 0x10, 0x1),
+                            new PS1_VRAMRegion(0xD0, 0x1E4, 0x10, 0x1),
+                            new PS1_VRAMRegion(0xE0, 0x1E4, 0x10, 0x1),
+                        };
+
+                        return;
+                    }
 
                     Pointer p;
 

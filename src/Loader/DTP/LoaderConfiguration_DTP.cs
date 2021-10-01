@@ -180,6 +180,19 @@ namespace BinarySerializer.Klonoa
 
                 [4101] = GlobalModifierType.JokaSpinningCore,
             },
+            [18] = new Dictionary<int, GlobalModifierType>()
+            {
+                [4001] = GlobalModifierType.TransparentGemPlatform,
+                [4002] = GlobalModifierType.MovingCavePlatform,
+                [4003] = GlobalModifierType.BirdStatueWithSwitch,
+                [4004] = GlobalModifierType.ObjectWithPaletteAnimation,
+                [4005] = GlobalModifierType.LightField,
+
+                [4101] = GlobalModifierType.PaletteAnimation,
+                [4102] = GlobalModifierType.PaletteAnimation,
+                [4120] = GlobalModifierType.Special,
+                [4121] = GlobalModifierType.LevelModelSection,
+            },
         };
         public virtual Dictionary<int, TextureAnimationInfo> TextureAnimationInfos { get; } = new Dictionary<int, TextureAnimationInfo>()
         {
@@ -189,13 +202,37 @@ namespace BinarySerializer.Klonoa
         };
 
         // TODO: Pointers will differ between each version, so these should be moved to the version specific configurations
-        public virtual Dictionary<int, PaletteAnimationInfo> PaletteAnimationInfos { get; } = new Dictionary<int, PaletteAnimationInfo>()
+        public virtual Dictionary<int, Dictionary<int, PaletteAnimationInfo>> PaletteAnimationInfos { get; } = new Dictionary<int, Dictionary<int, PaletteAnimationInfo>>()
         {
-            [4] = new PaletteAnimationInfo(0x80125c58, 8),
-            [7] = new PaletteAnimationInfo(0x8012d3c0, 8),
-            [13] = new PaletteAnimationInfo(0x80110aa4, 8),
-            [15] = new PaletteAnimationInfo(0x801261a8, 8),
-            [16] = new PaletteAnimationInfo(0x80110a8c, 12, blocksCount: 6),
+            [4] = new Dictionary<int, PaletteAnimationInfo>()
+            {
+                [5] = new PaletteAnimationInfo(0x80125c58, 8),
+            },
+            [7] = new Dictionary<int, PaletteAnimationInfo>()
+            {
+                [3] = new PaletteAnimationInfo(0x8012d3c0, 8),
+            },
+            [13] = new Dictionary<int, PaletteAnimationInfo>()
+            {
+                [3] = new PaletteAnimationInfo(0x80110aa4, 8),
+            },
+            [15] = new Dictionary<int, PaletteAnimationInfo>()
+            {
+                [6] = new PaletteAnimationInfo(0x801261a8, 8),
+            },
+            [16] = new Dictionary<int, PaletteAnimationInfo>()
+            {
+                [5] = new PaletteAnimationInfo(0x80110a8c, 12, blocksCount: 6),
+            },
+            [18] = new Dictionary<int, PaletteAnimationInfo>()
+            {
+                [1] = new PaletteAnimationInfo(0xFFFFFFFF, 8), // Need to hard-code this...
+                [2] = new PaletteAnimationInfo(0x80110b04, 16),
+            },
+        };
+        public virtual Dictionary<int, PaletteAnimationInfo> ObjectWithPaletteAnimationInfos { get; } = new Dictionary<int, PaletteAnimationInfo>()
+        {
+            [18] = new PaletteAnimationInfo(0x80110b0c, 8),
         };
         public virtual Dictionary<int, uint> GeyserPlatformPositionsPointers { get; } = new Dictionary<int, uint>()
         {

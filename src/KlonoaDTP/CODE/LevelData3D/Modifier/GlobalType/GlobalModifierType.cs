@@ -51,6 +51,11 @@
         IronGate,
         JokaUnknown,
         JokaSpinningCore,
+        TransparentGemPlatform,
+        BirdStatueWithSwitch,
+        ObjectWithPaletteAnimation,
+        LightField,
+        MovingCavePlatform,
         Light,
         GeyserPlatform,
         ScrollAnimation, // Scrolls the UVs for the level model
