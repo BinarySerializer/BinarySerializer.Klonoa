@@ -56,6 +56,11 @@
         ObjectWithPaletteAnimation,
         LightField,
         MovingCavePlatform,
+        ColoredStatue,
+        ColoredPillar,
+        ColoredDoor,
+        OnWayMovingWallPillar,
+        DoorWithPillar,
         Light,
         GeyserPlatform,
         ScrollAnimation, // Scrolls the UVs for the level model

@@ -632,12 +632,12 @@ namespace BinarySerializer.Klonoa.DTP
                     ConstantRotationY = 8;
                     break;
 
-                case GlobalModifierType.TransparentGemPlatform: // FUN_18_8__8011eaec
+                case GlobalModifierType.TransparentGemPlatform: // FUN_18_8__8011eaec, FUN_19_8__8011d9b0
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
                     Data_Collision = SerializeDataFile<ObjCollisionItems_File>(s, Data_Collision, name: nameof(Data_Collision));
                     Data_AbsoluteTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform,
                         onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_AbsoluteTransform));
-                    SkipDataFile<RawData_File>(s); // Unused?
+                    SkipDataFile<RawData_File>(s); // TODO: 20 byte structs
                     break;
 
                 case GlobalModifierType.BirdStatueWithSwitch: // FUN_18_8__80121694
@@ -683,6 +683,60 @@ namespace BinarySerializer.Klonoa.DTP
 
                     AnimatedAbsoluteTransformSpeed = Params_MovingPlatform.AnimSpeed;
                     DoesAnimatedAbsoluteTransformPingPong = true;
+                    break;
+
+                case GlobalModifierType.ColoredStatue: // FUN_19_8__80120a20
+                    Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
+                    Data_AbsoluteTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform,
+                        onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_AbsoluteTransform));
+                    Data_LocalTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_LocalTransform,
+                        onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_LocalTransform));
+
+                    AnimatedLocalTransformSpeed = 0x80 / (float)0x1000;
+                    break;
+
+                case GlobalModifierType.ColoredPillar: // FUN_19_8__8011bf40
+                    Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
+                    Data_Collision = SerializeDataFile<ObjCollisionItems_File>(s, Data_Collision, name: nameof(Data_Collision));
+                    Data_AbsoluteTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform,
+                        onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_AbsoluteTransform));
+                    Data_LocalTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_LocalTransform,
+                        onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_LocalTransform));
+
+                    AnimatedLocalTransformSpeed = 0.5f;
+                    break;
+
+                case GlobalModifierType.ColoredDoor: // FUN_19_8__8011fc90
+                    Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
+                    Data_LocalTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_LocalTransform,
+                        onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_LocalTransform));
+                    Data_AbsoluteTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform,
+                        onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_AbsoluteTransform));
+
+                    AnimatedLocalTransformSpeed = 0xC00 / (float)0x1000;
+                    DoesAnimatedLocalTransformPingPong = true;
+                    break;
+
+                case GlobalModifierType.OnWayMovingWallPillar: // FUN_19_8__8011f8fc
+                    Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
+                    Data_Collision = SerializeDataFile<ObjCollisionItems_File>(s, Data_Collision, name: nameof(Data_Collision));
+                    Data_AbsoluteTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform,
+                        onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_AbsoluteTransform));
+                    Data_LocalTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_LocalTransform,
+                        onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_LocalTransform));
+
+                    AnimatedLocalTransformSpeed = 0.5f;
+                    break;
+
+                case GlobalModifierType.DoorWithPillar: // FUN_19_8__8012011c
+                    Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
+                    Data_TMD_Secondary = SerializeDataFile<PS1_TMD>(s, Data_TMD_Secondary, name: nameof(Data_TMD_Secondary));
+                    Data_LocalTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_LocalTransform,
+                        onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_LocalTransform));
+                    Data_AbsoluteTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform,
+                        onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_AbsoluteTransform));
+
+                    AnimatedLocalTransformSpeed = 0.5f;
                     break;
 
                 case GlobalModifierType.Light:
