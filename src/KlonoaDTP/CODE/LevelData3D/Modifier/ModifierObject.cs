@@ -617,6 +617,19 @@ namespace BinarySerializer.Klonoa.DTP
                     AnimatedAbsoluteTransformSpeed = 0.5f;
                     break;
 
+                case GlobalModifierType.JokaUnknown: // FUN_17_7__80113b00
+                    SkipDataFile<RawData_File>(s);
+                    SkipDataFile<RawData_File>(s);
+                    break;
+
+                case GlobalModifierType.JokaSpinningCore: // FUN_17_7__80113854
+                    Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
+                    Data_AbsoluteTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform,
+                        onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_AbsoluteTransform));
+
+                    ConstantRotationY = 8;
+                    break;
+
                 case GlobalModifierType.Light:
                     if (Short_00 == 0x11)
                         Data_LightPositions = SerializeDataFile<ObjPositions_File>(s, Data_LightPositions, name: nameof(Data_LightPositions));

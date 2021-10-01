@@ -174,6 +174,12 @@ namespace BinarySerializer.Klonoa
                 [4105] = GlobalModifierType.PaletteAnimation,
                 [4121] = GlobalModifierType.LevelModelSection,
             },
+            [17] = new Dictionary<int, GlobalModifierType>()
+            {
+                [4001] = GlobalModifierType.JokaUnknown,
+
+                [4101] = GlobalModifierType.JokaSpinningCore,
+            },
         };
         public virtual Dictionary<int, TextureAnimationInfo> TextureAnimationInfos { get; } = new Dictionary<int, TextureAnimationInfo>()
         {
