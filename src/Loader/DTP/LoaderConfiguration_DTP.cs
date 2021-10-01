@@ -160,6 +160,20 @@ namespace BinarySerializer.Klonoa
                 [4106] = GlobalModifierType.PaletteAnimations,
                 [4120] = GlobalModifierType.Special,
             },
+            [16] = new Dictionary<int, GlobalModifierType>()
+            {
+                [4001] = GlobalModifierType.MovingPlatformWithOptionalLocal,
+                [4002] = GlobalModifierType.MovingWallPillars,
+                [4003] = GlobalModifierType.IronGate,
+                [4004] = GlobalModifierType.DarkLightPlatform,
+
+                [4101] = GlobalModifierType.DarkLightSwitcher,
+                [4102] = GlobalModifierType.ScenerySprites,
+                [4103] = GlobalModifierType.ScenerySprites,
+                [4104] = GlobalModifierType.ScenerySprites,
+                [4105] = GlobalModifierType.PaletteAnimation,
+                [4121] = GlobalModifierType.LevelModelSection,
+            },
         };
         public virtual Dictionary<int, TextureAnimationInfo> TextureAnimationInfos { get; } = new Dictionary<int, TextureAnimationInfo>()
         {
@@ -175,6 +189,7 @@ namespace BinarySerializer.Klonoa
             [7] = new PaletteAnimationInfo(0x8012d3c0, 8),
             [13] = new PaletteAnimationInfo(0x80110aa4, 8),
             [15] = new PaletteAnimationInfo(0x801261a8, 8),
+            [16] = new PaletteAnimationInfo(0x80110a8c, 12, blocksCount: 6),
         };
         public virtual Dictionary<int, uint> GeyserPlatformPositionsPointers { get; } = new Dictionary<int, uint>()
         {
@@ -342,14 +357,16 @@ namespace BinarySerializer.Klonoa
 
         public class PaletteAnimationInfo
         {
-            public PaletteAnimationInfo(uint addressRegions, int animSpeed)
+            public PaletteAnimationInfo(uint addressRegions, int animSpeed, int blocksCount = -1)
             {
                 Address_Regions = addressRegions;
                 AnimSpeed = animSpeed;
+                BlocksCount = blocksCount;
             }
 
             public uint Address_Regions { get; }
             public int AnimSpeed { get; }
+            public int BlocksCount { get; }
         }
 
         public class VRAMScrollInfo

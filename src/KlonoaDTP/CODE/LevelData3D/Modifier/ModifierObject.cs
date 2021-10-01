@@ -107,6 +107,7 @@ namespace BinarySerializer.Klonoa.DTP
                 case GlobalModifierType.Gondola:
                 case GlobalModifierType.VerticallyMovingWoodenPlatform:
                 case GlobalModifierType.MovingPlatformOnTrack:
+                case GlobalModifierType.MovingPlatformWithOptionalLocal:
                     s.DoAt(ParametersPointer, () => Params_MovingPlatform = s.SerializeObject<ModifierObjectParams_MovingPlatform>(Params_MovingPlatform, name: nameof(Params_MovingPlatform)));
                     break;
             }
@@ -553,6 +554,69 @@ namespace BinarySerializer.Klonoa.DTP
                     AnimatedLocalTransformSpeed = 0x2aa / (float)0x1000;
                     break;
 
+                case GlobalModifierType.MovingPlatformWithOptionalLocal: // FUN_16_8__8011d3ac
+                    Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
+                    Data_Collision = SerializeDataFile<ObjCollisionItems_File>(s, Data_Collision, name: nameof(Data_Collision));
+                    Data_MovementPaths = SerializeDataFile<MovementPath_File>(s, Data_MovementPaths, name: nameof(Data_MovementPaths));
+                    Data_AbsoluteTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform,
+                        onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_AbsoluteTransform));
+
+                    if (Short_02 == 1)
+                        Data_LocalTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_LocalTransform,
+                        onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_LocalTransform));
+                    else if (DataFileIndices[4] != 0)
+                        SkipDataFile<RawData_File>(s, isUnused: true);
+
+                    AnimatedLocalTransformSpeed = -0.5f;
+                    AnimatedAbsoluteTransformSpeed = Params_MovingPlatform.AnimSpeed;
+                    DoesAnimatedAbsoluteTransformPingPong = true;
+                    break;
+
+                case GlobalModifierType.MovingWallPillars: // FUN_16_8__80120140
+                    Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
+                    Data_Collision = SerializeDataFile<ObjCollisionItems_File>(s, Data_Collision, name: nameof(Data_Collision));
+                    Data_AbsoluteTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform,
+                        onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_AbsoluteTransform));
+                    Data_LocalTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_LocalTransform,
+                        onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_LocalTransform));
+
+                    AnimatedLocalTransformSpeed = 0.5f;
+                    DoesAnimatedLocalTransformPingPong = true;
+                    break;
+
+                case GlobalModifierType.DarkLightPlatform: // FUN_16_8__8011f698
+                    Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
+                    Data_Collision = SerializeDataFile<ObjCollisionItems_File>(s, Data_Collision, name: nameof(Data_Collision));
+                    Data_TMD_Secondary = SerializeDataFile<PS1_TMD>(s, Data_TMD_Secondary, name: nameof(Data_TMD_Secondary));
+                    Data_AbsoluteTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform,
+                        onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_AbsoluteTransform));
+                    break;
+
+                case GlobalModifierType.DarkLightSwitcher: // FUN_16_8__801229b8
+                    // Has no data. Switches between the dark/light state in the level.
+                    break;
+
+                case GlobalModifierType.IronGate: // FUN_16_8__8011fa54
+                    Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
+                    Data_Collision = SerializeDataFile<ObjCollisionItems_File>(s, Data_Collision, name: nameof(Data_Collision));
+
+                    Data_AbsoluteTransforms = new ArchiveFile<ObjTransform_ArchiveFile>()
+                    {
+                        Files = new ObjTransform_ArchiveFile[4]
+                    };
+
+                    Data_AbsoluteTransforms.Files[0] = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransforms.Files[0],
+                        onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: $"{nameof(Data_AbsoluteTransforms)}[{0}]");
+                    Data_AbsoluteTransforms.Files[1] = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransforms.Files[1],
+                        onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: $"{nameof(Data_AbsoluteTransforms)}[{1}]");
+                    Data_AbsoluteTransforms.Files[2] = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransforms.Files[2],
+                        onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: $"{nameof(Data_AbsoluteTransforms)}[{2}]");
+                    Data_AbsoluteTransforms.Files[3] = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransforms.Files[3],
+                        onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: $"{nameof(Data_AbsoluteTransforms)}[{3}]");
+
+                    AnimatedAbsoluteTransformSpeed = 0.5f;
+                    break;
+
                 case GlobalModifierType.Light:
                     if (Short_00 == 0x11)
                         Data_LightPositions = SerializeDataFile<ObjPositions_File>(s, Data_LightPositions, name: nameof(Data_LightPositions));
@@ -622,14 +686,22 @@ namespace BinarySerializer.Klonoa.DTP
 
                     Pointer p;
 
-                    if (GlobalModifierType == GlobalModifierType.PaletteAnimation)
+                    if (GlobalModifierType == GlobalModifierType.PaletteAnimation && PaletteAnimationInfo.BlocksCount == -1)
                         p = new Pointer(PaletteAnimationInfo.Address_Regions + (Short_02 * 8), loader.FindCodeFile(PaletteAnimationInfo.Address_Regions));
                     else
                         p = new Pointer(PaletteAnimationInfo.Address_Regions, loader.FindCodeFile(PaletteAnimationInfo.Address_Regions));
 
                     s.DoAt(p, () =>
                     {
-                        var count = GlobalModifierType == GlobalModifierType.PaletteAnimation ? 1 : Data_PaletteAnimations.OffsetTable.FilesCount;
+                        int count;
+                        
+                        if (GlobalModifierType == GlobalModifierType.PaletteAnimation && PaletteAnimationInfo.BlocksCount != -1)
+                            count = PaletteAnimationInfo.BlocksCount;
+                        else if (GlobalModifierType == GlobalModifierType.PaletteAnimation)
+                            count = 1;
+                        else
+                            count = Data_PaletteAnimations.OffsetTable.FilesCount;
+
                         PaletteAnimationVRAMRegions = s.SerializeObjectArray<PS1_VRAMRegion>(PaletteAnimationVRAMRegions, count, name: nameof(PaletteAnimationVRAMRegions));
                     });
                     break;

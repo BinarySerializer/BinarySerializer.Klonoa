@@ -44,6 +44,11 @@
         LockedDoor_3,
         BlockingLedge,
         UnknownOrbRelatedObj,
+        MovingPlatformWithOptionalLocal,
+        MovingWallPillars,
+        DarkLightPlatform,
+        DarkLightSwitcher,
+        IronGate,
         Light,
         GeyserPlatform,
         ScrollAnimation, // Scrolls the UVs for the level model
