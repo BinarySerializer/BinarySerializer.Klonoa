@@ -48,7 +48,7 @@ namespace BinarySerializer.Klonoa.DTP
         public PS1_TIM Data_TIM { get; set; }
         public ObjPositions_File Data_LightPositions { get; set; } // Each light has two positions, source and destination
         public ObjTransform_ArchiveFile Data_LocalTransform { get; set; }
-        public ObjTransform_ArchiveFile Data_LocalTransform_Secondary { get; set; }
+        public ObjTransform_ArchiveFile Data_LocalTransform_Secondary { get; set; } // TODO: Get rid of and use fake archive
         public ObjTransform_ArchiveFile Data_AbsoluteTransform { get; set; }
         public ArchiveFile<ObjTransform_ArchiveFile> Data_LocalTransforms { get; set; }
         public ArchiveFile<ObjTransform_ArchiveFile> Data_AbsoluteTransforms { get; set; }
@@ -57,6 +57,7 @@ namespace BinarySerializer.Klonoa.DTP
         public PaletteAnimation_ArchiveFile Data_PaletteAnimation { get; set; }
         public PaletteAnimations_ArchiveFile Data_PaletteAnimations { get; set; }
         public UVScrollAnimation_File Data_UVScrollAnimation { get; set; }
+        public RGBAnimations_File Data_RGBAnimations { get; set; }
         public ObjPositions_File Data_ScenerySprites { get; set; }
 
         // Custom
@@ -66,8 +67,10 @@ namespace BinarySerializer.Klonoa.DTP
         public float? ConstantRotationZ { get; set; }
         public float ConstantRotationMin { get; set; } = -0x800;
         public float ConstantRotationLength { get; set; } = 0x1000;
-        public float AnimatedTransformSpeed { get; set; } = 1;
-        public bool DoesAnimatedTransformPingPong { get; set; }
+        public float AnimatedLocalTransformSpeed { get; set; } = 1;
+        public bool DoesAnimatedLocalTransformPingPong { get; set; }
+        public float AnimatedAbsoluteTransformSpeed { get; set; } = 1;
+        public bool DoesAnimatedAbsoluteTransformPingPong { get; set; }
         public LoaderConfiguration_DTP.TextureAnimationInfo TextureAnimationInfo { get; set; }
         public LoaderConfiguration_DTP.PaletteAnimationInfo PaletteAnimationInfo { get; set; }
         public PS1_VRAMRegion[] PaletteAnimationVRAMRegions { get; set; }
@@ -103,6 +106,7 @@ namespace BinarySerializer.Klonoa.DTP
             {
                 case GlobalModifierType.Gondola:
                 case GlobalModifierType.VerticallyMovingWoodenPlatform:
+                case GlobalModifierType.MovingPlatformOnTrack:
                     s.DoAt(ParametersPointer, () => Params_MovingPlatform = s.SerializeObject<ModifierObjectParams_MovingPlatform>(Params_MovingPlatform, name: nameof(Params_MovingPlatform)));
                     break;
             }
@@ -167,7 +171,7 @@ namespace BinarySerializer.Klonoa.DTP
                     Data_AbsoluteTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform,
                         onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_AbsoluteTransform));
 
-                    AnimatedTransformSpeed = 1;
+                    AnimatedAbsoluteTransformSpeed = 1;
                     break;
 
                 case GlobalModifierType.RoadSign:
@@ -184,10 +188,10 @@ namespace BinarySerializer.Klonoa.DTP
                         onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_AbsoluteTransform));
                     SkipDataFile<RawData_File>(s); // TODO: Camera block (parsed at 0x800816e8)
 
-                    AnimatedTransformSpeed = 0.5f;
+                    AnimatedAbsoluteTransformSpeed = 0.5f;
                     break;
 
-                case GlobalModifierType.Minecart:
+                case GlobalModifierType.Minecart: // FUN_4_8__8011a638
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
                     Data_Collision = SerializeDataFile<ObjCollisionItems_File>(s, Data_Collision, name: nameof(Data_Collision));
                     Data_MovementPaths = SerializeDataFile<MovementPath_File>(s, Data_MovementPaths, name: nameof(Data_MovementPaths));
@@ -197,7 +201,7 @@ namespace BinarySerializer.Klonoa.DTP
                     Data_LocalTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_LocalTransform,
                         onPreSerialize: x => x.Pre_UsesTransformInfo = true, name: nameof(Data_LocalTransform));
 
-                    AnimatedTransformSpeed = 1;
+                    AnimatedAbsoluteTransformSpeed = 1;
                     break;
 
                 case GlobalModifierType.RongoLango:
@@ -231,7 +235,11 @@ namespace BinarySerializer.Klonoa.DTP
                     if (GlobalModifierType == GlobalModifierType.LockedDoor_0)
                         SkipDataFile<RawData_File>(s); // TODO: Unused?
 
-                    AnimatedTransformSpeed = 1;
+                    if (GlobalModifierType != GlobalModifierType.LockedDoor_2)
+                        AnimatedLocalTransformSpeed = 1;
+                    else
+                        AnimatedAbsoluteTransformSpeed = 1;
+
                     break;
 
                 case GlobalModifierType.WaterWheel:
@@ -247,7 +255,7 @@ namespace BinarySerializer.Klonoa.DTP
                     Data_AbsoluteTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform,
                         onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_AbsoluteTransform));
 
-                    AnimatedTransformSpeed = 0.5f;
+                    AnimatedAbsoluteTransformSpeed = 0.5f;
                     break;
 
                 case GlobalModifierType.MultiWheel:
@@ -266,8 +274,8 @@ namespace BinarySerializer.Klonoa.DTP
                         onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_AbsoluteTransform));
                     // TODO: Sometimes has two additional transforms - unused?
 
-                    AnimatedTransformSpeed = Params_MovingPlatform.AnimSpeed;
-                    DoesAnimatedTransformPingPong = true;
+                    AnimatedLocalTransformSpeed = Params_MovingPlatform.AnimSpeed;
+                    DoesAnimatedLocalTransformPingPong = true;
                     break;
 
                 case GlobalModifierType.FallingTreePart: // FUN_9_8__80122870
@@ -275,7 +283,7 @@ namespace BinarySerializer.Klonoa.DTP
                     Data_AbsoluteTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform,
                         onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_AbsoluteTransform));
 
-                    AnimatedTransformSpeed = 0.5f;
+                    AnimatedAbsoluteTransformSpeed = 0.5f;
                     break;
 
                 case GlobalModifierType.WoodenCart: // FUN_9_8__80122cfc
@@ -297,7 +305,7 @@ namespace BinarySerializer.Klonoa.DTP
                         pos.Z = 0;
                     }
 
-                    AnimatedTransformSpeed = 0.5f;
+                    AnimatedAbsoluteTransformSpeed = 0.5f;
                     break;
 
                 case GlobalModifierType.WoodenMallet:
@@ -308,7 +316,7 @@ namespace BinarySerializer.Klonoa.DTP
                         onPreSerialize: x => x.Pre_OnPreSerializeAction = f => f.Pre_UsesTransformInfo = false, name: nameof(Data_LocalTransforms));
                     SkipDataFile<RawData_File>(s); // TODO: Camera block (parsed at 0x800816e8)
 
-                    AnimatedTransformSpeed = 0.5f;
+                    AnimatedLocalTransformSpeed = 0.5f;
                     break;
 
                 case GlobalModifierType.VerticallyMovingWoodenPlatform:
@@ -318,8 +326,8 @@ namespace BinarySerializer.Klonoa.DTP
                     Data_LocalTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_LocalTransform,
                         onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_LocalTransform));
 
-                    AnimatedTransformSpeed = Params_MovingPlatform.AnimSpeed;
-                    DoesAnimatedTransformPingPong = true;
+                    AnimatedLocalTransformSpeed = Params_MovingPlatform.AnimSpeed;
+                    DoesAnimatedLocalTransformPingPong = true;
                     break;
 
                 case GlobalModifierType.Cogwheel: // FUN_10_8__8011f560
@@ -347,8 +355,8 @@ namespace BinarySerializer.Klonoa.DTP
 
                     if (Short_02 == 0)
                     {
-                        AnimatedTransformSpeed = 0.5f;
-                        DoesAnimatedTransformPingPong = true;
+                        AnimatedAbsoluteTransformSpeed = 0.5f;
+                        DoesAnimatedAbsoluteTransformPingPong = true;
                     }
                     else if (Short_02 == 1)
                     {
@@ -363,8 +371,8 @@ namespace BinarySerializer.Klonoa.DTP
                     Data_LocalTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform,
                         onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_AbsoluteTransform));
 
-                    AnimatedTransformSpeed = 0.5f;
-                    DoesAnimatedTransformPingPong = true;
+                    AnimatedLocalTransformSpeed = 0.5f;
+                    DoesAnimatedLocalTransformPingPong = true;
                     break;
 
                 case GlobalModifierType.MovingLedge: // FUN_10_8__8011f198
@@ -373,7 +381,7 @@ namespace BinarySerializer.Klonoa.DTP
                     Data_AbsoluteTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform,
                         onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_AbsoluteTransform));
 
-                    AnimatedTransformSpeed = 1;
+                    AnimatedAbsoluteTransformSpeed = 1;
                     break;
 
                 case GlobalModifierType.Ledge: // FUN_12_8__8011a74c
@@ -393,7 +401,7 @@ namespace BinarySerializer.Klonoa.DTP
                     Data_LocalTransform_Secondary = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_LocalTransform_Secondary,
                         onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_LocalTransform_Secondary));
 
-                    AnimatedTransformSpeed = 0.5f;
+                    AnimatedLocalTransformSpeed = 0.5f;
                     break;
 
                 case GlobalModifierType.SwingingPlatform: // FUN_12_8__8011af80
@@ -405,7 +413,7 @@ namespace BinarySerializer.Klonoa.DTP
                     Data_LocalTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_LocalTransform,
                         onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_LocalTransform));
 
-                    AnimatedTransformSpeed = 0xb00 / (float)0x1000;
+                    AnimatedLocalTransformSpeed = 0xb00 / (float)0x1000;
                     break;
 
                 case GlobalModifierType.Bone:
@@ -463,6 +471,88 @@ namespace BinarySerializer.Klonoa.DTP
                     SkipDataFile<RawData_File>(s, isUnused: true);
                     break;
 
+                case GlobalModifierType.MovingPlatformOnTrack: // FUN_15_8__8011d040
+                    Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
+                    Data_Collision = SerializeDataFile<ObjCollisionItems_File>(s, Data_Collision, name: nameof(Data_Collision));
+                    Data_MovementPaths = SerializeDataFile<MovementPath_File>(s, Data_MovementPaths, name: nameof(Data_MovementPaths));
+                    Data_AbsoluteTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform,
+                        onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_AbsoluteTransform));
+                    Data_LocalTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_LocalTransform,
+                        onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_LocalTransform));
+
+                    AnimatedLocalTransformSpeed = 0.5f;
+                    AnimatedAbsoluteTransformSpeed = Params_MovingPlatform.AnimSpeed;
+                    DoesAnimatedAbsoluteTransformPingPong = true;
+                    break;
+
+                case GlobalModifierType.SpinningWheel: // FUN_15_8__8011a9dc
+                    Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
+                    Data_Collision = SerializeDataFile<ObjCollisionItems_File>(s, Data_Collision, name: nameof(Data_Collision));
+                    Data_MovementPaths = SerializeDataFile<MovementPath_File>(s, Data_MovementPaths, name: nameof(Data_MovementPaths));
+                    Data_AbsoluteTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform,
+                        onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_AbsoluteTransform));
+
+                    ConstantRotationZ = 24;
+                    AnimatedAbsoluteTransformSpeed = 0.5f;
+                    break;
+
+                case GlobalModifierType.FallingTargetPlatform: // FUN_15_8__8011af24
+                    Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
+                    Data_Collision = SerializeDataFile<ObjCollisionItems_File>(s, Data_Collision, name: nameof(Data_Collision));
+                    Data_AbsoluteTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform,
+                        onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_AbsoluteTransform));
+
+                    Data_LocalTransforms = new ArchiveFile<ObjTransform_ArchiveFile>()
+                    {
+                        Files = new ObjTransform_ArchiveFile[3]
+                    };
+
+                    Data_LocalTransforms.Files[0] = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_LocalTransforms.Files[0],
+                        onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: $"{nameof(Data_LocalTransforms)}[{0}]");
+                    Data_LocalTransforms.Files[1] = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_LocalTransforms.Files[1],
+                        onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: $"{nameof(Data_LocalTransforms)}[{1}]");
+                    Data_LocalTransforms.Files[2] = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_LocalTransforms.Files[2],
+                        onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: $"{nameof(Data_LocalTransforms)}[{2}]");
+
+                    AnimatedLocalTransformSpeed = 0.5f;
+                    break;
+
+                case GlobalModifierType.LockedDoor_3: // FUN_15_8__8011e0c0
+                    Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
+                    Data_Collision = SerializeDataFile<ObjCollisionItems_File>(s, Data_Collision, name: nameof(Data_Collision));
+                    Data_AbsoluteTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform,
+                        onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_AbsoluteTransform));
+
+                    AnimatedAbsoluteTransformSpeed = 0.5f;
+                    break;
+
+                case GlobalModifierType.BlockingLedge: // FUN_15_8__8011ee5c
+                    Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
+                    Data_Collision = SerializeDataFile<ObjCollisionItems_File>(s, Data_Collision, name: nameof(Data_Collision));
+                    Data_AbsoluteTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform,
+                        onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_AbsoluteTransform));
+                    SkipDataFile<RawData_File>(s, isUnused: true);
+
+                    AnimatedAbsoluteTransformSpeed = 0xf00 / (float)0x1000;
+                    break;
+
+                case GlobalModifierType.UnknownOrbRelatedObj: // FUN_15_8__8011dc04
+                    Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
+                    Data_Collision = SerializeDataFile<ObjCollisionItems_File>(s, Data_Collision, name: nameof(Data_Collision));
+
+                    Data_AbsoluteTransforms = new ArchiveFile<ObjTransform_ArchiveFile>()
+                    {
+                        Files = new ObjTransform_ArchiveFile[2]
+                    };
+
+                    Data_AbsoluteTransforms.Files[0] = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransforms.Files[0],
+                        onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: $"{nameof(Data_AbsoluteTransforms)}[{0}]");
+                    Data_AbsoluteTransforms.Files[1] = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransforms.Files[1],
+                        onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: $"{nameof(Data_AbsoluteTransforms)}[{1}]");
+
+                    AnimatedLocalTransformSpeed = 0x2aa / (float)0x1000;
+                    break;
+
                 case GlobalModifierType.Light:
                     if (Short_00 == 0x11)
                         Data_LightPositions = SerializeDataFile<ObjPositions_File>(s, Data_LightPositions, name: nameof(Data_LightPositions));
@@ -495,6 +585,10 @@ namespace BinarySerializer.Klonoa.DTP
                 case GlobalModifierType.VRAMScrollAnimationWithTexture:
                     Data_TIM = SerializeDataFile<PS1_TIM>(s, Data_TIM, name: nameof(Data_TIM));
                     VRAMScrollInfos = loader.Config.VRAMScrollInfos[loader.BINBlock];
+                    break;
+
+                case GlobalModifierType.RGBAnimation:
+                    Data_RGBAnimations = SerializeDataFile<RGBAnimations_File>(s, Data_RGBAnimations, name: nameof(Data_RGBAnimations));
                     break;
 
                 case GlobalModifierType.Object:

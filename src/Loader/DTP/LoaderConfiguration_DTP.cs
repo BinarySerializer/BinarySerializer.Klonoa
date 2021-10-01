@@ -143,6 +143,23 @@ namespace BinarySerializer.Klonoa
                 [4101] = GlobalModifierType.Rocks,
                 [4120] = GlobalModifierType.Special,
             },
+            [15] = new Dictionary<int, GlobalModifierType>()
+            {
+                [4001] = GlobalModifierType.MovingPlatformOnTrack,
+                [4002] = GlobalModifierType.SpinningWheel,
+                [4003] = GlobalModifierType.FallingTargetPlatform,
+                [4004] = GlobalModifierType.BlockingLedge,
+                [4005] = GlobalModifierType.UnknownOrbRelatedObj,
+                [4007] = GlobalModifierType.LockedDoor_3,
+
+                [4101] = GlobalModifierType.ScenerySprites,
+                [4102] = GlobalModifierType.ScenerySprites,
+                [4103] = GlobalModifierType.VRAMScrollAnimation,
+                [4104] = GlobalModifierType.RGBAnimation,
+                [4105] = GlobalModifierType.Object,
+                [4106] = GlobalModifierType.PaletteAnimations,
+                [4120] = GlobalModifierType.Special,
+            },
         };
         public virtual Dictionary<int, TextureAnimationInfo> TextureAnimationInfos { get; } = new Dictionary<int, TextureAnimationInfo>()
         {
@@ -157,6 +174,7 @@ namespace BinarySerializer.Klonoa
             [4] = new PaletteAnimationInfo(0x80125c58, 8),
             [7] = new PaletteAnimationInfo(0x8012d3c0, 8),
             [13] = new PaletteAnimationInfo(0x80110aa4, 8),
+            [15] = new PaletteAnimationInfo(0x801261a8, 8),
         };
         public virtual Dictionary<int, uint> GeyserPlatformPositionsPointers { get; } = new Dictionary<int, uint>()
         {
@@ -168,7 +186,7 @@ namespace BinarySerializer.Klonoa
         };
         public virtual Dictionary<int, VRAMScrollInfo[]> VRAMScrollInfos { get; } = new Dictionary<int, VRAMScrollInfo[]>()
         {
-            // FUN_7_8__80122274 (NTSC)
+            // FUN_7_8__80122274
             [7] = new VRAMScrollInfo[]
             {
                 new VRAMScrollInfo(new PS1_VRAMRegion()
@@ -200,7 +218,7 @@ namespace BinarySerializer.Klonoa
                     Height = 0x1,
                 }, 0x190, 0x17F, 1),
             },
-            // FUN_8_7__80116f48 (NTSC)
+            // FUN_8_7__80116f48
             [8] = new VRAMScrollInfo[]
             {
                 new VRAMScrollInfo(new PS1_VRAMRegion()
@@ -232,7 +250,7 @@ namespace BinarySerializer.Klonoa
                     Height = 0x1,
                 }, 0x1D8, 0x7F, 1),
             },
-            // FUN_13_8__801205a4 (NTSC)
+            // FUN_13_8__801205a4
             [13] = new VRAMScrollInfo[]
             {
                 new VRAMScrollInfo(new PS1_VRAMRegion()
@@ -263,6 +281,38 @@ namespace BinarySerializer.Klonoa
                     Width = 0x8,
                     Height = 0x1,
                 }, 0x198, 0x17f, 1),
+            },
+            // FUN_15_8__8011b3c8
+            [15] = new VRAMScrollInfo[]
+            {
+                new VRAMScrollInfo(new PS1_VRAMRegion()
+                {
+                    XPos = 0x160,
+                    YPos = 0x141,
+                    Width = 0x10,
+                    Height = 0xBF,
+                }, 0x160, 0x140, 4),
+                new VRAMScrollInfo(new PS1_VRAMRegion()
+                {
+                    XPos = 0x160,
+                    YPos = 0x140,
+                    Width = 0x10,
+                    Height = 0x1,
+                }, 0x160, 0x1ff, 4),
+                new VRAMScrollInfo(new PS1_VRAMRegion()
+                {
+                    XPos = 0x150,
+                    YPos = 0x121,
+                    Width = 0x8,
+                    Height = 0x5F,
+                }, 0x150, 0x120, 8),
+                new VRAMScrollInfo(new PS1_VRAMRegion()
+                {
+                    XPos = 0x150,
+                    YPos = 0x120,
+                    Width = 0x8,
+                    Height = 0x1,
+                }, 0x150, 0x17f, 8),
             },
         };
         public GlobalModifierType GetGlobalModifierType(int binBlock, int primaryType, int secondaryType)

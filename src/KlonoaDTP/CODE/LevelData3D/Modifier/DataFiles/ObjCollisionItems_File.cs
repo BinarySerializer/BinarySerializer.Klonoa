@@ -8,7 +8,8 @@
         public override void SerializeImpl(SerializerObject s)
         {
             Count = s.Serialize<uint>(Count, name: nameof(Count));
-            CollisionItems = s.SerializeObjectArray<LevelCollisionItem>(CollisionItems, Count, name: nameof(CollisionItems));
+            // The count doesn't always match for some reason...
+            CollisionItems = s.SerializeObjectArray<LevelCollisionItem>(CollisionItems, (Pre_FileSize - 4) / 28, name: nameof(CollisionItems));
         }
     }
 }

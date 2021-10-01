@@ -38,11 +38,18 @@
         SwingingWoodPlank,
         Collision,
         Rocks,
+        MovingPlatformOnTrack,
+        SpinningWheel,
+        FallingTargetPlatform,
+        LockedDoor_3,
+        BlockingLedge,
+        UnknownOrbRelatedObj,
         Light,
         GeyserPlatform,
         ScrollAnimation, // Scrolls the UVs for the level model
         VRAMScrollAnimation, // Scrolls regions in VRAM
         VRAMScrollAnimationWithTexture,
+        RGBAnimation,
         Object,
         LevelModelSection,
         ScenerySprites,
