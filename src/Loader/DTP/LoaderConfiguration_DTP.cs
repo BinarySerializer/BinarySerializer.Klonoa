@@ -176,7 +176,7 @@ namespace BinarySerializer.Klonoa
             },
             [17] = new Dictionary<int, GlobalModifierType>()
             {
-                [4001] = GlobalModifierType.JokaUnknown,
+                [4001] = GlobalModifierType.BossUnknown,
 
                 [4101] = GlobalModifierType.JokaSpinningCore,
             },
@@ -208,6 +208,13 @@ namespace BinarySerializer.Klonoa
                 [4104] = GlobalModifierType.Object,
                 [4120] = GlobalModifierType.Special,
                 [4121] = GlobalModifierType.LevelModelSection,
+            },
+            [20] = new Dictionary<int, GlobalModifierType>()
+            {
+                [4001] = GlobalModifierType.GhadiusCirclePlatform,
+                [4002] = GlobalModifierType.BossUnknown,
+
+                [4101] = GlobalModifierType.CutsceneCrystal,
             },
         };
         public virtual Dictionary<int, TextureAnimationInfo> TextureAnimationInfos { get; } = new Dictionary<int, TextureAnimationInfo>()

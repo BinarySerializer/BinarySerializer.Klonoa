@@ -619,7 +619,7 @@ namespace BinarySerializer.Klonoa.DTP
                     AnimatedAbsoluteTransformSpeed = 0.5f;
                     break;
 
-                case GlobalModifierType.JokaUnknown: // FUN_17_7__80113b00
+                case GlobalModifierType.BossUnknown: // FUN_17_7__80113b00
                     SkipDataFile<RawData_File>(s);
                     SkipDataFile<RawData_File>(s);
                     break;
@@ -737,6 +737,18 @@ namespace BinarySerializer.Klonoa.DTP
                         onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_AbsoluteTransform));
 
                     AnimatedLocalTransformSpeed = 0.5f;
+                    break;
+
+                case GlobalModifierType.CutsceneCrystal: // FUN_20_8__80117918
+                    Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
+                    Data_AbsoluteTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform,
+                        onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_AbsoluteTransform));
+                    break;
+
+                case GlobalModifierType.GhadiusCirclePlatform: // FUN_20_8__80116070
+                    Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
+                    Data_Collision = SerializeDataFile<ObjCollisionItems_File>(s, Data_Collision, name: nameof(Data_Collision));
+                    SkipDataFile<RawData_File>(s); // TODO: Movement paths? Aligned to 28.
                     break;
 
                 case GlobalModifierType.Light:

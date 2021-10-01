@@ -49,7 +49,7 @@
         DarkLightPlatform,
         DarkLightSwitcher,
         IronGate,
-        JokaUnknown,
+        BossUnknown,
         JokaSpinningCore,
         TransparentGemPlatform,
         BirdStatueWithSwitch,
@@ -61,6 +61,8 @@
         ColoredDoor,
         OnWayMovingWallPillar,
         DoorWithPillar,
+        CutsceneCrystal,
+        GhadiusCirclePlatform,
         Light,
         GeyserPlatform,
         ScrollAnimation, // Scrolls the UVs for the level model
