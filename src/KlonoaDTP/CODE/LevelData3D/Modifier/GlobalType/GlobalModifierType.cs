@@ -63,6 +63,8 @@
         DoorWithPillar,
         CutsceneCrystal,
         GhadiusCirclePlatform,
+        NahatombSphere,
+        NahatombEscaping,
         Light,
         GeyserPlatform,
         ScrollAnimation, // Scrolls the UVs for the level model

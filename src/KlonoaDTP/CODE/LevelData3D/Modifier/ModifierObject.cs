@@ -751,6 +751,23 @@ namespace BinarySerializer.Klonoa.DTP
                     SkipDataFile<RawData_File>(s); // TODO: Movement paths? Aligned to 28.
                     break;
 
+                case GlobalModifierType.NahatombSphere: // FUN_22_8__8011549c
+                    Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
+                    Data_TMD_Secondary = SerializeDataFile<PS1_TMD>(s, Data_TMD_Secondary, name: nameof(Data_TMD_Secondary));
+                    Data_AbsoluteTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform,
+                        onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_AbsoluteTransform));
+                    //Data_LocalTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_LocalTransform,
+                    //    onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_LocalTransform));
+                    SkipDataFile<RawData_File>(s); // TODO: Transform
+                    SkipDataFile<RawData_File>(s); // TODO: 20 byte structs
+                    break;
+
+                case GlobalModifierType.NahatombEscaping: // FUN_22_8__8011be8c
+                    Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
+
+                    ConstantRotationY = 16;
+                    break;
+
                 case GlobalModifierType.Light:
                     if (Short_00 == 0x11)
                         Data_LightPositions = SerializeDataFile<ObjPositions_File>(s, Data_LightPositions, name: nameof(Data_LightPositions));

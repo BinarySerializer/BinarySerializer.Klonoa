@@ -216,6 +216,18 @@ namespace BinarySerializer.Klonoa
 
                 [4101] = GlobalModifierType.CutsceneCrystal,
             },
+            [21] = new Dictionary<int, GlobalModifierType>()
+            {
+                // Nothing
+            },
+            [22] = new Dictionary<int, GlobalModifierType>()
+            {
+                [4102] = GlobalModifierType.NahatombSphere,
+                [4103] = GlobalModifierType.NahatombEscaping,
+                [4104] = GlobalModifierType.Special,
+                [4105] = GlobalModifierType.CutsceneCrystal,
+                [4120] = GlobalModifierType.Special,
+            },
         };
         public virtual Dictionary<int, TextureAnimationInfo> TextureAnimationInfos { get; } = new Dictionary<int, TextureAnimationInfo>()
         {
