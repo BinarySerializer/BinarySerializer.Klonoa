@@ -66,7 +66,7 @@ namespace BinarySerializer.Klonoa
                 var file = s.SerializeObject<FileWrapper<T>>(default, x =>
                 {
                     x.Pre_EndPointer = endPointer;
-                    x.Pre_LogIfNotFullyParsed = logIfNotFullyParsed;
+                    x.Pre_LogIfNotFullyParsed = logIfNotFullyParsed && !DisableNotFullySerializedWarning;
                     x.Pre_OnPreSerialize = onPreSerialize;
                 }, name: name);
 
