@@ -236,6 +236,15 @@ namespace BinarySerializer.Klonoa
                 [4104] = GlobalModifierType.NahatombPaletteAnimation,
                 [4105] = GlobalModifierType.Special,
             },
+            [24] = new Dictionary<int, GlobalModifierType>()
+            {
+                [4101] = GlobalModifierType.VRAMScrollAnimation,
+                [4102] = GlobalModifierType.LevelTimer,
+                [4104] = GlobalModifierType.Fireworks,
+                [4105] = GlobalModifierType.Textures,
+                [4106] = GlobalModifierType.PaletteAnimations,
+                [4121] = GlobalModifierType.LevelModelSection,
+            },
         };
         public virtual Dictionary<int, TextureAnimationInfo> TextureAnimationInfos { get; } = new Dictionary<int, TextureAnimationInfo>()
         {
@@ -275,6 +284,10 @@ namespace BinarySerializer.Klonoa
             [23] = new Dictionary<int, PaletteAnimationInfo>()
             {
                 [4] = new PaletteAnimationInfo(0x8014f158, 8),
+            },
+            [24] = new Dictionary<int, PaletteAnimationInfo>()
+            {
+                [6] = new PaletteAnimationInfo(0x80127c24, 8),
             },
         };
         public virtual Dictionary<int, PaletteAnimationInfo> ObjectWithPaletteAnimationInfos { get; } = new Dictionary<int, PaletteAnimationInfo>()
@@ -451,6 +464,38 @@ namespace BinarySerializer.Klonoa
                     Width = 0x8,
                     Height = 0x1,
                 }, 0x150, 0x17F, 1),
+            },
+            // FUN_24_7__8011d3c8
+            [24] = new VRAMScrollInfo[]
+            {
+                new VRAMScrollInfo(new PS1_VRAMRegion()
+                {
+                    XPos = 0x1F0,
+                    YPos = 0x1,
+                    Width = 0x10,
+                    Height = 0xBF,
+                }, 0x1F0, 0x00, 4),
+                new VRAMScrollInfo(new PS1_VRAMRegion()
+                {
+                    XPos = 0x1F0,
+                    YPos = 0x0,
+                    Width = 0x10,
+                    Height = 0x1,
+                }, 0x1F0, 0xBF, 4),
+                new VRAMScrollInfo(new PS1_VRAMRegion()
+                {
+                    XPos = 0x1D8,
+                    YPos = 0x1,
+                    Width = 0x8,
+                    Height = 0x5F,
+                }, 0x1D8, 0x00, 8),
+                new VRAMScrollInfo(new PS1_VRAMRegion()
+                {
+                    XPos = 0x1D8,
+                    YPos = 0x20,
+                    Width = 0x8,
+                    Height = 0x1,
+                }, 0x1D8, 0x5F, 8),
             },
         };
         public GlobalModifierType GetGlobalModifierType(int binBlock, int primaryType, int secondaryType)

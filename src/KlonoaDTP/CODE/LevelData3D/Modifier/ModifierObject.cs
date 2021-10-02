@@ -46,6 +46,7 @@ namespace BinarySerializer.Klonoa.DTP
         public MovementPath_File Data_MovementPaths { get; set; }
         public UnknownModelObjectsData_File Data_UnknownModelObjectsData { get; set; }
         public PS1_TIM Data_TIM { get; set; }
+        public TIM_ArchiveFile Data_TIMArchive { get; set; }
         public ObjPositions_File Data_LightPositions { get; set; } // Each light has two positions, source and destination
         public ObjTransform_ArchiveFile Data_LocalTransform { get; set; }
         public ObjTransform_ArchiveFile Data_LocalTransform_Secondary { get; set; } // TODO: Get rid of and use fake archive
@@ -896,10 +897,20 @@ namespace BinarySerializer.Klonoa.DTP
                     });
                     break;
 
+                case GlobalModifierType.Textures:
+                    Data_TIMArchive = SerializeDataFile<TIM_ArchiveFile>(s, Data_TIMArchive, name: nameof(Data_TIMArchive));
+                    break;
+
                 case GlobalModifierType.Special:
                     break;
 
                 case GlobalModifierType.WeatherEffect:
+                    break;
+
+                case GlobalModifierType.LevelTimer:
+                    break;
+
+                case GlobalModifierType.Fireworks: // FUN_24_7__80119734
                     break;
 
                 default:

@@ -79,7 +79,10 @@
         TextureAnimation,
         PaletteAnimation,
         PaletteAnimations,
+        Textures,
         Special,
         WeatherEffect,
+        LevelTimer,
+        Fireworks,
     }
 }
