@@ -65,6 +65,8 @@
         GhadiusCirclePlatform,
         NahatombSphere,
         NahatombEscaping,
+        NahatombPaletteAnimation,
+        NahatombBluePlatformAndGem,
         Light,
         GeyserPlatform,
         ScrollAnimation, // Scrolls the UVs for the level model

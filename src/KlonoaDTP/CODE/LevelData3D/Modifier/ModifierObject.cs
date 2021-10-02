@@ -768,6 +768,26 @@ namespace BinarySerializer.Klonoa.DTP
                     ConstantRotationY = 16;
                     break;
 
+                case GlobalModifierType.NahatombPaletteAnimation: // FUN_23_7__8011499c
+                    Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
+                    Data_PaletteAnimation = SerializeDataFile<PaletteAnimation_ArchiveFile>(s, Data_PaletteAnimation, name: nameof(Data_PaletteAnimation));
+
+                    PaletteAnimationInfo = loader.Config.PaletteAnimationInfos[loader.BINBlock][SecondaryType];
+
+                    s.DoAt(new Pointer(PaletteAnimationInfo.Address_Regions, loader.FindCodeFile(PaletteAnimationInfo.Address_Regions)), () =>
+                    {
+                        PaletteAnimationVRAMRegions = s.SerializeObjectArray<PS1_VRAMRegion>(PaletteAnimationVRAMRegions, Data_PaletteAnimation.OffsetTable.FilesCount, name: nameof(PaletteAnimationVRAMRegions));
+                    });
+
+                    break;
+
+                case GlobalModifierType.NahatombBluePlatformAndGem: // FUN_23_7__80114d9c
+                    Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
+                    Data_Collision = SerializeDataFile<ObjCollisionItems_File>(s, Data_Collision, name: nameof(Data_Collision));
+                    Data_MovementPaths = SerializeDataFile<MovementPath_File>(s, Data_MovementPaths, name: nameof(Data_MovementPaths));
+                    Data_TMD_Secondary = SerializeDataFile<PS1_TMD>(s, Data_TMD_Secondary, name: nameof(Data_TMD_Secondary));
+                    break;
+
                 case GlobalModifierType.Light:
                     if (Short_00 == 0x11)
                         Data_LightPositions = SerializeDataFile<ObjPositions_File>(s, Data_LightPositions, name: nameof(Data_LightPositions));

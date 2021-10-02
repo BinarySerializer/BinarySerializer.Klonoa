@@ -228,6 +228,14 @@ namespace BinarySerializer.Klonoa
                 [4105] = GlobalModifierType.CutsceneCrystal,
                 [4120] = GlobalModifierType.Special,
             },
+            [23] = new Dictionary<int, GlobalModifierType>()
+            {
+                [4001] = GlobalModifierType.NahatombBluePlatformAndGem,
+
+                [4103] = GlobalModifierType.Special,
+                [4104] = GlobalModifierType.NahatombPaletteAnimation,
+                [4105] = GlobalModifierType.Special,
+            },
         };
         public virtual Dictionary<int, TextureAnimationInfo> TextureAnimationInfos { get; } = new Dictionary<int, TextureAnimationInfo>()
         {
@@ -263,6 +271,10 @@ namespace BinarySerializer.Klonoa
             {
                 [1] = new PaletteAnimationInfo(0xFFFFFFFF, 8), // Need to hard-code this...
                 [2] = new PaletteAnimationInfo(0x80110b04, 16),
+            },
+            [23] = new Dictionary<int, PaletteAnimationInfo>()
+            {
+                [4] = new PaletteAnimationInfo(0x8014f158, 8),
             },
         };
         public virtual Dictionary<int, PaletteAnimationInfo> ObjectWithPaletteAnimationInfos { get; } = new Dictionary<int, PaletteAnimationInfo>()
