@@ -95,7 +95,43 @@ Loader_LV loader = Loader_LV.Create(context, headPack, config);
 LevelPack_ArchiveFile levelPack = loader.LoadBINFile<LevelPack_ArchiveFile>(Loader_LV.BINType.KL, 10);
 ```
 
-# Documentation (Door to Phantomile)
+# Documentation
+
+**BIN Block**
+
+A BIN block is a block of data in the game data in DTP. Each block consists of multiple load commands with function pointers for parsing the data. Loading the data from a level requires loading its BIN block.
+
+**Archive**
+
+A collection of files. An archive is defined by having a header with offsets leading to each file it contains. Although there is no defined length for each file we can determine it using all the available offsets (this is harder in LV due to its data aligning).
+
+When an archive doesn't have any files it has the count set to -1. Multiple file offsets can point to the same file, although this is rare and mostly used for dummy data.
+
+The order of each file is very important. The game parses these archives in two ways. The first is where each file is indexed at a specific place. The second way is where each file is of the same type and the game enumerated through it (easily handled with the generic `ArchiveFile<T>`).
+
+It is worth noting an archive can contain multiple archives! Because of thise `ArchiveFile` inherits from `BaseFile`.
+
+**File**
+
+A file is any data type which is contained in an archive. Parsing a file from an archive will automatically fill out its size and decompress it if it's compressed.
+
+**Sector**
+
+A level is split into multiple parts, which in the library are named sectors. The game keeps track of the global sector ID calulated as `8 + (10 * Level) + Sector` where the level will usually be the block starting from the third one.
+
+**Modifier**
+
+The game has multiple lists of objects in memory. The most important ones are the primary and background objects. An object is defined as anything which updates every frame, with an optional function for drawing content to the buffer. Because of this not all objects correspond to in-game objects and can be for things such as VRAM animations, timers etc. Due to this they are named modifiers in the library as they simply modify some part of the game. The background objects work the same, where most are background layers and others can be things such as palette animations.
+
+**Code**
+
+Certain data has to be parsed from the game code, such as the objects. This is separated from the BIN loading as it's parsed differently. The BIN however had to be loaded first as the code data relies on it. Several archives are generic asset packs where the data type can only be determined from the code data.
+
+**Cutscenes**
+
+The cutscenes in the game are handled based on commands which are processed for specific frames. Some of these are cutscene specific while others are more generic. The text is drawn using font indices, where each cutscene has its own font. Skipping a cutscene will run a smaller cutscene command collection making sure all the objects are positioned correctly.
+
+# Game Documentation (Door to Phantomile)
 All of the data for the game is stored in the `FILE.BIN` file with the `FILE.IDX` telling us how to parse it. The BIN is split into 25 blocks, each representing a level (except the first 3).
 
 Why is everything stored in a single file? Well, primarily it's for performance when loading. Now when the game wants to load a level all of its data gets read from the same place, thus is doesn't need to seek around to different sectors on the disc! This inevitably means data gets duplicated across levels, but that's not an issue since discs can store a lot of data (a lot more than the PS1 can store in memory).
