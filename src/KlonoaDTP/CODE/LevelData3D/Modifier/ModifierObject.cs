@@ -54,6 +54,7 @@ namespace BinarySerializer.Klonoa.DTP
         public ArchiveFile<ObjTransform_ArchiveFile> Data_LocalTransforms { get; set; }
         public ArchiveFile<ObjTransform_ArchiveFile> Data_AbsoluteTransforms { get; set; }
         public KlonoaVector16 Data_Position { get; set; }
+        public CameraAnimations_File Data_CameraAnimations { get; set; }
         public TIM_ArchiveFile Data_TextureAnimation { get; set; }
         public PaletteAnimation_ArchiveFile Data_PaletteAnimation { get; set; }
         public PaletteAnimations_ArchiveFile Data_PaletteAnimations { get; set; }
@@ -190,7 +191,7 @@ namespace BinarySerializer.Klonoa.DTP
                     Data_MovementPaths = SerializeDataFile<MovementPath_File>(s, Data_MovementPaths, name: nameof(Data_MovementPaths));
                     Data_AbsoluteTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform,
                         onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_AbsoluteTransform));
-                    SkipDataFile<RawData_File>(s); // TODO: Camera block (parsed at 0x800816e8)
+                    Data_CameraAnimations = SerializeDataFile<CameraAnimations_File>(s, Data_CameraAnimations, name: nameof(Data_CameraAnimations));
 
                     AnimatedAbsoluteTransformSpeed = 0.5f;
                     break;
@@ -201,7 +202,7 @@ namespace BinarySerializer.Klonoa.DTP
                     Data_MovementPaths = SerializeDataFile<MovementPath_File>(s, Data_MovementPaths, name: nameof(Data_MovementPaths));
                     Data_AbsoluteTransforms = SerializeDataFile<ArchiveFile<ObjTransform_ArchiveFile>>(s, Data_AbsoluteTransforms,
                         onPreSerialize: x => x.Pre_OnPreSerializeAction = t => t.Pre_UsesTransformInfo = true, name: nameof(Data_AbsoluteTransforms));
-                    SkipDataFile<RawData_File>(s); // TODO: Camera block (parsed at 0x800816e8)
+                    Data_CameraAnimations = SerializeDataFile<CameraAnimations_File>(s, Data_CameraAnimations, name: nameof(Data_CameraAnimations));
                     Data_LocalTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_LocalTransform,
                         onPreSerialize: x => x.Pre_UsesTransformInfo = true, name: nameof(Data_LocalTransform));
 
@@ -296,7 +297,7 @@ namespace BinarySerializer.Klonoa.DTP
                     Data_MovementPaths = SerializeDataFile<MovementPath_File>(s, Data_MovementPaths, name: nameof(Data_MovementPaths));
                     Data_AbsoluteTransforms = SerializeDataFile<ArchiveFile<ObjTransform_ArchiveFile>>(s, Data_AbsoluteTransforms,
                         onPreSerialize: x => x.Pre_OnPreSerializeAction = t => t.Pre_UsesTransformInfo = false, name: nameof(Data_AbsoluteTransforms));
-                    SkipDataFile<RawData_File>(s); // TODO: Camera block (parsed at 0x800816e8)
+                    Data_CameraAnimations = SerializeDataFile<CameraAnimations_File>(s, Data_CameraAnimations, name: nameof(Data_CameraAnimations));
                     // NOTE: The positions file in here only has one entry. The game parses 3.
                     Data_LocalTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_LocalTransform,
                         onPreSerialize: x => x.Pre_UsesTransformInfo = true, name: nameof(Data_LocalTransform));
@@ -318,7 +319,7 @@ namespace BinarySerializer.Klonoa.DTP
                     Data_MovementPaths = SerializeDataFile<MovementPath_File>(s, Data_MovementPaths, name: nameof(Data_MovementPaths));
                     Data_LocalTransforms = SerializeDataFile<ArchiveFile<ObjTransform_ArchiveFile>>(s, Data_LocalTransforms,
                         onPreSerialize: x => x.Pre_OnPreSerializeAction = f => f.Pre_UsesTransformInfo = false, name: nameof(Data_LocalTransforms));
-                    SkipDataFile<RawData_File>(s); // TODO: Camera block (parsed at 0x800816e8)
+                    Data_CameraAnimations = SerializeDataFile<CameraAnimations_File>(s, Data_CameraAnimations, name: nameof(Data_CameraAnimations));
 
                     AnimatedLocalTransformSpeed = 0.5f;
                     break;
