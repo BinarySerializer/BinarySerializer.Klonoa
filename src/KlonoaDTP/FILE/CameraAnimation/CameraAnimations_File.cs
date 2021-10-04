@@ -1,4 +1,6 @@
-﻿namespace BinarySerializer.Klonoa.DTP
+﻿using System.Linq;
+
+namespace BinarySerializer.Klonoa.DTP
 {
     public class CameraAnimations_File : BaseFile
     {
@@ -22,18 +24,13 @@
             s.DoAt(FlagsPointer, () => Flags = s.SerializeArray<byte>(Flags, FramesPointer - FlagsPointer, name: nameof(Flags)));
             s.DoAt(FramesPointer, () =>
             {
-                var end = Offset + Pre_FileSize;
                 var i = 0;
 
-                Frames = s.SerializeObjectArrayUntil(
-                    obj: Frames,
-                    conditionCheckFunc: x => s.CurrentPointer.FileOffset >= end.FileOffset,
-                    onPreSerialize: x =>
-                    {
-                        x.Pre_IsRelative = (Flags[i / 8] & (0x80 >> (i & 7))) != 0;
-                        i++;
-                    },
-                    name: nameof(Frames));
+                Frames = s.SerializeObjectArray(Frames, Animations.Last().Frame, onPreSerialize: x =>
+                {
+                    x.Pre_IsRelative = (Flags[i / 8] & (0x80 >> (i & 7))) != 0;
+                    i++;
+                }, name: nameof(Frames));
             });
 
             s.Goto(Offset + Pre_FileSize);
