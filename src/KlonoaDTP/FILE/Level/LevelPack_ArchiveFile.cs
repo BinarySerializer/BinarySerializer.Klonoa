@@ -3,10 +3,8 @@
     // According to the prototype the source extensions for the data in this file were .TIA and .NAK
     public class LevelPack_ArchiveFile : ArchiveFile
     {
-        public ArchiveFile AdditionalLevelFilePack { get; set; } // Referenced from objects
-
-        // TODO: Parse this - Seems to be a bunch of stuff like sprites etc., some models too. Seems to be unused though?
-        public ArchiveFile<RawData_File> File_1 { get; set; }
+        public ArchiveFile ObjectAssets { get; set; } // Referenced from objects
+        public ArchiveFile<RawData_File> AdditionalAssets { get; set; } // Additional assets. Parsed from hard-coded functions. Has the boss data.
         
         public CutscenePack_ArchiveFile CutscenePack { get; set; }
 
@@ -22,8 +20,8 @@
 
         protected override void SerializeFiles(SerializerObject s)
         {
-            AdditionalLevelFilePack = SerializeFile<ArchiveFile>(s, AdditionalLevelFilePack, 0, name: nameof(AdditionalLevelFilePack));
-            File_1 = SerializeFile<ArchiveFile<RawData_File>>(s, File_1, 1, name: nameof(File_1));
+            ObjectAssets = SerializeFile<ArchiveFile>(s, ObjectAssets, 0, name: nameof(ObjectAssets));
+            AdditionalAssets = SerializeFile<ArchiveFile<RawData_File>>(s, AdditionalAssets, 1, name: nameof(AdditionalAssets));
             CutscenePack = SerializeFile<CutscenePack_ArchiveFile>(s, CutscenePack, 2, name: nameof(CutscenePack));
             File_3 = SerializeFile<RawData_File>(s, File_3, 3, name: nameof(File_3));
             File_4 = SerializeFile<RawData_ArchiveFile>(s, File_4, 4, name: nameof(File_4));

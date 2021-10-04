@@ -3,7 +3,7 @@
     public class LevelData3D : BinarySerializable
     {
         public int Pre_SectorsCount { get; set; }
-        public ArchiveFile Pre_AdditionalLevelFilePack { get; set; }
+        public ArchiveFile Pre_ObjectAssets { get; set; }
 
         public Pointer SectorModifiersPointer { get; set; }
         public Pointer MovementPathCamerasPointer { get; set; }
@@ -28,7 +28,7 @@
                 SectorModifiers = s.SerializeObjectArrayUntil<SectorModifiers>(
                     obj: SectorModifiers, 
                     conditionCheckFunc: x => x.Modifiers[0].Short_0E == -1, 
-                    onPreSerialize: x => x.Pre_AdditionalLevelFilePack = Pre_AdditionalLevelFilePack,
+                    onPreSerialize: x => x.Pre_ObjectAssets = Pre_ObjectAssets,
                     name: nameof(SectorModifiers));
 
                 var sectorToParse = Loader_DTP.GetLoader(s.Context).LevelSector;

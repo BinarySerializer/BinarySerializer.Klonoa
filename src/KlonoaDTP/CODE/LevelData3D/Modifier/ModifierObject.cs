@@ -15,7 +15,7 @@ namespace BinarySerializer.Klonoa.DTP
 
     public class ModifierObject : BinarySerializable
     {
-        public ArchiveFile Pre_AdditionalLevelFilePack { get; set; }
+        public ArchiveFile Pre_ObjectAssets { get; set; }
 
         public short Short_00 { get; set; }
         public short Short_02 { get; set; }
@@ -929,7 +929,7 @@ namespace BinarySerializer.Klonoa.DTP
             if (typeof(T) == typeof(PS1_TMD))
                 logIfNotFullyParsed = false;
 
-            return Pre_AdditionalLevelFilePack.SerializeFile<T>(
+            return Pre_ObjectAssets.SerializeFile<T>(
                 s: s, 
                 obj: obj, 
                 index: DataFileIndices[_dataFileIndex++], 

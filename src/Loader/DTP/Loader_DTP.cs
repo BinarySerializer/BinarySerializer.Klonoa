@@ -520,7 +520,7 @@ namespace BinarySerializer.Klonoa
             LevelData3D = s.DoAt(dataPointer, () => s.SerializeObject<LevelData3D>(default, x =>
             {
                 x.Pre_SectorsCount = LevelPack?.Sectors?.Length ?? 0;
-                x.Pre_AdditionalLevelFilePack = LevelPack?.AdditionalLevelFilePack;
+                x.Pre_ObjectAssets = LevelPack?.ObjectAssets;
             }, name: nameof(LevelData3D)));
 
             // Process the data only if we're loading a specific sector
