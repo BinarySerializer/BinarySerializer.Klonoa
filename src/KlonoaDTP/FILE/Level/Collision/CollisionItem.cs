@@ -1,6 +1,6 @@
 ﻿namespace BinarySerializer.Klonoa.DTP
 {
-    public class LevelCollisionItem : BinarySerializable
+    public class CollisionItem : BinarySerializable
     {
         // TODO: Parse this - four vertices?
 
