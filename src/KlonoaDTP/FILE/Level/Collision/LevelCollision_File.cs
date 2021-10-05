@@ -12,7 +12,7 @@
         public ushort CollisionGridItemStructuresOffset { get; set; }
         public ushort CollisionIndicesOffset { get; set; }
 
-        public LevelCollisionGridItem[][] CollisionGrid { get; set; }
+        public LevelCollisionGridItem[][] CollisionGrid { get; set; } // Each cell is 256x256x256
 
         public override void SerializeImpl(SerializerObject s)
         {
