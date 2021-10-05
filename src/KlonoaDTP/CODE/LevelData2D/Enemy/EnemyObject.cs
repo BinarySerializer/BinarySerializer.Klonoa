@@ -2,7 +2,7 @@
 {
     public class EnemyObject : BinarySerializable
     {
-        public Pointer[] Pre_DataPointers { get; set; }
+        public LevelData2D Pre_LevelData2D { get; set; }
         public bool Pre_IsSpawnedObject { get; set; }
 
         public int MovementPathSpawnPosition { get; set; } // The position on the movement path which spawns the object. This is relative to the movement path the object is read from rather than the path it's set to using the MovementPath property.
@@ -59,18 +59,18 @@
 
             switch (SecondaryType)
             {
-                case 1: SerializeData<EnemyData_01>(s, 3, 0x24); break;
-                case 2: SerializeData<EnemyData_02>(s, 13, 0x24); break;
+                case 1: SerializeData<EnemyData_01>(s, Pre_LevelData2D.Enemy_Data_01_Pointer, 0x24); break;
+                case 2: SerializeData<EnemyData_02>(s, Pre_LevelData2D.Enemy_Data_02_Pointer, 0x24); break;
                 //default: s.LogWarning($"Enemy data not parsed for enemy of type {SecondaryType}"); break;
             }
         }
 
-        private void SerializeData<T>(SerializerObject s, int blockIndex, int dataLength)
+        private void SerializeData<T>(SerializerObject s, Pointer pointer, int dataLength)
             where T : BaseEnemyData, new()
         {
-            s.DoAt(Pre_DataPointers[blockIndex] + DataIndex * dataLength, () => Data = s.SerializeObject<T>((T)Data, x =>
+            s.DoAt(pointer + DataIndex * dataLength, () => Data = s.SerializeObject<T>((T)Data, x =>
             {
-                x.Pre_DataPointers = Pre_DataPointers;
+                x.Pre_LevelData2D = Pre_LevelData2D;
                 x.Pre_EnemyObj = this;
             }, name: nameof(Data)));
         }

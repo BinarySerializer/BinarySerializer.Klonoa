@@ -33,7 +33,7 @@
 
             if (WaypointIndex > -1)
             {
-                s.DoAt(Pre_DataPointers[48] + WaypointIndex * 0xC, () => Waypoint = s.SerializeObject<EnemyWaypoint>(Waypoint, name: nameof(Waypoint)));
+                s.DoAt(Pre_LevelData2D.Enemy_WaypointsPointer + WaypointIndex * 0xC, () => Waypoint = s.SerializeObject<EnemyWaypoint>(Waypoint, name: nameof(Waypoint)));
                 Waypoints = new EnemyWaypoint[]
                 {
                     Waypoint

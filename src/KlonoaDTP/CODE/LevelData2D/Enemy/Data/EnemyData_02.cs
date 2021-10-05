@@ -36,11 +36,11 @@
             Bytes_22 = s.SerializeArray<byte>(Bytes_22, 2, name: nameof(Bytes_22));
 
             if (WaypointsCount > 0)
-                s.DoAt(Pre_DataPointers[48] + WaypointsIndex * 0xC, () => Waypoints = s.SerializeObjectArray<EnemyWaypoint>(Waypoints, WaypointsCount, name: nameof(Waypoints)));
+                s.DoAt(Pre_LevelData2D.Enemy_WaypointsPointer + WaypointsIndex * 0xC, () => Waypoints = s.SerializeObjectArray<EnemyWaypoint>(Waypoints, WaypointsCount, name: nameof(Waypoints)));
 
-            s.DoAt(Pre_DataPointers[41] + SpawnObjectsIndex * 0xC, () => SpawnObjects = s.SerializeObjectArray<EnemyObject>(SpawnObjects, SpawnObjectsCount, x =>
+            s.DoAt(Pre_LevelData2D.Enemy_SpawnObjectsPointer + SpawnObjectsIndex * 0xC, () => SpawnObjects = s.SerializeObjectArray<EnemyObject>(SpawnObjects, SpawnObjectsCount, x =>
             {
-                x.Pre_DataPointers = Pre_DataPointers;
+                x.Pre_LevelData2D = Pre_LevelData2D;
                 x.Pre_IsSpawnedObject = true;
 
                 // Copy properties
