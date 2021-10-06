@@ -32,10 +32,14 @@ namespace BinarySerializer.Klonoa
             var start = OffsetTable.FilePointers[index];
             var end = OffsetTable.FilePointers.Where(x => x != null).OrderBy(x => x.FileOffset).FirstOrDefault(x => x.FileOffset > start.FileOffset);
 
-            if (end == null)
-                end = OffsetTable.Offset + Pre_FileSize;
+            if (end != null) 
+                return end;
+            
+            // If we don't have a file size of the archive we can't determine the file size of the last file
+            if (Pre_FileSize == -1)
+                return null;
 
-            return end;
+            return OffsetTable.Offset + Pre_FileSize;
         }
 
         /// <summary>
@@ -104,8 +108,9 @@ namespace BinarySerializer.Klonoa
             // Serialize the files
             SerializeFiles(s);
 
-            // Go to the end of the archive
-            s.Goto(Offset + Pre_FileSize);
+            // Go to the end of the archive if a length is specified
+            if (Pre_FileSize != -1)
+                s.Goto(Offset + Pre_FileSize);
         }
 
         protected virtual void SerializeFiles(SerializerObject s) { }
@@ -125,18 +130,27 @@ namespace BinarySerializer.Klonoa
 
             public override void SerializeImpl(SerializerObject s)
             {
+                LoaderConfiguration config = Loader.GetConfiguration(s.Context);
+                
                 bool isCompressed = false;
+                IStreamEncoder encoder = null;
 
-                if (Loader.GetConfiguration(s.Context)?.Version == LoaderConfiguration.GameVersion.DTP_Prototype_19970717 ||
-                    Loader.GetConfiguration(s.Context)?.Version == LoaderConfiguration.GameVersion.DTP)
+                if (config?.Version == LoaderConfiguration.GameVersion.DTP_Prototype_19970717 ||
+                    config?.Version == LoaderConfiguration.GameVersion.DTP)
                 {
                     uint header = s.DoAt(s.CurrentPointer, () => s.Serialize<uint>(default, "HeaderCheck"));
                     isCompressed = header == ULZEncoder.Header;
+                    encoder = new ULZEncoder();
                 }
 
-                s.DoEncodedIf(new ULZEncoder(), isCompressed, () =>
+                s.DoEncodedIf(encoder, isCompressed, () =>
                 {
-                    var fileSize = isCompressed ? s.CurrentLength : Pre_EndPointer - s.CurrentPointer;
+                    long fileSize;
+                    
+                    if (isCompressed)
+                        fileSize = s.CurrentLength;
+                    else
+                        fileSize = Pre_EndPointer != null ? Pre_EndPointer - s.CurrentPointer : -1;
 
                     s.Log($"FileSize: {fileSize}");
 
@@ -152,13 +166,18 @@ namespace BinarySerializer.Klonoa
                     }, name: nameof(FileData));
                 }, allowLocalPointers: true);
 
-                if (Loader.GetConfiguration(s.Context)?.Version == LoaderConfiguration.GameVersion.LV)
+                if (config?.Version == LoaderConfiguration.GameVersion.LV)
                     s.Align(alignBytes: 16);
                 else
                     s.Align(alignBytes: 4);
 
-                if (Pre_LogIfNotFullyParsed && s.CurrentPointer != Pre_EndPointer && !(FileData is BaseFile { DisableNotFullySerializedWarning: true }))
+                if (Pre_LogIfNotFullyParsed && 
+                    s.CurrentPointer != Pre_EndPointer && 
+                    Pre_EndPointer != null && 
+                    !(FileData is BaseFile { DisableNotFullySerializedWarning: true }))
+                {
                     s.LogWarning($"Archived file of type {typeof(File).Name} at {Offset} was not fully serialized. {s.CurrentPointer} != {Pre_EndPointer}");
+                }
             }
         }
     }
