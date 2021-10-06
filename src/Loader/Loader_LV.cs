@@ -7,7 +7,7 @@ namespace BinarySerializer.Klonoa
     {
         #region Constructor
 
-        protected Loader_LV(Context context, HeadPack_ArchiveFile headPack, LoaderConfiguration_LV config) : base(context, config)
+        protected Loader_LV(Context context, HeadPack_ArchiveFile headPack) : base(context)
         {
             HeadPack = headPack;
         }
@@ -19,9 +19,9 @@ namespace BinarySerializer.Klonoa
         public HeadPack_ArchiveFile HeadPack { get; }
 
         /// <summary>
-        /// The loader config, used for version specific properties and functionality
+        /// The Klonoa settings, used for version specific properties and functionality
         /// </summary>
-        public LoaderConfiguration_LV Config => (LoaderConfiguration_LV)LoaderConfig;
+        public KlonoaSettings_LV Settings => (KlonoaSettings_LV)KlonoaSettings;
 
         #endregion
 
@@ -29,7 +29,7 @@ namespace BinarySerializer.Klonoa
 
         protected override void InitializeBIN()
         {
-            if (Config.HasMultipleLanguages)
+            if (Settings.HasMultipleLanguages)
             {
                 for (int langIndex = 0; langIndex < HeadPack.KLDATA_Multi.OffsetTable.FilesCount; langIndex++)
                     InitializeBIN(BINType.KL, HeadPack.KLDATA_Multi.Files[langIndex].FileDescriptors, langIndex);
@@ -46,7 +46,7 @@ namespace BinarySerializer.Klonoa
         protected void InitializeBIN<T>(BINType bin, T[] files, int languageIndex = 0)
             where T : BINHeader_BaseFileDescriptor
         {
-            var binFile = Context.GetFile(Config.GetFilePath(bin, languageIndex));
+            var binFile = Context.GetFile(Settings.GetFilePath(bin, languageIndex));
 
             if (binFile == null)
                 return;
@@ -59,7 +59,7 @@ namespace BinarySerializer.Klonoa
                 fileDescriptor.FilePointer = new Pointer(fileDescriptor.FILE_Offset, binFile);
 
                 // Add a region for nicer pointer logging
-                var regionName = $"File_{bin}{(Config.HasMultipleLanguages ? languageIndex.ToString() : null)}_{fileIndex}";
+                var regionName = $"File_{bin}{(Settings.HasMultipleLanguages ? languageIndex.ToString() : null)}_{fileIndex}";
                 binFile.AddRegion(fileDescriptor.FILE_Offset, fileDescriptor.FILE_Length, regionName);
             }
         }
@@ -72,7 +72,7 @@ namespace BinarySerializer.Klonoa
         {
             return bin switch
             {
-                BINType.KL => Config.HasMultipleLanguages ? HeadPack.KLDATA_Multi.Files[languageIndex] : HeadPack.KLDATA_Single,
+                BINType.KL => Settings.HasMultipleLanguages ? HeadPack.KLDATA_Multi.Files[languageIndex] : HeadPack.KLDATA_Single,
                 BINType.BGM => throw new Exception($"The BGM pack does not use {nameof(BINHeader_File)}"),
                 BINType.PPT => HeadPack.PPTPACK,
                 _ => throw new ArgumentOutOfRangeException(nameof(bin), bin, null)
@@ -150,16 +150,15 @@ namespace BinarySerializer.Klonoa
         /// </summary>
         /// <param name="context">The context to create the loader for</param>
         /// <param name="headPack">The serialized head pack</param>
-        /// <param name="config">The loader configuration</param>
         /// <returns>The loader</returns>
-        public static Loader_LV Create(Context context, HeadPack_ArchiveFile headPack, LoaderConfiguration_LV config)
+        public static Loader_LV Create(Context context, HeadPack_ArchiveFile headPack)
         {
             // Make sure a loader hasn't already been created for the context
             if (GetLoader(context) != null)
                 throw new Exception($"A loader has already been created for the current context. Only one loader is allowed per context.");
 
             // Create the loader
-            var loader = new Loader_LV(context, headPack, config);
+            var loader = new Loader_LV(context, headPack);
 
             // Initialize the loader
             loader.Initialize();

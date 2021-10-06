@@ -4,14 +4,12 @@
     {
         private const uint SectorSize = 2048;
 
-        public LoaderConfiguration_DTP Pre_LoaderConfig { get; set; } // Pass in the config as a pre-serialize value as the loader will not have been created yet
-
         public int Type { get; set; }
 
         // Type 1
         public uint BIN_LBA { get; set; } // The LBA offset relative to the LBA of the BIN
         public uint BIN_Offset => BIN_LBA * SectorSize;
-        public Pointer BIN_Pointer => new Pointer(BIN_Offset, Context.GetFile(Pre_LoaderConfig.FilePath_BIN));
+        public Pointer BIN_Pointer => new Pointer(BIN_Offset, Context.GetFile(Context.GetKlonoaSettings<KlonoaSettings_DTP>().FilePath_BIN));
         public uint BIN_UnknownPointerValue { get; set; }
         public uint BIN_LengthValue { get; set; }
         public uint BIN_Length => BIN_LengthValue * SectorSize;
@@ -45,9 +43,11 @@
 
                 FILE_DestinationValue = s.Serialize<uint>(FILE_DestinationValue, name: nameof(FILE_DestinationValue));
 
-                if (Pre_LoaderConfig != null)
+                var settings = Context.GetKlonoaSettings<KlonoaSettings_DTP>(throwIfNotFound: false);
+
+                if (settings != null)
                 {
-                    FILE_Destination = Pre_LoaderConfig.FileAddresses.TryGetValue(FILE_DestinationValue, out uint value) ? value : FILE_DestinationValue;
+                    FILE_Destination = settings.FileAddresses.TryGetValue(FILE_DestinationValue, out uint value) ? value : FILE_DestinationValue;
                     s.Log($"{nameof(FILE_Destination)}: 0x{FILE_Destination:X8}");
                 }
 
@@ -55,9 +55,9 @@
                 s.Log($"{nameof(FILE_FunctionPointer)}: 0x{FILE_FunctionPointer:X8}");
 
                 // The game parses the files using the supplied function pointer, so we can use that to determine the file type
-                if (Type == 2 && Pre_LoaderConfig?.FileTypes.ContainsKey(FILE_FunctionPointer) == true)
+                if (Type == 2 && settings?.FileTypes.ContainsKey(FILE_FunctionPointer) == true)
                 {
-                    FILE_Type = Pre_LoaderConfig.FileTypes[FILE_FunctionPointer];
+                    FILE_Type = settings.FileTypes[FILE_FunctionPointer];
                     s.Log($"{nameof(FILE_Type)}: {FILE_Type}");
                 }
             }

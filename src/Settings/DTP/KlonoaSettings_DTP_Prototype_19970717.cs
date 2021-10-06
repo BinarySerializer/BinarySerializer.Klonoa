@@ -3,9 +3,9 @@ using BinarySerializer.Klonoa.DTP;
 
 namespace BinarySerializer.Klonoa
 {
-    public class LoaderConfiguration_DTP_Prototype_19970717 : LoaderConfiguration_DTP
+    public class KlonoaSettings_DTP_Prototype_19970717 : KlonoaSettings_DTP
     {
-        public override GameVersion Version => GameVersion.DTP_Prototype_19970717;
+        public override KlonoaGameVersion Version => KlonoaGameVersion.DTP_Prototype_19970717;
 
         public override string FilePath_EXE => "PSX.EXE";
         public override uint Address_EXE => 0x80010C00;

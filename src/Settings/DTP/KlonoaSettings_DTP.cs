@@ -4,7 +4,7 @@ using BinarySerializer.PS1;
 
 namespace BinarySerializer.Klonoa
 {
-    public abstract class LoaderConfiguration_DTP : LoaderConfiguration
+    public abstract class KlonoaSettings_DTP : KlonoaSettings
     {
         public virtual int BLOCK_Fix => 0;
         public virtual int BLOCK_Menu => 1;

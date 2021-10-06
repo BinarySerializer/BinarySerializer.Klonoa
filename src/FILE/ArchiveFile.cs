@@ -130,13 +130,13 @@ namespace BinarySerializer.Klonoa
 
             public override void SerializeImpl(SerializerObject s)
             {
-                LoaderConfiguration config = Loader.GetConfiguration(s.Context);
-                
+                KlonoaSettings settings = s.Context.GetKlonoaSettings(throwIfNotFound: false);
+
                 bool isCompressed = false;
                 IStreamEncoder encoder = null;
 
-                if (config?.Version == LoaderConfiguration.GameVersion.DTP_Prototype_19970717 ||
-                    config?.Version == LoaderConfiguration.GameVersion.DTP)
+                if (settings?.Version == KlonoaGameVersion.DTP_Prototype_19970717 ||
+                    settings?.Version == KlonoaGameVersion.DTP)
                 {
                     uint header = s.DoAt(s.CurrentPointer, () => s.Serialize<uint>(default, "HeaderCheck"));
                     isCompressed = header == ULZEncoder.Header;
@@ -166,7 +166,7 @@ namespace BinarySerializer.Klonoa
                     }, name: nameof(FileData));
                 }, allowLocalPointers: true);
 
-                if (config?.Version == LoaderConfiguration.GameVersion.LV)
+                if (settings?.Version == KlonoaGameVersion.LV)
                     s.Align(alignBytes: 16);
                 else
                     s.Align(alignBytes: 4);

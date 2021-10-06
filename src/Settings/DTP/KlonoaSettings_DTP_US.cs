@@ -2,9 +2,9 @@
 
 namespace BinarySerializer.Klonoa.DTP
 {
-    public class LoaderConfiguration_DTP_US : LoaderConfiguration_DTP
+    public class KlonoaSettings_DTP_US : KlonoaSettings_DTP
     {
-        public override GameVersion Version => GameVersion.DTP;
+        public override KlonoaGameVersion Version => KlonoaGameVersion.DTP;
 
         public override Dictionary<uint, uint> FileAddresses { get; } = new Dictionary<uint, uint>()
         {

@@ -73,12 +73,12 @@ namespace BinarySerializer.Klonoa.DTP
         public bool DoesAnimatedLocalTransformPingPong { get; set; }
         public float AnimatedAbsoluteTransformSpeed { get; set; } = 1;
         public bool DoesAnimatedAbsoluteTransformPingPong { get; set; }
-        public LoaderConfiguration_DTP.TextureAnimationInfo TextureAnimationInfo { get; set; }
-        public LoaderConfiguration_DTP.PaletteAnimationInfo PaletteAnimationInfo { get; set; }
+        public KlonoaSettings_DTP.TextureAnimationInfo TextureAnimationInfo { get; set; }
+        public KlonoaSettings_DTP.PaletteAnimationInfo PaletteAnimationInfo { get; set; }
         public PS1_VRAMRegion[] PaletteAnimationVRAMRegions { get; set; }
         public uint GeyserPlatformPositionsPointer { get; set; }
         public GeyserPlatformPosition[] GeyserPlatformPositions { get; set; }
-        public LoaderConfiguration_DTP.VRAMScrollInfo[] VRAMScrollInfos { get; set; }
+        public KlonoaSettings_DTP.VRAMScrollInfo[] VRAMScrollInfos { get; set; }
 
         public override void SerializeImpl(SerializerObject s)
         {
@@ -101,7 +101,7 @@ namespace BinarySerializer.Klonoa.DTP
             
             // Determine the type
             var loader = Loader_DTP.GetLoader(s.Context);
-            GlobalModifierType = loader.Config.GetGlobalModifierType(loader.BINBlock, (int)PrimaryType, SecondaryType);
+            GlobalModifierType = loader.Settings.GetGlobalModifierType(loader.BINBlock, (int)PrimaryType, SecondaryType);
 
             // Serialize the parameters
             switch (GlobalModifierType)
@@ -661,7 +661,7 @@ namespace BinarySerializer.Klonoa.DTP
                     AnimatedAbsoluteTransformSpeed = Params_MovingPlatform.AnimSpeed;
                     DoesAnimatedAbsoluteTransformPingPong = true;
 
-                    PaletteAnimationInfo = loader.Config.ObjectWithPaletteAnimationInfos[loader.BINBlock];
+                    PaletteAnimationInfo = loader.Settings.ObjectWithPaletteAnimationInfos[loader.BINBlock];
 
                     s.DoAt(new Pointer(PaletteAnimationInfo.Address_Regions, loader.FindCodeFile(PaletteAnimationInfo.Address_Regions)), () =>
                     {
@@ -774,7 +774,7 @@ namespace BinarySerializer.Klonoa.DTP
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
                     Data_PaletteAnimation = SerializeDataFile<PaletteAnimation_ArchiveFile>(s, Data_PaletteAnimation, name: nameof(Data_PaletteAnimation));
 
-                    PaletteAnimationInfo = loader.Config.PaletteAnimationInfos[loader.BINBlock][SecondaryType];
+                    PaletteAnimationInfo = loader.Settings.PaletteAnimationInfos[loader.BINBlock][SecondaryType];
 
                     s.DoAt(new Pointer(PaletteAnimationInfo.Address_Regions, loader.FindCodeFile(PaletteAnimationInfo.Address_Regions)), () =>
                     {
@@ -801,7 +801,7 @@ namespace BinarySerializer.Klonoa.DTP
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
                     Data_Collision = SerializeDataFile<ObjCollision_File>(s, Data_Collision, name: nameof(Data_Collision));
 
-                    GeyserPlatformPositionsPointer = loader.Config.GeyserPlatformPositionsPointers[loader.GlobalSectorIndex];
+                    GeyserPlatformPositionsPointer = loader.Settings.GeyserPlatformPositionsPointers[loader.GlobalSectorIndex];
                     s.DoAt(new Pointer(GeyserPlatformPositionsPointer, loader.FindCodeFile(GeyserPlatformPositionsPointer)), () =>
                     {
                         GeyserPlatformPositions = s.SerializeObjectArrayUntil(GeyserPlatformPositions, x => x.Ushort_06 == 0, () => new GeyserPlatformPosition()
@@ -816,12 +816,12 @@ namespace BinarySerializer.Klonoa.DTP
                     break;
 
                 case GlobalModifierType.VRAMScrollAnimation:
-                    VRAMScrollInfos = loader.Config.VRAMScrollInfos[loader.BINBlock];
+                    VRAMScrollInfos = loader.Settings.VRAMScrollInfos[loader.BINBlock];
                     break;
 
                 case GlobalModifierType.VRAMScrollAnimationWithTexture:
                     Data_TIM = SerializeDataFile<PS1_TIM>(s, Data_TIM, name: nameof(Data_TIM));
-                    VRAMScrollInfos = loader.Config.VRAMScrollInfos[loader.BINBlock];
+                    VRAMScrollInfos = loader.Settings.VRAMScrollInfos[loader.BINBlock];
                     break;
 
                 case GlobalModifierType.RGBAnimation:
@@ -845,7 +845,7 @@ namespace BinarySerializer.Klonoa.DTP
                 case GlobalModifierType.TextureAnimation:
                     Data_TextureAnimation = SerializeDataFile<TIM_ArchiveFile>(s, Data_TextureAnimation, name: nameof(Data_TextureAnimation));
                     
-                    TextureAnimationInfo = loader.Config.TextureAnimationInfos[loader.BINBlock];
+                    TextureAnimationInfo = loader.Settings.TextureAnimationInfos[loader.BINBlock];
                     break;
 
                 case GlobalModifierType.PaletteAnimation:
@@ -855,7 +855,7 @@ namespace BinarySerializer.Klonoa.DTP
                     else
                         Data_PaletteAnimations = SerializeDataFile<PaletteAnimations_ArchiveFile>(s, Data_PaletteAnimations, name: nameof(Data_PaletteAnimations));
 
-                    PaletteAnimationInfo = loader.Config.PaletteAnimationInfos[loader.BINBlock][SecondaryType];
+                    PaletteAnimationInfo = loader.Settings.PaletteAnimationInfos[loader.BINBlock][SecondaryType];
 
                     // Ugly hard-coding for one of the types...
                     if (PaletteAnimationInfo.Address_Regions == 0xFFFFFFFF)

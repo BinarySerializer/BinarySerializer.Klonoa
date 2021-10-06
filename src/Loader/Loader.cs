@@ -2,10 +2,9 @@
 {
     public abstract class Loader
     {
-        protected Loader(Context context, LoaderConfiguration loaderConfig)
+        protected Loader(Context context)
         {
             Context = context;
-            LoaderConfig = loaderConfig;
         }
 
         /// <summary>
@@ -19,11 +18,11 @@
         public Context Context { get; }
 
         /// <summary>
-        /// The loader config, used for version specific properties and functionality
+        /// The Klonoa settings, used for version specific properties and functionality
         /// </summary>
-        public LoaderConfiguration LoaderConfig { get; }
+        public KlonoaSettings KlonoaSettings => Context.GetSettings<KlonoaSettings>();
 
-        public LoaderConfiguration.GameVersion GameVersion => LoaderConfig.Version;
+        public KlonoaGameVersion GameVersion => KlonoaSettings.Version;
 
         /// <summary>
         /// The deserializer object
@@ -43,7 +42,5 @@
             // Initialize the BIN files
             InitializeBIN();
         }
-
-        public static LoaderConfiguration GetConfiguration(Context context) => context.GetStoredObject<Loader>(Key)?.LoaderConfig;
     }
 }

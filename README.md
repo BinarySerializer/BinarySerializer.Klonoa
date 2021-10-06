@@ -27,18 +27,21 @@ To use this library in your own project you must first reference [BinarySerializ
 // First create a context for the data serialization
 using Context context = new Context(basePath);
 
-// Create a configuration
-LoaderConfiguration_DTP_US config = new LoaderConfiguration_DTP_US();
+// Create the game settings
+KlonoaSettings_DTP_US settings = new KlonoaSettings_DTP_US();
+
+// Add the game settings to the context
+context.AddKlonoaSettings(settings);
 
 // Add the IDX and BIN to the context. The BIN gets added as a linear file while the IDX has to be memory mapped. If the level data will be parsed then the exe needs to be added too.
-context.AddFile(new LinearFile(context, config.FilePath_BIN));
-context.AddFile(new MemoryMappedFile(context, config.FilePath_IDX, config.Address_IDX));
+context.AddFile(new LinearFile(context, settings.FilePath_BIN));
+context.AddFile(new MemoryMappedFile(context, settings.FilePath_IDX, settings.Address_IDX));
 
-// Load the IDX and pass in the configuration to it
-IDX idx = FileFactory.Read<IDX>(config.FilePath_IDX, context, (s, idxObj) => idxObj.Pre_LoaderConfig = config);
+// Load the IDX
+IDX idx = FileFactory.Read<IDX>(settings.FilePath_IDX, context);
 
-// Create the loader, passing in the context, IDX and configuration
-Loader_DTP loader = Loader_DTP.Create(context, idx, config);
+// Create the loader, passing in the context and IDX
+Loader_DTP loader = Loader_DTP.Create(context, idx);
 
 // Switch to the BIN block you want to load. Block 3 is Vision 1-1 for example, while block 0 is the fixed block.
 loader.SwitchBlocks(3);
@@ -63,10 +66,13 @@ PS1_VRAM vram = loader.VRAM;
 using Context context = new Context(basePath);
 
 // Create a configuration
-LoaderConfiguration_LV_US config = new LoaderConfiguration_LV_US();
+KlonoaSettings_LV_US settings = new KlonoaSettings_LV_US();
+
+// Add the game settings to the context
+context.AddKlonoaSettings(settings);
 
 // Add the header pack file to the context
-context.AddFile(new LinearFile(context, config.FilePath_HEAD));
+context.AddFile(new LinearFile(context, settings.FilePath_HEAD));
 
 // Add the BIN files to the context
 for (int i = 0; i < 3; i++)
@@ -76,20 +82,20 @@ for (int i = 0; i < 3; i++)
     // The KL file can have multiple language BINs depending on the version
     if (bin == Loader_LV.BINType.KL)
     {
-        for (int lang = 0; lang < config.LanguagesCount; lang++)
-            context.AddFile(new LinearFile(context, config.GetFilePath(bin, languageIndex: lang)));
+        for (int lang = 0; lang < settings.LanguagesCount; lang++)
+            context.AddFile(new LinearFile(context, settings.GetFilePath(bin, languageIndex: lang)));
     }
     else
     {
-        context.AddFile(new LinearFile(context, config.GetFilePath(bin)));
+        context.AddFile(new LinearFile(context, settings.GetFilePath(bin)));
     }
 }
 
 // Load the header pack
-HeadPack_ArchiveFile headPack = FileFactory.Read<HeadPack_ArchiveFile>(config.FilePath_HEAD, context, (_, head) => head.Pre_HasMultipleLanguages = config.HasMultipleLanguages);
+HeadPack_ArchiveFile headPack = FileFactory.Read<HeadPack_ArchiveFile>(settings.FilePath_HEAD, context, (_, head) => head.Pre_HasMultipleLanguages = settings.HasMultipleLanguages);
 
 // Create the loader, passing in the context, header pack and configuration
-Loader_LV loader = Loader_LV.Create(context, headPack, config);
+Loader_LV loader = Loader_LV.Create(context, headPack);
 
 // Load data from the BIN files
 LevelPack_ArchiveFile levelPack = loader.LoadBINFile<LevelPack_ArchiveFile>(Loader_LV.BINType.KL, 10);

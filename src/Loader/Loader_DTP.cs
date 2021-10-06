@@ -14,7 +14,7 @@ namespace BinarySerializer.Klonoa
     {
         #region Constructor
 
-        protected Loader_DTP(Context context, IDX idx, LoaderConfiguration_DTP config) : base(context, config)
+        protected Loader_DTP(Context context, IDX idx) : base(context)
         {
             IDX = idx;
             MemoryFiles = new HashSet<MemoryMappedByteArrayFile>();
@@ -42,9 +42,9 @@ namespace BinarySerializer.Klonoa
         public IDX IDX { get; }
 
         /// <summary>
-        /// The loader config, used for version specific properties and functionality
+        /// The Klonoa settings, used for version specific properties and functionality
         /// </summary>
-        public LoaderConfiguration_DTP Config => (LoaderConfiguration_DTP)LoaderConfig;
+        public KlonoaSettings_DTP Settings => (KlonoaSettings_DTP)KlonoaSettings;
 
         /// <summary>
         /// The current IDX entry, determined by the <see cref="BINBlock"/>
@@ -59,7 +59,7 @@ namespace BinarySerializer.Klonoa
         /// <summary>
         /// Indicates if the current BIN block is a level
         /// </summary>
-        public bool IsLevel => BINBlock >= Config.BLOCK_FirstLevel;
+        public bool IsLevel => BINBlock >= Settings.BLOCK_FirstLevel;
         
         /// <summary>
         /// Indicates if the current BIN block is a boss level
@@ -69,7 +69,7 @@ namespace BinarySerializer.Klonoa
         /// <summary>
         /// The global sector index, or -1 if not available
         /// </summary>
-        public int GlobalSectorIndex => !IsLevel ? -1 : 8 + (10 * (BINBlock - Config.BLOCK_FirstLevel)) + (LevelSector == -1 ? 0 : LevelSector);
+        public int GlobalSectorIndex => !IsLevel ? -1 : 8 + (10 * (BINBlock - Settings.BLOCK_FirstLevel)) + (LevelSector == -1 ? 0 : LevelSector);
 
         /// <summary>
         /// The global level index, or -1 if not available
@@ -79,7 +79,7 @@ namespace BinarySerializer.Klonoa
         /// <summary>
         /// The amount of available levels
         /// </summary>
-        public int LevelsCount => IDX.Entries.Length - Config.BLOCK_FirstLevel;
+        public int LevelsCount => IDX.Entries.Length - Settings.BLOCK_FirstLevel;
 
         /// <summary>
         /// The sector to serialize when serializing the level data, or -1 to serialize all of them
@@ -134,7 +134,7 @@ namespace BinarySerializer.Klonoa
             // Set the file pointers
             Pointer p = null;
             var s = Deserializer;
-            var binFile = s.Context.GetFile(Config.FilePath_BIN);
+            var binFile = s.Context.GetFile(Settings.FilePath_BIN);
 
             for (int binBlockIndex = 0; binBlockIndex < IDX.Entries.Length; binBlockIndex++)
             {
@@ -463,7 +463,7 @@ namespace BinarySerializer.Klonoa
         public void ProcessLevelData()
         {
             var s = Deserializer;
-            var funcAddr = Config.Address_LevelData3DFunction;
+            var funcAddr = Settings.Address_LevelData3DFunction;
 
             var funcPointer = new Pointer(funcAddr, FindCodeFile(funcAddr));
 
@@ -537,7 +537,7 @@ namespace BinarySerializer.Klonoa
             // Serialize level data 2D if a level index is specified
             if (GlobalLevelIndex != -1)
             {
-                var pointerTablePointer = new Pointer(Config.Address_LevelData2DPointerTable, Context.GetFile(Config.FilePath_EXE));
+                var pointerTablePointer = new Pointer(Settings.Address_LevelData2DPointerTable, Context.GetFile(Settings.FilePath_EXE));
                 var levelDataPointer = s.DoAt(pointerTablePointer + (GlobalLevelIndex * 4), () => s.SerializePointer(default, name: "LevelData2DPointer"));
                 LevelData2D = s.DoAt(levelDataPointer, () => s.SerializeObject<LevelData2D>(default, name: nameof(LevelData2D)));
             }
@@ -600,16 +600,15 @@ namespace BinarySerializer.Klonoa
         /// </summary>
         /// <param name="context">The context to create the loader for</param>
         /// <param name="idx">The serialized IDX</param>
-        /// <param name="config">The loader configuration</param>
         /// <returns>The loader</returns>
-        public static Loader_DTP Create(Context context, IDX idx, LoaderConfiguration_DTP config)
+        public static Loader_DTP Create(Context context, IDX idx)
         {
             // Make sure a loader hasn't already been created for the context
             if (GetLoader(context) != null)
                 throw new Exception($"A loader has already been created for the current context. Only one loader is allowed per context.");
 
             // Create the loader
-            var loader = new Loader_DTP(context, idx, config);
+            var loader = new Loader_DTP(context, idx);
 
             // Initialize the loader
             loader.Initialize();

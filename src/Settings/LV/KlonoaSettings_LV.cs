@@ -2,7 +2,7 @@
 
 namespace BinarySerializer.Klonoa
 {
-    public abstract class LoaderConfiguration_LV : LoaderConfiguration
+    public abstract class KlonoaSettings_LV : KlonoaSettings
     {
         public virtual int LanguagesCount => 1;
         public bool HasMultipleLanguages => LanguagesCount > 1;
