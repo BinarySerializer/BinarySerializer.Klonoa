@@ -7,12 +7,16 @@ namespace BinarySerializer.Klonoa.DTP
     /// </summary>
     public class Sector_ArchiveFile : ArchiveFile
     {
-        public PS1_TMD LevelModel { get; set; }
-        public LevelModelObjectMap_File LevelModelObjectMap { get; set; }
-        public LevelCollision_File LevelCollision { get; set; }
-        public CollisionItems_File LevelCollisionItems { get; set; }
-        public ArchiveFile<MovementPath_File> MovementPaths { get; set; }
-        public UnknownModelObjectsData_File UnknownModelObjectsData { get; set; }
+        public PS1_TMD LevelModel { get; set; } // The 3D level model
+
+        public LevelModelObjectSectorMap_File LevelModelObjectSectorMap { get; set; } // Defines which objects to render where
+        public LevelCollisionSectorMap_File LevelCollisionSectorMap { get; set; } // Defines which collision to check for where
+
+        public CollisionTriangles_File LevelCollisionTriangles { get; set; } // The level collision
+        
+        public ArchiveFile<MovementPath_File> MovementPaths { get; set; } // The movement paths in the level
+
+        public UnknownModelObjectsData_File UnknownModelObjectsData { get; set; } // Light related?
 
         public override void SerializeImpl(SerializerObject s)
         {
@@ -55,9 +59,9 @@ namespace BinarySerializer.Klonoa.DTP
         protected override void SerializeFiles(SerializerObject s)
         {
             LevelModel = SerializeFile<PS1_TMD>(s, LevelModel, 0, logIfNotFullyParsed: false, name: nameof(LevelModel));
-            LevelModelObjectMap = SerializeFile<LevelModelObjectMap_File>(s, LevelModelObjectMap, 1, name: nameof(LevelModelObjectMap));
-            LevelCollision = SerializeFile<LevelCollision_File>(s, LevelCollision, 2, name: nameof(LevelCollision));
-            LevelCollisionItems = SerializeFile<CollisionItems_File>(s, LevelCollisionItems, 3, name: nameof(LevelCollisionItems));
+            LevelModelObjectSectorMap = SerializeFile<LevelModelObjectSectorMap_File>(s, LevelModelObjectSectorMap, 1, name: nameof(LevelModelObjectSectorMap));
+            LevelCollisionSectorMap = SerializeFile<LevelCollisionSectorMap_File>(s, LevelCollisionSectorMap, 2, name: nameof(LevelCollisionSectorMap));
+            LevelCollisionTriangles = SerializeFile<CollisionTriangles_File>(s, LevelCollisionTriangles, 3, name: nameof(LevelCollisionTriangles));
             MovementPaths = SerializeFile<ArchiveFile<MovementPath_File>>(s, MovementPaths, 4, name: nameof(MovementPaths));
             UnknownModelObjectsData = SerializeFile<UnknownModelObjectsData_File>(s, UnknownModelObjectsData, 5, onPreSerialize: x => x.Pre_ObjsCount = LevelModel.ObjectsCount, name: nameof(UnknownModelObjectsData));
         }

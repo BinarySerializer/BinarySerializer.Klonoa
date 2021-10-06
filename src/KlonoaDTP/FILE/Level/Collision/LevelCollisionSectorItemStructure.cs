@@ -1,6 +1,6 @@
 ﻿namespace BinarySerializer.Klonoa.DTP
 {
-    public class LevelCollisionGridItemStructure : BinarySerializable
+    public class LevelCollisionSectorItemStructure : BinarySerializable
     {
         public Pointer Pre_CollisionIndicesPointer { get; set; }
 

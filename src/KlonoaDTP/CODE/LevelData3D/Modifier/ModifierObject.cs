@@ -42,7 +42,7 @@ namespace BinarySerializer.Klonoa.DTP
         public RawData_File[] Data_Unknown { get; set; }
         public PS1_TMD Data_TMD { get; set; }
         public PS1_TMD Data_TMD_Secondary { get; set; }
-        public ObjCollisionItems_File Data_Collision { get; set; }
+        public ObjCollision_File Data_Collision { get; set; }
         public MovementPath_File Data_MovementPaths { get; set; }
         public UnknownModelObjectsData_File Data_UnknownModelObjectsData { get; set; }
         public PS1_TIM Data_TIM { get; set; }
@@ -171,7 +171,7 @@ namespace BinarySerializer.Klonoa.DTP
 
                 case GlobalModifierType.MovingPlatform:
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
-                    Data_Collision = SerializeDataFile<ObjCollisionItems_File>(s, Data_Collision, name: nameof(Data_Collision));
+                    Data_Collision = SerializeDataFile<ObjCollision_File>(s, Data_Collision, name: nameof(Data_Collision));
                     Data_MovementPaths = SerializeDataFile<MovementPath_File>(s, Data_MovementPaths, name: nameof(Data_MovementPaths));
                     Data_AbsoluteTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform,
                         onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_AbsoluteTransform));
@@ -187,7 +187,7 @@ namespace BinarySerializer.Klonoa.DTP
 
                 case GlobalModifierType.TiltRock: // FUN_4_8__8011fff8
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
-                    Data_Collision = SerializeDataFile<ObjCollisionItems_File>(s, Data_Collision, name: nameof(Data_Collision));
+                    Data_Collision = SerializeDataFile<ObjCollision_File>(s, Data_Collision, name: nameof(Data_Collision));
                     Data_MovementPaths = SerializeDataFile<MovementPath_File>(s, Data_MovementPaths, name: nameof(Data_MovementPaths));
                     Data_AbsoluteTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform,
                         onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_AbsoluteTransform));
@@ -198,7 +198,7 @@ namespace BinarySerializer.Klonoa.DTP
 
                 case GlobalModifierType.Minecart: // FUN_4_8__8011a638
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
-                    Data_Collision = SerializeDataFile<ObjCollisionItems_File>(s, Data_Collision, name: nameof(Data_Collision));
+                    Data_Collision = SerializeDataFile<ObjCollision_File>(s, Data_Collision, name: nameof(Data_Collision));
                     Data_MovementPaths = SerializeDataFile<MovementPath_File>(s, Data_MovementPaths, name: nameof(Data_MovementPaths));
                     Data_AbsoluteTransforms = SerializeDataFile<ArchiveFile<ObjTransform_ArchiveFile>>(s, Data_AbsoluteTransforms,
                         onPreSerialize: x => x.Pre_OnPreSerializeAction = t => t.Pre_UsesTransformInfo = true, name: nameof(Data_AbsoluteTransforms));
@@ -228,7 +228,7 @@ namespace BinarySerializer.Klonoa.DTP
                 case GlobalModifierType.LockedDoor_1:
                 case GlobalModifierType.LockedDoor_2:
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
-                    Data_Collision = SerializeDataFile<ObjCollisionItems_File>(s, Data_Collision, name: nameof(Data_Collision));
+                    Data_Collision = SerializeDataFile<ObjCollision_File>(s, Data_Collision, name: nameof(Data_Collision));
 
                     if (GlobalModifierType != GlobalModifierType.LockedDoor_2)
                         Data_LocalTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_LocalTransform,
@@ -256,7 +256,7 @@ namespace BinarySerializer.Klonoa.DTP
 
                 case GlobalModifierType.Crate:
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
-                    Data_Collision = SerializeDataFile<ObjCollisionItems_File>(s, Data_Collision, name: nameof(Data_Collision));
+                    Data_Collision = SerializeDataFile<ObjCollision_File>(s, Data_Collision, name: nameof(Data_Collision));
                     Data_AbsoluteTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform,
                         onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_AbsoluteTransform));
 
@@ -271,7 +271,7 @@ namespace BinarySerializer.Klonoa.DTP
 
                 case GlobalModifierType.Gondola: // FUN_9_8__80120d24
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
-                    Data_Collision = SerializeDataFile<ObjCollisionItems_File>(s, Data_Collision, name: nameof(Data_Collision));
+                    Data_Collision = SerializeDataFile<ObjCollision_File>(s, Data_Collision, name: nameof(Data_Collision));
                     Data_MovementPaths = SerializeDataFile<MovementPath_File>(s, Data_MovementPaths, name: nameof(Data_MovementPaths));
                     Data_LocalTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_LocalTransform,
                         onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_LocalTransform));
@@ -293,7 +293,7 @@ namespace BinarySerializer.Klonoa.DTP
 
                 case GlobalModifierType.WoodenCart: // FUN_9_8__80122cfc
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
-                    Data_Collision = SerializeDataFile<ObjCollisionItems_File>(s, Data_Collision, name: nameof(Data_Collision));
+                    Data_Collision = SerializeDataFile<ObjCollision_File>(s, Data_Collision, name: nameof(Data_Collision));
                     Data_MovementPaths = SerializeDataFile<MovementPath_File>(s, Data_MovementPaths, name: nameof(Data_MovementPaths));
                     Data_AbsoluteTransforms = SerializeDataFile<ArchiveFile<ObjTransform_ArchiveFile>>(s, Data_AbsoluteTransforms,
                         onPreSerialize: x => x.Pre_OnPreSerializeAction = t => t.Pre_UsesTransformInfo = false, name: nameof(Data_AbsoluteTransforms));
@@ -315,7 +315,7 @@ namespace BinarySerializer.Klonoa.DTP
 
                 case GlobalModifierType.WoodenMallet:
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
-                    Data_Collision = SerializeDataFile<ObjCollisionItems_File>(s, Data_Collision, name: nameof(Data_Collision));
+                    Data_Collision = SerializeDataFile<ObjCollision_File>(s, Data_Collision, name: nameof(Data_Collision));
                     Data_MovementPaths = SerializeDataFile<MovementPath_File>(s, Data_MovementPaths, name: nameof(Data_MovementPaths));
                     Data_LocalTransforms = SerializeDataFile<ArchiveFile<ObjTransform_ArchiveFile>>(s, Data_LocalTransforms,
                         onPreSerialize: x => x.Pre_OnPreSerializeAction = f => f.Pre_UsesTransformInfo = false, name: nameof(Data_LocalTransforms));
@@ -326,7 +326,7 @@ namespace BinarySerializer.Klonoa.DTP
 
                 case GlobalModifierType.VerticallyMovingWoodenPlatform:
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
-                    Data_Collision = SerializeDataFile<ObjCollisionItems_File>(s, Data_Collision, name: nameof(Data_Collision));
+                    Data_Collision = SerializeDataFile<ObjCollision_File>(s, Data_Collision, name: nameof(Data_Collision));
                     Data_MovementPaths = SerializeDataFile<MovementPath_File>(s, Data_MovementPaths, name: nameof(Data_MovementPaths));
                     Data_LocalTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_LocalTransform,
                         onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_LocalTransform));
@@ -354,7 +354,7 @@ namespace BinarySerializer.Klonoa.DTP
 
                 case GlobalModifierType.SpinningWood: // FUN_10_8__8012059c
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
-                    Data_Collision = SerializeDataFile<ObjCollisionItems_File>(s, Data_Collision, name: nameof(Data_Collision));
+                    Data_Collision = SerializeDataFile<ObjCollision_File>(s, Data_Collision, name: nameof(Data_Collision));
                     Data_AbsoluteTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform,
                         onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_AbsoluteTransform));
 
@@ -371,7 +371,7 @@ namespace BinarySerializer.Klonoa.DTP
 
                 case GlobalModifierType.SpinningWoodAttachedPlatform: // FUN_10_8__801201ec
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
-                    Data_Collision = SerializeDataFile<ObjCollisionItems_File>(s, Data_Collision, name: nameof(Data_Collision));
+                    Data_Collision = SerializeDataFile<ObjCollision_File>(s, Data_Collision, name: nameof(Data_Collision));
                     Data_MovementPaths = SerializeDataFile<MovementPath_File>(s, Data_MovementPaths, name: nameof(Data_MovementPaths));
                     Data_LocalTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform,
                         onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_AbsoluteTransform));
@@ -382,7 +382,7 @@ namespace BinarySerializer.Klonoa.DTP
 
                 case GlobalModifierType.MovingLedge: // FUN_10_8__8011f198
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
-                    Data_Collision = SerializeDataFile<ObjCollisionItems_File>(s, Data_Collision, name: nameof(Data_Collision));
+                    Data_Collision = SerializeDataFile<ObjCollision_File>(s, Data_Collision, name: nameof(Data_Collision));
                     Data_AbsoluteTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform,
                         onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_AbsoluteTransform));
 
@@ -391,7 +391,7 @@ namespace BinarySerializer.Klonoa.DTP
 
                 case GlobalModifierType.Ledge: // FUN_12_8__8011a74c
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
-                    Data_Collision = SerializeDataFile<ObjCollisionItems_File>(s, Data_Collision, name: nameof(Data_Collision));
+                    Data_Collision = SerializeDataFile<ObjCollision_File>(s, Data_Collision, name: nameof(Data_Collision));
                     Data_AbsoluteTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform,
                         onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_AbsoluteTransform));
                     Data_TMD_Secondary = SerializeDataFile<PS1_TMD>(s, Data_TMD_Secondary, name: nameof(Data_TMD_Secondary));
@@ -399,7 +399,7 @@ namespace BinarySerializer.Klonoa.DTP
 
                 case GlobalModifierType.UnstablePlatform: // FUN_12_8__8011b2f0
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
-                    Data_Collision = SerializeDataFile<ObjCollisionItems_File>(s, Data_Collision, name: nameof(Data_Collision));
+                    Data_Collision = SerializeDataFile<ObjCollision_File>(s, Data_Collision, name: nameof(Data_Collision));
                     Data_MovementPaths = SerializeDataFile<MovementPath_File>(s, Data_MovementPaths, name: nameof(Data_MovementPaths));
                     Data_LocalTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_LocalTransform,
                         onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_LocalTransform));
@@ -411,7 +411,7 @@ namespace BinarySerializer.Klonoa.DTP
 
                 case GlobalModifierType.SwingingPlatform: // FUN_12_8__8011af80
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
-                    Data_Collision = SerializeDataFile<ObjCollisionItems_File>(s, Data_Collision, name: nameof(Data_Collision));
+                    Data_Collision = SerializeDataFile<ObjCollision_File>(s, Data_Collision, name: nameof(Data_Collision));
                     Data_MovementPaths = SerializeDataFile<MovementPath_File>(s, Data_MovementPaths, name: nameof(Data_MovementPaths));
                     Data_AbsoluteTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform,
                         onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_AbsoluteTransform));
@@ -423,14 +423,14 @@ namespace BinarySerializer.Klonoa.DTP
 
                 case GlobalModifierType.Bone:
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
-                    Data_Collision = SerializeDataFile<ObjCollisionItems_File>(s, Data_Collision, name: nameof(Data_Collision));
+                    Data_Collision = SerializeDataFile<ObjCollision_File>(s, Data_Collision, name: nameof(Data_Collision));
                     Data_AbsoluteTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform,
                         onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_AbsoluteTransform));
                     break;
 
                 case GlobalModifierType.GreenBoulder:
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
-                    Data_Collision = SerializeDataFile<ObjCollisionItems_File>(s, Data_Collision, name: nameof(Data_Collision));
+                    Data_Collision = SerializeDataFile<ObjCollision_File>(s, Data_Collision, name: nameof(Data_Collision));
                     Data_AbsoluteTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform,
                         onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_AbsoluteTransform));
                     Data_TMD_Secondary = SerializeDataFile<PS1_TMD>(s, Data_TMD_Secondary, name: nameof(Data_TMD_Secondary));
@@ -439,7 +439,7 @@ namespace BinarySerializer.Klonoa.DTP
                 case GlobalModifierType.RedBoulder:
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
                     Data_TMD_Secondary = SerializeDataFile<PS1_TMD>(s, Data_TMD_Secondary, name: nameof(Data_TMD_Secondary));
-                    Data_Collision = SerializeDataFile<ObjCollisionItems_File>(s, Data_Collision, name: nameof(Data_Collision));
+                    Data_Collision = SerializeDataFile<ObjCollision_File>(s, Data_Collision, name: nameof(Data_Collision));
                     Data_AbsoluteTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform,
                         onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_AbsoluteTransform));
                     break;
@@ -451,19 +451,19 @@ namespace BinarySerializer.Klonoa.DTP
 
                 case GlobalModifierType.BlockingBoulder:
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
-                    Data_Collision = SerializeDataFile<ObjCollisionItems_File>(s, Data_Collision, name: nameof(Data_Collision));
+                    Data_Collision = SerializeDataFile<ObjCollision_File>(s, Data_Collision, name: nameof(Data_Collision));
                     Data_AbsoluteTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform,
                         onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_AbsoluteTransform));
                     break;
 
                 case GlobalModifierType.SwingingWoodPlank: // FUN_14_7__8011648c
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
-                    Data_Collision = SerializeDataFile<ObjCollisionItems_File>(s, Data_Collision, name: nameof(Data_Collision));
+                    Data_Collision = SerializeDataFile<ObjCollision_File>(s, Data_Collision, name: nameof(Data_Collision));
                     Data_MovementPaths = SerializeDataFile<MovementPath_File>(s, Data_MovementPaths, name: nameof(Data_MovementPaths));
                     break;
 
                 case GlobalModifierType.Collision: // FUN_14_7__801170a8
-                    Data_Collision = SerializeDataFile<ObjCollisionItems_File>(s, Data_Collision, name: nameof(Data_Collision));
+                    Data_Collision = SerializeDataFile<ObjCollision_File>(s, Data_Collision, name: nameof(Data_Collision));
                     Data_AbsoluteTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform,
                         onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_AbsoluteTransform));
                     break;
@@ -478,7 +478,7 @@ namespace BinarySerializer.Klonoa.DTP
 
                 case GlobalModifierType.MovingPlatformOnTrack: // FUN_15_8__8011d040
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
-                    Data_Collision = SerializeDataFile<ObjCollisionItems_File>(s, Data_Collision, name: nameof(Data_Collision));
+                    Data_Collision = SerializeDataFile<ObjCollision_File>(s, Data_Collision, name: nameof(Data_Collision));
                     Data_MovementPaths = SerializeDataFile<MovementPath_File>(s, Data_MovementPaths, name: nameof(Data_MovementPaths));
                     Data_AbsoluteTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform,
                         onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_AbsoluteTransform));
@@ -492,7 +492,7 @@ namespace BinarySerializer.Klonoa.DTP
 
                 case GlobalModifierType.SpinningWheel: // FUN_15_8__8011a9dc
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
-                    Data_Collision = SerializeDataFile<ObjCollisionItems_File>(s, Data_Collision, name: nameof(Data_Collision));
+                    Data_Collision = SerializeDataFile<ObjCollision_File>(s, Data_Collision, name: nameof(Data_Collision));
                     Data_MovementPaths = SerializeDataFile<MovementPath_File>(s, Data_MovementPaths, name: nameof(Data_MovementPaths));
                     Data_AbsoluteTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform,
                         onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_AbsoluteTransform));
@@ -503,7 +503,7 @@ namespace BinarySerializer.Klonoa.DTP
 
                 case GlobalModifierType.FallingTargetPlatform: // FUN_15_8__8011af24
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
-                    Data_Collision = SerializeDataFile<ObjCollisionItems_File>(s, Data_Collision, name: nameof(Data_Collision));
+                    Data_Collision = SerializeDataFile<ObjCollision_File>(s, Data_Collision, name: nameof(Data_Collision));
                     Data_AbsoluteTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform,
                         onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_AbsoluteTransform));
 
@@ -524,7 +524,7 @@ namespace BinarySerializer.Klonoa.DTP
 
                 case GlobalModifierType.LockedDoor_3: // FUN_15_8__8011e0c0
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
-                    Data_Collision = SerializeDataFile<ObjCollisionItems_File>(s, Data_Collision, name: nameof(Data_Collision));
+                    Data_Collision = SerializeDataFile<ObjCollision_File>(s, Data_Collision, name: nameof(Data_Collision));
                     Data_AbsoluteTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform,
                         onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_AbsoluteTransform));
 
@@ -533,7 +533,7 @@ namespace BinarySerializer.Klonoa.DTP
 
                 case GlobalModifierType.BlockingLedge: // FUN_15_8__8011ee5c
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
-                    Data_Collision = SerializeDataFile<ObjCollisionItems_File>(s, Data_Collision, name: nameof(Data_Collision));
+                    Data_Collision = SerializeDataFile<ObjCollision_File>(s, Data_Collision, name: nameof(Data_Collision));
                     Data_AbsoluteTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform,
                         onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_AbsoluteTransform));
                     SkipDataFile<RawData_File>(s, isUnused: true);
@@ -543,7 +543,7 @@ namespace BinarySerializer.Klonoa.DTP
 
                 case GlobalModifierType.UnknownOrbRelatedObj: // FUN_15_8__8011dc04
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
-                    Data_Collision = SerializeDataFile<ObjCollisionItems_File>(s, Data_Collision, name: nameof(Data_Collision));
+                    Data_Collision = SerializeDataFile<ObjCollision_File>(s, Data_Collision, name: nameof(Data_Collision));
 
                     Data_AbsoluteTransforms = new ArchiveFile<ObjTransform_ArchiveFile>()
                     {
@@ -560,7 +560,7 @@ namespace BinarySerializer.Klonoa.DTP
 
                 case GlobalModifierType.MovingPlatformWithOptionalLocal: // FUN_16_8__8011d3ac
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
-                    Data_Collision = SerializeDataFile<ObjCollisionItems_File>(s, Data_Collision, name: nameof(Data_Collision));
+                    Data_Collision = SerializeDataFile<ObjCollision_File>(s, Data_Collision, name: nameof(Data_Collision));
                     Data_MovementPaths = SerializeDataFile<MovementPath_File>(s, Data_MovementPaths, name: nameof(Data_MovementPaths));
                     Data_AbsoluteTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform,
                         onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_AbsoluteTransform));
@@ -578,7 +578,7 @@ namespace BinarySerializer.Klonoa.DTP
 
                 case GlobalModifierType.MovingWallPillars: // FUN_16_8__80120140
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
-                    Data_Collision = SerializeDataFile<ObjCollisionItems_File>(s, Data_Collision, name: nameof(Data_Collision));
+                    Data_Collision = SerializeDataFile<ObjCollision_File>(s, Data_Collision, name: nameof(Data_Collision));
                     Data_AbsoluteTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform,
                         onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_AbsoluteTransform));
                     Data_LocalTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_LocalTransform,
@@ -590,7 +590,7 @@ namespace BinarySerializer.Klonoa.DTP
 
                 case GlobalModifierType.DarkLightPlatform: // FUN_16_8__8011f698
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
-                    Data_Collision = SerializeDataFile<ObjCollisionItems_File>(s, Data_Collision, name: nameof(Data_Collision));
+                    Data_Collision = SerializeDataFile<ObjCollision_File>(s, Data_Collision, name: nameof(Data_Collision));
                     Data_TMD_Secondary = SerializeDataFile<PS1_TMD>(s, Data_TMD_Secondary, name: nameof(Data_TMD_Secondary));
                     Data_AbsoluteTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform,
                         onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_AbsoluteTransform));
@@ -602,7 +602,7 @@ namespace BinarySerializer.Klonoa.DTP
 
                 case GlobalModifierType.IronGate: // FUN_16_8__8011fa54
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
-                    Data_Collision = SerializeDataFile<ObjCollisionItems_File>(s, Data_Collision, name: nameof(Data_Collision));
+                    Data_Collision = SerializeDataFile<ObjCollision_File>(s, Data_Collision, name: nameof(Data_Collision));
 
                     Data_AbsoluteTransforms = new ArchiveFile<ObjTransform_ArchiveFile>()
                     {
@@ -636,7 +636,7 @@ namespace BinarySerializer.Klonoa.DTP
 
                 case GlobalModifierType.TransparentGemPlatform: // FUN_18_8__8011eaec, FUN_19_8__8011d9b0
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
-                    Data_Collision = SerializeDataFile<ObjCollisionItems_File>(s, Data_Collision, name: nameof(Data_Collision));
+                    Data_Collision = SerializeDataFile<ObjCollision_File>(s, Data_Collision, name: nameof(Data_Collision));
                     Data_AbsoluteTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform,
                         onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_AbsoluteTransform));
                     SkipDataFile<RawData_File>(s); // TODO: 20 byte structs
@@ -644,7 +644,7 @@ namespace BinarySerializer.Klonoa.DTP
 
                 case GlobalModifierType.BirdStatueWithSwitch: // FUN_18_8__80121694
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
-                    Data_Collision = SerializeDataFile<ObjCollisionItems_File>(s, Data_Collision, name: nameof(Data_Collision));
+                    Data_Collision = SerializeDataFile<ObjCollision_File>(s, Data_Collision, name: nameof(Data_Collision));
                     Data_AbsoluteTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform,
                         onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_AbsoluteTransform));
                     // NOTE: This loads a block into VRAM, seems to be for an effect only?
@@ -652,7 +652,7 @@ namespace BinarySerializer.Klonoa.DTP
 
                 case GlobalModifierType.ObjectWithPaletteAnimation: // FUN_18_8__80123c18
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
-                    Data_Collision = SerializeDataFile<ObjCollisionItems_File>(s, Data_Collision, name: nameof(Data_Collision));
+                    Data_Collision = SerializeDataFile<ObjCollision_File>(s, Data_Collision, name: nameof(Data_Collision));
                     Data_MovementPaths = SerializeDataFile<MovementPath_File>(s, Data_MovementPaths, name: nameof(Data_MovementPaths));
                     Data_AbsoluteTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform,
                         onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_AbsoluteTransform));
@@ -671,14 +671,14 @@ namespace BinarySerializer.Klonoa.DTP
 
                 case GlobalModifierType.LightField: // FUN_18_8__801226ec
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
-                    Data_Collision = SerializeDataFile<ObjCollisionItems_File>(s, Data_Collision, name: nameof(Data_Collision));
+                    Data_Collision = SerializeDataFile<ObjCollision_File>(s, Data_Collision, name: nameof(Data_Collision));
                     Data_AbsoluteTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform,
                         onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_AbsoluteTransform));
                     break;
 
                 case GlobalModifierType.MovingCavePlatform: // FUN_18_8__8012323c
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
-                    Data_Collision = SerializeDataFile<ObjCollisionItems_File>(s, Data_Collision, name: nameof(Data_Collision));
+                    Data_Collision = SerializeDataFile<ObjCollision_File>(s, Data_Collision, name: nameof(Data_Collision));
                     Data_MovementPaths = SerializeDataFile<MovementPath_File>(s, Data_MovementPaths, name: nameof(Data_MovementPaths));
                     Data_AbsoluteTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform,
                         onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_AbsoluteTransform));
@@ -699,7 +699,7 @@ namespace BinarySerializer.Klonoa.DTP
 
                 case GlobalModifierType.ColoredPillar: // FUN_19_8__8011bf40
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
-                    Data_Collision = SerializeDataFile<ObjCollisionItems_File>(s, Data_Collision, name: nameof(Data_Collision));
+                    Data_Collision = SerializeDataFile<ObjCollision_File>(s, Data_Collision, name: nameof(Data_Collision));
                     Data_AbsoluteTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform,
                         onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_AbsoluteTransform));
                     Data_LocalTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_LocalTransform,
@@ -721,7 +721,7 @@ namespace BinarySerializer.Klonoa.DTP
 
                 case GlobalModifierType.OnWayMovingWallPillar: // FUN_19_8__8011f8fc
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
-                    Data_Collision = SerializeDataFile<ObjCollisionItems_File>(s, Data_Collision, name: nameof(Data_Collision));
+                    Data_Collision = SerializeDataFile<ObjCollision_File>(s, Data_Collision, name: nameof(Data_Collision));
                     Data_AbsoluteTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform,
                         onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_AbsoluteTransform));
                     Data_LocalTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_LocalTransform,
@@ -749,7 +749,7 @@ namespace BinarySerializer.Klonoa.DTP
 
                 case GlobalModifierType.GhadiusCirclePlatform: // FUN_20_8__80116070
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
-                    Data_Collision = SerializeDataFile<ObjCollisionItems_File>(s, Data_Collision, name: nameof(Data_Collision));
+                    Data_Collision = SerializeDataFile<ObjCollision_File>(s, Data_Collision, name: nameof(Data_Collision));
                     SkipDataFile<RawData_File>(s); // TODO: Movement paths? Aligned to 28.
                     break;
 
@@ -785,7 +785,7 @@ namespace BinarySerializer.Klonoa.DTP
 
                 case GlobalModifierType.NahatombBluePlatformAndGem: // FUN_23_7__80114d9c
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
-                    Data_Collision = SerializeDataFile<ObjCollisionItems_File>(s, Data_Collision, name: nameof(Data_Collision));
+                    Data_Collision = SerializeDataFile<ObjCollision_File>(s, Data_Collision, name: nameof(Data_Collision));
                     Data_MovementPaths = SerializeDataFile<MovementPath_File>(s, Data_MovementPaths, name: nameof(Data_MovementPaths));
                     Data_TMD_Secondary = SerializeDataFile<PS1_TMD>(s, Data_TMD_Secondary, name: nameof(Data_TMD_Secondary));
                     break;
@@ -799,7 +799,7 @@ namespace BinarySerializer.Klonoa.DTP
 
                 case GlobalModifierType.GeyserPlatform:
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
-                    Data_Collision = SerializeDataFile<ObjCollisionItems_File>(s, Data_Collision, name: nameof(Data_Collision));
+                    Data_Collision = SerializeDataFile<ObjCollision_File>(s, Data_Collision, name: nameof(Data_Collision));
 
                     GeyserPlatformPositionsPointer = loader.Config.GeyserPlatformPositionsPointers[loader.GlobalSectorIndex];
                     s.DoAt(new Pointer(GeyserPlatformPositionsPointer, loader.FindCodeFile(GeyserPlatformPositionsPointer)), () =>

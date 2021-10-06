@@ -1,6 +1,6 @@
 ﻿namespace BinarySerializer.Klonoa.DTP
 {
-    public class LevelModelObjectMap_File : BaseFile
+    public class LevelModelObjectSectorMap_File : BaseFile
     {
         public ushort Width { get; set; }
         public ushort Height { get; set; }
@@ -8,7 +8,7 @@
 
         public KlonoaVector16 Pivot { get; set; }
 
-        public short[] ObjIndices { get; set; } // Indices to level model objects
+        public short[] ObjIndices { get; set; } // Indices to level model objects in each sector
 
         public override void SerializeImpl(SerializerObject s)
         {
