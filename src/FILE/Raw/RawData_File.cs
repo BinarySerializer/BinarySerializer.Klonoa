@@ -9,7 +9,15 @@
 
         public override void SerializeImpl(SerializerObject s)
         {
-            Data = s.SerializeArray<byte>(Data, Pre_FileSize, name: nameof(Data));
+            var size = Pre_FileSize;
+
+            if (size == -1)
+            {
+                s.LogWarning($"No data parsed for raw data file at {Offset} due to the file size not being specified");
+                size = 0;
+            }
+
+            Data = s.SerializeArray<byte>(Data, size, name: nameof(Data));
         }
     }
 }

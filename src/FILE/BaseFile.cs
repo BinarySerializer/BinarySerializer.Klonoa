@@ -10,7 +10,7 @@
         /// <summary>
         /// The file size, should be set before serializing
         /// </summary>
-        public long Pre_FileSize { get; set; }
+        public long Pre_FileSize { get; set; } = -1;
 
         /// <summary>
         /// Indicates if the file is compressed using ULZ, should be set before serializing
