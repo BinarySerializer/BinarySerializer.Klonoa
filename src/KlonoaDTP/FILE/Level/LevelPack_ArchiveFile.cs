@@ -32,6 +32,10 @@
             // The last file is always a dummy file to show the game that it's the last sector
             var sectorsCount = OffsetTable.FilesCount - 9;
 
+            // Every third level (every boss) is not compressed
+            var isCompressed = !Loader_DTP.GetLoader(s.Context).IsBossFight;
+            var encoder = isCompressed ? new LevelSectorEncoder() : null;
+
             Sectors ??= new Sector_ArchiveFile[sectorsCount];
 
             var sectorToParse = Loader_DTP.GetLoader(s.Context).LevelSector;
@@ -39,7 +43,8 @@
             for (int i = 0; i < sectorsCount; i++)
             {
                 if (sectorToParse == -1 || sectorToParse == i)
-                    Sectors[i] = SerializeFile<Sector_ArchiveFile>(s, Sectors[i], 8 + i, name: $"{Sectors}[{i}]");
+                    // TODO: Re-enable logging if not fully parsed. Had to disable since the encoder often reads 2 bytes too many.
+                    Sectors[i] = SerializeFile<Sector_ArchiveFile>(s, Sectors[i], 8 + i, logIfNotFullyParsed: !isCompressed, fileEncoder: encoder, name: $"{Sectors}[{i}]");
             }
         }
     }

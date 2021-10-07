@@ -51,9 +51,10 @@ namespace BinarySerializer.Klonoa
         /// <param name="index">The file index</param>
         /// <param name="logIfNotFullyParsed">Indicates if a warning log should be created if not fully parsed</param>
         /// <param name="onPreSerialize">Optional action to call before serializing</param>
+        /// <param name="fileEncoder">An optional file encoder if the file is encoded</param>
         /// <param name="name">The name</param>
         /// <returns>The serialized object</returns>
-        public T SerializeFile<T>(SerializerObject s, T obj, int index, bool logIfNotFullyParsed = true, Action<T> onPreSerialize = null, string name = null)
+        public T SerializeFile<T>(SerializerObject s, T obj, int index, bool logIfNotFullyParsed = true, Action<T> onPreSerialize = null, IStreamEncoder fileEncoder = null, string name = null)
             where T : BinarySerializable, new()
         {
             if (index >= OffsetTable.FilePointers.Length)
@@ -72,6 +73,7 @@ namespace BinarySerializer.Klonoa
                     x.Pre_EndPointer = endPointer;
                     x.Pre_LogIfNotFullyParsed = logIfNotFullyParsed && !DisableNotFullySerializedWarning;
                     x.Pre_OnPreSerialize = onPreSerialize;
+                    x.Pre_FileEncoder = fileEncoder;
                 }, name: name);
 
                 obj = file.FileData;
@@ -125,6 +127,7 @@ namespace BinarySerializer.Klonoa
             public Pointer Pre_EndPointer { get; set; }
             public bool Pre_LogIfNotFullyParsed { get; set; }
             public Action<File> Pre_OnPreSerialize { get; set; }
+            public IStreamEncoder Pre_FileEncoder { get; set; }
 
             public File FileData { get; set; }
 
@@ -135,7 +138,15 @@ namespace BinarySerializer.Klonoa
                 bool isCompressed = false;
                 IStreamEncoder encoder = null;
 
-                if (settings?.Version == KlonoaGameVersion.DTP_Prototype_19970717 ||
+                // If a file encoder is specified we use it
+                if (Pre_FileEncoder != null)
+                {
+                    encoder = Pre_FileEncoder;
+                    isCompressed = true;
+                }
+                // If the game is DTP we check for the ULZ header. The game does this for certain files, while hard-coding it for others. For simplicity
+                // we do it everywhere as the ULZ header is never used unless it's compressed.
+                else if (settings?.Version == KlonoaGameVersion.DTP_Prototype_19970717 ||
                     settings?.Version == KlonoaGameVersion.DTP)
                 {
                     uint header = s.DoAt(s.CurrentPointer, () => s.Serialize<uint>(default, "HeaderCheck"));

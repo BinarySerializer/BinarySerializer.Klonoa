@@ -18,44 +18,6 @@ namespace BinarySerializer.Klonoa.DTP
 
         public UnknownModelObjectsData_File UnknownModelObjectsData { get; set; } // Light related?
 
-        public override void SerializeImpl(SerializerObject s)
-        {
-            // Every third level (every boss) is not compressed
-            var isCompressed = !Loader_DTP.GetLoader(s.Context).IsBossFight;
-
-            if (isCompressed)
-            {
-                var compresedSize = Pre_FileSize;
-
-                s.DoEncoded(new LevelSectorEncoder(), () =>
-                {
-                    Pre_FileSize = s.CurrentLength;
-
-                    var start = s.CurrentPointer;
-
-                    // Serialize the offset table
-                    OffsetTable = s.SerializeObject<OffsetTable>(OffsetTable, name: nameof(OffsetTable));
-
-                    ParsedFiles = new (BinarySerializable, string)[OffsetTable.FilesCount];
-
-                    if (AddToParsedArchiveFiles)
-                        ParsedArchiveFiles[this] = new bool[OffsetTable.FilesCount];
-
-                    // Serialize the files
-                    SerializeFiles(s);
-
-                    s.Goto(start + s.CurrentLength);
-                }, allowLocalPointers: true);
-
-                // Go to the end of the archive
-                s.Goto(Offset + compresedSize);
-
-                return;
-            }
-
-            base.SerializeImpl(s);
-        }
-
         protected override void SerializeFiles(SerializerObject s)
         {
             LevelModel = SerializeFile<PS1_TMD>(s, LevelModel, 0, logIfNotFullyParsed: false, name: nameof(LevelModel));
