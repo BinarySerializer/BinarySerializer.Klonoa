@@ -16,5 +16,10 @@
         /// Klonoa 2: Lunatea's Veil
         /// </summary>
         LV,
+
+        /// <summary>
+        /// Klonoa Heroes
+        /// </summary>
+        KH,
     }
 }
