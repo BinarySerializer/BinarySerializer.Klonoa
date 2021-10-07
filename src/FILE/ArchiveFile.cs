@@ -201,6 +201,7 @@ namespace BinarySerializer.Klonoa
         where T : BinarySerializable, new()
     {
         public Action<T> Pre_OnPreSerializeAction { get; set; }
+        public IStreamEncoder Pre_FileEncoder { get; set; }
 
         /// <summary>
         /// The files
@@ -217,7 +218,7 @@ namespace BinarySerializer.Klonoa
             Files ??= new T[OffsetTable.FilesCount];
 
             for (int i = 0; i < Files.Length; i++)
-                Files[i] = SerializeFile<T>(s, Files[i], i, onPreSerialize: OnPreSerialize, name: $"{nameof(Files)}[{i}]");
+                Files[i] = SerializeFile<T>(s, Files[i], i, onPreSerialize: OnPreSerialize, fileEncoder: Pre_FileEncoder, name: $"{nameof(Files)}[{i}]");
         }
     }
 }
