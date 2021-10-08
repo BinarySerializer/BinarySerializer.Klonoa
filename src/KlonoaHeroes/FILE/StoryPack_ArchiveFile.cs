@@ -6,7 +6,7 @@
         public StoryPack_File0_ArchiveFile File_0 { get; set; }
         public MM_KH_Compressed_ArchiveFile<Graphics_File> File_1 { get; set; }
         public ArchiveFile<ArchiveFile<Graphics_File>> File_2 { get; set; }
-        public ArchiveFile<ArchiveFile<RawData_ArchiveFile>> File_3 { get; set; } // Text
+        public ArchiveFile<ArchiveFile<ArchiveFile<Cutscene_File>>> Cutscenes { get; set; }
         public ArchiveFile<Graphics_File> File_4 { get; set; }
         public Graphics_File File_5 { get; set; }
         public MM_KH_Compressed_ArchiveFile<Graphics_File> File_6 { get; set; }
@@ -31,7 +31,7 @@
             File_0 = SerializeFile<StoryPack_File0_ArchiveFile>(s, File_0, 0, name: nameof(File_0));
             File_1 = SerializeFile<MM_KH_Compressed_ArchiveFile<Graphics_File>>(s, File_1, 1, name: nameof(File_1));
             File_2 = SerializeFile<ArchiveFile<ArchiveFile<Graphics_File>>>(s, File_2, 2, name: nameof(File_2));
-            File_3 = SerializeFile<ArchiveFile<ArchiveFile<RawData_ArchiveFile>>>(s, File_3, 3, name: nameof(File_3));
+            Cutscenes = SerializeFile<ArchiveFile<ArchiveFile<ArchiveFile<Cutscene_File>>>>(s, Cutscenes, 3, name: nameof(Cutscenes));
             File_4 = SerializeFile<ArchiveFile<Graphics_File>>(s, File_4, 4, name: nameof(File_4));
             File_5 = SerializeFile<Graphics_File>(s, File_5, 5, name: nameof(File_5));
             File_6 = SerializeFile<MM_KH_Compressed_ArchiveFile<Graphics_File>>(s, File_6, 6, name: nameof(File_6));
