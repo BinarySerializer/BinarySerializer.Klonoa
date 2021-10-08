@@ -102,6 +102,24 @@ Loader_LV loader = Loader_LV.Create(context, headPack);
 LevelPack_ArchiveFile levelPack = loader.LoadBINFile<LevelPack_ArchiveFile>(Loader_LV.BINType.KL, 10);
 ```
 
+## Klonoa Heroes
+```cs
+// First create a context for the data serialization
+using Context context = new Context(basePath);
+
+// Create a configuration
+KlonoaSettings_KH settings = new KlonoaSettings_KH();
+
+// Add the game settings to the context
+context.AddKlonoaSettings(settings);
+
+// Add the ROM file to the context
+context.AddFile(new MemoryMappedFile(context, romFileName, GBAConstants.Address_ROM));
+
+// Load the ROM
+KlonoaHeroesROM rom = FileFactory.Read<KlonoaHeroesROM>(romFileName, context);
+```
+
 # Documentation
 
 **Common**
