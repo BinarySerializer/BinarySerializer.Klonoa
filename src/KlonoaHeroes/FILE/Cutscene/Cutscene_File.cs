@@ -6,8 +6,7 @@
 
         public override void SerializeImpl(SerializerObject s)
         {
-            // TODO: There are multiple groups of commands. Each group runs on a single frame (some commands tell it to wait a certain number of frames before the next group). How we do we know when we've reached the last group?
-            Commands = s.SerializeObjectArrayUntil(Commands, x => x.EndOfFrame, name: nameof(Commands));
+            Commands = s.SerializeObjectArrayUntil(Commands, x => x.Type == CutsceneCommand.CommandType.End_0 || x.Type == CutsceneCommand.CommandType.End_1, name: nameof(Commands));
         }
     }
 }
