@@ -17,7 +17,7 @@
 
         public RGBA5551Color[] Palette { get; set; }
         public byte[] TileSet { get; set; }
-        public ushort[] TileMap { get; set; }
+        public GraphicsTile[] TileMap { get; set; }
 
         public override void SerializeImpl(SerializerObject s)
         {
@@ -36,9 +36,12 @@
 
             s.DoAt(Offset + PaletteOffset, () => Palette = s.SerializeObjectArray<RGBA5551Color>(Palette, PalettesCount * 16, name: nameof(Palette)));
             s.DoAt(Offset + TileSetOffset, () => TileSet = s.SerializeArray<byte>(TileSet, TileSetLength, name: nameof(TileSet)));
-            s.DoAt(Offset + TileMapOffset, () => TileMap = s.SerializeArray<ushort>(TileMap, TileMapLength / 2, name: nameof(TileMap)));
+            s.DoAt(Offset + TileMapOffset, () => TileMap = s.SerializeObjectArray<GraphicsTile>(TileMap, TileMapLength / 2, name: nameof(TileMap)));
             
-            s.Goto(Offset + TileMapOffset + TileMapLength);
+            if (TileMapOffset != 0)
+                s.Goto(Offset + TileMapOffset + TileMapLength);
+            else
+                s.Goto(Offset + TileSetOffset + TileSetLength);
         }
     }
 }
