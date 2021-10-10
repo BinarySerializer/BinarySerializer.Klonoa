@@ -99,7 +99,16 @@ HeadPack_ArchiveFile headPack = FileFactory.Read<HeadPack_ArchiveFile>(settings.
 Loader_LV loader = Loader_LV.Create(context, headPack);
 
 // Load data from the BIN files
-LevelPack_ArchiveFile levelPack = loader.LoadBINFile<LevelPack_ArchiveFile>(Loader_LV.BINType.KL, 10);
+// Each vision has a preload archive and a data archive
+
+// Even-numbered archives are preload archives
+LevelPreloadPack_ArchiveFile preloadPack = loader.LoadBINFile<LevelPreloadPack_ArchiveFile>(Loader_LV.BINType.KL, 2);
+
+// Odd-numbered archives are data archives
+LevelDataPack_ArchiveFile dataPack = loader.LoadBINFile<LevelDataPack_ArchiveFile>(Loader_LV.BINType.KL, 3);
+
+// The last archive in KLDATA.BIN (199) is for menu sprites
+MenuSpritesPack_ArchiveFile menuSprites = loader.LoadBINFile<MenuSpritesPack_ArchiveFile>(Loader_LV.BINType.KL, 199);
 ```
 
 ## Klonoa Heroes
