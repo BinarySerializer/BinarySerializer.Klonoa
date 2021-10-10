@@ -82,6 +82,34 @@ namespace BinarySerializer.Klonoa
         public BINHeader_BGM_File GetBINHeader_BGM() => HeadPack.BGMPACK;
 
         /// <summary>
+        /// Loads the archive/file at the given index in the specified BIN file and automatically decides the type
+        /// </summary>
+        /// <param name="bin">The BIN to load from</param>
+        /// <param name="fileIndex">The BIN file to load</param>
+        /// <param name="languageIndex">The language index</param>
+        /// <param name="bgmIndex">The BGM index if a BGM bin</param>
+        /// <returns>The loaded file</returns>
+        public BaseFile LoadBINFile(BINType bin, int fileIndex, int languageIndex = 0, int bgmIndex = 0)
+        {
+            switch (bin) {
+                case BINType.KL:
+                    if (fileIndex == 199) // Menu sprites
+                        return LoadBINFile<MenuSpritesPack_ArchiveFile>(bin, fileIndex, languageIndex, bgmIndex);
+                    
+                    bool isPreload = fileIndex % 2 == 0; // Even archives are preload, odd archives are data
+                    if (isPreload)
+                        return LoadBINFile<LevelPreloadPack_ArchiveFile>(bin, fileIndex, languageIndex, bgmIndex);
+                    else
+                        return LoadBINFile<LevelDataPack_ArchiveFile>(bin, fileIndex, languageIndex, bgmIndex);
+                case BINType.BGM:
+                case BINType.PPT:
+                default:
+                    // No parser yet for BGM/PPT files
+                    return LoadBINFile<RawData_File>(bin, fileIndex, languageIndex, bgmIndex);
+            }
+        }
+
+        /// <summary>
         /// Loads the BIN file of a generic type in the specified BIN
         /// </summary>
         /// <typeparam name="T">The type of file to load</typeparam>
