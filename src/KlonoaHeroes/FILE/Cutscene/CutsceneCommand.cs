@@ -22,8 +22,8 @@ namespace BinarySerializer.Klonoa.KH
         public short Arg_Padding { get; set; }
         
         // Generic arguments
-        public short CommandOffset1 { get; set; } // Value * 2
-        public short CommandOffset2 { get; set; } // Value * 2
+        public short CommandOffset1 { get; set; } // Value * 4
+        public short CommandOffset2 { get; set; } // Value * 4
         public short Frames { get; set; }
         
         // Conditional
@@ -36,7 +36,9 @@ namespace BinarySerializer.Klonoa.KH
         public short FileIndex_2 { get; set; }
 
         // Text
-        public short TextOffset { get; set; }
+        public short TextOffsetOffset { get; set; } // Value * 4
+        public int TextOffset { get; set; } // Value * 4
+        public CutsceneTextCommand[] TextCommands { get; set; }
 
         // Sub-function
         public CutsceneCommand[] SubCommands { get; set; }
@@ -103,8 +105,12 @@ namespace BinarySerializer.Klonoa.KH
                     break;
                 
                 case CommandType.SetText:
-                    TextOffset = s.Serialize<short>(TextOffset, name: nameof(TextOffset));
-                    // TODO: Parse text at offset
+                    TextOffsetOffset = s.Serialize<short>(TextOffsetOffset, name: nameof(TextOffsetOffset));
+                    // Why does the game have an offset to an offset?? Seems to always be 1.
+                    s.DoAt(Offset + TextOffsetOffset * 4, () => 
+                        TextOffset = s.Serialize<int>(TextOffset, name: nameof(TextOffset)));
+                    s.DoAt(Offset + TextOffsetOffset * 4 + TextOffset * 4, () => 
+                        TextCommands = s.SerializeObjectArrayUntil(TextCommands, x => x.Command == CutsceneTextCommand.CommandType.End, name: nameof(TextCommands)));
                     break;
 
                 case CommandType.CMD_00_11:
@@ -382,7 +388,6 @@ namespace BinarySerializer.Klonoa.KH
                     Arg2_Short = s.Serialize<short>(Arg2_Short, name: nameof(Arg2_Short));
                     break;
 
-                // TODO: Continue down here
                 case CommandType.CMD_01_55:
                 case CommandType.CMD_01_56:
                     Arg1_Short = s.Serialize<short>(Arg1_Short, name: nameof(Arg1_Short));
