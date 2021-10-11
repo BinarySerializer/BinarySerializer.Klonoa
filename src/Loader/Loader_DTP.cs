@@ -396,11 +396,7 @@ namespace BinarySerializer.Klonoa
             s.Goto(cmd.FILE_Pointer);
 
             // Serialize the file
-            var file = s.SerializeObject<T>(null, x =>
-            {
-                x.Pre_FileSize = cmd.FILE_Length;
-                x.Pre_IsCompressed = false;
-            }, name: $"BIN_File_{BINBlock}_{fileIndex}");
+            var file = s.SerializeObject<T>(null, x => x.Pre_FileSize = cmd.FILE_Length, name: $"BIN_File_{BINBlock}_{fileIndex}");
 
             // Store the loaded file
             LoadedFiles[BINBlock][fileIndex] = file;

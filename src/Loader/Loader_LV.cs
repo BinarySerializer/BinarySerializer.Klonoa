@@ -141,11 +141,7 @@ namespace BinarySerializer.Klonoa
             }
 
             // Serialize the file
-            var file = s.SerializeObject<T>(null, x =>
-            {
-                x.Pre_FileSize = length;
-                x.Pre_IsCompressed = false;
-            }, name: $"{bin}_{fileIndex}");
+            var file = s.SerializeObject<T>(null, x => x.Pre_FileSize = length, name: $"{bin}_{fileIndex}");
 
             // Return the file
             return file;

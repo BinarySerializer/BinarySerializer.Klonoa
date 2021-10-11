@@ -60,15 +60,14 @@ namespace BinarySerializer.Klonoa
             if (index >= OffsetTable.FilePointers.Length)
             {
                 s.LogWarning($"File {index} of requested type {typeof(T).Name} does not exist in archive at {Offset}");
-                return null;
+                return obj;
             }
 
             s.DoAt(OffsetTable.FilePointers[index], () =>
             {
                 var endPointer = GetFileEndPointer(index);
 
-                // TODO: Allow writing back the same object again
-                var file = s.SerializeObject<FileWrapper<T>>(default, x =>
+                var file = s.SerializeObject<FileWrapper<T>>(new FileWrapper<T>(obj), x =>
                 {
                     x.Pre_EndPointer = endPointer;
                     x.Pre_LogIfNotFullyParsed = logIfNotFullyParsed && !DisableNotFullySerializedWarning;
@@ -124,6 +123,9 @@ namespace BinarySerializer.Klonoa
         protected class FileWrapper<File> : BinarySerializable
             where File : BinarySerializable, new()
         {
+            public FileWrapper() { }
+            public FileWrapper(File fileData) => FileData = fileData;
+
             public Pointer Pre_EndPointer { get; set; }
             public bool Pre_LogIfNotFullyParsed { get; set; }
             public Action<File> Pre_OnPreSerialize { get; set; }
@@ -135,30 +137,31 @@ namespace BinarySerializer.Klonoa
             {
                 KlonoaSettings settings = s.Context.GetKlonoaSettings(throwIfNotFound: false);
 
-                bool isCompressed = false;
                 IStreamEncoder encoder = null;
 
-                // If a file encoder is specified we use it
+                // If the file is not null (we're serializing/writing the file after it has already been deserialized), then use the existing values
+                if (FileData is BaseFile file)
+                    encoder = file.Pre_FileEncoder;
+
+                // If a file encoder is specified we always use that
                 if (Pre_FileEncoder != null)
-                {
                     encoder = Pre_FileEncoder;
-                    isCompressed = true;
-                }
-                // If the game is DTP we check for the ULZ header. The game does this for certain files, while hard-coding it for others. For simplicity
-                // we do it everywhere as the ULZ header is never used unless it's compressed.
-                else if (settings?.Version == KlonoaGameVersion.DTP_Prototype_19970717 ||
-                    settings?.Version == KlonoaGameVersion.DTP)
+
+                // If the game is DTP we check for the ULZ header (unless the file has already been serialized).
+                // The game does this for certain files, while hard-coding it for others. For simplicity we do
+                // it everywhere as the ULZ header is never used unless it's compressed.
+                if (FileData == null && (settings?.Version == KlonoaGameVersion.DTP_Prototype_19970717 || 
+                                         settings?.Version == KlonoaGameVersion.DTP))
                 {
                     uint header = s.DoAt(s.CurrentPointer, () => s.Serialize<uint>(default, "HeaderCheck"));
-                    isCompressed = header == ULZEncoder.Header;
-                    encoder = new ULZEncoder();
+                    encoder = header == ULZEncoder.Header ? new ULZEncoder() : null;
                 }
 
-                s.DoEncodedIf(encoder, isCompressed, () =>
+                s.DoEncodedIf(encoder, encoder != null, () =>
                 {
                     long fileSize;
                     
-                    if (isCompressed)
+                    if (encoder != null)
                         fileSize = s.CurrentLength;
                     else
                         fileSize = Pre_EndPointer != null ? Pre_EndPointer - s.CurrentPointer : -1;
@@ -170,7 +173,7 @@ namespace BinarySerializer.Klonoa
                         if (x is BaseFile f)
                         {
                             f.Pre_FileSize = fileSize;
-                            f.Pre_IsCompressed = isCompressed;
+                            f.Pre_FileEncoder = encoder;
                         }
 
                         Pre_OnPreSerialize?.Invoke(x);
