@@ -3,8 +3,6 @@
     public class GraphicsTile : BinarySerializable
     {
         public int TileSetIndex { get; set; }
-
-        // TODO: Is this correct?
         public bool FlipX { get; set; }
         public bool FlipY { get; set; }
         public int PaletteIndex { get; set; }
