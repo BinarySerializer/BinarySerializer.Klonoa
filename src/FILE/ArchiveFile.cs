@@ -150,8 +150,8 @@ namespace BinarySerializer.Klonoa
                 // If the game is DTP we check for the ULZ header (unless the file has already been serialized).
                 // The game does this for certain files, while hard-coding it for others. For simplicity we do
                 // it everywhere as the ULZ header is never used unless it's compressed.
-                if (FileData == null && (settings?.Version == KlonoaGameVersion.DTP_Prototype_19970717 || 
-                                         settings?.Version == KlonoaGameVersion.DTP))
+                if (FileData == null && encoder == null && (settings?.Version == KlonoaGameVersion.DTP_Prototype_19970717 || 
+                                                            settings?.Version == KlonoaGameVersion.DTP))
                 {
                     uint header = s.DoAt(s.CurrentPointer, () => s.Serialize<uint>(default, "HeaderCheck"));
                     encoder = header == ULZEncoder.Header ? new ULZEncoder() : null;
@@ -204,7 +204,7 @@ namespace BinarySerializer.Klonoa
         where T : BinarySerializable, new()
     {
         public Action<T> Pre_OnPreSerializeAction { get; set; }
-        public IStreamEncoder Pre_FileEncoder { get; set; }
+        public IStreamEncoder Pre_ArchivedFilesEncoder { get; set; }
 
         /// <summary>
         /// The files
@@ -221,7 +221,7 @@ namespace BinarySerializer.Klonoa
             Files ??= new T[OffsetTable.FilesCount];
 
             for (int i = 0; i < Files.Length; i++)
-                Files[i] = SerializeFile<T>(s, Files[i], i, onPreSerialize: OnPreSerialize, fileEncoder: Pre_FileEncoder, name: $"{nameof(Files)}[{i}]");
+                Files[i] = SerializeFile<T>(s, Files[i], i, onPreSerialize: OnPreSerialize, fileEncoder: Pre_ArchivedFilesEncoder, name: $"{nameof(Files)}[{i}]");
         }
     }
 }
