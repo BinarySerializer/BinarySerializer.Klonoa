@@ -2,7 +2,7 @@ namespace BinarySerializer.Klonoa.LV {
     public class Model_ArchiveFile : ArchiveFile {
         public ModelGeometry_File ModelGeometry { get; set; }
         public ArchiveFile<GSTextures_File> ModelTextures { get; set; }
-        public ArchiveFile<ModelMorphTarget_File> ModelMorphTargets { get; set; }
+        public ModelMorphTargets_ArchiveFile ModelMorphTargets { get; set; }
         public ModelAnimData_ArchiveFile ModelAnimData { get; set; }
         public ModelDescriptor_File ModelDescriptor { get; set; } // Includes model name (3 characters long)
 
