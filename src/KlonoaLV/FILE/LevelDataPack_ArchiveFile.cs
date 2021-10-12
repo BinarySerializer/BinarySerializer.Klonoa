@@ -2,7 +2,7 @@
 {
     public class LevelDataPack_ArchiveFile : ArchiveFile
     {
-        public LevelCommonAssets_ArchiveFile BasicAssets { get; set; } 
+        public LevelCommonAssets_ArchiveFile LevelCommonAssets { get; set; } 
         public RawData_ArchiveFile Archive_1 { get; set; } // Contains geometry and textures for dream stones, not sure about the other files
         public ArchiveFile<RawData_ArchiveFile> Archive_2 { get; set; } // ? (seems like the number of archives inside this archive is equal to the number of level sectors)
         public LevelMiscAssets_ArchiveFile LevelMiscAssets { get; set; }
@@ -13,7 +13,7 @@
 
         protected override void SerializeFiles(SerializerObject s)
         {
-            BasicAssets = SerializeFile(s, BasicAssets, 0, name: nameof(BasicAssets));
+            LevelCommonAssets = SerializeFile(s, LevelCommonAssets, 0, name: nameof(LevelCommonAssets));
             Archive_1 = SerializeFile(s, Archive_1, 1, name: nameof(Archive_1));
             Archive_2 = SerializeFile(s, Archive_2, 2, name: nameof(Archive_2));
             LevelMiscAssets = SerializeFile(s, LevelMiscAssets, 3, name: nameof(LevelMiscAssets));
