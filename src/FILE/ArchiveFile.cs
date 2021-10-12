@@ -43,7 +43,8 @@ namespace BinarySerializer.Klonoa
         }
 
         /// <summary>
-        /// Serializes a file within in the archive
+        /// Serializes a file within the archive. If the file is not of type <see cref="BaseFile"/> then it will not retain the encoder information
+        /// (unless the encoder is explicitly set here using <see cref="fileEncoder"/>) which might be needed for writing the file.
         /// </summary>
         /// <typeparam name="T">The type of file to serialize. If the type is a <see cref="BaseFile"/> the pre_ values will be set.</typeparam>
         /// <param name="s">The serializer object</param>
