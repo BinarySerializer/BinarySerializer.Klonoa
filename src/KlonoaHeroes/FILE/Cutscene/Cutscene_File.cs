@@ -7,6 +7,8 @@
         public override void SerializeImpl(SerializerObject s)
         {
             Commands = s.SerializeObjectArrayUntil(Commands, x => x.Type == CutsceneCommand.CommandType.End_0 || x.Type == CutsceneCommand.CommandType.End_1, name: nameof(Commands));
+
+            s.Goto(Offset + Pre_FileSize);
         }
     }
 }
