@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace BinarySerializer.Klonoa
@@ -95,9 +96,26 @@ namespace BinarySerializer.Klonoa
         /// </summary>
         public void CalculateFileEndPointers()
         {
+            KlonoaSettings settings = Context.GetKlonoaSettings(false);
+            HashSet<KlonoaSettings.RelocatedFile> relocatedFiles = null;
+            settings?.RelocatedFiles?.TryGetValue(Offset, out relocatedFiles);
+
+            IEnumerable<Pointer> filePointers = OffsetTable.FilePointers.Where(x => x != null);
+
+            if (relocatedFiles != null)
+            {
+                // Replace any relocated pointer with their original pointer if it still exists, otherwise remove it. A relocated pointer
+                // can't be used to determine the size of the files.
+                filePointers = filePointers.Select(pointer =>
+                {
+                    KlonoaSettings.RelocatedFile r = relocatedFiles.FirstOrDefault(x => x.NewPointer == pointer);
+                    return r == null ? pointer : r.OriginalPointer;
+                }).Where(x => x != null);
+            }
+
             // Although they usually are the files don't have to be located in the order they're indexed in. Some archives for example
             // have "empty" files reference a dummy file with index 0 or 1.
-            Pointer[] sortedFilePointers = OffsetTable.FilePointers.Where(x => x != null).OrderBy(x => x.FileOffset).ToArray();
+            Pointer[] sortedFilePointers = filePointers.OrderBy(x => x.FileOffset).ToArray();
 
             _fileEndPointers = new Pointer[OffsetTable.FilesCount];
 
@@ -111,6 +129,22 @@ namespace BinarySerializer.Klonoa
                     continue;
                 }
 
+                // If the file has been relocated we get the specified file size
+                KlonoaSettings.RelocatedFile r = relocatedFiles?.FirstOrDefault(x => x.NewPointer == start);
+
+                if (r != null)
+                {
+                    uint size = r.FileSize;
+
+                    // Align
+                    if (size % 4 != 0)
+                        size += 4 - size % 4;
+
+                    _fileEndPointers[i] = start + size;
+                    continue;
+                }
+
+                // Try getting the end pointer by getting the pointer of the next file
                 Pointer end = sortedFilePointers.FirstOrDefault(x => x.FileOffset > start.FileOffset);
 
                 // If we found an end pointer we use that (i.e. this is not the last file)
