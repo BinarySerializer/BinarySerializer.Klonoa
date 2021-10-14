@@ -13,6 +13,11 @@ namespace BinarySerializer.Klonoa
         public static Dictionary<ArchiveFile, bool[]> ParsedArchiveFiles { get; } = new Dictionary<ArchiveFile, bool[]>();
 
         /// <summary>
+        /// The calculated file end pointers
+        /// </summary>
+        private Pointer[] _fileEndPointers;
+
+        /// <summary>
         /// The parsed files and their names, if any
         /// </summary>
         public (BinarySerializable, string)[] ParsedFiles { get; set; }
@@ -26,21 +31,8 @@ namespace BinarySerializer.Klonoa
         /// Gets the end pointer of the file of the specified index
         /// </summary>
         /// <param name="index">The index of the file</param>
-        /// <returns>The end pointer</returns>
-        public Pointer GetFileEndPointer(int index)
-        {
-            var start = OffsetTable.FilePointers[index];
-            var end = OffsetTable.FilePointers.Where(x => x != null).OrderBy(x => x.FileOffset).FirstOrDefault(x => x.FileOffset > start.FileOffset);
-
-            if (end != null) 
-                return end;
-            
-            // If we don't have a file size of the archive we can't determine the file size of the last file
-            if (Pre_FileSize == -1)
-                return null;
-
-            return OffsetTable.Offset + Pre_FileSize;
-        }
+        /// <returns>The end pointer, or null if it could not be determined</returns>
+        public Pointer GetFileEndPointer(int index) => _fileEndPointers[index];
 
         /// <summary>
         /// Serializes a file within the archive. If the file is not of type <see cref="BaseFile"/> then it will not retain the encoder information
@@ -97,6 +89,42 @@ namespace BinarySerializer.Klonoa
             ParsedArchiveFiles[this][index] = true;
         }
 
+        /// <summary>
+        /// Calculates the end pointers for each file in the archive. This updates what is returned by <see cref="GetFileEndPointer"/> and is used
+        /// to determine the file sizes. Only call this if a file size has been changed or the offset table has been modified.
+        /// </summary>
+        public void CalculateFileEndPointers()
+        {
+            // Although they usually are the files don't have to be located in the order they're indexed in. Some archives for example
+            // have "empty" files reference a dummy file with index 0 or 1.
+            Pointer[] sortedFilePointers = OffsetTable.FilePointers.Where(x => x != null).OrderBy(x => x.FileOffset).ToArray();
+
+            _fileEndPointers = new Pointer[OffsetTable.FilesCount];
+
+            for (int i = 0; i < OffsetTable.FilesCount; i++)
+            {
+                Pointer start = OffsetTable.FilePointers[i];
+
+                if (start == null)
+                {
+                    _fileEndPointers[i] = null;
+                    continue;
+                }
+
+                Pointer end = sortedFilePointers.FirstOrDefault(x => x.FileOffset > start.FileOffset);
+
+                // If we found an end pointer we use that (i.e. this is not the last file)
+                if (end != null)
+                    _fileEndPointers[i] = end;
+                // If we have a file size of the archive we can use that to determine the size of the last file
+                else if (Pre_FileSize != -1)
+                    _fileEndPointers[i] = OffsetTable.Offset + Pre_FileSize;
+                // If we don't have a file size of the archive we can't determine the file size of the last file
+                else
+                    _fileEndPointers[i] = null;
+            }
+        }
+
         public override void SerializeImpl(SerializerObject s)
         {
             // Serialize the offset table
@@ -106,6 +134,8 @@ namespace BinarySerializer.Klonoa
 
             if (AddToParsedArchiveFiles)
                 ParsedArchiveFiles[this] = new bool[OffsetTable.FilesCount];
+
+            CalculateFileEndPointers();
 
             // Serialize the files
             SerializeFiles(s);
