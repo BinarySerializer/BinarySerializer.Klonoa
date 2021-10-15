@@ -18,6 +18,8 @@ namespace BinarySerializer.Klonoa
         /// </summary>
         private Pointer[] _fileEndPointers;
 
+        public ArchiveFileType Pre_Type { get; set; }
+
         /// <summary>
         /// The parsed files and their names, if any
         /// </summary>
@@ -96,6 +98,13 @@ namespace BinarySerializer.Klonoa
         /// </summary>
         public void CalculateFileEndPointers()
         {
+            if (Pre_Type == ArchiveFileType.KH_PF)
+            {
+                _fileEndPointers = Enumerable.Range(0, OffsetTable.FilesCount).Select(i => OffsetTable.FilePointers[i] + OffsetTable.KH_PF_FileSizes[i]).ToArray();
+
+                return;
+            }
+
             KlonoaSettings settings = Context.GetKlonoaSettings(false);
             HashSet<KlonoaSettings.RelocatedFile> relocatedFiles = null;
             settings?.RelocatedFiles?.TryGetValue(Offset, out relocatedFiles);
@@ -162,7 +171,7 @@ namespace BinarySerializer.Klonoa
         public override void SerializeImpl(SerializerObject s)
         {
             // Serialize the offset table
-            OffsetTable = s.SerializeObject<OffsetTable>(OffsetTable, name: nameof(OffsetTable));
+            OffsetTable = s.SerializeObject<OffsetTable>(OffsetTable, x => x.Pre_Type = Pre_Type, name: nameof(OffsetTable));
 
             ParsedFiles = new (BinarySerializable, string)[OffsetTable.FilesCount];
 
