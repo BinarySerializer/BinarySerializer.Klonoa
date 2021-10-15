@@ -1,5 +1,6 @@
 ﻿namespace BinarySerializer.Klonoa.KH
 {
+    // Most raw data files here are ushort arrays. Palette animations?
     public class UIPack_ArchiveFile : ArchiveFile
     {
         public Graphics_File File_0 { get; set; }
@@ -21,7 +22,65 @@
         public Graphics_File Font_1 { get; set; }
         public Graphics_File Font_2 { get; set; }
         public ArchiveFile<ArchiveFile<ArchiveFile<Graphics_File>>> File_18 { get; set; }
-        public RawData_File[] UnknownFiles { get; set; } // TODO: Parse these correctly. Mostly graphics.
+        public ArchiveFile<ArchiveFile<Graphics_File>> File_19 { get; set; }
+        public Graphics_File File_20 { get; set; }
+        public Graphics_File File_21 { get; set; }
+        public ArchiveFile<Graphics_File> File_22 { get; set; }
+        public Graphics_File File_23 { get; set; }
+        public ArchiveFile<ArchiveFile<ArchiveFile<Graphics_File>>> File_24 { get; set; }
+        public ArchiveFile<ArchiveFile<Graphics_File>> File_25 { get; set; }
+        public ArchiveFile<ArchiveFile<Graphics_File>> File_26 { get; set; }
+        public ArchiveFile<ArchiveFile<Graphics_File>> File_27 { get; set; }
+        public ArchiveFile<Graphics_File> File_28 { get; set; }
+        public ArchiveFile<Graphics_File> File_29 { get; set; }
+        public ArchiveFile<Graphics_File> File_30 { get; set; }
+        public Graphics_File File_31 { get; set; }
+        public Graphics_File File_32 { get; set; }
+        public Graphics_File File_33 { get; set; }
+        public Graphics_File File_34 { get; set; }
+        public Graphics_File File_35 { get; set; }
+        public Graphics_File File_36 { get; set; }
+        public Graphics_File File_37 { get; set; }
+        public Graphics_File File_38 { get; set; }
+        public Graphics_File File_39 { get; set; }
+        public Graphics_File File_40 { get; set; }
+        public Graphics_File File_41 { get; set; }
+        public RawData_File File_42 { get; set; }
+        public ArchiveFile<Graphics_File> File_43 { get; set; }
+        public ArchiveFile<Graphics_File> File_44 { get; set; }
+        public ArchiveFile<Graphics_File> File_45 { get; set; }
+        public ArchiveFile<Graphics_File> File_46 { get; set; }
+        public ArchiveFile<Graphics_File> File_47 { get; set; }
+        public Graphics_File File_48 { get; set; }
+        public Graphics_File File_49 { get; set; }
+        public Graphics_File File_50 { get; set; }
+        public Graphics_File File_51 { get; set; }
+        public Graphics_File File_52 { get; set; }
+        public Graphics_File File_53 { get; set; }
+        public Graphics_File File_54 { get; set; }
+        public Graphics_File File_55 { get; set; }
+        public Graphics_File File_56 { get; set; }
+        public Graphics_File File_57 { get; set; }
+        public Graphics_File File_58 { get; set; }
+        public Graphics_File File_59 { get; set; }
+        public Graphics_File File_60 { get; set; }
+        public Graphics_File File_61 { get; set; }
+        public Graphics_File File_62 { get; set; }
+        public RawData_File File_63 { get; set; }
+        public RawData_File File_64 { get; set; }
+        public RawData_File File_65 { get; set; }
+        public RawData_File File_66 { get; set; }
+        public RawData_File File_67 { get; set; }
+        public RawData_File File_68 { get; set; }
+        public RawData_File File_69 { get; set; }
+        public RawData_File File_70 { get; set; }
+        public RawData_File File_71 { get; set; }
+        public RawData_File File_72 { get; set; }
+        public ArchiveFile<Graphics_File> File_73 { get; set; }
+        public ArchiveFile<Graphics_File> File_74 { get; set; }
+        public ArchiveFile<Graphics_File> File_75 { get; set; }
+        public UIPack_File76_ArchiveFile File_76 { get; set; }
+        public UIPack_File77_ArchiveFile File_77 { get; set; }
 
         protected override void SerializeFiles(SerializerObject s)
         {
@@ -44,13 +103,65 @@
             Font_1 = SerializeFile<Graphics_File>(s, Font_1, 16, name: nameof(Font_1));
             Font_2 = SerializeFile<Graphics_File>(s, Font_2, 17, name: nameof(Font_2));
             File_18 = SerializeFile<ArchiveFile<ArchiveFile<ArchiveFile<Graphics_File>>>>(s, File_18, 18, name: nameof(File_18));
-
-            const int parsedCount = 19;
-
-            UnknownFiles ??= new RawData_File[OffsetTable.FilesCount - parsedCount];
-
-            for (int i = 0; i < OffsetTable.FilesCount - parsedCount; i++)
-                UnknownFiles[i] = SerializeFile<RawData_File>(s, UnknownFiles[i], i + parsedCount, name: $"{nameof(UnknownFiles)}[{i}]");
+            File_19 = SerializeFile<ArchiveFile<ArchiveFile<Graphics_File>>>(s, File_19, 19, name: nameof(File_19));
+            File_20 = SerializeFile<Graphics_File>(s, File_20, 20, name: nameof(File_20));
+            File_21 = SerializeFile<Graphics_File>(s, File_21, 21, name: nameof(File_21));
+            File_22 = SerializeFile<ArchiveFile<Graphics_File>>(s, File_22, 22, name: nameof(File_22));
+            File_23 = SerializeFile<Graphics_File>(s, File_23, 23, name: nameof(File_23));
+            File_24 = SerializeFile<ArchiveFile<ArchiveFile<ArchiveFile<Graphics_File>>>>(s, File_24, 24, name: nameof(File_24));
+            File_25 = SerializeFile<ArchiveFile<ArchiveFile<Graphics_File>>>(s, File_25, 25, name: nameof(File_25));
+            File_26 = SerializeFile<ArchiveFile<ArchiveFile<Graphics_File>>>(s, File_26, 26, name: nameof(File_26));
+            File_27 = SerializeFile<ArchiveFile<ArchiveFile<Graphics_File>>>(s, File_27, 27, name: nameof(File_27));
+            File_28 = SerializeFile<ArchiveFile<Graphics_File>>(s, File_28, 28, name: nameof(File_28));
+            File_29 = SerializeFile<ArchiveFile<Graphics_File>>(s, File_29, 29, name: nameof(File_29));
+            File_30 = SerializeFile<ArchiveFile<Graphics_File>>(s, File_30, 30, name: nameof(File_30));
+            File_31 = SerializeFile<Graphics_File>(s, File_31, 31, name: nameof(File_31));
+            File_32 = SerializeFile<Graphics_File>(s, File_32, 32, name: nameof(File_32));
+            File_33 = SerializeFile<Graphics_File>(s, File_33, 33, name: nameof(File_33));
+            File_34 = SerializeFile<Graphics_File>(s, File_34, 34, name: nameof(File_34));
+            File_35 = SerializeFile<Graphics_File>(s, File_35, 35, name: nameof(File_35));
+            File_36 = SerializeFile<Graphics_File>(s, File_36, 36, name: nameof(File_36));
+            File_37 = SerializeFile<Graphics_File>(s, File_37, 37, name: nameof(File_37));
+            File_38 = SerializeFile<Graphics_File>(s, File_38, 38, name: nameof(File_38));
+            File_39 = SerializeFile<Graphics_File>(s, File_39, 39, name: nameof(File_39));
+            File_40 = SerializeFile<Graphics_File>(s, File_40, 40, name: nameof(File_40));
+            File_41 = SerializeFile<Graphics_File>(s, File_41, 41, name: nameof(File_41));
+            File_42 = SerializeFile<RawData_File>(s, File_42, 42, name: nameof(File_42));
+            File_43 = SerializeFile<ArchiveFile<Graphics_File>>(s, File_43, 43, name: nameof(File_43));
+            File_44 = SerializeFile<ArchiveFile<Graphics_File>>(s, File_44, 44, name: nameof(File_44));
+            File_45 = SerializeFile<ArchiveFile<Graphics_File>>(s, File_45, 45, name: nameof(File_45));
+            File_46 = SerializeFile<ArchiveFile<Graphics_File>>(s, File_46, 46, name: nameof(File_46));
+            File_47 = SerializeFile<ArchiveFile<Graphics_File>>(s, File_47, 47, name: nameof(File_47));
+            File_48 = SerializeFile<Graphics_File>(s, File_48, 48, name: nameof(File_48));
+            File_49 = SerializeFile<Graphics_File>(s, File_49, 49, name: nameof(File_49));
+            File_50 = SerializeFile<Graphics_File>(s, File_50, 50, name: nameof(File_50));
+            File_51 = SerializeFile<Graphics_File>(s, File_51, 51, name: nameof(File_51));
+            File_52 = SerializeFile<Graphics_File>(s, File_52, 52, name: nameof(File_52));
+            File_53 = SerializeFile<Graphics_File>(s, File_53, 53, name: nameof(File_53));
+            File_54 = SerializeFile<Graphics_File>(s, File_54, 54, name: nameof(File_54));
+            File_55 = SerializeFile<Graphics_File>(s, File_55, 55, name: nameof(File_55));
+            File_56 = SerializeFile<Graphics_File>(s, File_56, 56, name: nameof(File_56));
+            File_57 = SerializeFile<Graphics_File>(s, File_57, 57, name: nameof(File_57));
+            File_58 = SerializeFile<Graphics_File>(s, File_58, 58, name: nameof(File_58));
+            File_59 = SerializeFile<Graphics_File>(s, File_59, 59, name: nameof(File_59));
+            File_60 = SerializeFile<Graphics_File>(s, File_60, 60, name: nameof(File_60));
+            File_61 = SerializeFile<Graphics_File>(s, File_61, 61, name: nameof(File_61));
+            File_62 = SerializeFile<Graphics_File>(s, File_62, 62, name: nameof(File_62));
+            File_63 = SerializeFile<RawData_File>(s, File_63, 63, name: nameof(File_63));
+            File_64 = SerializeFile<RawData_File>(s, File_64, 64, name: nameof(File_64));
+            File_65 = SerializeFile<RawData_File>(s, File_65, 65, name: nameof(File_65));
+            File_66 = SerializeFile<RawData_File>(s, File_66, 66, name: nameof(File_66));
+            File_67 = SerializeFile<RawData_File>(s, File_67, 67, name: nameof(File_67));
+            File_68 = SerializeFile<RawData_File>(s, File_68, 68, name: nameof(File_68));
+            File_69 = SerializeFile<RawData_File>(s, File_69, 69, name: nameof(File_69));
+            File_70 = SerializeFile<RawData_File>(s, File_70, 70, name: nameof(File_70));
+            File_71 = SerializeFile<RawData_File>(s, File_71, 71, name: nameof(File_71));
+            File_72 = SerializeFile<RawData_File>(s, File_72, 72, name: nameof(File_72));
+            File_73 = SerializeFile<ArchiveFile<Graphics_File>>(s, File_73, 73, name: nameof(File_73));
+            File_74 = SerializeFile<ArchiveFile<Graphics_File>>(s, File_74, 74, name: nameof(File_74));
+            File_75 = SerializeFile<ArchiveFile<Graphics_File>>(s, File_75, 75, name: nameof(File_75));
+            File_76 = SerializeFile<UIPack_File76_ArchiveFile>(s, File_76, 76, name: nameof(File_76));
+            File_77 = SerializeFile<UIPack_File77_ArchiveFile>(s, File_77, 77, name: nameof(File_77));
         }
     }
 }
