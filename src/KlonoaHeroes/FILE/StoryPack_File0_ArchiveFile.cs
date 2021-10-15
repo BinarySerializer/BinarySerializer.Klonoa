@@ -15,7 +15,7 @@
 
                 for (int j = 0; j < Files[i].Length; j++)
                 {
-                    Files[i][j] = SerializeFile<Graphics_File>(s, Files[i][j], i * 3 + j, fileEncoder: new MM_KH_Encoder(), name: $"{nameof(Files)}[{i}][{j}]");
+                    Files[i][j] = SerializeFile<Graphics_File>(s, Files[i][j], i * 3 + j, fileEncoder: new BytePairEncoder(), name: $"{nameof(Files)}[{i}][{j}]");
                 }
             }
         }

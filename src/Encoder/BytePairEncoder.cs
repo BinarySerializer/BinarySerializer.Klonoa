@@ -7,9 +7,9 @@ namespace BinarySerializer.Klonoa.KH
     /// <summary>
     /// Encoder for compressed data in Moonlight Museum and Heroes
     /// </summary>
-    public class MM_KH_Encoder : IStreamEncoder
+    public class BytePairEncoder : IStreamEncoder
     {
-        public string Name => nameof(MM_KH_Encoder);
+        public string Name => nameof(BytePairEncoder);
 
         // Decompressed at 0x0804E428 in the ROM
         public Stream DecodeStream(Stream s)

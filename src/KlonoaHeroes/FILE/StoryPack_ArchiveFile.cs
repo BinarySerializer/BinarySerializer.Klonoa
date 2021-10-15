@@ -3,13 +3,13 @@
     public class StoryPack_ArchiveFile : ArchiveFile
     {
         public StoryPack_File0_ArchiveFile Backgrounds { get; set; }
-        public MM_KH_Compressed_ArchiveFile<Graphics_File> Vignettes { get; set; }
+        public BytePairEncoded_ArchiveFile<Graphics_File> Vignettes { get; set; }
         public ArchiveFile<ArchiveFile<Graphics_File>> CharacterPortraits_0 { get; set; }
         public ArchiveFile<ArchiveFile<ArchiveFile<Cutscene_File>>> Cutscenes_0 { get; set; }
         public ArchiveFile<Graphics_File> TextGraphics_0 { get; set; }
         public Graphics_File TextBox { get; set; }
-        public MM_KH_Compressed_ArchiveFile<Graphics_File> TextGraphics_1 { get; set; }
-        public MM_KH_Compressed_ArchiveFile<Graphics_File> FullscreenVignettes { get; set; }
+        public BytePairEncoded_ArchiveFile<Graphics_File> TextGraphics_1 { get; set; }
+        public BytePairEncoded_ArchiveFile<Graphics_File> FullscreenVignettes { get; set; }
         public Graphics_File TextBoxPrompt { get; set; }
         public ArchiveFile<ArchiveFile<Graphics_File>> CharacterPortraits_1 { get; set; }
         public ArchiveFile<RawData_ArchiveFile> File_10 { get; set; }
@@ -28,13 +28,13 @@
         protected override void SerializeFiles(SerializerObject s)
         {
             Backgrounds = SerializeFile<StoryPack_File0_ArchiveFile>(s, Backgrounds, 0, name: nameof(Backgrounds));
-            Vignettes = SerializeFile<MM_KH_Compressed_ArchiveFile<Graphics_File>>(s, Vignettes, 1, name: nameof(Vignettes));
+            Vignettes = SerializeFile<BytePairEncoded_ArchiveFile<Graphics_File>>(s, Vignettes, 1, name: nameof(Vignettes));
             CharacterPortraits_0 = SerializeFile<ArchiveFile<ArchiveFile<Graphics_File>>>(s, CharacterPortraits_0, 2, name: nameof(CharacterPortraits_0));
             Cutscenes_0 = SerializeFile<ArchiveFile<ArchiveFile<ArchiveFile<Cutscene_File>>>>(s, Cutscenes_0, 3, name: nameof(Cutscenes_0));
             TextGraphics_0 = SerializeFile<ArchiveFile<Graphics_File>>(s, TextGraphics_0, 4, name: nameof(TextGraphics_0));
             TextBox = SerializeFile<Graphics_File>(s, TextBox, 5, name: nameof(TextBox));
-            TextGraphics_1 = SerializeFile<MM_KH_Compressed_ArchiveFile<Graphics_File>>(s, TextGraphics_1, 6, name: nameof(TextGraphics_1));
-            FullscreenVignettes = SerializeFile<MM_KH_Compressed_ArchiveFile<Graphics_File>>(s, FullscreenVignettes, 7, name: nameof(FullscreenVignettes));
+            TextGraphics_1 = SerializeFile<BytePairEncoded_ArchiveFile<Graphics_File>>(s, TextGraphics_1, 6, name: nameof(TextGraphics_1));
+            FullscreenVignettes = SerializeFile<BytePairEncoded_ArchiveFile<Graphics_File>>(s, FullscreenVignettes, 7, name: nameof(FullscreenVignettes));
             TextBoxPrompt = SerializeFile<Graphics_File>(s, TextBoxPrompt, 8, name: nameof(TextBoxPrompt));
             CharacterPortraits_1 = SerializeFile<ArchiveFile<ArchiveFile<Graphics_File>>>(s, CharacterPortraits_1, 9, name: nameof(CharacterPortraits_1));
             File_10 = SerializeFile<ArchiveFile<RawData_ArchiveFile>>(s, File_10, 10, name: nameof(File_10));
