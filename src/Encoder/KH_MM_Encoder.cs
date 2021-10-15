@@ -132,13 +132,51 @@ namespace BinarySerializer.Klonoa.KH
             // Set position back to 0
             decompressedStream.Position = 0;
 
-            // Return the compressed data stream
+            // Return the decompressed data stream
             return decompressedStream;
         }
 
+        // TODO: Implement proper decompression by checking for repeating byte pairs and unused bytes. The current implementation simply adds a proper
+        // header so the game will recognize the data, but it will take up more space than the decompressed data takes up this way which isn't good
         public Stream EncodeStream(Stream s)
         {
-            throw new NotImplementedException();
+            long initialPosition = s.Position;
+            long decompressedSize = s.Length - initialPosition;
+
+            // Create a stream to store the compressed data
+            var compressedStream = new MemoryStream();
+
+            var writer = new Writer(compressedStream, isLittleEndian: false, leaveOpen: true);
+
+            // Skip the header for now (we write that last)
+            compressedStream.Position += 8;
+
+            // Empty translation table
+            writer.Write((byte)255); // 255 - 128 = 128
+            writer.Write((byte)128); // 128 == 128
+            writer.Write((byte)254); // 254 - 128 = 127, 128 + 1 + 127 = 256
+
+            // TODO: Support bigger data by looping multiple times
+            if (decompressedSize > UInt16.MaxValue)
+                throw new Exception($"Data bigger than 0xFFFF bytes is currently not supported");
+
+            // Data size
+            writer.Write((ushort)decompressedSize);
+
+            // Copy the data. Since the translation table is empty we leave it as is.
+            s.CopyTo(compressedStream);
+
+            // Write the header
+            compressedStream.Position = 0;
+            writer.IsLittleEndian = true;
+            writer.Write((uint)compressedStream.Length); // Compressed size
+            writer.Write((uint)decompressedSize); // Decompressed size
+
+            // Set position back to 0
+            compressedStream.Position = 0;
+
+            // Return the compressed data stream
+            return compressedStream;
         }
     }
 }
