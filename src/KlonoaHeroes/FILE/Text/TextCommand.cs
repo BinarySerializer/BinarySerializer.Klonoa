@@ -1,6 +1,6 @@
 ﻿namespace BinarySerializer.Klonoa.KH
 {
-    public class CutsceneTextCommand : BinarySerializable
+    public class TextCommand : BinarySerializable
     {
         public bool IsCommand => FontIndex < 0;
 

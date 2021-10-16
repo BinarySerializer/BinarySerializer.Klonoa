@@ -38,7 +38,7 @@ namespace BinarySerializer.Klonoa.KH
         // Text
         public short TextOffsetOffset { get; set; } // Value * 4
         public int TextOffset { get; set; } // Value * 4
-        public CutsceneTextCommand[] TextCommands { get; set; }
+        public TextCommands TextCommands { get; set; }
 
         // Sub-function
         public CutsceneCommand[] SubCommands { get; set; }
@@ -109,8 +109,8 @@ namespace BinarySerializer.Klonoa.KH
                     // Why does the game have an offset to an offset?? Seems to always be 1.
                     s.DoAt(Offset + TextOffsetOffset * 4, () => 
                         TextOffset = s.Serialize<int>(TextOffset, name: nameof(TextOffset)));
-                    s.DoAt(Offset + TextOffsetOffset * 4 + TextOffset * 4, () => 
-                        TextCommands = s.SerializeObjectArrayUntil(TextCommands, x => x.Command == CutsceneTextCommand.CommandType.End, name: nameof(TextCommands)));
+                    s.DoAt(Offset + TextOffsetOffset * 4 + TextOffset * 4, () =>
+                        TextCommands = s.SerializeObject<TextCommands>(TextCommands, name: nameof(TextCommands)));
                     break;
 
                 case CommandType.CMD_00_11:
