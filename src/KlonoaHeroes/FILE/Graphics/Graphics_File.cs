@@ -24,7 +24,7 @@
             Magic = s.SerializeString(Magic, 2, name: nameof(Magic));
 
             if (Magic != "CT")
-                throw new BinarySerializableException(this, $"Invalid Magic '{Magic}'");
+                throw new BinarySerializableException(this, $"Invalid magic header '{Magic}'");
 
             TileMapWidth = s.Serialize<ushort>(TileMapWidth, name: nameof(TileMapWidth));
             TileMapHeight = s.Serialize<ushort>(TileMapHeight, name: nameof(TileMapHeight));

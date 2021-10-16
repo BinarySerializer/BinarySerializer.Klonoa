@@ -11,7 +11,7 @@
         public Graphics_File File_6 { get; set; }
         public Graphics_File File_7 { get; set; }
         public Graphics_File File_8 { get; set; }
-        public RawData_File File_9 { get; set; } // TODO: What is this? Magic seems to be AN. Has palette at the end.
+        public Animation_File File_9 { get; set; }
         public Graphics_File File_10 { get; set; }
         public TextCommands File_11 { get; set; }
         public TextCommands File_12 { get; set; }
@@ -28,7 +28,7 @@
             File_6 = SerializeFile<Graphics_File>(s, File_6, 6, fileEncoder: new BytePairEncoder(), name: nameof(File_6));
             File_7 = SerializeFile<Graphics_File>(s, File_7, 7, fileEncoder: new BytePairEncoder(), name: nameof(File_7));
             File_8 = SerializeFile<Graphics_File>(s, File_8, 8, fileEncoder: new BytePairEncoder(), name: nameof(File_8));
-            File_9 = SerializeFile<RawData_File>(s, File_9, 9, name: nameof(File_9));
+            File_9 = SerializeFile<Animation_File>(s, File_9, 9, name: nameof(File_9));
             File_10 = SerializeFile<Graphics_File>(s, File_10, 10, name: nameof(File_10));
             File_11 = SerializeFile<TextCommands>(s, File_11, 11, name: nameof(File_11));
             File_12 = SerializeFile<TextCommands>(s, File_12, 12, name: nameof(File_12));
