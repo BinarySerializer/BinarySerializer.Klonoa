@@ -16,7 +16,7 @@
         public Graphics_File File_11 { get; set; }
         public Graphics_File File_12 { get; set; }
         public Graphics_File File_13 { get; set; }
-        public RawData_File File_14 { get; set; }
+        public TextCommands File_14 { get; set; }
 
         protected override void SerializeFiles(SerializerObject s)
         {
@@ -34,7 +34,7 @@
             File_11 = SerializeFile<Graphics_File>(s, File_11, 11, name: nameof(File_11));
             File_12 = SerializeFile<Graphics_File>(s, File_12, 12, name: nameof(File_12));
             File_13 = SerializeFile<Graphics_File>(s, File_13, 13, name: nameof(File_13));
-            File_14 = SerializeFile<RawData_File>(s, File_14, 14, name: nameof(File_14));
+            File_14 = SerializeFile<TextCommands>(s, File_14, 14, name: nameof(File_14));
         }
     }
 }
