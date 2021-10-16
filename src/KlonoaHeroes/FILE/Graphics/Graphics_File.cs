@@ -22,6 +22,10 @@
         public override void SerializeImpl(SerializerObject s)
         {
             Magic = s.SerializeString(Magic, 2, name: nameof(Magic));
+
+            if (Magic != "CT")
+                throw new BinarySerializableException(this, $"Invalid Magic '{Magic}'");
+
             TileMapWidth = s.Serialize<ushort>(TileMapWidth, name: nameof(TileMapWidth));
             TileMapHeight = s.Serialize<ushort>(TileMapHeight, name: nameof(TileMapHeight));
             BPP = s.Serialize<byte>(BPP, name: nameof(BPP));
