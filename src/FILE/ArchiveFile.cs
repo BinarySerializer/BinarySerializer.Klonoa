@@ -69,6 +69,7 @@ namespace BinarySerializer.Klonoa
                     x.Pre_LogIfNotFullyParsed = logIfNotFullyParsed && !DisableNotFullySerializedWarning;
                     x.Pre_OnPreSerialize = onPreSerialize;
                     x.Pre_FileEncoder = fileEncoder;
+                    x.Pre_ParentArchiveType = Pre_Type;
                 }, name: name);
 
                 obj = file.FileData;
@@ -204,6 +205,7 @@ namespace BinarySerializer.Klonoa
             public bool Pre_LogIfNotFullyParsed { get; set; }
             public Action<File> Pre_OnPreSerialize { get; set; }
             public IStreamEncoder Pre_FileEncoder { get; set; }
+            public ArchiveFileType Pre_ParentArchiveType { get; set; }
 
             public File FileData { get; set; }
 
@@ -249,6 +251,10 @@ namespace BinarySerializer.Klonoa
                             f.Pre_FileSize = fileSize;
                             f.Pre_FileEncoder = encoder;
                         }
+
+                        // Default to inheriting the file type from the parent archive
+                        if (x is ArchiveFile a)
+                            a.Pre_Type = Pre_ParentArchiveType;
 
                         Pre_OnPreSerialize?.Invoke(x);
                     }, name: nameof(FileData));
