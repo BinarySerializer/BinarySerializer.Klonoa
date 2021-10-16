@@ -1,6 +1,6 @@
 ﻿namespace BinarySerializer.Klonoa.KH
 {
-    public class UnknownPack : PF_ArchiveFile
+    public class UnknownPack_ArchiveFile : PF_ArchiveFile
     {
         public Graphics_File File_0 { get; set; }
         public ArchiveFile<Graphics_File> File_1 { get; set; }
