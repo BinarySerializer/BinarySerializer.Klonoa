@@ -260,10 +260,14 @@ namespace BinarySerializer.Klonoa
                     }, name: nameof(FileData));
                 }, allowLocalPointers: true);
 
-                if (settings?.Version == KlonoaGameVersion.LV)
-                    s.Align(alignBytes: 16);
-                else
-                    s.Align(alignBytes: 4);
+                // Only align if not at the end. If a size is defined for a compressed block it might not be aligned.
+                if (s.CurrentPointer != Pre_EndPointer)
+                {
+                    if (settings?.Version == KlonoaGameVersion.LV)
+                        s.Align(alignBytes: 16);
+                    else
+                        s.Align(alignBytes: 4);
+                }
 
                 if (Pre_LogIfNotFullyParsed && 
                     s.CurrentPointer != Pre_EndPointer && 
