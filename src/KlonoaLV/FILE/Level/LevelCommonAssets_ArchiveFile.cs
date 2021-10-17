@@ -1,5 +1,7 @@
-namespace BinarySerializer.Klonoa.LV {
-    public class LevelCommonAssets_ArchiveFile : ArchiveFile {
+namespace BinarySerializer.Klonoa.LV
+{
+    public class LevelCommonAssets_ArchiveFile : ArchiveFile
+    {
         public LevelSectors_ArchiveFile LevelSectors;
         public LevelModels_ArchiveFile LevelModels;
         public RawData_ArchiveFile Archive_2; // Contains video files (PS2 .ipu) for things like water, as well as some other files with float values

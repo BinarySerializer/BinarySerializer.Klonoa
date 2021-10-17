@@ -2,6 +2,8 @@ using System.Collections.Generic;
 
 namespace BinarySerializer.Klonoa.LV {
     public class ModelMorphTargets_ArchiveFile : ArchiveFile {
+        public ModelMesh[] Pre_Meshes { get; set; }
+
         public ModelMorphTarget_File[] ModelMorphTargets { get; set; }
 
         protected override void SerializeFiles(SerializerObject s)
@@ -15,7 +17,7 @@ namespace BinarySerializer.Klonoa.LV {
                     if ((i != OffsetTable.FilesCount - 1 ? OffsetTable.FilePointers[i + 1].SerializedOffset : Pre_FileSize) - OffsetTable.FilePointers[i].SerializedOffset == 0x10)
                         continue;
                     
-                    ModelMorphTargets[i] = SerializeFile(s, ModelMorphTargets[i], i, name: $"{nameof(ModelMorphTargets)}[{i}]");
+                    ModelMorphTargets[i] = SerializeFile(s, ModelMorphTargets[i], i, onPreSerialize: x => x.Pre_Meshes = Pre_Meshes, name: $"{nameof(ModelMorphTargets)}[{i}]");
                 }
             }
             

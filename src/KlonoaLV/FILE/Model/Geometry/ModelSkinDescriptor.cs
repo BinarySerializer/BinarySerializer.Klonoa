@@ -19,7 +19,7 @@ namespace BinarySerializer.Klonoa.LV
         public Pointer NormalsPointer { get; set; } // Uses normals pointer from the mesh as the anchor pointer
         public Pointer WeightsPointer_2 { get; set; } // Seems like it points to another set of weights that's the exact same as the vertex weights...? (normal weights????)
         public KlonoaLV_Vector16[] Vertices { get; set; }
-        public ModelVertexWeight[] VertexWeights; // Weights of the joint influences for each vertex
+        public ModelVertexWeight[] VertexWeights { get; set; } // Weights of the joint influences for each vertex
         public KlonoaLV_Vector16[] Normals { get; set; }
 
         public override void SerializeImpl(SerializerObject s)

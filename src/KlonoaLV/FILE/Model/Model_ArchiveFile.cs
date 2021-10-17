@@ -10,7 +10,7 @@ namespace BinarySerializer.Klonoa.LV {
         {
             ModelGeometry = SerializeFile(s, ModelGeometry, 0, name: nameof(ModelGeometry));
             ModelTextures = SerializeFile(s, ModelTextures, 1, name: nameof(ModelTextures));
-            ModelMorphTargets = SerializeFile(s, ModelMorphTargets, 2, name: nameof(ModelMorphTargets));
+            ModelMorphTargets = SerializeFile(s, ModelMorphTargets, 2, onPreSerialize: x => x.Pre_Meshes = ModelGeometry.Meshes, name: nameof(ModelMorphTargets));
             ModelAnimData = SerializeFile(s, ModelAnimData, 3, name: nameof(ModelAnimData));
             ModelDescriptor = SerializeFile(s, ModelDescriptor, 4, name: nameof(ModelDescriptor));
         }
