@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace BinarySerializer.Klonoa.KH
 {
@@ -10,6 +11,13 @@ namespace BinarySerializer.Klonoa.KH
     public class BytePairEncoder : IStreamEncoder
     {
         public string Name => nameof(BytePairEncoder);
+
+        /// <summary>
+        /// The block size to use when encoding
+        /// </summary>
+        public int BlockSize { get; set; } = 1024;
+
+        public const int MaxRecursionCount = 16;
 
         // Decompressed at 0x0804E428 in the ROM
         public Stream DecodeStream(Stream s)
@@ -56,8 +64,11 @@ namespace BinarySerializer.Klonoa.KH
                     {
                         translationByteKey = translationByteKey + count - 0x7f;
 
+                        if (translationByteKey > 0x100)
+                            throw new Exception($"Failed to decompress data! Translation byte key is more than 0x100.");
+
                         // Check if we've reached the end
-                        if (translationByteKey >= 0x100)
+                        if (translationByteKey == 0x100)
                             break;
 
                         count = 0;
@@ -86,6 +97,9 @@ namespace BinarySerializer.Klonoa.KH
                         translationByteKey++;
                     }
                 }
+
+                if (translationByteKey > 0x100)
+                    throw new Exception($"Failed to decompress data! Translation byte key is more than 0x100.");
 
                 int writeCount = reader.ReadUInt16();
 
@@ -136,12 +150,9 @@ namespace BinarySerializer.Klonoa.KH
             return decompressedStream;
         }
 
-        // TODO: Implement proper decompression by checking for repeating byte pairs and unused bytes. The current implementation simply adds a proper
-        // header so the game will recognize the data, but it will take up more space than the decompressed data takes up this way which isn't good
         public Stream EncodeStream(Stream s)
         {
-            long initialPosition = s.Position;
-            long decompressedSize = s.Length - initialPosition;
+            long decompressedSize = s.Length - s.Position;
 
             // Create a stream to store the compressed data
             var compressedStream = new MemoryStream();
@@ -151,20 +162,153 @@ namespace BinarySerializer.Klonoa.KH
             // Skip the header for now (we write that last)
             compressedStream.Position += 8;
 
-            // Empty translation table
-            writer.Write((byte)255); // 255 - 128 = 128
-            writer.Write((byte)128); // 128 == 128
-            writer.Write((byte)254); // 254 - 128 = 127, 128 + 1 + 127 = 256
+            while (s.Position < s.Length)
+            {
+                // Read a block
+                byte[] originalBlock = new byte[BlockSize];
+                var blockSize = s.Read(originalBlock, 0, originalBlock.Length);
+                List<byte> block = originalBlock.Take(blockSize).ToList();
 
-            // TODO: Support bigger data by looping multiple times
-            if (decompressedSize > UInt16.MaxValue)
-                throw new Exception($"Data bigger than 0xFFFF bytes is currently not supported");
+                // Keep track of used bytes
+                bool[] usedBytes = new bool[256];
 
-            // Data size
-            writer.Write((ushort)decompressedSize);
+                var translationTable = new Dictionary<byte, byte[]>();
 
-            // Copy the data. Since the translation table is empty we leave it as is.
-            s.CopyTo(compressedStream);
+                // Recursively loop and replace bytes. Each loop we find the most common byte pair and an unused byte to use as the key.
+                for (int r = 0; r < MaxRecursionCount; r++)
+                {
+                    var bytePairCounts = new Dictionary<ushort, int>();
+
+                    // Enumerate every byte
+                    for (int i = 0; i < block.Count; i++)
+                    {
+                        // Flag that the byte is used
+                        usedBytes[block[i]] = true;
+
+                        // If we're not at the last byte we check the byte pair
+                        if (i + 1 < block.Count)
+                        {
+                            ushort v = (ushort)(block[i] | block[i + 1] << 8);
+                            bytePairCounts[v] = bytePairCounts.TryGetValue(v, out int prevCount) ? prevCount + 1 : 1;
+                        }
+                    }
+
+                    // If no more byte pairs occur more than 4 times we break
+                    if (!bytePairCounts.Values.Any(x => x > 4))
+                        break;
+
+                    // Get the most common byte pair
+                    var mostCommonPair = bytePairCounts.OrderBy(x => x.Value).Last().Key;
+
+                    // Get an unused byte to use
+                    byte? unusedByte = null;
+
+                    for (int i = 0; i < usedBytes.Length; i++)
+                    {
+                        if (!usedBytes[i])
+                        {
+                            unusedByte = (byte)i;
+                            break;
+                        }
+                    }
+
+                    // Break if there is no unused byte to use
+                    if (unusedByte == null)
+                        break;
+
+                    var b1 = (byte)BitHelpers.ExtractBits(mostCommonPair, 8, 0);
+                    var b2 = (byte)BitHelpers.ExtractBits(mostCommonPair, 8, 8);
+
+                    // Add to the translation table
+                    translationTable.Add(unusedByte.Value, new byte[] { b1, b2 });
+
+                    // Update the block
+                    for (int i = 0; i < block.Count; i++)
+                    {
+                        if (i + 1 < block.Count && block[i] == b1 && block[i + 1] == b2)
+                        {
+                            block[i] = unusedByte.Value;
+                            block.RemoveAt(i + 1);
+                        }
+                    }
+                }
+
+                var translationByteKey = 0;
+                var sortedTranslationTable = translationTable.OrderBy(x => x.Key).ToArray();
+
+                for (var i = 0; i < sortedTranslationTable.Length; i++)
+                {
+                    var translationTableItem = sortedTranslationTable[i];
+                    int count;
+
+                    // If not equal to the current key we need to skip forward
+                    if (translationTableItem.Key != translationByteKey)
+                    {
+                        var difference = translationTableItem.Key - translationByteKey;
+
+                        if (difference < 0)
+                            throw new Exception("Negative difference!");
+
+                        if (difference <= 128)
+                        {
+                            writer.Write((byte)(0x7F + difference)); // Skip difference
+                            translationByteKey += difference;
+                        }
+                        else
+                        {
+                            writer.Write((byte)(0x7F + 127)); // Skip 127
+                            translationByteKey += 127;
+                            writer.Write((byte)translationByteKey); // Write same value as index to ignore
+                            translationByteKey++;
+                            writer.Write((byte)(0x7F + (difference - 127 - 1))); // Skip remaining difference
+                            translationByteKey += difference - 127 - 1;
+                        }
+
+                        count = 1;
+                    }
+                    else
+                    {
+                        // TODO: Optimize this by setting a higher count if the values are in sequence
+                        count = 1;
+                        writer.Write((byte)(count - 1));
+                    }
+
+                    for (int j = 0; j < count; j++)
+                    {
+                        writer.Write(translationTableItem.Value[0]);
+                        writer.Write(translationTableItem.Value[1]);
+
+                        translationByteKey++;
+                    }
+                }
+
+                var diff = 0x100 - translationByteKey;
+
+                if (diff != 0)
+                {
+                    if (diff < 0)
+                        throw new Exception("Negative difference!");
+
+                    if (diff <= 128)
+                    {
+                        writer.Write((byte)(0x7F + diff)); // Skip difference
+                    }
+                    else
+                    {
+                        writer.Write((byte)(0x7F + 127)); // Skip 127
+                        translationByteKey += 127;
+                        writer.Write((byte)translationByteKey); // Write same value as index to ignore
+                        translationByteKey++;
+                        writer.Write((byte)(0x7F + (diff - 127 - 1))); // Skip remaining difference
+                    }
+                }
+
+                // Write the block size
+                writer.Write((ushort)block.Count);
+
+                // Write the block
+                writer.Write(block.ToArray());
+            }
 
             // Write the header
             compressedStream.Position = 0;
