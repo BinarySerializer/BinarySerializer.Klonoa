@@ -20,7 +20,7 @@
         {
             return cmd == CommandType.Speaker || 
                    cmd == CommandType.CMD_07 || 
-                   cmd == CommandType.CMD_08 ||
+                   cmd == CommandType.BlankSpace ||
                    cmd == CommandType.CMD_0C || 
                    cmd == CommandType.CMD_0D;
         }
@@ -30,12 +30,12 @@
             None = 0,
             End = -1,
             Clear = -2,
-            Linebreak = -3,
-            Speaker = -4,
+            Linebreak = -3, // Increment y by 0x10 and reset x
+            Speaker = -4, // Draw speaker as two sprites and increment x by 0x20 + 8
             CMD_05 = -5,
             CMD_06 = -6,
             CMD_07 = -7,
-            CMD_08 = -8,
+            BlankSpace = -8, // Pixels specified by argument, if arg is 0 then default to 0x28
             Prompt = -9,
             Pause = -10,
             CMD_0B = -11,
