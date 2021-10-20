@@ -1,3 +1,5 @@
+using BinarySerializer.PS2;
+
 namespace BinarySerializer.Klonoa.LV
 {
     public class ModelMesh : BinarySerializable
@@ -20,7 +22,7 @@ namespace BinarySerializer.Klonoa.LV
         public Pointer VerticesPointer { get; set; }
         public Pointer NormalsPointer { get; set; }
         public Pointer SkinPointer { get; set; }
-        public byte[] TextureSelector { get; set; } // TODO: Is this a GS register? It defines the pointers of the texture + palette, as well as size the size of the texture.
+        public GSReg_TEX0 TEX0 { get; set; }
         public ModelSkinDescriptor[] SkinDescriptors { get; set; }
         public KlonoaLV_UV32[] UVs { get; set; }
         public ModelTriangleStrip[] TriangleStrips { get; set; }
@@ -51,7 +53,7 @@ namespace BinarySerializer.Klonoa.LV
             SkinPointer = s.SerializePointer(SkinPointer, anchor: Pre_GeometryPointer, name: nameof(SkinPointer));
             
             s.SerializePadding(4, logIfNotNull: true);
-            TextureSelector = s.SerializeArray<byte>(TextureSelector, 8, name: nameof(TextureSelector));
+            TEX0 = s.SerializeObject<GSReg_TEX0>(TEX0, name: nameof(TEX0));
 
             if (HasSkin)
             {
