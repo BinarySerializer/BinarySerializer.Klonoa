@@ -15,14 +15,15 @@ namespace BinarySerializer.Klonoa.LV
         public GSReg_TRXREG TRXREG { get; set; }
         public GSReg_TRXDIR TRXDIR { get; set; }
         public GIFtag GIFTag_Image { get; set; }
-        public byte[] RawData { get; set; }
+        public bool IsPalette => BITBLTBUF.DPSM == GS.PixelStorageMode.PSMCT32;
+        public byte[] ImgData { get; set; }
+        public PS2_RGBA8888Color[] Palette { get; set; }
 
         // End of packet
         public Chain_DMAtag DMATag { get; set; }
         public GSReg_TEXFLUSH TEXFLUSH { get; set; }
         public VIFcode VIFCode_NOP1 { get; set; }
         public VIFcode VIFCode_NOP2 { get; set; }
-
 
         public override void SerializeImpl(SerializerObject s)
         {
@@ -34,7 +35,10 @@ namespace BinarySerializer.Klonoa.LV
                 TRXREG = s.SerializeObject<GSReg_TRXREG>(TRXREG, onPreSerialize: x => x.SerializeTag = true, name: nameof(TRXREG));
                 TRXDIR = s.SerializeObject<GSReg_TRXDIR>(TRXDIR, onPreSerialize: x => x.SerializeTag = true, name: nameof(TRXDIR));
                 GIFTag_Image = s.SerializeObject<GIFtag>(GIFTag_Image, name: nameof(GIFTag_Image));
-                RawData = s.SerializeArray<byte>(RawData, GIFTag_Image.NLOOP * 0x10);
+                if (!IsPalette)
+                    ImgData = s.SerializeArray<byte>(ImgData, GIFTag_Image.NLOOP * 0x10, name: nameof(ImgData));
+                else
+                    Palette = s.SerializeObjectArray<PS2_RGBA8888Color>(Palette, TRXREG.RRW * TRXREG.RRH, name: nameof(Palette));
             } else // End of packet
             {
                 TEXFLUSH = s.SerializeObject<GSReg_TEXFLUSH>(TEXFLUSH, onPreSerialize: x => x.SerializeTag = true, name: nameof(TEXFLUSH));
