@@ -1,6 +1,6 @@
 ﻿namespace BinarySerializer.Klonoa.KH
 {
-    public class AnimationsPack2_File24_ArchiveFile : TP_ArchiveFile
+    public class GameplayPack_File24_ArchiveFile : TP_ArchiveFile
     {
         // File 0 is null
         public Graphics_File File_1 { get; set; }

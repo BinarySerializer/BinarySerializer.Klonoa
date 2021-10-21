@@ -1,9 +1,9 @@
 ﻿namespace BinarySerializer.Klonoa.KH
 {
-    public class AnimationsPack2_ArchiveFile : TP_ArchiveFile
+    public class GameplayPack_ArchiveFile : TP_ArchiveFile
     {
         // File 0 is null
-        public Animation_File File_1 { get; set; }
+        public Animation_File Klonoa { get; set; }
         public Animation_File File_2 { get; set; }
         public Animation_File File_3 { get; set; }
         public Graphics_File File_4 { get; set; }
@@ -11,7 +11,7 @@
         public Graphics_File File_6 { get; set; }
         public Graphics_File File_7 { get; set; }
         public Animation_File File_8 { get; set; }
-        public Animation_File File_9 { get; set; }
+        public Animation_File Doors { get; set; }
         public Graphics_File File_10 { get; set; }
         public Graphics_File File_11 { get; set; }
         public ArchiveFile<Graphics_File> File_12 { get; set; }
@@ -26,7 +26,7 @@
         public ArchiveFile<Graphics_File> File_21 { get; set; }
         public Graphics_File File_22 { get; set; }
         public RawData_File File_23 { get; set; } // TODO: HM file
-        public AnimationsPack2_File24_ArchiveFile File_24 { get; set; }
+        public GameplayPack_File24_ArchiveFile File_24 { get; set; }
         public ArchiveFile<Graphics_File> File_25 { get; set; }
         public ArchiveFile<Graphics_File> File_26 { get; set; }
         public Graphics_File File_27 { get; set; }
@@ -55,7 +55,7 @@
 
         protected override void SerializeFiles(SerializerObject s)
         {
-            File_1 = SerializeFile<Animation_File>(s, File_1, 1, name: nameof(File_1));
+            Klonoa = SerializeFile<Animation_File>(s, Klonoa, 1, name: nameof(Klonoa));
             File_2 = SerializeFile<Animation_File>(s, File_2, 2, name: nameof(File_2));
             File_3 = SerializeFile<Animation_File>(s, File_3, 3, name: nameof(File_3));
             File_4 = SerializeFile<Graphics_File>(s, File_4, 4, name: nameof(File_4));
@@ -63,7 +63,7 @@
             File_6 = SerializeFile<Graphics_File>(s, File_6, 6, name: nameof(File_6));
             File_7 = SerializeFile<Graphics_File>(s, File_7, 7, name: nameof(File_7));
             File_8 = SerializeFile<Animation_File>(s, File_8, 8, name: nameof(File_8));
-            File_9 = SerializeFile<Animation_File>(s, File_9, 9, name: nameof(File_9));
+            Doors = SerializeFile<Animation_File>(s, Doors, 9, name: nameof(Doors));
             File_10 = SerializeFile<Graphics_File>(s, File_10, 10, name: nameof(File_10));
             File_11 = SerializeFile<Graphics_File>(s, File_11, 11, name: nameof(File_11));
             File_12 = SerializeFile<ArchiveFile<Graphics_File>>(s, File_12, 12, name: nameof(File_12));
@@ -78,7 +78,7 @@
             File_21 = SerializeFile<ArchiveFile<Graphics_File>>(s, File_21, 21, name: nameof(File_21));
             File_22 = SerializeFile<Graphics_File>(s, File_22, 22, name: nameof(File_22));
             File_23 = SerializeFile<RawData_File>(s, File_23, 23, name: nameof(File_23));
-            File_24 = SerializeFile<AnimationsPack2_File24_ArchiveFile>(s, File_24, 24, name: nameof(File_24));
+            File_24 = SerializeFile<GameplayPack_File24_ArchiveFile>(s, File_24, 24, name: nameof(File_24));
             File_25 = SerializeFile<ArchiveFile<Graphics_File>>(s, File_25, 25, name: nameof(File_25));
             File_26 = SerializeFile<ArchiveFile<Graphics_File>>(s, File_26, 26, name: nameof(File_26));
             File_27 = SerializeFile<Graphics_File>(s, File_27, 27, name: nameof(File_27));
