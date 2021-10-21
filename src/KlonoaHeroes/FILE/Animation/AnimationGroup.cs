@@ -6,7 +6,7 @@
         public uint BaseAnimationsOffset { get; set; } // Always 48
         public int[] AnimationOffsets { get; set; } // Can be -1
 
-        public Animation[] Animations { get; set; }
+        public Animation[] Animations { get; set; } // Contains an animation for each rotation (0-7)
 
         public override void SerializeImpl(SerializerObject s)
         {
