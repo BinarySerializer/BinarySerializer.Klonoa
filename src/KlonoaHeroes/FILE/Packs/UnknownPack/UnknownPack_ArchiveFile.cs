@@ -6,7 +6,7 @@
         public ArchiveFile<Graphics_File> File_1 { get; set; }
         public ArchiveFile<Graphics_File> File_2 { get; set; }
         public UnknownPack_File3_ArchiveFile File_3 { get; set; }
-        public RawData_File File_4 { get; set; }
+        public ArchiveFile<BestiaryEntry_Archive> Bestiary { get; set; }
         public RawData_File File_5 { get; set; }
         public Graphics_File File_6 { get; set; }
         public Graphics_File File_7 { get; set; }
@@ -21,7 +21,7 @@
             File_1 = SerializeFile<ArchiveFile<Graphics_File>>(s, File_1, 1, name: nameof(File_1));
             File_2 = SerializeFile<ArchiveFile<Graphics_File>>(s, File_2, 2, name: nameof(File_2));
             File_3 = SerializeFile<UnknownPack_File3_ArchiveFile>(s, File_3, 3, name: nameof(File_3));
-            File_4 = SerializeFile<RawData_File>(s, File_4, 4, name: nameof(File_4));
+            Bestiary = SerializeFile<ArchiveFile<BestiaryEntry_Archive>>(s, Bestiary, 4, fileEncoder: new BytePairEncoder(), name: nameof(Bestiary));
             File_5 = SerializeFile<RawData_File>(s, File_5, 5, name: nameof(File_5));
             File_6 = SerializeFile<Graphics_File>(s, File_6, 6, name: nameof(File_6));
             File_7 = SerializeFile<Graphics_File>(s, File_7, 7, fileEncoder: new BytePairEncoder(), name: nameof(File_7));
