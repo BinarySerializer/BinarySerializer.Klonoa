@@ -1,5 +1,5 @@
 # BinarySerializer.Klonoa
-BinarySerializer.Klonoa is an extension library to [BinarySerializer](https://github.com/RayCarrot/BinarySerializer) for serializing the game data in the console Klonoa games. This can be used for reverse engineering and to read any of its files, export the data (such as the graphics, models, sounds etc.) and more.
+BinarySerializer.Klonoa is an extension library to [BinarySerializer](https://github.com/RayCarrot/BinarySerializer) for serializing the game data in the Klonoa games. This can be used for reverse engineering and to read/write to any of its files, export the data (such as the graphics, models, sounds etc.) and more.
 
 To view the parsed data directly from the files the [Binary Data Explorer](https://github.com/RayCarrot/BinaryDataExplorer) tool can be used.
 
