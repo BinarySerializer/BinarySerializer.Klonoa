@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace BinarySerializer.Klonoa.DTP.DTP
+namespace BinarySerializer.Klonoa.DTP
 {
     public class KlonoaSettings_DTP_US : KlonoaSettings_DTP
     {
