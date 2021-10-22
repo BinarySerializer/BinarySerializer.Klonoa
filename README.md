@@ -20,7 +20,7 @@ Example image is from this library being used in [Ray1Map](https://github.com/Ad
 _Note:_ The first two GBA games are currently only supported directly in [Ray1Map](https://github.com/Adsolution/Ray1Map/tree/master/Assets/Scripts/DataTypes/GBAKlonoa). They might be migrated to this library in the future.
 
 # Get Started
-To use this library in your own project you must first reference [BinarySerializer](https://github.com/RayCarrot/BinarySerializer), [BinarySerializer.PS1](https://github.com/RayCarrot/BinarySerializer.PS1) and [BinarySerializer.GBA](https://github.com/RayCarrot/BinarySerializer.GBA) as it relies on these libraries. After that you can quickly get started using the `Loader` class.
+To use this library in your own project you must first reference [BinarySerializer](https://github.com/BinarySerializer/BinarySerializer), [BinarySerializer.PS1](https://github.com/BinarySerializer/BinarySerializer.PS1), [BinarySerializer.PS2](https://github.com/BinarySerializer/BinarySerializer.PS2) and [BinarySerializer.GBA](https://github.com/BinarySerializer/BinarySerializer.GBA) as it relies on these libraries. After that you can quickly get started using the `Loader` class.
 
 ## Door to Phantomile
 
