@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using BinarySerializer.PS2;
 
 namespace BinarySerializer.Klonoa.LV
@@ -6,6 +5,7 @@ namespace BinarySerializer.Klonoa.LV
     public class GeometryCommand : BinarySerializable
     {
         public VIFcode VIFCode { get; set; }
+        public CommandType Type { get; set; }
 
         public KlonoaLV_FloatVector SectionPosition { get; set; }
         public GeometryTriangleStrip[] TriangleStrips { get; set; }
@@ -22,12 +22,13 @@ namespace BinarySerializer.Klonoa.LV
             switch (VIFCode.CMD)
             {
                 case 0x11:
+                case 0x14:
+                    Type = CommandType.NOP;
                     break;
                 case 0x50:
                     GIFTag = s.SerializeObject<GIFtag>(GIFTag, name: nameof(GIFTag));
                     CLAMP = s.SerializeObject<GSReg_CLAMP_1>(CLAMP, onPreSerialize: x => x.SerializeTag = true, name: nameof(CLAMP));
-                    break;
-                case 0x14:
+                    Type = CommandType.TransferData;
                     break;
                 default:
                     VIFcode_Unpack unpack = new VIFcode_Unpack(VIFCode);
@@ -35,31 +36,49 @@ namespace BinarySerializer.Klonoa.LV
                     {
                         case 923:
                             SectionPosition = s.SerializeObject(SectionPosition, name: nameof(SectionPosition));
+                            Type = CommandType.SectionPosition;
                             break;
                         case 0:
                             TriangleStrips = s.SerializeObjectArray<GeometryTriangleStrip>(TriangleStrips, unpack.SIZE - 1, name: nameof(TriangleStrips));
                             s.SerializePadding(0x10, logIfNotNull: true);
+                            Type = CommandType.TriangleStrips;
                             break;
                         case 12:
                             Vertices = s.SerializeObjectArray<KlonoaLV_Vector16>(Vertices, unpack.SIZE, name: nameof(Vertices));
                             s.Align(4);
+                            Type = CommandType.Vertices;
                             break;
                         case 82:
                             UVs = s.SerializeObjectArray<KlonoaLV_UV16>(UVs, unpack.SIZE, name: nameof(UVs));
+                            Type = CommandType.UVs;
                             break;
                         case 152:
                             VertexColors = s.SerializeObjectArray<RGB888Color>(VertexColors, unpack.SIZE, name: nameof(VertexColors));
                             s.Align(4);
+                            Type = CommandType.VertexColors;
                             break;
                         case 920:
                             TEX0 = s.SerializeObject<GSReg_TEX0_1>(TEX0, name: nameof(TEX0));
                             s.SerializePadding(8);
+                            Type = CommandType.Tex0;
                             break;
                         default:
                             throw new BinarySerializableException(this, $"Unknown command for address {unpack.ADDR}");
                     }
                     break;
             }
+        }
+
+        public enum CommandType
+        {
+            Vertices,
+            SectionPosition,
+            TriangleStrips,
+            UVs,
+            VertexColors,
+            Tex0,
+            TransferData,
+            NOP
         }
     }
 }
