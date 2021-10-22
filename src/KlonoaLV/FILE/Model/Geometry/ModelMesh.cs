@@ -22,7 +22,7 @@ namespace BinarySerializer.Klonoa.LV
         public Pointer VerticesPointer { get; set; }
         public Pointer NormalsPointer { get; set; }
         public Pointer SkinPointer { get; set; }
-        public GSReg_TEX0 TEX0 { get; set; }
+        public GSReg_TEX0_1 TEX0 { get; set; }
         public ModelSkinDescriptor[] SkinDescriptors { get; set; }
         public KlonoaLV_UV32[] UVs { get; set; }
         public ModelTriangleStrip[] TriangleStrips { get; set; }
@@ -53,7 +53,7 @@ namespace BinarySerializer.Klonoa.LV
             SkinPointer = s.SerializePointer(SkinPointer, anchor: Pre_GeometryPointer, name: nameof(SkinPointer));
             
             s.SerializePadding(4, logIfNotNull: true);
-            TEX0 = s.SerializeObject<GSReg_TEX0>(TEX0, name: nameof(TEX0));
+            TEX0 = s.SerializeObject<GSReg_TEX0_1>(TEX0, name: nameof(TEX0));
 
             if (HasSkin)
             {
