@@ -4,8 +4,8 @@
     {
         // File 0 is null
         public Animation_File Klonoa { get; set; }
-        public Animation_File File_2 { get; set; }
-        public Animation_File File_3 { get; set; }
+        public Animation_File Guntz { get; set; }
+        public Animation_File Pango { get; set; }
         public Graphics_File File_4 { get; set; }
         public Graphics_File File_5 { get; set; }
         public Graphics_File File_6 { get; set; }
@@ -56,8 +56,8 @@
         protected override void SerializeFiles(SerializerObject s)
         {
             Klonoa = SerializeFile<Animation_File>(s, Klonoa, 1, name: nameof(Klonoa));
-            File_2 = SerializeFile<Animation_File>(s, File_2, 2, name: nameof(File_2));
-            File_3 = SerializeFile<Animation_File>(s, File_3, 3, name: nameof(File_3));
+            Guntz = SerializeFile<Animation_File>(s, Guntz, 2, name: nameof(Guntz));
+            Pango = SerializeFile<Animation_File>(s, Pango, 3, name: nameof(Pango));
             File_4 = SerializeFile<Graphics_File>(s, File_4, 4, name: nameof(File_4));
             File_5 = SerializeFile<Graphics_File>(s, File_5, 5, name: nameof(File_5));
             File_6 = SerializeFile<Graphics_File>(s, File_6, 6, name: nameof(File_6));
