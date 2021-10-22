@@ -32,38 +32,43 @@ namespace BinarySerializer.Klonoa.LV
                     break;
                 default:
                     VIFcode_Unpack unpack = new VIFcode_Unpack(VIFCode);
-                    switch (unpack.ADDR)
+                    if (unpack.VN == VIFcode_Unpack.UnpackVN.V3 && unpack.VL == VIFcode_Unpack.UnpackVL.VL_32)
                     {
-                        case 923:
+                        if (unpack.ADDR == 923)
+                        {
                             SectionPosition = s.SerializeObject(SectionPosition, name: nameof(SectionPosition));
                             Type = CommandType.SectionPosition;
-                            break;
-                        case 0:
-                            TriangleStrips = s.SerializeObjectArray<GeometryTriangleStrip>(TriangleStrips, unpack.SIZE - 1, name: nameof(TriangleStrips));
-                            s.SerializePadding(0x10, logIfNotNull: true);
-                            Type = CommandType.TriangleStrips;
-                            break;
-                        case 12:
-                            Vertices = s.SerializeObjectArray<KlonoaLV_Vector16>(Vertices, unpack.SIZE, name: nameof(Vertices));
-                            s.Align(4);
-                            Type = CommandType.Vertices;
-                            break;
-                        case 82:
-                            UVs = s.SerializeObjectArray<KlonoaLV_UV16>(UVs, unpack.SIZE, name: nameof(UVs));
-                            Type = CommandType.UVs;
-                            break;
-                        case 152:
-                            VertexColors = s.SerializeObjectArray<RGB888Color>(VertexColors, unpack.SIZE, name: nameof(VertexColors));
-                            s.Align(4);
-                            Type = CommandType.VertexColors;
-                            break;
-                        case 920:
+                        } else if (unpack.ADDR == 0)
+                        {
                             TEX0 = s.SerializeObject<GSReg_TEX0_1>(TEX0, name: nameof(TEX0));
                             s.SerializePadding(8);
                             Type = CommandType.Tex0;
-                            break;
-                        default:
+                        } else
+                        {
                             throw new BinarySerializableException(this, $"Unknown command for address {unpack.ADDR}");
+                        }
+                    } else if (unpack.VN == VIFcode_Unpack.UnpackVN.V4 && unpack.VL == VIFcode_Unpack.UnpackVL.VL_32)
+                    {
+                        TriangleStrips = s.SerializeObjectArray<GeometryTriangleStrip>(TriangleStrips, unpack.SIZE - 1, name: nameof(TriangleStrips));
+                        s.SerializePadding(0x10, logIfNotNull: true);
+                        Type = CommandType.TriangleStrips;
+                    } else if (unpack.VN == VIFcode_Unpack.UnpackVN.V3 && unpack.VL == VIFcode_Unpack.UnpackVL.VL_16)
+                    {
+                        Vertices = s.SerializeObjectArray<KlonoaLV_Vector16>(Vertices, unpack.SIZE, name: nameof(Vertices));
+                        s.Align(4);
+                        Type = CommandType.Vertices;
+                    } else if (unpack.VN == VIFcode_Unpack.UnpackVN.V2 && unpack.VL == VIFcode_Unpack.UnpackVL.VL_16)
+                    {
+                        UVs = s.SerializeObjectArray<KlonoaLV_UV16>(UVs, unpack.SIZE, name: nameof(UVs));
+                        Type = CommandType.UVs;
+                    } else if (unpack.VN == VIFcode_Unpack.UnpackVN.V3 && unpack.VL == VIFcode_Unpack.UnpackVL.VL_8)
+                    {
+                        VertexColors = s.SerializeObjectArray<RGB888Color>(VertexColors, unpack.SIZE, name: nameof(VertexColors));
+                        s.Align(4);
+                        Type = CommandType.VertexColors;
+                    } else
+                    {
+                        throw new BinarySerializableException(this, $"Unknown command for data type {unpack.VN}-{unpack.VL}");
                     }
                     break;
             }
