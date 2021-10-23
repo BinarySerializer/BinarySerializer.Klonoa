@@ -1,12 +1,12 @@
 ﻿namespace BinarySerializer.Klonoa.KH
 {
-    public class MapObjects : BinarySerializable
+    public class EnemyObjects : BinarySerializable
     {
         public ushort ObjectsCount { get; set; }
         public byte[] Bytes_04 { get; set; }
         public uint ObjectsOffset { get; set; }
 
-        public MapObject[] Objects { get; set; }
+        public EnemyObject[] Objects { get; set; }
 
         public override void SerializeImpl(SerializerObject s)
         {
@@ -15,7 +15,7 @@
             Bytes_04 = s.SerializeArray<byte>(Bytes_04, 8, name: nameof(Bytes_04));
             ObjectsOffset = s.Serialize<uint>(ObjectsOffset, name: nameof(ObjectsOffset));
 
-            s.DoAt(Offset + ObjectsOffset, () => Objects = s.SerializeObjectArray<MapObject>(Objects, ObjectsCount, name: nameof(Objects)));
+            s.DoAt(Offset + ObjectsOffset, () => Objects = s.SerializeObjectArray<EnemyObject>(Objects, ObjectsCount, name: nameof(Objects)));
         }
     }
 }

@@ -1,6 +1,6 @@
 ﻿namespace BinarySerializer.Klonoa.KH
 {
-    public class MapObject : BinarySerializable
+    public class EnemyObject : BinarySerializable
     {
         public short ObjType { get; set; }
         public byte Byte_02 { get; set; }

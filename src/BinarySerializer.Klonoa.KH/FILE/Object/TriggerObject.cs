@@ -1,8 +1,8 @@
 ﻿namespace BinarySerializer.Klonoa.KH
 {
-    public class MapTriggerObject : BinarySerializable
+    public class TriggerObject : BinarySerializable
     {
-        public short ObjType { get; set; }
+        public short ObjType { get; set; } // 1-15
         public short XPos { get; set; }
         public short ZPos { get; set; }
         public short YPos { get; set; }

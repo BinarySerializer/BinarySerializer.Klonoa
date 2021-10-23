@@ -1,13 +1,13 @@
 ﻿namespace BinarySerializer.Klonoa.KH
 {
-    public class MapObjectType : BinarySerializable
+    public class EnemyObjectTypeDefinition : BinarySerializable
     {
         public Pointer Function1 { get; set; }
         public Pointer Function2 { get; set; }
         public byte AnimFileIndex { get; set; }
         public byte Byte_05_0 { get; set; }
         public byte Byte_05_1 { get; set; }
-        public byte Byte_06 { get; set; } // Index to 0x08068480
+        public byte Byte_06 { get; set; } // Index to array at 0x08068480
         public byte Flags { get; set; }
 
         public override void SerializeImpl(SerializerObject s)
