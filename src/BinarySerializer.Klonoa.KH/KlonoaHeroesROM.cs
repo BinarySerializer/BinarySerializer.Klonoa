@@ -12,6 +12,8 @@ namespace BinarySerializer.Klonoa.KH
         public StoryPack_ArchiveFile StoryPack { get; set; }
         public MapsPack_ArchiveFile MapsPack { get; set; }
 
+        public MapObjectType[] MapObjectTypes { get; set; }
+
         public override void SerializeImpl(SerializerObject s)
         {
             base.SerializeImpl(s);
@@ -28,6 +30,8 @@ namespace BinarySerializer.Klonoa.KH
             s.DoAt(new Pointer(0x0828fd20, Offset.File), () => UIPack = s.SerializeObject<UIPack_ArchiveFile>(UIPack, name: nameof(UIPack)));
             s.DoAt(new Pointer(0x0873d350, Offset.File), () => StoryPack = s.SerializeObject<StoryPack_ArchiveFile>(StoryPack, name: nameof(StoryPack)));
             s.DoAt(new Pointer(0x08b30fd0, Offset.File), () => MapsPack = s.SerializeObject<MapsPack_ArchiveFile>(MapsPack, name: nameof(MapsPack)));
+
+            s.DoAt(new Pointer(0x08068720, Offset.File), () => MapObjectTypes = s.SerializeObjectArray<MapObjectType>(MapObjectTypes, 182, name: nameof(MapObjectTypes)));
         }
     }
 }
