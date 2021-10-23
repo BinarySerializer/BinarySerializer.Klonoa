@@ -9,7 +9,7 @@
         public uint SpecialMapLayerOffset { get; set; }
         public uint[] MapLayerOffsets { get; set; }
 
-        // TODO: Parse objects
+        public MapObjects MapObjects { get; set; }
         // TODO: Parse KE
 
         public MapLayer SpecialMapLayer { get; set; } // Has palette, tileset and collision
@@ -25,6 +25,9 @@
             s.SerializePadding(4, logIfNotNull: true);
             MapLayerOffsets = s.SerializeArray<uint>(MapLayerOffsets, 4, name: nameof(MapLayerOffsets));
             s.SerializePadding(16, logIfNotNull: true);
+
+            if (ObjectsOffset != 0)
+                s.DoAt(Offset + ObjectsOffset, () => MapObjects = s.SerializeObject<MapObjects>(MapObjects, name: nameof(MapObjects)));
 
             if (SpecialMapLayerOffset != 0)
                 s.DoAt(Offset + SpecialMapLayerOffset, () => SpecialMapLayer = s.SerializeObject<MapLayer>(SpecialMapLayer, x => x.Pre_SharedDataPointer = Pre_SharedDataPointer, name: nameof(SpecialMapLayer)));

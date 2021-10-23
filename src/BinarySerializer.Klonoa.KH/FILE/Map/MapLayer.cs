@@ -8,7 +8,7 @@ namespace BinarySerializer.Klonoa.KH
         public uint TileMapOffset { get; set; }
         public uint PaletteOffset { get; set; }
         public uint TileSetOffset { get; set; } // Gets appended after shared tile set
-        public uint CollisionMapOffset { get; set; } // Collision is 16x16 tiles
+        public uint CollisionMapOffset { get; set; } // Collision tiles are 32x32 pixels (4x4 normal tiles)
         public short Width { get; set; }
         public short Height { get; set; }
         public uint TileMapLength { get; set; }
