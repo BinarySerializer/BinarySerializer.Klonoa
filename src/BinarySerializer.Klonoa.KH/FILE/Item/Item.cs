@@ -33,13 +33,10 @@ namespace BinarySerializer.Klonoa.KH
         public ushort A_Unknown { get; set; }
         public ushort A_EffectParam { get; set; }
 
-        public ushort I_EffectType { get; set; }
+        public ushort I_IconIndex { get; set; }
         public ushort I_Unknown { get; set; }
 
-        public ushort E_Unknown1 { get; set; }
-        public ushort E_Unknown2 { get; set; }
-        public ushort E_Unknown3 { get; set; }
-        public ushort E_Unknown4 { get; set; }
+        public ushort E_IconIndex { get; set; }
 
         public override void SerializeImpl(SerializerObject s)
         {
@@ -89,7 +86,7 @@ namespace BinarySerializer.Klonoa.KH
 
                 case Item_Category.I:
                     Name = s.SerializeObject<TextCommands>(Name, x => x.Pre_MaxLength = 9, name: nameof(Name));
-                    I_EffectType = s.Serialize<ushort>(I_EffectType, name: nameof(I_EffectType));
+                    I_IconIndex = s.Serialize<ushort>(I_IconIndex, name: nameof(I_IconIndex));
                     I_Unknown = s.Serialize<ushort>(I_Unknown, name: nameof(I_Unknown));
                     Description1 = s.SerializeObject<TextCommands>(Description1, x => x.Pre_MaxLength = 17, name: nameof(Description1));
                     Price = s.Serialize<uint>(Price, name: nameof(Price));
@@ -98,11 +95,8 @@ namespace BinarySerializer.Klonoa.KH
 
                 case Item_Category.E:
                     Name = s.SerializeObject<TextCommands>(Name, x => x.Pre_MaxLength = 9, name: nameof(Name));
-                    E_Unknown1 = s.Serialize<ushort>(E_Unknown1, name: nameof(E_Unknown1));
-                    E_Unknown2 = s.Serialize<ushort>(E_Unknown2, name: nameof(E_Unknown2));
-                    E_Unknown3 = s.Serialize<ushort>(E_Unknown3, name: nameof(E_Unknown3));
-                    E_Unknown4 = s.Serialize<ushort>(E_Unknown4, name: nameof(E_Unknown4));
-                    Description1 = s.SerializeObject<TextCommands>(Description1, x => x.Pre_MaxLength = 17, name: nameof(Description1));
+                    E_IconIndex = s.Serialize<ushort>(E_IconIndex, name: nameof(E_IconIndex));
+                    Description1 = s.SerializeObject<TextCommands>(Description1, x => x.Pre_MaxLength = 20, name: nameof(Description1));
                     Description2 = s.SerializeObject<TextCommands>(Description2, x => x.Pre_MaxLength = 24, name: nameof(Description2));
                     break;
 
