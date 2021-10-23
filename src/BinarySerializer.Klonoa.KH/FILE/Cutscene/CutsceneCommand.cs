@@ -233,7 +233,6 @@ namespace BinarySerializer.Klonoa.KH
                     InvertCondition = s.Serialize<bool>(InvertCondition, name: nameof(InvertCondition));
                     s.SerializePadding(1);
                     Arg2_Short = s.Serialize<short>(Arg2_Short, name: nameof(Arg2_Short)); // Checks if this value equals some other value in memory
-                    s.SerializePadding(1);
                     CommandOffset1 = s.Serialize<short>(CommandOffset1, name: nameof(CommandOffset1));
                     break;
 
@@ -258,7 +257,6 @@ namespace BinarySerializer.Klonoa.KH
                     InvertCondition = s.Serialize<bool>(InvertCondition, name: nameof(InvertCondition));
                     s.SerializePadding(1);
                     Arg2_Short = s.Serialize<short>(Arg2_Short, name: nameof(Arg2_Short)); // Value used to determine condition
-                    s.SerializePadding(1);
                     CommandOffset1 = s.Serialize<short>(CommandOffset1, name: nameof(CommandOffset1));
                     break;
 
