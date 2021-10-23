@@ -125,7 +125,7 @@ namespace BinarySerializer.Klonoa
 
             // KW archives have an end pointer we can use to get the size for the last file
             if (Pre_Type == ArchiveFileType.KH_KW)
-                filePointers = filePointers.Append(OffsetTable.KH_KW_EndPointer);
+                filePointers = filePointers.Append(OffsetTable.KH_KW_SharedDataPointer);
 
             // Although they usually are the files don't have to be located in the order they're indexed in. Some archives for example
             // have "empty" files reference a dummy file with index 0 or 1.

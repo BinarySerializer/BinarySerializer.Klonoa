@@ -22,7 +22,7 @@ namespace BinarySerializer.Klonoa
         // Klonoa Heroes KW
         public Pointer KH_KW_FileOffsetsPointer { get; set; }
         public int KH_KW_OffsetTableLength { get; set; }
-        public Pointer KH_KW_EndPointer { get; set; }
+        public Pointer KH_KW_SharedDataPointer { get; set; } // Shared data between the maps, such as common tilesets. Appears after the map files.
         public KH_KW_Entry[] KH_KW_Entries { get; set; }
 
         public override void SerializeImpl(SerializerObject s)
@@ -53,7 +53,7 @@ namespace BinarySerializer.Klonoa
                 FilesCount = s.Serialize<int>(FilesCount, name: nameof(FilesCount));
                 KH_KW_FileOffsetsPointer = s.SerializePointer(KH_KW_FileOffsetsPointer, anchor: Offset, name: nameof(KH_KW_FileOffsetsPointer));
                 KH_KW_OffsetTableLength = s.Serialize<int>(KH_KW_OffsetTableLength, name: nameof(KH_KW_OffsetTableLength));
-                KH_KW_EndPointer = s.SerializePointer(KH_KW_EndPointer, anchor: Offset, name: nameof(KH_KW_EndPointer));
+                KH_KW_SharedDataPointer = s.SerializePointer(KH_KW_SharedDataPointer, anchor: Offset, name: nameof(KH_KW_SharedDataPointer));
                 s.SerializePadding(44, logIfNotNull: true);
 
                 // For simplicity we don't use a GoTo or DoAt and instead check to make sure we're at the correct position
