@@ -5,12 +5,12 @@
         public Pointer Pre_SharedDataPointer { get; set; }
 
         public uint EnemyObjectsOffset { get; set; }
-        public uint TriggerObjectsOffset { get; set; }
+        public uint GenericObjectsOffset { get; set; }
         public uint SpecialMapLayerOffset { get; set; }
         public uint[] MapLayerOffsets { get; set; }
 
         public EnemyObjects EnemyObjects { get; set; }
-        public TriggerObjects TriggerObjects { get; set; }
+        public GenericObjects GenericObjects { get; set; }
 
         public MapLayer SpecialMapLayer { get; set; } // Has palette, tileset and collision
         public MapLayer[] MapLayers { get; set; } // Has the map layers
@@ -20,7 +20,7 @@
             s.SerializeMagicString("KM", 4);
             s.SerializePadding(12, logIfNotNull: true);
             EnemyObjectsOffset = s.Serialize<uint>(EnemyObjectsOffset, name: nameof(EnemyObjectsOffset));
-            TriggerObjectsOffset = s.Serialize<uint>(TriggerObjectsOffset, name: nameof(TriggerObjectsOffset));
+            GenericObjectsOffset = s.Serialize<uint>(GenericObjectsOffset, name: nameof(GenericObjectsOffset));
             SpecialMapLayerOffset = s.Serialize<uint>(SpecialMapLayerOffset, name: nameof(SpecialMapLayerOffset));
             s.SerializePadding(4, logIfNotNull: true);
             MapLayerOffsets = s.SerializeArray<uint>(MapLayerOffsets, 4, name: nameof(MapLayerOffsets));
@@ -29,8 +29,8 @@
             if (EnemyObjectsOffset != 0)
                 s.DoAt(Offset + EnemyObjectsOffset, () => EnemyObjects = s.SerializeObject<EnemyObjects>(EnemyObjects, name: nameof(EnemyObjects)));
 
-            if (TriggerObjectsOffset != 0)
-                s.DoAt(Offset + TriggerObjectsOffset, () => TriggerObjects = s.SerializeObject<TriggerObjects>(TriggerObjects, name: nameof(TriggerObjects)));
+            if (GenericObjectsOffset != 0)
+                s.DoAt(Offset + GenericObjectsOffset, () => GenericObjects = s.SerializeObject<GenericObjects>(GenericObjects, name: nameof(GenericObjects)));
 
             if (SpecialMapLayerOffset != 0)
                 s.DoAt(Offset + SpecialMapLayerOffset, () => SpecialMapLayer = s.SerializeObject<MapLayer>(SpecialMapLayer, x => x.Pre_SharedDataPointer = Pre_SharedDataPointer, name: nameof(SpecialMapLayer)));

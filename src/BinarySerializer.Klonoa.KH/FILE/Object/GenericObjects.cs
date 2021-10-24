@@ -1,6 +1,6 @@
 ﻿namespace BinarySerializer.Klonoa.KH
 {
-    public class TriggerObjects : BinarySerializable
+    public class GenericObjects : BinarySerializable
     {
         public byte[] Bytes_04 { get; set; }
         public short Width { get; set; }
@@ -11,7 +11,7 @@
         public uint ObjectsOffset { get; set; }
 
         public byte[] ObjectsIndexMap { get; set; }
-        public TriggerObject[] Objects { get; set; }
+        public GenericObject[] Objects { get; set; }
 
         public override void SerializeImpl(SerializerObject s)
         {
@@ -25,7 +25,7 @@
             ObjectsOffset = s.Serialize<uint>(ObjectsOffset, name: nameof(ObjectsOffset));
 
             s.DoAt(Offset + ObjectsIndexMapOffset, () => ObjectsIndexMap = s.SerializeArray<byte>(ObjectsIndexMap, (Width / 8) * (Height / 8), name: nameof(ObjectsIndexMap)));
-            s.DoAt(Offset + ObjectsOffset, () => Objects = s.SerializeObjectArray<TriggerObject>(Objects, ObjectsCount, name: nameof(Objects)));
+            s.DoAt(Offset + ObjectsOffset, () => Objects = s.SerializeObjectArray<GenericObject>(Objects, ObjectsCount, name: nameof(Objects)));
         }
     }
 }

@@ -1,12 +1,12 @@
 ﻿namespace BinarySerializer.Klonoa.KH
 {
-    public class TriggerObject : BinarySerializable
+    public class GenericObject : BinarySerializable
     {
         public short ObjType { get; set; } // 1-15
         public short XPos { get; set; }
         public short ZPos { get; set; }
         public short YPos { get; set; }
-        public byte[] Bytes_08 { get; set; }
+        public byte[] Bytes_08 { get; set; } // Type specific values
 
         public override void SerializeImpl(SerializerObject s)
         {
