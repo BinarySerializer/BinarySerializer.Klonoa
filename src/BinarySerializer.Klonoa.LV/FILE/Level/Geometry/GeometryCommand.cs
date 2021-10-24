@@ -34,11 +34,17 @@ namespace BinarySerializer.Klonoa.LV
                     VIFcode_Unpack unpack = new VIFcode_Unpack(VIFCode);
                     if (unpack.VN == VIFcode_Unpack.UnpackVN.V3 && unpack.VL == VIFcode_Unpack.UnpackVL.VL_32)
                     {
-                        if (unpack.ADDR == 923)
+                        SectionPosition = s.SerializeObject(SectionPosition, name: nameof(SectionPosition));
+                        Type = CommandType.SectionPosition;
+                    } else if (unpack.VN == VIFcode_Unpack.UnpackVN.V4 && unpack.VL == VIFcode_Unpack.UnpackVL.VL_32)
+                    {
+                        if (unpack.ADDR == 0)
                         {
-                            SectionPosition = s.SerializeObject(SectionPosition, name: nameof(SectionPosition));
-                            Type = CommandType.SectionPosition;
-                        } else if (unpack.ADDR == 0)
+                            TriangleStrips = s.SerializeObjectArray<GIFtag>(TriangleStrips, unpack.SIZE - 1, name: nameof(TriangleStrips));
+                            s.SerializePadding(0x10, logIfNotNull: true);
+                            Type = CommandType.TriangleStrips;
+                            
+                        } else if (unpack.ADDR == 920)
                         {
                             TEX0 = s.SerializeObject<GSReg_TEX0_1>(TEX0, name: nameof(TEX0));
                             s.SerializePadding(8);
@@ -47,11 +53,6 @@ namespace BinarySerializer.Klonoa.LV
                         {
                             throw new BinarySerializableException(this, $"Unknown command for address {unpack.ADDR}");
                         }
-                    } else if (unpack.VN == VIFcode_Unpack.UnpackVN.V4 && unpack.VL == VIFcode_Unpack.UnpackVL.VL_32)
-                    {
-                        TriangleStrips = s.SerializeObjectArray<GIFtag>(TriangleStrips, unpack.SIZE - 1, name: nameof(TriangleStrips));
-                        s.SerializePadding(0x10, logIfNotNull: true);
-                        Type = CommandType.TriangleStrips;
                     } else if (unpack.VN == VIFcode_Unpack.UnpackVN.V3 && unpack.VL == VIFcode_Unpack.UnpackVL.VL_16)
                     {
                         Vertices = s.SerializeObjectArray<KlonoaLV_Vector16>(Vertices, unpack.SIZE, name: nameof(Vertices));
