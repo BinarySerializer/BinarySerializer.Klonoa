@@ -8,7 +8,7 @@ namespace BinarySerializer.Klonoa.LV
         public CommandType Type { get; set; }
 
         public KlonoaLV_FloatVector SectionPosition { get; set; }
-        public GeometryTriangleStrip[] TriangleStrips { get; set; }
+        public GIFtag[] TriangleStrips { get; set; }
         public KlonoaLV_Vector16[] Vertices { get; set; }
         public KlonoaLV_UV16[] UVs { get; set; }
         public RGB888Color[] VertexColors { get; set; }
@@ -49,7 +49,7 @@ namespace BinarySerializer.Klonoa.LV
                         }
                     } else if (unpack.VN == VIFcode_Unpack.UnpackVN.V4 && unpack.VL == VIFcode_Unpack.UnpackVL.VL_32)
                     {
-                        TriangleStrips = s.SerializeObjectArray<GeometryTriangleStrip>(TriangleStrips, unpack.SIZE - 1, name: nameof(TriangleStrips));
+                        TriangleStrips = s.SerializeObjectArray<GIFtag>(TriangleStrips, unpack.SIZE - 1, name: nameof(TriangleStrips));
                         s.SerializePadding(0x10, logIfNotNull: true);
                         Type = CommandType.TriangleStrips;
                     } else if (unpack.VN == VIFcode_Unpack.UnpackVN.V3 && unpack.VL == VIFcode_Unpack.UnpackVL.VL_16)
