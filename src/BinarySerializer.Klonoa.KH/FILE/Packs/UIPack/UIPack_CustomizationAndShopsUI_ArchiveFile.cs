@@ -1,6 +1,6 @@
 ﻿namespace BinarySerializer.Klonoa.KH
 {
-    public class UIPack_File76_ArchiveFile : ArchiveFile
+    public class UIPack_CustomizationAndShopsUI_ArchiveFile : ArchiveFile
     {
         public Graphics_File File_0 { get; set; }
         public Graphics_File File_1 { get; set; }

@@ -20,19 +20,19 @@
         public Graphics_File Font_0 { get; set; }
         public Graphics_File Font_1 { get; set; }
         public Graphics_File Font_2 { get; set; }
-        public ArchiveFile<ArchiveFile<ArchiveFile<Graphics_File>>> File_18 { get; set; }
-        public ArchiveFile<ArchiveFile<Graphics_File>> File_19 { get; set; }
+        public ArchiveFile<ArchiveFile<ArchiveFile<Graphics_File>>> CharacterCustomizationPortraits { get; set; }
+        public ArchiveFile<ArchiveFile<Graphics_File>> CharacterNames { get; set; }
         public Graphics_File File_20 { get; set; }
         public Graphics_File File_21 { get; set; }
         public ArchiveFile<Graphics_File> File_22 { get; set; }
         public Graphics_File File_23 { get; set; }
-        public ArchiveFile<ArchiveFile<ArchiveFile<Graphics_File>>> File_24 { get; set; }
-        public ArchiveFile<ArchiveFile<Graphics_File>> File_25 { get; set; }
-        public ArchiveFile<ArchiveFile<Graphics_File>> File_26 { get; set; }
-        public ArchiveFile<ArchiveFile<Graphics_File>> File_27 { get; set; }
-        public ArchiveFile<Graphics_File> File_28 { get; set; }
-        public ArchiveFile<Graphics_File> File_29 { get; set; }
-        public ArchiveFile<Graphics_File> File_30 { get; set; }
+        public ArchiveFile<ArchiveFile<ArchiveFile<Graphics_File>>> WeaponCustomizationGraphics { get; set; }
+        public ArchiveFile<ArchiveFile<Graphics_File>> ArmorCustomizationGraphics { get; set; }
+        public ArchiveFile<ArchiveFile<Graphics_File>> WeaponIcons { get; set; }
+        public ArchiveFile<ArchiveFile<Graphics_File>> ArmorIcons { get; set; }
+        public ArchiveFile<Graphics_File> AccessoryIcons { get; set; }
+        public ArchiveFile<Graphics_File> ConsumableIcons { get; set; }
+        public ArchiveFile<Graphics_File> KeyItemIcons { get; set; }
         public Graphics_File File_31 { get; set; }
         public Graphics_File File_32 { get; set; }
         public Graphics_File File_33 { get; set; }
@@ -75,10 +75,10 @@
         public TextCommands File_70 { get; set; }
         public TextCommands File_71 { get; set; }
         public TextCommands File_72 { get; set; }
-        public ArchiveFile<Graphics_File> File_73 { get; set; }
-        public ArchiveFile<Graphics_File> File_74 { get; set; }
+        public ArchiveFile<Graphics_File> LevelUp { get; set; }
+        public ArchiveFile<Graphics_File> HeroMedals { get; set; }
         public ArchiveFile<Graphics_File> File_75 { get; set; }
-        public UIPack_File76_ArchiveFile File_76 { get; set; }
+        public UIPack_CustomizationAndShopsUI_ArchiveFile CustomizationAndShopsUI { get; set; }
         public UIPack_File77_ArchiveFile File_77 { get; set; }
 
         protected override void SerializeFiles(SerializerObject s)
@@ -101,19 +101,19 @@
             Font_0 = SerializeFile<Graphics_File>(s, Font_0, 15, name: nameof(Font_0));
             Font_1 = SerializeFile<Graphics_File>(s, Font_1, 16, name: nameof(Font_1));
             Font_2 = SerializeFile<Graphics_File>(s, Font_2, 17, name: nameof(Font_2));
-            File_18 = SerializeFile<ArchiveFile<ArchiveFile<ArchiveFile<Graphics_File>>>>(s, File_18, 18, name: nameof(File_18));
-            File_19 = SerializeFile<ArchiveFile<ArchiveFile<Graphics_File>>>(s, File_19, 19, name: nameof(File_19));
+            CharacterCustomizationPortraits = SerializeFile<ArchiveFile<ArchiveFile<ArchiveFile<Graphics_File>>>>(s, CharacterCustomizationPortraits, 18, name: nameof(CharacterCustomizationPortraits));
+            CharacterNames = SerializeFile<ArchiveFile<ArchiveFile<Graphics_File>>>(s, CharacterNames, 19, name: nameof(CharacterNames));
             File_20 = SerializeFile<Graphics_File>(s, File_20, 20, name: nameof(File_20));
             File_21 = SerializeFile<Graphics_File>(s, File_21, 21, name: nameof(File_21));
             File_22 = SerializeFile<ArchiveFile<Graphics_File>>(s, File_22, 22, name: nameof(File_22));
             File_23 = SerializeFile<Graphics_File>(s, File_23, 23, name: nameof(File_23));
-            File_24 = SerializeFile<ArchiveFile<ArchiveFile<ArchiveFile<Graphics_File>>>>(s, File_24, 24, name: nameof(File_24));
-            File_25 = SerializeFile<ArchiveFile<ArchiveFile<Graphics_File>>>(s, File_25, 25, name: nameof(File_25));
-            File_26 = SerializeFile<ArchiveFile<ArchiveFile<Graphics_File>>>(s, File_26, 26, name: nameof(File_26));
-            File_27 = SerializeFile<ArchiveFile<ArchiveFile<Graphics_File>>>(s, File_27, 27, name: nameof(File_27));
-            File_28 = SerializeFile<ArchiveFile<Graphics_File>>(s, File_28, 28, name: nameof(File_28));
-            File_29 = SerializeFile<ArchiveFile<Graphics_File>>(s, File_29, 29, name: nameof(File_29));
-            File_30 = SerializeFile<ArchiveFile<Graphics_File>>(s, File_30, 30, name: nameof(File_30));
+            WeaponCustomizationGraphics = SerializeFile<ArchiveFile<ArchiveFile<ArchiveFile<Graphics_File>>>>(s, WeaponCustomizationGraphics, 24, name: nameof(WeaponCustomizationGraphics));
+            ArmorCustomizationGraphics = SerializeFile<ArchiveFile<ArchiveFile<Graphics_File>>>(s, ArmorCustomizationGraphics, 25, name: nameof(ArmorCustomizationGraphics));
+            WeaponIcons = SerializeFile<ArchiveFile<ArchiveFile<Graphics_File>>>(s, WeaponIcons, 26, name: nameof(WeaponIcons));
+            ArmorIcons = SerializeFile<ArchiveFile<ArchiveFile<Graphics_File>>>(s, ArmorIcons, 27, name: nameof(ArmorIcons));
+            AccessoryIcons = SerializeFile<ArchiveFile<Graphics_File>>(s, AccessoryIcons, 28, name: nameof(AccessoryIcons));
+            ConsumableIcons = SerializeFile<ArchiveFile<Graphics_File>>(s, ConsumableIcons, 29, name: nameof(ConsumableIcons));
+            KeyItemIcons = SerializeFile<ArchiveFile<Graphics_File>>(s, KeyItemIcons, 30, name: nameof(KeyItemIcons));
             File_31 = SerializeFile<Graphics_File>(s, File_31, 31, name: nameof(File_31));
             File_32 = SerializeFile<Graphics_File>(s, File_32, 32, name: nameof(File_32));
             File_33 = SerializeFile<Graphics_File>(s, File_33, 33, name: nameof(File_33));
@@ -156,10 +156,10 @@
             File_70 = SerializeFile<TextCommands>(s, File_70, 70, name: nameof(File_70));
             File_71 = SerializeFile<TextCommands>(s, File_71, 71, name: nameof(File_71));
             File_72 = SerializeFile<TextCommands>(s, File_72, 72, name: nameof(File_72));
-            File_73 = SerializeFile<ArchiveFile<Graphics_File>>(s, File_73, 73, name: nameof(File_73));
-            File_74 = SerializeFile<ArchiveFile<Graphics_File>>(s, File_74, 74, name: nameof(File_74));
+            LevelUp = SerializeFile<ArchiveFile<Graphics_File>>(s, LevelUp, 73, name: nameof(LevelUp));
+            HeroMedals = SerializeFile<ArchiveFile<Graphics_File>>(s, HeroMedals, 74, name: nameof(HeroMedals));
             File_75 = SerializeFile<ArchiveFile<Graphics_File>>(s, File_75, 75, name: nameof(File_75));
-            File_76 = SerializeFile<UIPack_File76_ArchiveFile>(s, File_76, 76, name: nameof(File_76));
+            CustomizationAndShopsUI = SerializeFile<UIPack_CustomizationAndShopsUI_ArchiveFile>(s, CustomizationAndShopsUI, 76, name: nameof(CustomizationAndShopsUI));
             File_77 = SerializeFile<UIPack_File77_ArchiveFile>(s, File_77, 77, name: nameof(File_77));
         }
     }
