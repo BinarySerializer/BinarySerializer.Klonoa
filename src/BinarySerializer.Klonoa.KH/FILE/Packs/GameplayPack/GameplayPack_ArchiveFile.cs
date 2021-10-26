@@ -25,7 +25,7 @@
         public Animation_File File_20 { get; set; }
         public ArchiveFile<Graphics_File> ShopBackgrounds { get; set; }
         public Graphics_File File_22 { get; set; }
-        public RawData_File File_23 { get; set; } // TODO: HM file
+        public TextCollection_File File_23 { get; set; }
         public GameplayPack_StartMenu_ArchiveFile StartMenu { get; set; }
         public ArchiveFile<Graphics_File> ScreenTransition_Klonoa { get; set; }
         public ArchiveFile<Graphics_File> ScreenTransition_Moo { get; set; }
@@ -77,7 +77,7 @@
             File_20 = SerializeFile<Animation_File>(s, File_20, 20, name: nameof(File_20));
             ShopBackgrounds = SerializeFile<ArchiveFile<Graphics_File>>(s, ShopBackgrounds, 21, name: nameof(ShopBackgrounds));
             File_22 = SerializeFile<Graphics_File>(s, File_22, 22, name: nameof(File_22));
-            File_23 = SerializeFile<RawData_File>(s, File_23, 23, name: nameof(File_23));
+            File_23 = SerializeFile<TextCollection_File>(s, File_23, 23, name: nameof(File_23));
             StartMenu = SerializeFile<GameplayPack_StartMenu_ArchiveFile>(s, StartMenu, 24, name: nameof(StartMenu));
             ScreenTransition_Klonoa = SerializeFile<ArchiveFile<Graphics_File>>(s, ScreenTransition_Klonoa, 25, name: nameof(ScreenTransition_Klonoa));
             ScreenTransition_Moo = SerializeFile<ArchiveFile<Graphics_File>>(s, ScreenTransition_Moo, 26, name: nameof(ScreenTransition_Moo));
