@@ -116,11 +116,14 @@ MenuSpritesPack_ArchiveFile menuSprites = loader.LoadBINFile<MenuSpritesPack_Arc
 // First create a context for the data serialization
 using Context context = new Context(basePath);
 
-// Create a configuration
+// Create the game settings
 KlonoaSettings_KH settings = new KlonoaSettings_KH();
 
 // Add the game settings to the context
 context.AddKlonoaSettings(settings);
+
+// Add the pointers to the context
+Context.AddPreDefinedPointers(DefinedPointers.GBA_JP);
 
 // Add the ROM file to the context
 context.AddFile(new MemoryMappedFile(context, romFileName, GBAConstants.Address_ROM));

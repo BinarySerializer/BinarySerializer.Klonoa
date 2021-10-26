@@ -30,28 +30,36 @@ namespace BinarySerializer.Klonoa.KH
             // 082f9870 - offset table with names
 
             if (Pre_SerializeFlags.HasFlag(SerializeDataFlags.MenuPack))
-                s.DoAt(new Pointer(0x08267940, Offset.File), () => MenuPack = s.SerializeObject<MenuPack_ArchiveFile>(MenuPack, name: nameof(MenuPack)));
+                s.DoAt(s.GetPreDefinedPointer(DefinedPointer.MenuPack), () => 
+                    MenuPack = s.SerializeObject<MenuPack_ArchiveFile>(MenuPack, name: nameof(MenuPack)));
             
             if (Pre_SerializeFlags.HasFlag(SerializeDataFlags.EnemyAnimationsPack))
-                s.DoAt(new Pointer(0x08399f10, Offset.File), () => EnemyAnimationsPack = s.SerializeObject<ArchiveFile<Animation_File>>(EnemyAnimationsPack, x => x.Pre_Type = ArchiveFileType.KH_TP, name: nameof(EnemyAnimationsPack)));
+                s.DoAt(s.GetPreDefinedPointer(DefinedPointer.EnemyAnimationsPack), () => 
+                    EnemyAnimationsPack = s.SerializeObject<ArchiveFile<Animation_File>>(EnemyAnimationsPack, x => x.Pre_Type = ArchiveFileType.KH_TP, name: nameof(EnemyAnimationsPack)));
             
             if (Pre_SerializeFlags.HasFlag(SerializeDataFlags.GameplayPack))
-                s.DoAt(new Pointer(0x088fda70, Offset.File), () => GameplayPack = s.SerializeObject<GameplayPack_ArchiveFile>(GameplayPack, name: nameof(GameplayPack)));
+                s.DoAt(s.GetPreDefinedPointer(DefinedPointer.GameplayPack), () => 
+                    GameplayPack = s.SerializeObject<GameplayPack_ArchiveFile>(GameplayPack, name: nameof(GameplayPack)));
             
             if (Pre_SerializeFlags.HasFlag(SerializeDataFlags.ItemsPack))
-                s.DoAt(new Pointer(0x0825c880, Offset.File), () => ItemsPack = s.SerializeObject<ItemsPack_Archive>(ItemsPack, name: nameof(ItemsPack)));
+                s.DoAt(s.GetPreDefinedPointer(DefinedPointer.ItemsPack), () => 
+                    ItemsPack = s.SerializeObject<ItemsPack_Archive>(ItemsPack, name: nameof(ItemsPack)));
             
             if (Pre_SerializeFlags.HasFlag(SerializeDataFlags.UIPack))
-                s.DoAt(new Pointer(0x0828fd20, Offset.File), () => UIPack = s.SerializeObject<UIPack_ArchiveFile>(UIPack, name: nameof(UIPack)));
+                s.DoAt(s.GetPreDefinedPointer(DefinedPointer.UIPack), () => 
+                    UIPack = s.SerializeObject<UIPack_ArchiveFile>(UIPack, name: nameof(UIPack)));
             
             if (Pre_SerializeFlags.HasFlag(SerializeDataFlags.StoryPack))
-                s.DoAt(new Pointer(0x0873d350, Offset.File), () => StoryPack = s.SerializeObject<StoryPack_ArchiveFile>(StoryPack, name: nameof(StoryPack)));
+                s.DoAt(s.GetPreDefinedPointer(DefinedPointer.StoryPack), () => 
+                    StoryPack = s.SerializeObject<StoryPack_ArchiveFile>(StoryPack, name: nameof(StoryPack)));
             
             if (Pre_SerializeFlags.HasFlag(SerializeDataFlags.MapsPack))
-                s.DoAt(new Pointer(0x08b30fd0, Offset.File), () => MapsPack = s.SerializeObject<MapsPack_ArchiveFile>(MapsPack, name: nameof(MapsPack)));
+                s.DoAt(s.GetPreDefinedPointer(DefinedPointer.MapsPack), () => 
+                    MapsPack = s.SerializeObject<MapsPack_ArchiveFile>(MapsPack, name: nameof(MapsPack)));
 
             if (Pre_SerializeFlags.HasFlag(SerializeDataFlags.EnemyObjectDefinitions))
-                s.DoAt(new Pointer(0x08068720, Offset.File), () => EnemyObjectDefinitions = s.SerializeObjectArray<EnemyObjectTypeDefinition>(EnemyObjectDefinitions, 182, name: nameof(EnemyObjectDefinitions)));
+                s.DoAt(s.GetPreDefinedPointer(DefinedPointer.EnemyObjectDefinitions), () => 
+                    EnemyObjectDefinitions = s.SerializeObjectArray<EnemyObjectTypeDefinition>(EnemyObjectDefinitions, 182, name: nameof(EnemyObjectDefinitions)));
         }
 
         [Flags]
