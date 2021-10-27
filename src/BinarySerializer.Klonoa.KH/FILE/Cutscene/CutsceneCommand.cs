@@ -41,7 +41,6 @@ namespace BinarySerializer.Klonoa.KH
         public TextCommands TextCommands { get; set; }
 
         // Text array
-        public short TextArrayOffset { get; set; } // Value * 4
         public short DefaultTextIndex { get; set; }
         public ArchiveFile<TextCommands> TextCommandsArray { get; set; }
 
@@ -556,10 +555,12 @@ namespace BinarySerializer.Klonoa.KH
                     break;
 
                 case CommandType.SetTextMulti:
-                    TextArrayOffset = s.Serialize<short>(TextArrayOffset, name: nameof(TextArrayOffset));
+                    TextOffsetOffset = s.Serialize<short>(TextOffsetOffset, name: nameof(TextOffsetOffset));
                     DefaultTextIndex = s.Serialize<short>(DefaultTextIndex, name: nameof(DefaultTextIndex));
 
-                    s.DoAt(Offset + TextArrayOffset * 4, () =>
+                    s.DoAt(Offset + TextOffsetOffset * 4, () =>
+                        TextOffset = s.Serialize<int>(TextOffset, name: nameof(TextOffset)));
+                    s.DoAt(Offset + TextOffsetOffset * 4 + TextOffset * 4, () =>
                         TextCommandsArray = s.SerializeObject<ArchiveFile<TextCommands>>(TextCommandsArray, name: nameof(TextCommandsArray)));
                     break;
 
