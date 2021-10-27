@@ -13,10 +13,13 @@ namespace BinarySerializer.Klonoa.KH
             Pointer firstTextPointer = null;
             Commands = s.SerializeObjectArrayUntil(Commands, x =>
             {
-                var textPointer = x.TextCommands?.Offset ?? x.TextCommandsArray?.Offset;
+                if (x.Type == CutsceneCommand.CommandType.SetText || x.Type == CutsceneCommand.CommandType.SetTextMulti)
+                {
+                    Pointer textPointer = x.GetPointerFromOffset(x.TextOffsetOffset);
 
-                if (textPointer != null && (firstTextPointer == null || firstTextPointer.FileOffset > textPointer.FileOffset))
-                    firstTextPointer = textPointer;
+                    if (firstTextPointer == null || firstTextPointer.FileOffset > textPointer.FileOffset)
+                        firstTextPointer = textPointer;
+                }
 
                 return firstTextPointer != null && s.CurrentPointer.FileOffset >= firstTextPointer.FileOffset;
             }, name: nameof(Commands));
