@@ -40,8 +40,10 @@ namespace BinarySerializer.Klonoa.KH
         public int TextOffset { get; set; } // Value * 4
         public TextCommands TextCommands { get; set; }
 
-        // Sub-function
-        public CutsceneCommand[] SubCommands { get; set; }
+        // Text array
+        public short TextArrayOffset { get; set; } // Value * 4
+        public short DefaultTextIndex { get; set; }
+        public ArchiveFile<TextCommands> TextCommandsArray { get; set; }
 
         public override void SerializeImpl(SerializerObject s)
         {
@@ -72,7 +74,6 @@ namespace BinarySerializer.Klonoa.KH
 
                 case CommandType.Call: // Goes to offset and saves current position to go back to when hitting a return
                     CommandOffset1 = s.Serialize<short>(CommandOffset1, name: nameof(CommandOffset1));
-                    s.DoAt(Offset + CommandOffset1 * 4, () => SubCommands = s.SerializeObjectArrayUntil(SubCommands, x => x.Type == CommandType.Return, name: nameof(SubCommands)));
                     break;
 
                 case CommandType.Return: // Return to the saved position
@@ -554,9 +555,12 @@ namespace BinarySerializer.Klonoa.KH
                     Arg1_Short = s.Serialize<short>(Arg1_Short, name: nameof(Arg1_Short));
                     break;
 
-                case CommandType.CMD_03_24:
-                    FileIndex_0 = s.Serialize<short>(FileIndex_0, name: nameof(FileIndex_0));
-                    FileIndex_1 = s.Serialize<short>(FileIndex_1, name: nameof(FileIndex_1));
+                case CommandType.SetTextMulti:
+                    TextArrayOffset = s.Serialize<short>(TextArrayOffset, name: nameof(TextArrayOffset));
+                    DefaultTextIndex = s.Serialize<short>(DefaultTextIndex, name: nameof(DefaultTextIndex));
+
+                    s.DoAt(Offset + TextArrayOffset * 4, () =>
+                        TextCommandsArray = s.SerializeObject<ArchiveFile<TextCommands>>(TextCommandsArray, name: nameof(TextCommandsArray)));
                     break;
 
                 case CommandType.CMD_03_25:
@@ -766,7 +770,7 @@ namespace BinarySerializer.Klonoa.KH
             ConditionalGoTo_4 = 0321,
             CMD_03_22 = 0322,
             CMD_03_23 = 0323,
-            CMD_03_24 = 0324,
+            SetTextMulti = 0324,
             CMD_03_25 = 0325,
             CMD_03_26 = 0326,
         }
