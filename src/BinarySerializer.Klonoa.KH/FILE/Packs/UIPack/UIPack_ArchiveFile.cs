@@ -44,7 +44,7 @@
         public Graphics_File File_39 { get; set; }
         public Graphics_File File_40 { get; set; }
         public Graphics_File File_41 { get; set; }
-        public TextCommands File_42 { get; set; }
+        public TextCommands_File File_42 { get; set; }
         public ArchiveFile<Graphics_File> File_43 { get; set; }
         public ArchiveFile<Graphics_File> File_44 { get; set; }
         public ArchiveFile<Graphics_File> File_45 { get; set; }
@@ -65,16 +65,16 @@
         public Graphics_File File_60 { get; set; }
         public Graphics_File File_61 { get; set; }
         public Graphics_File File_62 { get; set; }
-        public TextCommands File_63 { get; set; }
-        public TextCommands File_64 { get; set; }
-        public TextCommands File_65 { get; set; }
-        public TextCommands File_66 { get; set; }
-        public TextCommands File_67 { get; set; }
-        public TextCommands File_68 { get; set; }
-        public TextCommands File_69 { get; set; }
-        public TextCommands File_70 { get; set; }
-        public TextCommands File_71 { get; set; }
-        public TextCommands File_72 { get; set; }
+        public TextCommands_File File_63 { get; set; }
+        public TextCommands_File File_64 { get; set; }
+        public TextCommands_File File_65 { get; set; }
+        public TextCommands_File File_66 { get; set; }
+        public TextCommands_File File_67 { get; set; }
+        public TextCommands_File File_68 { get; set; }
+        public TextCommands_File File_69 { get; set; }
+        public TextCommands_File File_70 { get; set; }
+        public TextCommands_File File_71 { get; set; }
+        public TextCommands_File File_72 { get; set; }
         public ArchiveFile<Graphics_File> LevelUp { get; set; }
         public ArchiveFile<Graphics_File> HeroMedals { get; set; }
         public ArchiveFile<Graphics_File> File_75 { get; set; }
@@ -125,7 +125,7 @@
             File_39 = SerializeFile<Graphics_File>(s, File_39, 39, name: nameof(File_39));
             File_40 = SerializeFile<Graphics_File>(s, File_40, 40, name: nameof(File_40));
             File_41 = SerializeFile<Graphics_File>(s, File_41, 41, name: nameof(File_41));
-            File_42 = SerializeFile<TextCommands>(s, File_42, 42, name: nameof(File_42));
+            File_42 = SerializeFile<TextCommands_File>(s, File_42, 42, name: nameof(File_42));
             File_43 = SerializeFile<ArchiveFile<Graphics_File>>(s, File_43, 43, name: nameof(File_43));
             File_44 = SerializeFile<ArchiveFile<Graphics_File>>(s, File_44, 44, name: nameof(File_44));
             File_45 = SerializeFile<ArchiveFile<Graphics_File>>(s, File_45, 45, name: nameof(File_45));
@@ -146,16 +146,16 @@
             File_60 = SerializeFile<Graphics_File>(s, File_60, 60, name: nameof(File_60));
             File_61 = SerializeFile<Graphics_File>(s, File_61, 61, name: nameof(File_61));
             File_62 = SerializeFile<Graphics_File>(s, File_62, 62, name: nameof(File_62));
-            File_63 = SerializeFile<TextCommands>(s, File_63, 63, name: nameof(File_63));
-            File_64 = SerializeFile<TextCommands>(s, File_64, 64, name: nameof(File_64));
-            File_65 = SerializeFile<TextCommands>(s, File_65, 65, name: nameof(File_65));
-            File_66 = SerializeFile<TextCommands>(s, File_66, 66, name: nameof(File_66));
-            File_67 = SerializeFile<TextCommands>(s, File_67, 67, name: nameof(File_67));
-            File_68 = SerializeFile<TextCommands>(s, File_68, 68, name: nameof(File_68));
-            File_69 = SerializeFile<TextCommands>(s, File_69, 69, name: nameof(File_69));
-            File_70 = SerializeFile<TextCommands>(s, File_70, 70, name: nameof(File_70));
-            File_71 = SerializeFile<TextCommands>(s, File_71, 71, name: nameof(File_71));
-            File_72 = SerializeFile<TextCommands>(s, File_72, 72, name: nameof(File_72));
+            File_63 = SerializeFile<TextCommands_File>(s, File_63, 63, name: nameof(File_63));
+            File_64 = SerializeFile<TextCommands_File>(s, File_64, 64, name: nameof(File_64));
+            File_65 = SerializeFile<TextCommands_File>(s, File_65, 65, name: nameof(File_65));
+            File_66 = SerializeFile<TextCommands_File>(s, File_66, 66, name: nameof(File_66));
+            File_67 = SerializeFile<TextCommands_File>(s, File_67, 67, name: nameof(File_67));
+            File_68 = SerializeFile<TextCommands_File>(s, File_68, 68, name: nameof(File_68));
+            File_69 = SerializeFile<TextCommands_File>(s, File_69, 69, name: nameof(File_69));
+            File_70 = SerializeFile<TextCommands_File>(s, File_70, 70, name: nameof(File_70));
+            File_71 = SerializeFile<TextCommands_File>(s, File_71, 71, name: nameof(File_71));
+            File_72 = SerializeFile<TextCommands_File>(s, File_72, 72, name: nameof(File_72));
             LevelUp = SerializeFile<ArchiveFile<Graphics_File>>(s, LevelUp, 73, name: nameof(LevelUp));
             HeroMedals = SerializeFile<ArchiveFile<Graphics_File>>(s, HeroMedals, 74, name: nameof(HeroMedals));
             File_75 = SerializeFile<ArchiveFile<Graphics_File>>(s, File_75, 75, name: nameof(File_75));

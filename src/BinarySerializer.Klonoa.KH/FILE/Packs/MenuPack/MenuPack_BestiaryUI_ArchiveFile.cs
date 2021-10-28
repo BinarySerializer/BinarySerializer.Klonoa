@@ -13,9 +13,9 @@
         public Graphics_File File_8 { get; set; }
         public Animation_File File_9 { get; set; }
         public Graphics_File File_10 { get; set; }
-        public TextCommands File_11 { get; set; }
-        public TextCommands File_12 { get; set; }
-        public TextCommands File_13 { get; set; }
+        public TextCommands_File File_11 { get; set; }
+        public TextCommands_File File_12 { get; set; }
+        public TextCommands_File File_13 { get; set; }
 
         protected override void SerializeFiles(SerializerObject s)
         {
@@ -30,9 +30,9 @@
             File_8 = SerializeFile<Graphics_File>(s, File_8, 8, fileEncoder: new BytePairEncoder(), name: nameof(File_8));
             File_9 = SerializeFile<Animation_File>(s, File_9, 9, name: nameof(File_9));
             File_10 = SerializeFile<Graphics_File>(s, File_10, 10, name: nameof(File_10));
-            File_11 = SerializeFile<TextCommands>(s, File_11, 11, name: nameof(File_11));
-            File_12 = SerializeFile<TextCommands>(s, File_12, 12, name: nameof(File_12));
-            File_13 = SerializeFile<TextCommands>(s, File_13, 13, name: nameof(File_13));
+            File_11 = SerializeFile<TextCommands_File>(s, File_11, 11, name: nameof(File_11));
+            File_12 = SerializeFile<TextCommands_File>(s, File_12, 12, name: nameof(File_12));
+            File_13 = SerializeFile<TextCommands_File>(s, File_13, 13, name: nameof(File_13));
         }
     }
 }
