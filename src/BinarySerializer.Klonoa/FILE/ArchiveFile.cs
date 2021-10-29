@@ -35,7 +35,7 @@ namespace BinarySerializer.Klonoa
         /// <summary>
         /// The parsed files and their names, if any
         /// </summary>
-        public (BinarySerializable, string)[] ParsedFiles { get; set; }
+        public ParsedFile[] ParsedFiles { get; set; }
 
         /// <summary>
         /// The offset table for the contained files
@@ -108,7 +108,7 @@ namespace BinarySerializer.Klonoa
 
         public void FlagAsParsed(int index, BinarySerializable file, string name)
         {
-            ParsedFiles[index] = (file, name);
+            ParsedFiles[index] = new ParsedFile(file, name);
 
             if (!AddToParsedArchiveFiles)
                 return;
@@ -204,7 +204,7 @@ namespace BinarySerializer.Klonoa
             // Serialize the offset table
             OffsetTable = s.SerializeObject<OffsetTable>(OffsetTable, x => x.Pre_Type = Pre_Type, name: nameof(OffsetTable));
 
-            ParsedFiles = new (BinarySerializable, string)[OffsetTable.FilesCount];
+            ParsedFiles = new ParsedFile[OffsetTable.FilesCount];
 
             if (AddToParsedArchiveFiles)
                 ParsedArchiveFiles[this] = new bool[OffsetTable.FilesCount];
@@ -217,6 +217,22 @@ namespace BinarySerializer.Klonoa
             // Go to the end of the archive if a length is specified
             if (Pre_FileSize != -1)
                 s.Goto(Offset + Pre_FileSize);
+        }
+
+        #endregion
+
+        #region Data Types
+
+        public class ParsedFile
+        {
+            public ParsedFile(BinarySerializable obj, string name)
+            {
+                Obj = obj;
+                Name = name;
+            }
+
+            public BinarySerializable Obj { get; }
+            public string Name { get; }
         }
 
         #endregion
