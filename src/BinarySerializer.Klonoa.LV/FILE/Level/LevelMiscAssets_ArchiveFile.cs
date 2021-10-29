@@ -4,7 +4,7 @@ namespace BinarySerializer.Klonoa.LV
     {
         public RawData_ArchiveFile ScriptData { get; set; } // Seems mainly like script data for each level section, but looks like there may be a bit of geometry in here as well
         public GSTextures_File DialogueBoxTexture { get; set; }
-        public ArchiveFile SkyTextures { get; set; }
+        public ArchiveFile<SkyTexture_ArchiveFile> SkyTextures { get; set; }
         public RawData_ArchiveFile Archive_3 { get; set; } // ?
         public RawData_File File_4 { get; set; }
         public GSTextures_File DialogueFont { get; set; }
