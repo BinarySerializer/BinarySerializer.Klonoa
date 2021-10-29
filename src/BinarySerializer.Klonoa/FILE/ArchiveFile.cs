@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 
 namespace BinarySerializer.Klonoa
@@ -10,14 +9,27 @@ namespace BinarySerializer.Klonoa
     /// </summary>
     public class ArchiveFile : BaseFile
     {
-        public static bool AddToParsedArchiveFiles { get; set; } = false;
-        public static Dictionary<ArchiveFile, bool[]> ParsedArchiveFiles { get; } = new Dictionary<ArchiveFile, bool[]>();
+        #region Private Fields
 
         /// <summary>
         /// The calculated file end pointers
         /// </summary>
         private Pointer[] _fileEndPointers;
 
+        #endregion
+
+        #region Public Static Properties
+
+        public static bool AddToParsedArchiveFiles { get; set; } = false;
+        public static Dictionary<ArchiveFile, bool[]> ParsedArchiveFiles { get; } = new Dictionary<ArchiveFile, bool[]>();
+
+        #endregion
+
+        #region Public Properties
+
+        /// <summary>
+        /// Set in the OnPreSerialize action to specify the archive type
+        /// </summary>
         public ArchiveFileType Pre_Type { get; set; }
 
         /// <summary>
@@ -29,6 +41,20 @@ namespace BinarySerializer.Klonoa
         /// The offset table for the contained files
         /// </summary>
         public OffsetTable OffsetTable { get; set; }
+
+        #endregion
+
+        #region Protected Methods
+
+        /// <summary>
+        /// Serializes the files in the archive
+        /// </summary>
+        /// <param name="s">The serializer object</param>
+        protected virtual void SerializeFiles(SerializerObject s) { }
+
+        #endregion
+
+        #region Public Methods
 
         /// <summary>
         /// Gets the end pointer of the file of the specified index
@@ -84,9 +110,9 @@ namespace BinarySerializer.Klonoa
         {
             ParsedFiles[index] = (file, name);
 
-            if (!AddToParsedArchiveFiles) 
+            if (!AddToParsedArchiveFiles)
                 return;
-            
+
             if (!ParsedArchiveFiles.ContainsKey(this))
                 ParsedArchiveFiles[this] = new bool[OffsetTable.FilesCount];
 
@@ -193,7 +219,7 @@ namespace BinarySerializer.Klonoa
                 s.Goto(Offset + Pre_FileSize);
         }
 
-        protected virtual void SerializeFiles(SerializerObject s) { }
+        #endregion
     }
 
     /// <summary>
