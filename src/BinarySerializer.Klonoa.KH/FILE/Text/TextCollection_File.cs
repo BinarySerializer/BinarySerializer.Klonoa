@@ -22,6 +22,7 @@
             TextSize = s.Serialize<short>(TextSize, name: nameof(TextSize));
             s.SerializePadding(16);
             s.DoAt(Offset + TextOffset, () => Text = s.SerializeObjectArray<TextCommands>(Text, Count, x => x.Pre_MaxLength = TextSize / 2, name: nameof(Text)));
+            s.Goto(Offset + Pre_FileSize);
         }
     }
 }
