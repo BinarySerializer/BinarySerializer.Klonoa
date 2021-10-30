@@ -199,6 +199,105 @@ namespace BinarySerializer.Klonoa
             }
         }
 
+        /// <summary>
+        /// Recursively updates the <see cref="OffsetTable"/> to match the new sizes of the files. This also updates the <see cref="BaseFile.Pre_FileSize"/> and re-calculates the file end pointers.
+        /// </summary>
+        public void RecalculateFileOffsets()
+        {
+            if (Pre_Type == ArchiveFileType.KH_KW)
+                throw new NotImplementedException("KW archives are currently not supported for recalculating the offsets");
+
+            // Recalculate the size of the offset table. This is needed if the files count has changed.
+            OffsetTable.RecalculateSize();
+
+            // Files will be placed starting from the end of the offset table
+            Pointer fileOffset = OffsetTable.Offset + OffsetTable.Size;
+
+            // Helper for aligning the offset
+            void align()
+            {
+                if (fileOffset.FileOffset % 4 != 0)
+                    fileOffset += 4 - fileOffset.FileOffset % 4;
+            }
+
+            align();
+
+            if (ParsedFiles.Length != OffsetTable.FilesCount)
+                throw new Exception($"Files count mismatch");
+
+            Pointer anchor = OffsetTable.Offset;
+
+            if (Pre_Type == ArchiveFileType.KH_PF)
+                anchor += 4 + OffsetTable.FilesCount * 4 * 2;
+
+            // Keep track of the pointer for each file as there can be duplicates
+            var filePointers = new Dictionary<BinarySerializable, Pointer>();
+
+            for (var i = 0; i < OffsetTable.FilesCount; i++)
+            {
+                BinarySerializable fileObj = ParsedFiles[i].Obj;
+
+                if (fileObj != null && filePointers.ContainsKey(fileObj))
+                {
+                    OffsetTable.FilePointers[i] = filePointers[fileObj];
+                    continue;
+                }
+
+                if (fileObj == null)
+                {
+                    OffsetTable.FilePointers[i] = null;
+                }
+                else if (fileObj is ArchiveFile archive)
+                {
+                    // Set the pointer
+                    OffsetTable.FilePointers[i] = new Pointer(fileOffset.AbsoluteOffset, fileOffset.File, anchor, fileOffset.Size, Pointer.OffsetType.Absolute);
+                    filePointers[fileObj] = OffsetTable.FilePointers[i];
+
+                    // Recursively update any archives within this one
+                    archive.RecalculateFileOffsets();
+
+                    fileOffset += archive.Pre_FileSize;
+                }
+                else
+                {
+                    // Set the pointer
+                    OffsetTable.FilePointers[i] = new Pointer(fileOffset.AbsoluteOffset, fileOffset.File, anchor, fileOffset.Size, Pointer.OffsetType.Absolute);
+                    filePointers[fileObj] = OffsetTable.FilePointers[i];
+
+                    if (fileObj is BaseFile {Pre_IsCompressed: true} f)
+                    {
+                        // Create a serializer for calculating the size
+                        using var s = new SizeCalculationSerializer(fileObj.Context);
+
+                        // Go to the offset of the object
+                        s.Goto(fileObj.Offset);
+
+                        // Serialize the object and compress it
+                        s.DoEncoded(f.Pre_FileEncoder, () => fileObj.Serialize(s));
+
+                        // Increase the pointer by the compressed size
+                        fileOffset += s.CurrentFileOffset - fileObj.Offset.FileOffset;
+                    }
+                    else
+                    {
+                        // Recalculate the size of the file
+                        fileObj.RecalculateSize();
+
+                        // Increase the pointer by the size
+                        fileOffset += fileObj.Size;
+                    }
+
+                    // Update the size if a base file
+                    if (fileObj is BaseFile ff)
+                        ff.Pre_FileSize = fileObj.Size;
+                }
+
+                align();
+            }
+
+            Pre_FileSize = fileOffset.FileOffset - Offset.FileOffset;
+        }
+
         public override void SerializeImpl(SerializerObject s)
         {
             // Serialize the offset table
