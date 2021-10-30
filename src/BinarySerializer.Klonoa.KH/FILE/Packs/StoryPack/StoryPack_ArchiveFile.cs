@@ -14,7 +14,7 @@
         public ArchiveFile<ArchiveFile<Graphics_File>> CharacterPortraits_1 { get; set; }
         public ArchiveFile<ArchiveFile<Cutscene_File>> Cutscenes_1 { get; set; }
         public Cutscene_File WorldNamesCutscene { get; set; }
-        public ArchiveFile<ArchiveFile<ArchiveFile<TextCommands_File>>> File_12 { get; set; }
+        public ArchiveFile<ArchiveFile<ArchiveFile<RawData_File>>> File_12 { get; set; }
         public ArchiveFile<Graphics_File> File_13 { get; set; }
         public ArchiveFile<Cutscene_File> Cutscenes_2 { get; set; }
 
@@ -39,7 +39,7 @@
             CharacterPortraits_1 = SerializeFile<ArchiveFile<ArchiveFile<Graphics_File>>>(s, CharacterPortraits_1, 9, name: nameof(CharacterPortraits_1));
             Cutscenes_1 = SerializeFile<ArchiveFile<ArchiveFile<Cutscene_File>>>(s, Cutscenes_1, 10, name: nameof(Cutscenes_1));
             WorldNamesCutscene = SerializeFile<Cutscene_File>(s, WorldNamesCutscene, 11, name: nameof(WorldNamesCutscene));
-            File_12 = SerializeFile<ArchiveFile<ArchiveFile<ArchiveFile<TextCommands_File>>>>(s, File_12, 12, name: nameof(File_12));
+            File_12 = SerializeFile<ArchiveFile<ArchiveFile<ArchiveFile<RawData_File>>>>(s, File_12, 12, name: nameof(File_12));
             File_13 = SerializeFile<ArchiveFile<Graphics_File>>(s, File_13, 13, name: nameof(File_13));
             Cutscenes_2 = SerializeFile<ArchiveFile<Cutscene_File>>(s, Cutscenes_2, 14, name: nameof(Cutscenes_2));
             File_15 = SerializeFile<RawData_File>(s, File_15, 15, name: nameof(File_15));
