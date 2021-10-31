@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace BinarySerializer.Klonoa.DTP
+﻿namespace BinarySerializer.Klonoa.DTP
 {
     public class CollisionTriangle : BinarySerializable
     {
@@ -22,7 +20,7 @@ namespace BinarySerializer.Klonoa.DTP
         public short Z2 { get; set; }
         public short Z3 { get; set; }
 
-        public CollisionType Type { get; set; }
+        public uint Type { get; set; } // Solid is 0x00FFFFFF, pit is 0x00FF0000 - use enum?
 
         public override void SerializeImpl(SerializerObject s)
         {
@@ -38,16 +36,7 @@ namespace BinarySerializer.Klonoa.DTP
             Z1 = s.Serialize<short>(Z1, name: nameof(Z1));
             Z2 = s.Serialize<short>(Z2, name: nameof(Z2));
             Z3 = s.Serialize<short>(Z3, name: nameof(Z3));
-            Type = s.Serialize<CollisionType>(Type, name: nameof(Type));
-
-            if (!Enum.IsDefined(typeof(CollisionType), Type))
-                s.LogWarning($"Collision type 0x{(uint)Type:X8} is not defined");
-        }
-
-        public enum CollisionType : uint
-        {
-            Solid = 0x00FFFFFF,
-            Pit = 0x00FF0000,
+            Type = s.Serialize<uint>(Type, name: nameof(Type));
         }
     }
 }
