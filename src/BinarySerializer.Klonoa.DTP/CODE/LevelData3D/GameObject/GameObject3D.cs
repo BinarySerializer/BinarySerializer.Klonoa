@@ -1,19 +1,15 @@
-﻿using System;
+﻿using BinarySerializer.PS1;
+using System;
 using System.Linq;
-using System.Reflection;
-using BinarySerializer.PS1;
 
 namespace BinarySerializer.Klonoa.DTP
 {
-    // A GameObject for Klonoa. We call it a modifier here since it's not necessarily an in-game object, but rather anything which updates
-    // every frame. Most objects will draw an object on screen, while others can do other things like modify the VRAM.
+    // A 3D GameObject for Klonoa. The game defines 24 secondary types by using the type as an index in a function table. This table is located
+    // in the code files for each level block and thus will differ. For Vision 1-1 NTSC the function pointer table is at 0x80110808. A lot of
+    // the pointers are nulled out, so you would believe the actual indices themselves will be globally the same, with each level only
+    // implementing functions for the used ones, but oddly enough the indices differ between levels.
 
-    // The game defines 24 secondary types by using the type as an index in a function table. This table is located in the code files
-    // for each level block and thus will differ. For Vision 1-1 NTSC the function pointer table is at 0x80110808. A lot of the pointers
-    // are nulled out, so you would believe the actual indices themselves will be globally the same, with each level only implementing
-    // functions for the used ones, but oddly enough the indices differ between levels.
-
-    public class ModifierObject : BinarySerializable
+    public class GameObject3D : BinarySerializable
     {
         public ArchiveFile Pre_ObjectAssets { get; set; }
 
@@ -36,7 +32,7 @@ namespace BinarySerializer.Klonoa.DTP
         public ushort[] DataFileIndices { get; set; }
 
         // Parameters
-        public ModifierObjectParams_MovingPlatform Params_MovingPlatform { get; set; }
+        public GameObject3DObjectParams_MovingPlatform Params_MovingPlatform { get; set; }
 
         // Data files
         public RawData_File[] Data_Unknown { get; set; }
@@ -63,7 +59,7 @@ namespace BinarySerializer.Klonoa.DTP
         public ObjPositions_File Data_ScenerySprites { get; set; }
 
         // Custom
-        public GlobalModifierType GlobalModifierType { get; set; }
+        public GlobalGameObjectType GlobalGameObjectType { get; set; }
         public float? ConstantRotationX { get; set; }
         public float? ConstantRotationY { get; set; }
         public float? ConstantRotationZ { get; set; }
@@ -101,18 +97,18 @@ namespace BinarySerializer.Klonoa.DTP
             
             // Determine the type
             var loader = Loader.GetLoader(s.Context);
-            GlobalModifierType = loader.Settings.GetGlobalModifierType(loader.BINBlock, (int)PrimaryType, SecondaryType);
+            GlobalGameObjectType = loader.Settings.GetGlobalGameObjectType(loader.BINBlock, (int)PrimaryType, SecondaryType);
 
             // Serialize the parameters
-            switch (GlobalModifierType)
+            switch (GlobalGameObjectType)
             {
-                case GlobalModifierType.Gondola:
-                case GlobalModifierType.VerticallyMovingWoodenPlatform:
-                case GlobalModifierType.MovingPlatformOnTrack:
-                case GlobalModifierType.MovingPlatformWithOptionalLocal:
-                case GlobalModifierType.ObjectWithPaletteAnimation:
-                case GlobalModifierType.MovingCavePlatform:
-                    s.DoAt(ParametersPointer, () => Params_MovingPlatform = s.SerializeObject<ModifierObjectParams_MovingPlatform>(Params_MovingPlatform, name: nameof(Params_MovingPlatform)));
+                case GlobalGameObjectType.Gondola:
+                case GlobalGameObjectType.VerticallyMovingWoodenPlatform:
+                case GlobalGameObjectType.MovingPlatformOnTrack:
+                case GlobalGameObjectType.MovingPlatformWithOptionalLocal:
+                case GlobalGameObjectType.ObjectWithPaletteAnimation:
+                case GlobalGameObjectType.MovingCavePlatform:
+                    s.DoAt(ParametersPointer, () => Params_MovingPlatform = s.SerializeObject<GameObject3DObjectParams_MovingPlatform>(Params_MovingPlatform, name: nameof(Params_MovingPlatform)));
                     break;
             }
         }
@@ -122,12 +118,12 @@ namespace BinarySerializer.Klonoa.DTP
             if (IsInvalid)
                 return;
 
-            s.Log($"Serializing data files for type {GlobalModifierType}");
+            s.Log($"Serializing data files for type {GlobalGameObjectType}");
 
-            if (GlobalModifierType == GlobalModifierType.Unknown)
+            if (GlobalGameObjectType == GlobalGameObjectType.Unknown)
             {
                 var count = DataFileIndices?.Select((x, i) => new { x, i }).ToList().FindIndex(x => x.x == 0 && x.i > 0);
-                s.LogWarning($"Unknown modifier at {Offset} with {count ?? 0} data files");
+                s.LogWarning($"Unknown game object at {Offset} with {count ?? 0} data files");
 
                 Data_Unknown = new RawData_File[count ?? 0];
 
@@ -142,19 +138,19 @@ namespace BinarySerializer.Klonoa.DTP
 
             var loader = Loader.GetLoader(s.Context);
 
-            switch (GlobalModifierType)
+            switch (GlobalGameObjectType)
             {
-                case GlobalModifierType.Unknown:
+                case GlobalGameObjectType.Unknown:
                     break;
                 
-                case GlobalModifierType.WindSwirl:
+                case GlobalGameObjectType.WindSwirl:
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
                     Data_TMD_Secondary = SerializeDataFile<PS1_TMD>(s, Data_TMD_Secondary, name: nameof(Data_TMD_Secondary));
                     Data_Position = SerializeDataFile<KlonoaVector16>(s, Data_Position, name: nameof(Data_Position));
                     ConstantRotationY = 128;
                     break;
                 
-                case GlobalModifierType.BigWindmill:
+                case GlobalGameObjectType.BigWindmill:
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
                     Data_AbsoluteTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform, 
                         onPreSerialize: x => x.Pre_UsesTransformInfo = true, name: nameof(Data_AbsoluteTransform));
@@ -162,14 +158,14 @@ namespace BinarySerializer.Klonoa.DTP
                     ConstantRotationZ = -9;
                     break;
 
-                case GlobalModifierType.SmallWindmill:
+                case GlobalGameObjectType.SmallWindmill:
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
                     Data_AbsoluteTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform,
                         onPreSerialize: x => x.Pre_UsesTransformInfo = true, name: nameof(Data_AbsoluteTransform));
                     ConstantRotationZ = -24;
                     break;
 
-                case GlobalModifierType.MovingPlatform:
+                case GlobalGameObjectType.MovingPlatform:
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
                     Data_Collision = SerializeDataFile<ObjCollision_File>(s, Data_Collision, name: nameof(Data_Collision));
                     Data_MovementPaths = SerializeDataFile<MovementPath_File>(s, Data_MovementPaths, name: nameof(Data_MovementPaths));
@@ -179,13 +175,13 @@ namespace BinarySerializer.Klonoa.DTP
                     AnimatedAbsoluteTransformSpeed = 1;
                     break;
 
-                case GlobalModifierType.RoadSign:
+                case GlobalGameObjectType.RoadSign:
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
                     Data_AbsoluteTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform,
                         onPreSerialize: x => x.Pre_UsesTransformInfo = true, name: nameof(Data_AbsoluteTransform));
                     break;
 
-                case GlobalModifierType.TiltRock: // FUN_4_8__8011fff8
+                case GlobalGameObjectType.TiltRock: // FUN_4_8__8011fff8
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
                     Data_Collision = SerializeDataFile<ObjCollision_File>(s, Data_Collision, name: nameof(Data_Collision));
                     Data_MovementPaths = SerializeDataFile<MovementPath_File>(s, Data_MovementPaths, name: nameof(Data_MovementPaths));
@@ -196,7 +192,7 @@ namespace BinarySerializer.Klonoa.DTP
                     AnimatedAbsoluteTransformSpeed = 0.5f;
                     break;
 
-                case GlobalModifierType.Minecart: // FUN_4_8__8011a638
+                case GlobalGameObjectType.Minecart: // FUN_4_8__8011a638
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
                     Data_Collision = SerializeDataFile<ObjCollision_File>(s, Data_Collision, name: nameof(Data_Collision));
                     Data_MovementPaths = SerializeDataFile<MovementPath_File>(s, Data_MovementPaths, name: nameof(Data_MovementPaths));
@@ -209,7 +205,7 @@ namespace BinarySerializer.Klonoa.DTP
                     AnimatedAbsoluteTransformSpeed = 1;
                     break;
 
-                case GlobalModifierType.RongoLango:
+                case GlobalGameObjectType.RongoLango:
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
                     SkipDataFile<ArchiveFile<RawData_ArchiveFile>>(s); // TODO: Parts
                     SkipDataFile<RawData_File>(s); // TODO: Unknown data
@@ -219,42 +215,42 @@ namespace BinarySerializer.Klonoa.DTP
                     SkipDataFile<RawData_ArchiveFile>(s); // TODO: Palettes
                     break;
 
-                case GlobalModifierType.Bell:
+                case GlobalGameObjectType.Bell:
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
                     Data_Position = SerializeDataFile<KlonoaVector16>(s, Data_Position, name: nameof(Data_Position));
                     break;
 
-                case GlobalModifierType.LockedDoor_0: // FUN_800790e4
-                case GlobalModifierType.LockedDoor_1:
-                case GlobalModifierType.LockedDoor_2:
+                case GlobalGameObjectType.LockedDoor_0: // FUN_800790e4
+                case GlobalGameObjectType.LockedDoor_1:
+                case GlobalGameObjectType.LockedDoor_2:
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
                     Data_Collision = SerializeDataFile<ObjCollision_File>(s, Data_Collision, name: nameof(Data_Collision));
 
-                    if (GlobalModifierType != GlobalModifierType.LockedDoor_2)
+                    if (GlobalGameObjectType != GlobalGameObjectType.LockedDoor_2)
                         Data_LocalTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_LocalTransform,
                             onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_LocalTransform));
 
                     Data_AbsoluteTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform,
                         onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_AbsoluteTransform));
 
-                    if (GlobalModifierType == GlobalModifierType.LockedDoor_0)
+                    if (GlobalGameObjectType == GlobalGameObjectType.LockedDoor_0)
                         SkipDataFile<RawData_File>(s); // TODO: Unused?
 
-                    if (GlobalModifierType != GlobalModifierType.LockedDoor_2)
+                    if (GlobalGameObjectType != GlobalGameObjectType.LockedDoor_2)
                         AnimatedLocalTransformSpeed = 1;
                     else
                         AnimatedAbsoluteTransformSpeed = 1;
 
                     break;
 
-                case GlobalModifierType.WaterWheel:
+                case GlobalGameObjectType.WaterWheel:
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
                     Data_AbsoluteTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform,
                         onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_AbsoluteTransform));
                     ConstantRotationZ = -2;
                     break;
 
-                case GlobalModifierType.Crate:
+                case GlobalGameObjectType.Crate:
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
                     Data_Collision = SerializeDataFile<ObjCollision_File>(s, Data_Collision, name: nameof(Data_Collision));
                     Data_AbsoluteTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform,
@@ -263,13 +259,13 @@ namespace BinarySerializer.Klonoa.DTP
                     AnimatedAbsoluteTransformSpeed = 0.5f;
                     break;
 
-                case GlobalModifierType.MultiWheel:
+                case GlobalGameObjectType.MultiWheel:
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
                     Data_AbsoluteTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform,
                         onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_AbsoluteTransform));
                     break;
 
-                case GlobalModifierType.Gondola: // FUN_9_8__80120d24
+                case GlobalGameObjectType.Gondola: // FUN_9_8__80120d24
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
                     Data_Collision = SerializeDataFile<ObjCollision_File>(s, Data_Collision, name: nameof(Data_Collision));
                     Data_MovementPaths = SerializeDataFile<MovementPath_File>(s, Data_MovementPaths, name: nameof(Data_MovementPaths));
@@ -283,7 +279,7 @@ namespace BinarySerializer.Klonoa.DTP
                     DoesAnimatedLocalTransformPingPong = true;
                     break;
 
-                case GlobalModifierType.FallingTreePart: // FUN_9_8__80122870
+                case GlobalGameObjectType.FallingTreePart: // FUN_9_8__80122870
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
                     Data_AbsoluteTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform,
                         onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_AbsoluteTransform));
@@ -291,7 +287,7 @@ namespace BinarySerializer.Klonoa.DTP
                     AnimatedAbsoluteTransformSpeed = 0.5f;
                     break;
 
-                case GlobalModifierType.WoodenCart: // FUN_9_8__80122cfc
+                case GlobalGameObjectType.WoodenCart: // FUN_9_8__80122cfc
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
                     Data_Collision = SerializeDataFile<ObjCollision_File>(s, Data_Collision, name: nameof(Data_Collision));
                     Data_MovementPaths = SerializeDataFile<MovementPath_File>(s, Data_MovementPaths, name: nameof(Data_MovementPaths));
@@ -313,7 +309,7 @@ namespace BinarySerializer.Klonoa.DTP
                     AnimatedAbsoluteTransformSpeed = 0.5f;
                     break;
 
-                case GlobalModifierType.WoodenMallet:
+                case GlobalGameObjectType.WoodenMallet:
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
                     Data_Collision = SerializeDataFile<ObjCollision_File>(s, Data_Collision, name: nameof(Data_Collision));
                     Data_MovementPaths = SerializeDataFile<MovementPath_File>(s, Data_MovementPaths, name: nameof(Data_MovementPaths));
@@ -324,7 +320,7 @@ namespace BinarySerializer.Klonoa.DTP
                     AnimatedLocalTransformSpeed = 0.5f;
                     break;
 
-                case GlobalModifierType.VerticallyMovingWoodenPlatform:
+                case GlobalGameObjectType.VerticallyMovingWoodenPlatform:
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
                     Data_Collision = SerializeDataFile<ObjCollision_File>(s, Data_Collision, name: nameof(Data_Collision));
                     Data_MovementPaths = SerializeDataFile<MovementPath_File>(s, Data_MovementPaths, name: nameof(Data_MovementPaths));
@@ -335,7 +331,7 @@ namespace BinarySerializer.Klonoa.DTP
                     DoesAnimatedLocalTransformPingPong = true;
                     break;
 
-                case GlobalModifierType.Cogwheel: // FUN_10_8__8011f560
+                case GlobalGameObjectType.Cogwheel: // FUN_10_8__8011f560
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
                     Data_AbsoluteTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform,
                         onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_AbsoluteTransform));
@@ -352,7 +348,7 @@ namespace BinarySerializer.Klonoa.DTP
 
                     break;
 
-                case GlobalModifierType.SpinningWood: // FUN_10_8__8012059c
+                case GlobalGameObjectType.SpinningWood: // FUN_10_8__8012059c
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
                     Data_Collision = SerializeDataFile<ObjCollision_File>(s, Data_Collision, name: nameof(Data_Collision));
                     Data_AbsoluteTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform,
@@ -369,7 +365,7 @@ namespace BinarySerializer.Klonoa.DTP
                     }
                     break;
 
-                case GlobalModifierType.SpinningWoodAttachedPlatform: // FUN_10_8__801201ec
+                case GlobalGameObjectType.SpinningWoodAttachedPlatform: // FUN_10_8__801201ec
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
                     Data_Collision = SerializeDataFile<ObjCollision_File>(s, Data_Collision, name: nameof(Data_Collision));
                     Data_MovementPaths = SerializeDataFile<MovementPath_File>(s, Data_MovementPaths, name: nameof(Data_MovementPaths));
@@ -380,7 +376,7 @@ namespace BinarySerializer.Klonoa.DTP
                     DoesAnimatedLocalTransformPingPong = true;
                     break;
 
-                case GlobalModifierType.MovingLedge: // FUN_10_8__8011f198
+                case GlobalGameObjectType.MovingLedge: // FUN_10_8__8011f198
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
                     Data_Collision = SerializeDataFile<ObjCollision_File>(s, Data_Collision, name: nameof(Data_Collision));
                     Data_AbsoluteTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform,
@@ -389,7 +385,7 @@ namespace BinarySerializer.Klonoa.DTP
                     AnimatedAbsoluteTransformSpeed = 1;
                     break;
 
-                case GlobalModifierType.Ledge: // FUN_12_8__8011a74c
+                case GlobalGameObjectType.Ledge: // FUN_12_8__8011a74c
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
                     Data_Collision = SerializeDataFile<ObjCollision_File>(s, Data_Collision, name: nameof(Data_Collision));
                     Data_AbsoluteTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform,
@@ -397,7 +393,7 @@ namespace BinarySerializer.Klonoa.DTP
                     Data_TMD_Secondary = SerializeDataFile<PS1_TMD>(s, Data_TMD_Secondary, name: nameof(Data_TMD_Secondary));
                     break;
 
-                case GlobalModifierType.UnstablePlatform: // FUN_12_8__8011b2f0
+                case GlobalGameObjectType.UnstablePlatform: // FUN_12_8__8011b2f0
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
                     Data_Collision = SerializeDataFile<ObjCollision_File>(s, Data_Collision, name: nameof(Data_Collision));
                     Data_MovementPaths = SerializeDataFile<MovementPath_File>(s, Data_MovementPaths, name: nameof(Data_MovementPaths));
@@ -409,7 +405,7 @@ namespace BinarySerializer.Klonoa.DTP
                     AnimatedLocalTransformSpeed = 0.5f;
                     break;
 
-                case GlobalModifierType.SwingingPlatform: // FUN_12_8__8011af80
+                case GlobalGameObjectType.SwingingPlatform: // FUN_12_8__8011af80
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
                     Data_Collision = SerializeDataFile<ObjCollision_File>(s, Data_Collision, name: nameof(Data_Collision));
                     Data_MovementPaths = SerializeDataFile<MovementPath_File>(s, Data_MovementPaths, name: nameof(Data_MovementPaths));
@@ -421,14 +417,14 @@ namespace BinarySerializer.Klonoa.DTP
                     AnimatedLocalTransformSpeed = 0xb00 / (float)0x1000;
                     break;
 
-                case GlobalModifierType.Bone:
+                case GlobalGameObjectType.Bone:
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
                     Data_Collision = SerializeDataFile<ObjCollision_File>(s, Data_Collision, name: nameof(Data_Collision));
                     Data_AbsoluteTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform,
                         onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_AbsoluteTransform));
                     break;
 
-                case GlobalModifierType.GreenBoulder:
+                case GlobalGameObjectType.GreenBoulder:
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
                     Data_Collision = SerializeDataFile<ObjCollision_File>(s, Data_Collision, name: nameof(Data_Collision));
                     Data_AbsoluteTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform,
@@ -436,7 +432,7 @@ namespace BinarySerializer.Klonoa.DTP
                     Data_TMD_Secondary = SerializeDataFile<PS1_TMD>(s, Data_TMD_Secondary, name: nameof(Data_TMD_Secondary));
                     break;
 
-                case GlobalModifierType.RedBoulder:
+                case GlobalGameObjectType.RedBoulder:
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
                     Data_TMD_Secondary = SerializeDataFile<PS1_TMD>(s, Data_TMD_Secondary, name: nameof(Data_TMD_Secondary));
                     Data_Collision = SerializeDataFile<ObjCollision_File>(s, Data_Collision, name: nameof(Data_Collision));
@@ -444,31 +440,31 @@ namespace BinarySerializer.Klonoa.DTP
                         onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_AbsoluteTransform));
                     break;
 
-                case GlobalModifierType.DestroyedHouse:
+                case GlobalGameObjectType.DestroyedHouse:
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
                     Data_TMD_Secondary = SerializeDataFile<PS1_TMD>(s, Data_TMD_Secondary, name: nameof(Data_TMD_Secondary));
                     break;
 
-                case GlobalModifierType.BlockingBoulder:
+                case GlobalGameObjectType.BlockingBoulder:
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
                     Data_Collision = SerializeDataFile<ObjCollision_File>(s, Data_Collision, name: nameof(Data_Collision));
                     Data_AbsoluteTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform,
                         onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_AbsoluteTransform));
                     break;
 
-                case GlobalModifierType.SwingingWoodPlank: // FUN_14_7__8011648c
+                case GlobalGameObjectType.SwingingWoodPlank: // FUN_14_7__8011648c
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
                     Data_Collision = SerializeDataFile<ObjCollision_File>(s, Data_Collision, name: nameof(Data_Collision));
                     Data_MovementPaths = SerializeDataFile<MovementPath_File>(s, Data_MovementPaths, name: nameof(Data_MovementPaths));
                     break;
 
-                case GlobalModifierType.Collision: // FUN_14_7__801170a8
+                case GlobalGameObjectType.Collision: // FUN_14_7__801170a8
                     Data_Collision = SerializeDataFile<ObjCollision_File>(s, Data_Collision, name: nameof(Data_Collision));
                     Data_AbsoluteTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform,
                         onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_AbsoluteTransform));
                     break;
 
-                case GlobalModifierType.Rocks: // FUN_14_7__8011724c
+                case GlobalGameObjectType.Rocks: // FUN_14_7__8011724c
                     Data_TMD_Secondary = SerializeDataFile<PS1_TMD>(s, Data_TMD_Secondary, name: nameof(Data_TMD_Secondary));
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
                     Data_LocalTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_LocalTransform,
@@ -476,7 +472,7 @@ namespace BinarySerializer.Klonoa.DTP
                     SkipDataFile<RawData_File>(s, isUnused: true);
                     break;
 
-                case GlobalModifierType.MovingPlatformOnTrack: // FUN_15_8__8011d040
+                case GlobalGameObjectType.MovingPlatformOnTrack: // FUN_15_8__8011d040
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
                     Data_Collision = SerializeDataFile<ObjCollision_File>(s, Data_Collision, name: nameof(Data_Collision));
                     Data_MovementPaths = SerializeDataFile<MovementPath_File>(s, Data_MovementPaths, name: nameof(Data_MovementPaths));
@@ -490,7 +486,7 @@ namespace BinarySerializer.Klonoa.DTP
                     DoesAnimatedAbsoluteTransformPingPong = true;
                     break;
 
-                case GlobalModifierType.SpinningWheel: // FUN_15_8__8011a9dc
+                case GlobalGameObjectType.SpinningWheel: // FUN_15_8__8011a9dc
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
                     Data_Collision = SerializeDataFile<ObjCollision_File>(s, Data_Collision, name: nameof(Data_Collision));
                     Data_MovementPaths = SerializeDataFile<MovementPath_File>(s, Data_MovementPaths, name: nameof(Data_MovementPaths));
@@ -501,7 +497,7 @@ namespace BinarySerializer.Klonoa.DTP
                     AnimatedAbsoluteTransformSpeed = 0.5f;
                     break;
 
-                case GlobalModifierType.FallingTargetPlatform: // FUN_15_8__8011af24
+                case GlobalGameObjectType.FallingTargetPlatform: // FUN_15_8__8011af24
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
                     Data_Collision = SerializeDataFile<ObjCollision_File>(s, Data_Collision, name: nameof(Data_Collision));
                     Data_AbsoluteTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform,
@@ -522,7 +518,7 @@ namespace BinarySerializer.Klonoa.DTP
                     AnimatedLocalTransformSpeed = 0.5f;
                     break;
 
-                case GlobalModifierType.LockedDoor_3: // FUN_15_8__8011e0c0
+                case GlobalGameObjectType.LockedDoor_3: // FUN_15_8__8011e0c0
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
                     Data_Collision = SerializeDataFile<ObjCollision_File>(s, Data_Collision, name: nameof(Data_Collision));
                     Data_AbsoluteTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform,
@@ -531,7 +527,7 @@ namespace BinarySerializer.Klonoa.DTP
                     AnimatedAbsoluteTransformSpeed = 0.5f;
                     break;
 
-                case GlobalModifierType.BlockingLedge: // FUN_15_8__8011ee5c
+                case GlobalGameObjectType.BlockingLedge: // FUN_15_8__8011ee5c
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
                     Data_Collision = SerializeDataFile<ObjCollision_File>(s, Data_Collision, name: nameof(Data_Collision));
                     Data_AbsoluteTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform,
@@ -541,7 +537,7 @@ namespace BinarySerializer.Klonoa.DTP
                     AnimatedAbsoluteTransformSpeed = 0xf00 / (float)0x1000;
                     break;
 
-                case GlobalModifierType.UnknownOrbRelatedObj: // FUN_15_8__8011dc04
+                case GlobalGameObjectType.UnknownOrbRelatedObj: // FUN_15_8__8011dc04
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
                     Data_Collision = SerializeDataFile<ObjCollision_File>(s, Data_Collision, name: nameof(Data_Collision));
 
@@ -558,7 +554,7 @@ namespace BinarySerializer.Klonoa.DTP
                     AnimatedLocalTransformSpeed = 0x2aa / (float)0x1000;
                     break;
 
-                case GlobalModifierType.MovingPlatformWithOptionalLocal: // FUN_16_8__8011d3ac
+                case GlobalGameObjectType.MovingPlatformWithOptionalLocal: // FUN_16_8__8011d3ac
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
                     Data_Collision = SerializeDataFile<ObjCollision_File>(s, Data_Collision, name: nameof(Data_Collision));
                     Data_MovementPaths = SerializeDataFile<MovementPath_File>(s, Data_MovementPaths, name: nameof(Data_MovementPaths));
@@ -576,7 +572,7 @@ namespace BinarySerializer.Klonoa.DTP
                     DoesAnimatedAbsoluteTransformPingPong = true;
                     break;
 
-                case GlobalModifierType.MovingWallPillars: // FUN_16_8__80120140
+                case GlobalGameObjectType.MovingWallPillars: // FUN_16_8__80120140
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
                     Data_Collision = SerializeDataFile<ObjCollision_File>(s, Data_Collision, name: nameof(Data_Collision));
                     Data_AbsoluteTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform,
@@ -588,7 +584,7 @@ namespace BinarySerializer.Klonoa.DTP
                     DoesAnimatedLocalTransformPingPong = true;
                     break;
 
-                case GlobalModifierType.DarkLightPlatform: // FUN_16_8__8011f698
+                case GlobalGameObjectType.DarkLightPlatform: // FUN_16_8__8011f698
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
                     Data_Collision = SerializeDataFile<ObjCollision_File>(s, Data_Collision, name: nameof(Data_Collision));
                     Data_TMD_Secondary = SerializeDataFile<PS1_TMD>(s, Data_TMD_Secondary, name: nameof(Data_TMD_Secondary));
@@ -596,11 +592,11 @@ namespace BinarySerializer.Klonoa.DTP
                         onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_AbsoluteTransform));
                     break;
 
-                case GlobalModifierType.DarkLightSwitcher: // FUN_16_8__801229b8
+                case GlobalGameObjectType.DarkLightSwitcher: // FUN_16_8__801229b8
                     // Has no data. Switches between the dark/light state in the level.
                     break;
 
-                case GlobalModifierType.IronGate: // FUN_16_8__8011fa54
+                case GlobalGameObjectType.IronGate: // FUN_16_8__8011fa54
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
                     Data_Collision = SerializeDataFile<ObjCollision_File>(s, Data_Collision, name: nameof(Data_Collision));
 
@@ -621,12 +617,12 @@ namespace BinarySerializer.Klonoa.DTP
                     AnimatedAbsoluteTransformSpeed = 0.5f;
                     break;
 
-                case GlobalModifierType.BossUnknown: // FUN_17_7__80113b00
+                case GlobalGameObjectType.BossUnknown: // FUN_17_7__80113b00
                     SkipDataFile<RawData_File>(s);
                     SkipDataFile<RawData_File>(s);
                     break;
 
-                case GlobalModifierType.JokaSpinningCore: // FUN_17_7__80113854
+                case GlobalGameObjectType.JokaSpinningCore: // FUN_17_7__80113854
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
                     Data_AbsoluteTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform,
                         onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_AbsoluteTransform));
@@ -634,7 +630,7 @@ namespace BinarySerializer.Klonoa.DTP
                     ConstantRotationY = 8;
                     break;
 
-                case GlobalModifierType.TransparentGemPlatform: // FUN_18_8__8011eaec, FUN_19_8__8011d9b0
+                case GlobalGameObjectType.TransparentGemPlatform: // FUN_18_8__8011eaec, FUN_19_8__8011d9b0
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
                     Data_Collision = SerializeDataFile<ObjCollision_File>(s, Data_Collision, name: nameof(Data_Collision));
                     Data_AbsoluteTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform,
@@ -642,7 +638,7 @@ namespace BinarySerializer.Klonoa.DTP
                     SkipDataFile<RawData_File>(s); // TODO: 20 byte structs
                     break;
 
-                case GlobalModifierType.BirdStatueWithSwitch: // FUN_18_8__80121694
+                case GlobalGameObjectType.BirdStatueWithSwitch: // FUN_18_8__80121694
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
                     Data_Collision = SerializeDataFile<ObjCollision_File>(s, Data_Collision, name: nameof(Data_Collision));
                     Data_AbsoluteTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform,
@@ -650,7 +646,7 @@ namespace BinarySerializer.Klonoa.DTP
                     // NOTE: This loads a block into VRAM, seems to be for an effect only?
                     break;
 
-                case GlobalModifierType.ObjectWithPaletteAnimation: // FUN_18_8__80123c18
+                case GlobalGameObjectType.ObjectWithPaletteAnimation: // FUN_18_8__80123c18
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
                     Data_Collision = SerializeDataFile<ObjCollision_File>(s, Data_Collision, name: nameof(Data_Collision));
                     Data_MovementPaths = SerializeDataFile<MovementPath_File>(s, Data_MovementPaths, name: nameof(Data_MovementPaths));
@@ -669,14 +665,14 @@ namespace BinarySerializer.Klonoa.DTP
                     });
                     break;
 
-                case GlobalModifierType.LightField: // FUN_18_8__801226ec
+                case GlobalGameObjectType.LightField: // FUN_18_8__801226ec
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
                     Data_Collision = SerializeDataFile<ObjCollision_File>(s, Data_Collision, name: nameof(Data_Collision));
                     Data_AbsoluteTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform,
                         onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_AbsoluteTransform));
                     break;
 
-                case GlobalModifierType.MovingCavePlatform: // FUN_18_8__8012323c
+                case GlobalGameObjectType.MovingCavePlatform: // FUN_18_8__8012323c
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
                     Data_Collision = SerializeDataFile<ObjCollision_File>(s, Data_Collision, name: nameof(Data_Collision));
                     Data_MovementPaths = SerializeDataFile<MovementPath_File>(s, Data_MovementPaths, name: nameof(Data_MovementPaths));
@@ -687,7 +683,7 @@ namespace BinarySerializer.Klonoa.DTP
                     DoesAnimatedAbsoluteTransformPingPong = true;
                     break;
 
-                case GlobalModifierType.ColoredStatue: // FUN_19_8__80120a20
+                case GlobalGameObjectType.ColoredStatue: // FUN_19_8__80120a20
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
                     Data_AbsoluteTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform,
                         onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_AbsoluteTransform));
@@ -697,7 +693,7 @@ namespace BinarySerializer.Klonoa.DTP
                     AnimatedLocalTransformSpeed = 0x80 / (float)0x1000;
                     break;
 
-                case GlobalModifierType.ColoredPillar: // FUN_19_8__8011bf40
+                case GlobalGameObjectType.ColoredPillar: // FUN_19_8__8011bf40
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
                     Data_Collision = SerializeDataFile<ObjCollision_File>(s, Data_Collision, name: nameof(Data_Collision));
                     Data_AbsoluteTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform,
@@ -708,7 +704,7 @@ namespace BinarySerializer.Klonoa.DTP
                     AnimatedLocalTransformSpeed = 0.5f;
                     break;
 
-                case GlobalModifierType.ColoredDoor: // FUN_19_8__8011fc90
+                case GlobalGameObjectType.ColoredDoor: // FUN_19_8__8011fc90
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
                     Data_LocalTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_LocalTransform,
                         onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_LocalTransform));
@@ -719,7 +715,7 @@ namespace BinarySerializer.Klonoa.DTP
                     DoesAnimatedLocalTransformPingPong = true;
                     break;
 
-                case GlobalModifierType.OnWayMovingWallPillar: // FUN_19_8__8011f8fc
+                case GlobalGameObjectType.OnWayMovingWallPillar: // FUN_19_8__8011f8fc
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
                     Data_Collision = SerializeDataFile<ObjCollision_File>(s, Data_Collision, name: nameof(Data_Collision));
                     Data_AbsoluteTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform,
@@ -730,7 +726,7 @@ namespace BinarySerializer.Klonoa.DTP
                     AnimatedLocalTransformSpeed = 0.5f;
                     break;
 
-                case GlobalModifierType.DoorWithPillar: // FUN_19_8__8012011c
+                case GlobalGameObjectType.DoorWithPillar: // FUN_19_8__8012011c
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
                     Data_TMD_Secondary = SerializeDataFile<PS1_TMD>(s, Data_TMD_Secondary, name: nameof(Data_TMD_Secondary));
                     Data_LocalTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_LocalTransform,
@@ -741,19 +737,19 @@ namespace BinarySerializer.Klonoa.DTP
                     AnimatedLocalTransformSpeed = 0.5f;
                     break;
 
-                case GlobalModifierType.CutsceneCrystal: // FUN_20_8__80117918
+                case GlobalGameObjectType.CutsceneCrystal: // FUN_20_8__80117918
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
                     Data_AbsoluteTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform,
                         onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_AbsoluteTransform));
                     break;
 
-                case GlobalModifierType.GhadiusCirclePlatform: // FUN_20_8__80116070
+                case GlobalGameObjectType.GhadiusCirclePlatform: // FUN_20_8__80116070
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
                     Data_Collision = SerializeDataFile<ObjCollision_File>(s, Data_Collision, name: nameof(Data_Collision));
                     SkipDataFile<RawData_File>(s); // TODO: Movement paths? Aligned to 28.
                     break;
 
-                case GlobalModifierType.NahatombSphere: // FUN_22_8__8011549c
+                case GlobalGameObjectType.NahatombSphere: // FUN_22_8__8011549c
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
                     Data_TMD_Secondary = SerializeDataFile<PS1_TMD>(s, Data_TMD_Secondary, name: nameof(Data_TMD_Secondary));
                     Data_AbsoluteTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform,
@@ -764,13 +760,13 @@ namespace BinarySerializer.Klonoa.DTP
                     SkipDataFile<RawData_File>(s); // TODO: 20 byte structs
                     break;
 
-                case GlobalModifierType.NahatombEscaping: // FUN_22_8__8011be8c
+                case GlobalGameObjectType.NahatombEscaping: // FUN_22_8__8011be8c
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
 
                     ConstantRotationY = 16;
                     break;
 
-                case GlobalModifierType.NahatombPaletteAnimation: // FUN_23_7__8011499c
+                case GlobalGameObjectType.NahatombPaletteAnimation: // FUN_23_7__8011499c
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
                     Data_PaletteAnimation = SerializeDataFile<PaletteAnimation_ArchiveFile>(s, Data_PaletteAnimation, name: nameof(Data_PaletteAnimation));
 
@@ -783,21 +779,21 @@ namespace BinarySerializer.Klonoa.DTP
 
                     break;
 
-                case GlobalModifierType.NahatombBluePlatformAndGem: // FUN_23_7__80114d9c
+                case GlobalGameObjectType.NahatombBluePlatformAndGem: // FUN_23_7__80114d9c
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
                     Data_Collision = SerializeDataFile<ObjCollision_File>(s, Data_Collision, name: nameof(Data_Collision));
                     Data_MovementPaths = SerializeDataFile<MovementPath_File>(s, Data_MovementPaths, name: nameof(Data_MovementPaths));
                     Data_TMD_Secondary = SerializeDataFile<PS1_TMD>(s, Data_TMD_Secondary, name: nameof(Data_TMD_Secondary));
                     break;
 
-                case GlobalModifierType.Light:
+                case GlobalGameObjectType.Light:
                     if (Short_00 == 0x11)
                         Data_LightPositions = SerializeDataFile<ObjPositions_File>(s, Data_LightPositions, name: nameof(Data_LightPositions));
                     else
                         Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
                     break;
 
-                case GlobalModifierType.GeyserPlatform:
+                case GlobalGameObjectType.GeyserPlatform:
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
                     Data_Collision = SerializeDataFile<ObjCollision_File>(s, Data_Collision, name: nameof(Data_Collision));
 
@@ -811,46 +807,46 @@ namespace BinarySerializer.Klonoa.DTP
                     });
                     break;
 
-                case GlobalModifierType.ScrollAnimation:
+                case GlobalGameObjectType.ScrollAnimation:
                     Data_UVScrollAnimation = SerializeDataFile<UVScrollAnimation_File>(s, Data_UVScrollAnimation, name: nameof(Data_UVScrollAnimation));
                     break;
 
-                case GlobalModifierType.VRAMScrollAnimation:
+                case GlobalGameObjectType.VRAMScrollAnimation:
                     VRAMScrollInfos = loader.Settings.VRAMScrollInfos[loader.BINBlock];
                     break;
 
-                case GlobalModifierType.VRAMScrollAnimationWithTexture:
+                case GlobalGameObjectType.VRAMScrollAnimationWithTexture:
                     Data_TIM = SerializeDataFile<PS1_TIM>(s, Data_TIM, name: nameof(Data_TIM));
                     VRAMScrollInfos = loader.Settings.VRAMScrollInfos[loader.BINBlock];
                     break;
 
-                case GlobalModifierType.RGBAnimation:
+                case GlobalGameObjectType.RGBAnimation:
                     Data_RGBAnimations = SerializeDataFile<RGBAnimations_File>(s, Data_RGBAnimations, name: nameof(Data_RGBAnimations));
                     break;
 
-                case GlobalModifierType.Object:
+                case GlobalGameObjectType.Object:
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
                     break;
 
-                case GlobalModifierType.LevelModelSection:
+                case GlobalGameObjectType.LevelModelSection:
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
                     Data_UnknownModelObjectsData = SerializeDataFile<UnknownModelObjectsData_File>(s, Data_UnknownModelObjectsData, 
                         onPreSerialize: x => x.Pre_ObjsCount = Data_TMD.ObjectsCount, name: nameof(Data_UnknownModelObjectsData)); // TODO: Parsed at FUN_8002692c
                     break;
 
-                case GlobalModifierType.ScenerySprites:
+                case GlobalGameObjectType.ScenerySprites:
                     Data_ScenerySprites = SerializeDataFile<ObjPositions_File>(s, Data_ScenerySprites, name: nameof(Data_ScenerySprites));
                     break;
 
-                case GlobalModifierType.TextureAnimation:
+                case GlobalGameObjectType.TextureAnimation:
                     Data_TextureAnimation = SerializeDataFile<TIM_ArchiveFile>(s, Data_TextureAnimation, name: nameof(Data_TextureAnimation));
                     
                     TextureAnimationInfo = loader.Settings.TextureAnimationInfos[loader.BINBlock];
                     break;
 
-                case GlobalModifierType.PaletteAnimation:
-                case GlobalModifierType.PaletteAnimations:
-                    if (GlobalModifierType == GlobalModifierType.PaletteAnimation)
+                case GlobalGameObjectType.PaletteAnimation:
+                case GlobalGameObjectType.PaletteAnimations:
+                    if (GlobalGameObjectType == GlobalGameObjectType.PaletteAnimation)
                         Data_PaletteAnimation = SerializeDataFile<PaletteAnimation_ArchiveFile>(s, Data_PaletteAnimation, name: nameof(Data_PaletteAnimation));
                     else
                         Data_PaletteAnimations = SerializeDataFile<PaletteAnimations_ArchiveFile>(s, Data_PaletteAnimations, name: nameof(Data_PaletteAnimations));
@@ -878,7 +874,7 @@ namespace BinarySerializer.Klonoa.DTP
 
                     Pointer p;
 
-                    if (GlobalModifierType == GlobalModifierType.PaletteAnimation && PaletteAnimationInfo.BlocksCount == -1)
+                    if (GlobalGameObjectType == GlobalGameObjectType.PaletteAnimation && PaletteAnimationInfo.BlocksCount == -1)
                         p = new Pointer(PaletteAnimationInfo.Address_Regions + (Short_02 * 8), loader.FindCodeFile(PaletteAnimationInfo.Address_Regions));
                     else
                         p = new Pointer(PaletteAnimationInfo.Address_Regions, loader.FindCodeFile(PaletteAnimationInfo.Address_Regions));
@@ -887,9 +883,9 @@ namespace BinarySerializer.Klonoa.DTP
                     {
                         int count;
                         
-                        if (GlobalModifierType == GlobalModifierType.PaletteAnimation && PaletteAnimationInfo.BlocksCount != -1)
+                        if (GlobalGameObjectType == GlobalGameObjectType.PaletteAnimation && PaletteAnimationInfo.BlocksCount != -1)
                             count = PaletteAnimationInfo.BlocksCount;
-                        else if (GlobalModifierType == GlobalModifierType.PaletteAnimation)
+                        else if (GlobalGameObjectType == GlobalGameObjectType.PaletteAnimation)
                             count = 1;
                         else
                             count = Data_PaletteAnimations.OffsetTable.FilesCount;
@@ -898,20 +894,20 @@ namespace BinarySerializer.Klonoa.DTP
                     });
                     break;
 
-                case GlobalModifierType.Textures:
+                case GlobalGameObjectType.Textures:
                     Data_TIMArchive = SerializeDataFile<TIM_ArchiveFile>(s, Data_TIMArchive, name: nameof(Data_TIMArchive));
                     break;
 
-                case GlobalModifierType.Special:
+                case GlobalGameObjectType.Special:
                     break;
 
-                case GlobalModifierType.WeatherEffect:
+                case GlobalGameObjectType.WeatherEffect:
                     break;
 
-                case GlobalModifierType.LevelTimer:
+                case GlobalGameObjectType.LevelTimer:
                     break;
 
-                case GlobalModifierType.Fireworks: // FUN_24_7__80119734
+                case GlobalGameObjectType.Fireworks: // FUN_24_7__80119734
                     break;
 
                 default:
@@ -919,7 +915,7 @@ namespace BinarySerializer.Klonoa.DTP
             }
 
             if (DataFileIndices != null && DataFileIndices[_dataFileIndex] != 0)
-                s.LogWarning($"Modifier of type {GlobalModifierType} has unparsed data file(s)");
+                s.LogWarning($"Game object of type {GlobalGameObjectType} has unparsed data file(s)");
         }
 
         private int _dataFileIndex;
@@ -941,7 +937,7 @@ namespace BinarySerializer.Klonoa.DTP
             where T : BinarySerializable, new()
         {
             if (!isUnused)
-                s.LogWarning($"Data file skipped at index {_dataFileIndex} for object of type {GlobalModifierType}");
+                s.LogWarning($"Data file skipped at index {_dataFileIndex} for object of type {GlobalGameObjectType}");
             
             SerializeDataFile<T>(s, null, name: isUnused ? "Unused" : "Unknown");
         }

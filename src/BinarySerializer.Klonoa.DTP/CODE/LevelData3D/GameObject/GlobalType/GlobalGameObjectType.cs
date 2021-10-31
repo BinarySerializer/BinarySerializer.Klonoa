@@ -1,6 +1,8 @@
 ﻿namespace BinarySerializer.Klonoa.DTP
 {
-    public enum GlobalModifierType
+    // This enum is not a part of the game and is only used in order to be able to parse the different game object assets correctly. In-game
+    // each game object has a function which handles its assets. So in order to parse it we need to hard-code it per unique type.
+    public enum GlobalGameObjectType
     {
         Unknown,
         WindSwirl,

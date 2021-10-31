@@ -1,6 +1,6 @@
 ﻿namespace BinarySerializer.Klonoa.DTP
 {
-    public class BackgroundModifierData_SetLightState : BinarySerializable
+    public class BackgroundGameObjectData_SetLightState : BinarySerializable
     {
         public int Int_00 { get; set; }
         public int Int_04 { get; set; }

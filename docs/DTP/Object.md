@@ -1,6 +1,4 @@
 # Object (DTP)
-*Note: In this library objects are defined as modifiers*
-
 The game has a global array of 64 entries for the objects. A game object is defined as anything which updates every frame, so not necessarily something which draws to the image buffer. The objcts use a primary object type (0-50) where the functions for them are defined in a pointer table (at 0x800b1bbc in the NTSC version). Many of the object types have level specific implementations and secondary types.
 
 Each object has a struct of 180 bytes. Most values differ based on the type, but the first 4 are always the same. The first value is a pointer to an optional function for the object. The next is an optional pointer to the draw function. The next two are pointers to additional data. The first data object usually contains drawing related data.

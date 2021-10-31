@@ -5,38 +5,38 @@
         public int Pre_SectorsCount { get; set; }
         public ArchiveFile Pre_ObjectAssets { get; set; }
 
-        public Pointer SectorModifiersPointer { get; set; }
+        public Pointer SectorGameObjectsPointer { get; set; }
         public Pointer MovementPathCamerasPointer { get; set; }
         public Pointer Pointer_2 { get; set; }
         public Pointer MovementPathFOVsPointer { get; set; }
 
         // Serialized from pointers
-        public SectorModifiers[] SectorModifiers { get; set; } // One for each sector
+        public SectorGameObjects3D[] SectorGameObjects3D { get; set; } // One for each sector
         public MovementPathCameras MovementPathCameras { get; set; }
         public Data2Structs[] Data2 { get; set; } // One for each sector
         public MovementPathFOVs[] MovementPathFOVs { get; set; } // One for each sector
 
         public override void SerializeImpl(SerializerObject s)
         {
-            SectorModifiersPointer = s.SerializePointer(SectorModifiersPointer, name: nameof(SectorModifiersPointer));
+            SectorGameObjectsPointer = s.SerializePointer(SectorGameObjectsPointer, name: nameof(SectorGameObjectsPointer));
             MovementPathCamerasPointer = s.SerializePointer(MovementPathCamerasPointer, name: nameof(MovementPathCamerasPointer));
             Pointer_2 = s.SerializePointer(Pointer_2, name: nameof(Pointer_2));
             MovementPathFOVsPointer = s.SerializePointer(MovementPathFOVsPointer, name: nameof(MovementPathFOVsPointer));
 
-            s.DoAt(SectorModifiersPointer, () =>
+            s.DoAt(SectorGameObjectsPointer, () =>
             {
-                SectorModifiers = s.SerializeObjectArrayUntil<SectorModifiers>(
-                    obj: SectorModifiers, 
-                    conditionCheckFunc: x => x.Modifiers[0].Short_0E == -1, 
+                SectorGameObjects3D = s.SerializeObjectArrayUntil<SectorGameObjects3D>(
+                    obj: SectorGameObjects3D, 
+                    conditionCheckFunc: x => x.Objects[0].Short_0E == -1, 
                     onPreSerialize: x => x.Pre_ObjectAssets = Pre_ObjectAssets,
-                    name: nameof(SectorModifiers));
+                    name: nameof(SectorGameObjects3D));
 
                 var sectorToParse = Loader.GetLoader(s.Context).LevelSector;
-                for (int i = 0; i < SectorModifiers.Length; i++)
+                for (int i = 0; i < SectorGameObjects3D.Length; i++)
                 {
                     if (sectorToParse == -1 || sectorToParse == i)
                     {
-                        foreach (var m in SectorModifiers[i].Modifiers)
+                        foreach (var m in SectorGameObjects3D[i].Objects)
                             m.SerializeDataFiles(s);
                     }
                 }

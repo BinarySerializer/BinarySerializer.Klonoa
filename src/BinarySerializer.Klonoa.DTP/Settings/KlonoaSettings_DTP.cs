@@ -22,228 +22,228 @@ namespace BinarySerializer.Klonoa.DTP
         public abstract uint Address_LevelData3DFunction { get; }
         public abstract uint Address_LevelData2DPointerTable { get; }
 
-        public virtual Dictionary<int, Dictionary<int, GlobalModifierType>> GlobalModifierTypes { get; } = new Dictionary<int, Dictionary<int, GlobalModifierType>>()
+        public virtual Dictionary<int, Dictionary<int, GlobalGameObjectType>> GlobalGameObjectTypes { get; } = new Dictionary<int, Dictionary<int, GlobalGameObjectType>>()
         {
-            [3] = new Dictionary<int, GlobalModifierType>()
+            [3] = new Dictionary<int, GlobalGameObjectType>()
             {
-                [4001] = GlobalModifierType.MovingPlatform,
+                [4001] = GlobalGameObjectType.MovingPlatform,
 
-                [4101] = GlobalModifierType.WindSwirl,
-                [4103] = GlobalModifierType.ScrollAnimation,
-                [4105] = GlobalModifierType.SmallWindmill,
-                [4106] = GlobalModifierType.BigWindmill,
-                [4107] = GlobalModifierType.ScenerySprites,
-                [4108] = GlobalModifierType.RoadSign,
-                [4109] = GlobalModifierType.ScenerySprites,
-                [4110] = GlobalModifierType.TextureAnimation,
-                [4120] = GlobalModifierType.Special,
-                [4121] = GlobalModifierType.LevelModelSection,
+                [4101] = GlobalGameObjectType.WindSwirl,
+                [4103] = GlobalGameObjectType.ScrollAnimation,
+                [4105] = GlobalGameObjectType.SmallWindmill,
+                [4106] = GlobalGameObjectType.BigWindmill,
+                [4107] = GlobalGameObjectType.ScenerySprites,
+                [4108] = GlobalGameObjectType.RoadSign,
+                [4109] = GlobalGameObjectType.ScenerySprites,
+                [4110] = GlobalGameObjectType.TextureAnimation,
+                [4120] = GlobalGameObjectType.Special,
+                [4121] = GlobalGameObjectType.LevelModelSection,
             },
-            [4] = new Dictionary<int, GlobalModifierType>()
+            [4] = new Dictionary<int, GlobalGameObjectType>()
             {
-                [4001] = GlobalModifierType.Minecart,
-                [4002] = GlobalModifierType.TiltRock,
+                [4001] = GlobalGameObjectType.Minecart,
+                [4002] = GlobalGameObjectType.TiltRock,
 
-                [4101] = GlobalModifierType.WindSwirl,
-                [4103] = GlobalModifierType.ScrollAnimation,
-                [4104] = GlobalModifierType.ScenerySprites,
-                [4105] = GlobalModifierType.PaletteAnimations,
-                [4107] = GlobalModifierType.WeatherEffect,
-                [4108] = GlobalModifierType.Object,
+                [4101] = GlobalGameObjectType.WindSwirl,
+                [4103] = GlobalGameObjectType.ScrollAnimation,
+                [4104] = GlobalGameObjectType.ScenerySprites,
+                [4105] = GlobalGameObjectType.PaletteAnimations,
+                [4107] = GlobalGameObjectType.WeatherEffect,
+                [4108] = GlobalGameObjectType.Object,
             },
-            [5] = new Dictionary<int, GlobalModifierType>()
+            [5] = new Dictionary<int, GlobalGameObjectType>()
             {
-                [4101] = GlobalModifierType.RongoLango,
-                [4104] = GlobalModifierType.Bell,
+                [4101] = GlobalGameObjectType.RongoLango,
+                [4104] = GlobalGameObjectType.Bell,
             },
-            [6] = new Dictionary<int, GlobalModifierType>()
+            [6] = new Dictionary<int, GlobalGameObjectType>()
             {
-                [4001] = GlobalModifierType.MovingPlatform,
-                [4002] = GlobalModifierType.LockedDoor_0,
+                [4001] = GlobalGameObjectType.MovingPlatform,
+                [4002] = GlobalGameObjectType.LockedDoor_0,
 
-                [4102] = GlobalModifierType.Light,
-                [4104] = GlobalModifierType.ScenerySprites,
-                [4120] = GlobalModifierType.Special,
+                [4102] = GlobalGameObjectType.Light,
+                [4104] = GlobalGameObjectType.ScenerySprites,
+                [4120] = GlobalGameObjectType.Special,
             },
-            [7] = new Dictionary<int, GlobalModifierType>()
+            [7] = new Dictionary<int, GlobalGameObjectType>()
             {
-                [4101] = GlobalModifierType.GeyserPlatform,
+                [4101] = GlobalGameObjectType.GeyserPlatform,
                 // TODO: 4102 is archive of movement path files, seems to be for water drops in cave
-                [4103] = GlobalModifierType.PaletteAnimations,
-                [4104] = GlobalModifierType.TextureAnimation,
-                [4116] = GlobalModifierType.VRAMScrollAnimation,
-                [4117] = GlobalModifierType.WaterWheel,
-                [4120] = GlobalModifierType.Special,
+                [4103] = GlobalGameObjectType.PaletteAnimations,
+                [4104] = GlobalGameObjectType.TextureAnimation,
+                [4116] = GlobalGameObjectType.VRAMScrollAnimation,
+                [4117] = GlobalGameObjectType.WaterWheel,
+                [4120] = GlobalGameObjectType.Special,
             },
-            [8] = new Dictionary<int, GlobalModifierType>()
+            [8] = new Dictionary<int, GlobalGameObjectType>()
             {
-                [4101] = GlobalModifierType.Object,
-                [4102] = GlobalModifierType.Object,
-                [4103] = GlobalModifierType.VRAMScrollAnimation,
-                [4120] = GlobalModifierType.Special,
+                [4101] = GlobalGameObjectType.Object,
+                [4102] = GlobalGameObjectType.Object,
+                [4103] = GlobalGameObjectType.VRAMScrollAnimation,
+                [4120] = GlobalGameObjectType.Special,
             },
-            [9] = new Dictionary<int, GlobalModifierType>()
+            [9] = new Dictionary<int, GlobalGameObjectType>()
             {
-                [4002] = GlobalModifierType.Gondola,
-                [4003] = GlobalModifierType.WoodenCart,
-                [4004] = GlobalModifierType.Crate,
-                [4005] = GlobalModifierType.LockedDoor_1,
+                [4002] = GlobalGameObjectType.Gondola,
+                [4003] = GlobalGameObjectType.WoodenCart,
+                [4004] = GlobalGameObjectType.Crate,
+                [4005] = GlobalGameObjectType.LockedDoor_1,
 
-                [4102] = GlobalModifierType.MultiWheel,
-                [4103] = GlobalModifierType.ScenerySprites,
-                [4104] = GlobalModifierType.FallingTreePart,
-                [4120] = GlobalModifierType.Special,
-                [4121] = GlobalModifierType.LevelModelSection,
+                [4102] = GlobalGameObjectType.MultiWheel,
+                [4103] = GlobalGameObjectType.ScenerySprites,
+                [4104] = GlobalGameObjectType.FallingTreePart,
+                [4120] = GlobalGameObjectType.Special,
+                [4121] = GlobalGameObjectType.LevelModelSection,
             },
-            [10] = new Dictionary<int, GlobalModifierType>() // Note: This level scroll the VRAM using an object of primary type 12 (FUN_10_8__80110c78)
+            [10] = new Dictionary<int, GlobalGameObjectType>() // Note: This level scroll the VRAM using an object of primary type 12 (FUN_10_8__80110c78)
             {
-                [4001] = GlobalModifierType.WoodenMallet,
-                [4002] = GlobalModifierType.LockedDoor_2,
-                [4003] = GlobalModifierType.VerticallyMovingWoodenPlatform,
-                [4004] = GlobalModifierType.SpinningWoodAttachedPlatform,
-                [4005] = GlobalModifierType.SpinningWood,
-                [4006] = GlobalModifierType.MovingLedge,
+                [4001] = GlobalGameObjectType.WoodenMallet,
+                [4002] = GlobalGameObjectType.LockedDoor_2,
+                [4003] = GlobalGameObjectType.VerticallyMovingWoodenPlatform,
+                [4004] = GlobalGameObjectType.SpinningWoodAttachedPlatform,
+                [4005] = GlobalGameObjectType.SpinningWood,
+                [4006] = GlobalGameObjectType.MovingLedge,
 
-                [4101] = GlobalModifierType.Cogwheel,
-                [4102] = GlobalModifierType.ScenerySprites,
-                [4103] = GlobalModifierType.ScenerySprites,
-                [4120] = GlobalModifierType.Special,
+                [4101] = GlobalGameObjectType.Cogwheel,
+                [4102] = GlobalGameObjectType.ScenerySprites,
+                [4103] = GlobalGameObjectType.ScenerySprites,
+                [4120] = GlobalGameObjectType.Special,
             },
-            [11] = new Dictionary<int, GlobalModifierType>()
+            [11] = new Dictionary<int, GlobalGameObjectType>()
             {
                 // Nothing
             },
-            [12] = new Dictionary<int, GlobalModifierType>()
+            [12] = new Dictionary<int, GlobalGameObjectType>()
             {
-                [4001] = GlobalModifierType.UnstablePlatform,
-                [4002] = GlobalModifierType.SwingingPlatform,
-                [4003] = GlobalModifierType.Ledge,
+                [4001] = GlobalGameObjectType.UnstablePlatform,
+                [4002] = GlobalGameObjectType.SwingingPlatform,
+                [4003] = GlobalGameObjectType.Ledge,
 
-                [4121] = GlobalModifierType.LevelModelSection,
+                [4121] = GlobalGameObjectType.LevelModelSection,
             },
-            [13] = new Dictionary<int, GlobalModifierType>()
+            [13] = new Dictionary<int, GlobalGameObjectType>()
             {
-                [4001] = GlobalModifierType.Bone,
-                [4002] = GlobalModifierType.RedBoulder,
-                [4003] = GlobalModifierType.GreenBoulder,
-                [4004] = GlobalModifierType.BlockingBoulder,
+                [4001] = GlobalGameObjectType.Bone,
+                [4002] = GlobalGameObjectType.RedBoulder,
+                [4003] = GlobalGameObjectType.GreenBoulder,
+                [4004] = GlobalGameObjectType.BlockingBoulder,
 
-                [4101] = GlobalModifierType.VRAMScrollAnimationWithTexture,
-                [4103] = GlobalModifierType.PaletteAnimation,
-                [4104] = GlobalModifierType.TextureAnimation,
-                [4105] = GlobalModifierType.DestroyedHouse,
-                [4107] = GlobalModifierType.ScenerySprites,
-                [4120] = GlobalModifierType.Special,
+                [4101] = GlobalGameObjectType.VRAMScrollAnimationWithTexture,
+                [4103] = GlobalGameObjectType.PaletteAnimation,
+                [4104] = GlobalGameObjectType.TextureAnimation,
+                [4105] = GlobalGameObjectType.DestroyedHouse,
+                [4107] = GlobalGameObjectType.ScenerySprites,
+                [4120] = GlobalGameObjectType.Special,
             },
-            [14] = new Dictionary<int, GlobalModifierType>()
+            [14] = new Dictionary<int, GlobalGameObjectType>()
             {
-                [4001] = GlobalModifierType.SwingingWoodPlank,
-                [4002] = GlobalModifierType.Collision,
+                [4001] = GlobalGameObjectType.SwingingWoodPlank,
+                [4002] = GlobalGameObjectType.Collision,
 
-                [4101] = GlobalModifierType.Rocks,
-                [4120] = GlobalModifierType.Special,
+                [4101] = GlobalGameObjectType.Rocks,
+                [4120] = GlobalGameObjectType.Special,
             },
-            [15] = new Dictionary<int, GlobalModifierType>()
+            [15] = new Dictionary<int, GlobalGameObjectType>()
             {
-                [4001] = GlobalModifierType.MovingPlatformOnTrack,
-                [4002] = GlobalModifierType.SpinningWheel,
-                [4003] = GlobalModifierType.FallingTargetPlatform,
-                [4004] = GlobalModifierType.BlockingLedge,
-                [4005] = GlobalModifierType.UnknownOrbRelatedObj,
-                [4007] = GlobalModifierType.LockedDoor_3,
+                [4001] = GlobalGameObjectType.MovingPlatformOnTrack,
+                [4002] = GlobalGameObjectType.SpinningWheel,
+                [4003] = GlobalGameObjectType.FallingTargetPlatform,
+                [4004] = GlobalGameObjectType.BlockingLedge,
+                [4005] = GlobalGameObjectType.UnknownOrbRelatedObj,
+                [4007] = GlobalGameObjectType.LockedDoor_3,
 
-                [4101] = GlobalModifierType.ScenerySprites,
-                [4102] = GlobalModifierType.ScenerySprites,
-                [4103] = GlobalModifierType.VRAMScrollAnimation,
-                [4104] = GlobalModifierType.RGBAnimation,
-                [4105] = GlobalModifierType.Object,
-                [4106] = GlobalModifierType.PaletteAnimations,
-                [4120] = GlobalModifierType.Special,
+                [4101] = GlobalGameObjectType.ScenerySprites,
+                [4102] = GlobalGameObjectType.ScenerySprites,
+                [4103] = GlobalGameObjectType.VRAMScrollAnimation,
+                [4104] = GlobalGameObjectType.RGBAnimation,
+                [4105] = GlobalGameObjectType.Object,
+                [4106] = GlobalGameObjectType.PaletteAnimations,
+                [4120] = GlobalGameObjectType.Special,
             },
-            [16] = new Dictionary<int, GlobalModifierType>()
+            [16] = new Dictionary<int, GlobalGameObjectType>()
             {
-                [4001] = GlobalModifierType.MovingPlatformWithOptionalLocal,
-                [4002] = GlobalModifierType.MovingWallPillars,
-                [4003] = GlobalModifierType.IronGate,
-                [4004] = GlobalModifierType.DarkLightPlatform,
+                [4001] = GlobalGameObjectType.MovingPlatformWithOptionalLocal,
+                [4002] = GlobalGameObjectType.MovingWallPillars,
+                [4003] = GlobalGameObjectType.IronGate,
+                [4004] = GlobalGameObjectType.DarkLightPlatform,
 
-                [4101] = GlobalModifierType.DarkLightSwitcher,
-                [4102] = GlobalModifierType.ScenerySprites,
-                [4103] = GlobalModifierType.ScenerySprites,
-                [4104] = GlobalModifierType.ScenerySprites,
-                [4105] = GlobalModifierType.PaletteAnimation,
-                [4121] = GlobalModifierType.LevelModelSection,
+                [4101] = GlobalGameObjectType.DarkLightSwitcher,
+                [4102] = GlobalGameObjectType.ScenerySprites,
+                [4103] = GlobalGameObjectType.ScenerySprites,
+                [4104] = GlobalGameObjectType.ScenerySprites,
+                [4105] = GlobalGameObjectType.PaletteAnimation,
+                [4121] = GlobalGameObjectType.LevelModelSection,
             },
-            [17] = new Dictionary<int, GlobalModifierType>()
+            [17] = new Dictionary<int, GlobalGameObjectType>()
             {
-                [4001] = GlobalModifierType.BossUnknown,
+                [4001] = GlobalGameObjectType.BossUnknown,
 
-                [4101] = GlobalModifierType.JokaSpinningCore,
+                [4101] = GlobalGameObjectType.JokaSpinningCore,
             },
-            [18] = new Dictionary<int, GlobalModifierType>()
+            [18] = new Dictionary<int, GlobalGameObjectType>()
             {
-                [4001] = GlobalModifierType.TransparentGemPlatform,
-                [4002] = GlobalModifierType.MovingCavePlatform,
-                [4003] = GlobalModifierType.BirdStatueWithSwitch,
-                [4004] = GlobalModifierType.ObjectWithPaletteAnimation,
-                [4005] = GlobalModifierType.LightField,
+                [4001] = GlobalGameObjectType.TransparentGemPlatform,
+                [4002] = GlobalGameObjectType.MovingCavePlatform,
+                [4003] = GlobalGameObjectType.BirdStatueWithSwitch,
+                [4004] = GlobalGameObjectType.ObjectWithPaletteAnimation,
+                [4005] = GlobalGameObjectType.LightField,
 
-                [4101] = GlobalModifierType.PaletteAnimation,
-                [4102] = GlobalModifierType.PaletteAnimation,
-                [4120] = GlobalModifierType.Special,
-                [4121] = GlobalModifierType.LevelModelSection,
+                [4101] = GlobalGameObjectType.PaletteAnimation,
+                [4102] = GlobalGameObjectType.PaletteAnimation,
+                [4120] = GlobalGameObjectType.Special,
+                [4121] = GlobalGameObjectType.LevelModelSection,
             },
-            [19] = new Dictionary<int, GlobalModifierType>()
+            [19] = new Dictionary<int, GlobalGameObjectType>()
             {
-                [4001] = GlobalModifierType.TransparentGemPlatform,
-                [4002] = GlobalModifierType.MovingCavePlatform,
-                [4003] = GlobalModifierType.OnWayMovingWallPillar,
-                [4004] = GlobalModifierType.ColoredPillar,
-                [4006] = GlobalModifierType.DoorWithPillar,
-                [4007] = GlobalModifierType.ObjectWithPaletteAnimation,
+                [4001] = GlobalGameObjectType.TransparentGemPlatform,
+                [4002] = GlobalGameObjectType.MovingCavePlatform,
+                [4003] = GlobalGameObjectType.OnWayMovingWallPillar,
+                [4004] = GlobalGameObjectType.ColoredPillar,
+                [4006] = GlobalGameObjectType.DoorWithPillar,
+                [4007] = GlobalGameObjectType.ObjectWithPaletteAnimation,
 
-                [4101] = GlobalModifierType.ColoredStatue,
-                [4102] = GlobalModifierType.ColoredDoor,
-                [4103] = GlobalModifierType.VRAMScrollAnimation,
-                [4104] = GlobalModifierType.Object,
-                [4120] = GlobalModifierType.Special,
-                [4121] = GlobalModifierType.LevelModelSection,
+                [4101] = GlobalGameObjectType.ColoredStatue,
+                [4102] = GlobalGameObjectType.ColoredDoor,
+                [4103] = GlobalGameObjectType.VRAMScrollAnimation,
+                [4104] = GlobalGameObjectType.Object,
+                [4120] = GlobalGameObjectType.Special,
+                [4121] = GlobalGameObjectType.LevelModelSection,
             },
-            [20] = new Dictionary<int, GlobalModifierType>()
+            [20] = new Dictionary<int, GlobalGameObjectType>()
             {
-                [4001] = GlobalModifierType.GhadiusCirclePlatform,
-                [4002] = GlobalModifierType.BossUnknown,
+                [4001] = GlobalGameObjectType.GhadiusCirclePlatform,
+                [4002] = GlobalGameObjectType.BossUnknown,
 
-                [4101] = GlobalModifierType.CutsceneCrystal,
+                [4101] = GlobalGameObjectType.CutsceneCrystal,
             },
-            [21] = new Dictionary<int, GlobalModifierType>()
+            [21] = new Dictionary<int, GlobalGameObjectType>()
             {
                 // Nothing
             },
-            [22] = new Dictionary<int, GlobalModifierType>()
+            [22] = new Dictionary<int, GlobalGameObjectType>()
             {
-                [4102] = GlobalModifierType.NahatombSphere,
-                [4103] = GlobalModifierType.NahatombEscaping,
-                [4104] = GlobalModifierType.Special,
-                [4105] = GlobalModifierType.CutsceneCrystal,
-                [4120] = GlobalModifierType.Special,
+                [4102] = GlobalGameObjectType.NahatombSphere,
+                [4103] = GlobalGameObjectType.NahatombEscaping,
+                [4104] = GlobalGameObjectType.Special,
+                [4105] = GlobalGameObjectType.CutsceneCrystal,
+                [4120] = GlobalGameObjectType.Special,
             },
-            [23] = new Dictionary<int, GlobalModifierType>()
+            [23] = new Dictionary<int, GlobalGameObjectType>()
             {
-                [4001] = GlobalModifierType.NahatombBluePlatformAndGem,
+                [4001] = GlobalGameObjectType.NahatombBluePlatformAndGem,
 
-                [4103] = GlobalModifierType.Special,
-                [4104] = GlobalModifierType.NahatombPaletteAnimation,
-                [4105] = GlobalModifierType.Special,
+                [4103] = GlobalGameObjectType.Special,
+                [4104] = GlobalGameObjectType.NahatombPaletteAnimation,
+                [4105] = GlobalGameObjectType.Special,
             },
-            [24] = new Dictionary<int, GlobalModifierType>()
+            [24] = new Dictionary<int, GlobalGameObjectType>()
             {
-                [4101] = GlobalModifierType.VRAMScrollAnimation,
-                [4102] = GlobalModifierType.LevelTimer,
-                [4104] = GlobalModifierType.Fireworks,
-                [4105] = GlobalModifierType.Textures,
-                [4106] = GlobalModifierType.PaletteAnimations,
-                [4121] = GlobalModifierType.LevelModelSection,
+                [4101] = GlobalGameObjectType.VRAMScrollAnimation,
+                [4102] = GlobalGameObjectType.LevelTimer,
+                [4104] = GlobalGameObjectType.Fireworks,
+                [4105] = GlobalGameObjectType.Textures,
+                [4106] = GlobalGameObjectType.PaletteAnimations,
+                [4121] = GlobalGameObjectType.LevelModelSection,
             },
         };
         public virtual Dictionary<int, TextureAnimationInfo> TextureAnimationInfos { get; } = new Dictionary<int, TextureAnimationInfo>()
@@ -498,17 +498,17 @@ namespace BinarySerializer.Klonoa.DTP
                 }, 0x1D8, 0x5F, 8),
             },
         };
-        public GlobalModifierType GetGlobalModifierType(int binBlock, int primaryType, int secondaryType)
+        public GlobalGameObjectType GetGlobalGameObjectType(int binBlock, int primaryType, int secondaryType)
         {
-            if (!GlobalModifierTypes.ContainsKey(binBlock))
-                return GlobalModifierType.Unknown;
+            if (!GlobalGameObjectTypes.ContainsKey(binBlock))
+                return GlobalGameObjectType.Unknown;
 
             var typeKey = primaryType * 100 + secondaryType;
 
-            if (!GlobalModifierTypes[binBlock].ContainsKey(typeKey))
-                return GlobalModifierType.Unknown;
+            if (!GlobalGameObjectTypes[binBlock].ContainsKey(typeKey))
+                return GlobalGameObjectType.Unknown;
 
-            return GlobalModifierTypes[binBlock][typeKey];
+            return GlobalGameObjectTypes[binBlock][typeKey];
         }
 
         public class TextureAnimationInfo

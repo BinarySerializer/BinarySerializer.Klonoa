@@ -1,6 +1,6 @@
 ﻿namespace BinarySerializer.Klonoa.DTP
 {
-    public class BackgroundModifierData_Clear : BinarySerializable
+    public class BackgroundGameObjectData_Clear : BinarySerializable
     {
         public Entry[] Entries { get; set; }
 
@@ -12,10 +12,10 @@
         public class Entry : BinarySerializable
         {
             public short XPos { get; set; }
-            public short XPos_RelativeObj { get; set; } // An index to a background modifier, can be -1
+            public short XPos_RelativeObj { get; set; } // An index to a background object, can be -1
 
             public short YPos { get; set; }
-            public short YPos_RelativeObj { get; set; } // An index to a background modifier, can be -1
+            public short YPos_RelativeObj { get; set; } // An index to a background object, can be -1
 
             public RGBA8888Color Color { get; set; }
 

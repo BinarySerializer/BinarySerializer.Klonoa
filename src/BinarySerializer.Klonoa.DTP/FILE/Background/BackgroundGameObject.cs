@@ -1,11 +1,11 @@
 ﻿namespace BinarySerializer.Klonoa.DTP
 {
-    public class BackgroundModifierObject : BinarySerializable
+    public class BackgroundGameObject : BinarySerializable
     {
         public short XPos { get; set; }
         public short YPos { get; set; }
-        public BackgroundModifierType Type { get; set; }
-        public bool IsLayer => Type == BackgroundModifierType.BackgroundLayer_19 || Type == BackgroundModifierType.BackgroundLayer_22;
+        public BackgroundGameObjectType Type { get; set; }
+        public bool IsLayer => Type == BackgroundGameObjectType.BackgroundLayer_19 || Type == BackgroundGameObjectType.BackgroundLayer_22;
 
         public int BGDIndex { get; set; }
         public int UnknownValues { get; set; }
@@ -13,17 +13,17 @@
         public bool UnknownFlag1 { get; set; }
         public bool UnknownFlag2 { get; set; }
 
-        public BackgroundModifierData_Clear Data_Clear { get; set; }
-        public BackgroundModifierData_PaletteScroll Data_PaletteScroll { get; set; }
-        public BackgroundModifierData_SetLightState Data_SetLightState { get; set; }
-        public BackgroundModifierData_PaletteSwap Data_PaletteSwap { get; set; }
+        public BackgroundGameObjectData_Clear Data_Clear { get; set; }
+        public BackgroundGameObjectData_PaletteScroll Data_PaletteScroll { get; set; }
+        public BackgroundGameObjectData_SetLightState Data_SetLightState { get; set; }
+        public BackgroundGameObjectData_PaletteSwap Data_PaletteSwap { get; set; }
         public byte[] Data_Raw { get; set; }
 
         public override void SerializeImpl(SerializerObject s)
         {
             XPos = s.Serialize<short>(XPos, name: nameof(XPos));
             YPos = s.Serialize<short>(YPos, name: nameof(YPos));
-            Type = s.Serialize<BackgroundModifierType>(Type, name: nameof(Type));
+            Type = s.Serialize<BackgroundGameObjectType>(Type, name: nameof(Type));
 
             s.SerializeBitValues<ushort>(bitFunc =>
             {
@@ -36,54 +36,54 @@
 
             switch (Type)
             {
-                case BackgroundModifierType.Unknown_1:
+                case BackgroundGameObjectType.Unknown_1:
                     // There is no data to parse
                     break;
 
-                case BackgroundModifierType.HUD:
-                case BackgroundModifierType.Reset:
+                case BackgroundGameObjectType.HUD:
+                case BackgroundGameObjectType.Reset:
                     // Do nothing
                     break;
 
-                case BackgroundModifierType.Clear:
-                case BackgroundModifierType.Clear_Gradient:
-                    Data_Clear = s.SerializeObject<BackgroundModifierData_Clear>(Data_Clear, name: nameof(Data_Clear));
+                case BackgroundGameObjectType.Clear:
+                case BackgroundGameObjectType.Clear_Gradient:
+                    Data_Clear = s.SerializeObject<BackgroundGameObjectData_Clear>(Data_Clear, name: nameof(Data_Clear));
                     break;
 
-                case BackgroundModifierType.PaletteScroll:
-                    Data_PaletteScroll = s.SerializeObject<BackgroundModifierData_PaletteScroll>(Data_PaletteScroll, name: nameof(Data_PaletteScroll));
+                case BackgroundGameObjectType.PaletteScroll:
+                    Data_PaletteScroll = s.SerializeObject<BackgroundGameObjectData_PaletteScroll>(Data_PaletteScroll, name: nameof(Data_PaletteScroll));
                     break;
 
-                case BackgroundModifierType.SetLightState:
-                    Data_SetLightState = s.SerializeObject<BackgroundModifierData_SetLightState>(Data_SetLightState, name: nameof(Data_SetLightState));
+                case BackgroundGameObjectType.SetLightState:
+                    Data_SetLightState = s.SerializeObject<BackgroundGameObjectData_SetLightState>(Data_SetLightState, name: nameof(Data_SetLightState));
                     break;
 
                 // TODO: Parse
-                case BackgroundModifierType.BackgroundLayer_19:
-                case BackgroundModifierType.BackgroundLayer_22:
+                case BackgroundGameObjectType.BackgroundLayer_19:
+                case BackgroundGameObjectType.BackgroundLayer_22:
                     Data_Raw = s.SerializeArray<byte>(Data_Raw, 56, name: nameof(Data_Raw));
                     break;
 
-                case BackgroundModifierType.PaletteSwap:
-                    Data_PaletteSwap = s.SerializeObject<BackgroundModifierData_PaletteSwap>(Data_PaletteSwap, name: nameof(Data_PaletteSwap));
+                case BackgroundGameObjectType.PaletteSwap:
+                    Data_PaletteSwap = s.SerializeObject<BackgroundGameObjectData_PaletteSwap>(Data_PaletteSwap, name: nameof(Data_PaletteSwap));
                     break;
 
                 default:
                     Data_Raw = s.SerializeArray<byte>(Data_Raw, 56, name: nameof(Data_Raw));
-                    s.LogWarning($"Unknown background modifier type {Type}");
+                    s.LogWarning($"Unknown background object type {Type}");
                     break;
             }
 
             s.Goto(Offset + 64);
         }
 
-        public enum BackgroundModifierType : short
+        public enum BackgroundGameObjectType : short
         {
             Unknown_1 = 1,
 
             HUD = 11, // The game HUD
 
-            Reset = 18, // Resets some values, seems to always be the first modifier
+            Reset = 18, // Resets some values, seems to always be the first object
             BackgroundLayer_19 = 19, // Used when CEL index is 1?
             Clear_Gradient = 20, // Handles background clearing each frame
             Clear = 21,

@@ -1,18 +1,18 @@
 ﻿namespace BinarySerializer.Klonoa.DTP
 {
-    public class SectorModifiers : BinarySerializable
+    public class SectorGameObjects3D : BinarySerializable
     {
         public ArchiveFile Pre_ObjectAssets { get; set; }
 
-        public ModifierObject[] Modifiers { get; set; }
+        public GameObject3D[] Objects { get; set; }
 
         public override void SerializeImpl(SerializerObject s)
         {
-            Modifiers = s.SerializeObjectArrayUntil<ModifierObject>(
-                obj: Modifiers,
+            Objects = s.SerializeObjectArrayUntil<GameObject3D>(
+                obj: Objects,
                 conditionCheckFunc: x => x.Short_00 == -1,
                 onPreSerialize: x => x.Pre_ObjectAssets = Pre_ObjectAssets,
-                name: nameof(Modifiers));
+                name: nameof(Objects));
         }
     }
 }

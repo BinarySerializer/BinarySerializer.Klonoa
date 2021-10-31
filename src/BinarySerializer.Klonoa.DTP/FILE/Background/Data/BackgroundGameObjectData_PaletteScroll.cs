@@ -1,6 +1,6 @@
 ﻿namespace BinarySerializer.Klonoa.DTP
 {
-    public class BackgroundModifierData_PaletteScroll : BinarySerializable
+    public class BackgroundGameObjectData_PaletteScroll : BinarySerializable
     {
         public int XPosition { get; set; }
         public int YPosition { get; set; }
