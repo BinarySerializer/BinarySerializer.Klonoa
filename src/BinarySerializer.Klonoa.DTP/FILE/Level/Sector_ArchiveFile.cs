@@ -23,7 +23,7 @@ namespace BinarySerializer.Klonoa.DTP
             LevelModel = SerializeFile<PS1_TMD>(s, LevelModel, 0, logIfNotFullyParsed: false, name: nameof(LevelModel));
             LevelModelObjectSectorMap = SerializeFile<LevelModelObjectSectorMap_File>(s, LevelModelObjectSectorMap, 1, name: nameof(LevelModelObjectSectorMap));
             LevelCollisionSectorMap = SerializeFile<LevelCollisionSectorMap_File>(s, LevelCollisionSectorMap, 2, name: nameof(LevelCollisionSectorMap));
-            LevelCollisionTriangles = SerializeFile<CollisionTriangles_File>(s, LevelCollisionTriangles, 3, name: nameof(LevelCollisionTriangles));
+            LevelCollisionTriangles = SerializeFile<CollisionTriangles_File>(s, LevelCollisionTriangles, 3, onPreSerialize: x => x.Pre_HasCount = false, name: nameof(LevelCollisionTriangles));
             MovementPaths = SerializeFile<ArchiveFile<MovementPath_File>>(s, MovementPaths, 4, name: nameof(MovementPaths));
             UnknownModelObjectsData = SerializeFile<UnknownModelObjectsData_File>(s, UnknownModelObjectsData, 5, onPreSerialize: x => x.Pre_ObjsCount = LevelModel.ObjectsCount, name: nameof(UnknownModelObjectsData));
         }
