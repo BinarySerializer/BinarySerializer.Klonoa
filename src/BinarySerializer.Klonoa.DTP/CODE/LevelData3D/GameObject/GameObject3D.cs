@@ -41,6 +41,7 @@ namespace BinarySerializer.Klonoa.DTP
         public ObjCollision_File Data_Collision { get; set; }
         public MovementPath_File Data_MovementPaths { get; set; }
         public UnknownModelObjectsData_File Data_UnknownModelObjectsData { get; set; }
+        public ArchiveFile<ModelAnimation> ModelAnimations { get; set; }
         public PS1_TIM Data_TIM { get; set; }
         public TIM_ArchiveFile Data_TIMArchive { get; set; }
         public ObjPositions_File Data_LightPositions { get; set; } // Each light has two positions, source and destination
@@ -206,8 +207,8 @@ namespace BinarySerializer.Klonoa.DTP
                     break;
 
                 case GlobalGameObjectType.RongoLango:
-                    Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
-                    SkipDataFile<ArchiveFile<RawData_ArchiveFile>>(s); // TODO: Parts
+                    Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, x => x.Pre_HasParts = true, name: nameof(Data_TMD));
+                    ModelAnimations = SerializeDataFile<ArchiveFile<ModelAnimation>>(s, ModelAnimations, name: nameof(ModelAnimations));
                     SkipDataFile<RawData_File>(s); // TODO: Unknown data
                     SkipDataFile<RawData_File>(s); // TODO: Unknown data
                     SkipDataFile<RawData_File>(s); // TODO: Unknown data
