@@ -1,8 +1,9 @@
-﻿namespace BinarySerializer.Klonoa.KH
+﻿using BinarySerializer.GBA;
+
+namespace BinarySerializer.Klonoa.KH
 {
     public class Graphics_File : BaseFile
     {
-        public string Magic { get; set; } // CT
         public ushort TileMapWidth { get; set; }
         public ushort TileMapHeight { get; set; }
         public byte BPP { get; set; } // 4 or 8
@@ -15,17 +16,16 @@
         public uint TileMapLength { get; set; }
         public uint TileMapOffset { get; set; }
 
+        public bool IsAffine { get; set; }
+        public bool HasTileMap => TileMapLength != 0;
+
         public RGBA5551Color[] Palette { get; set; }
         public byte[] TileSet { get; set; }
-        public GraphicsTile[] TileMap { get; set; }
+        public MapTile[] TileMap { get; set; }
 
         public override void SerializeImpl(SerializerObject s)
         {
-            Magic = s.SerializeString(Magic, 2, name: nameof(Magic));
-
-            if (Magic != "CT")
-                throw new BinarySerializableException(this, $"Invalid magic header '{Magic}'");
-
+            s.SerializeMagicString("CT", 2);
             TileMapWidth = s.Serialize<ushort>(TileMapWidth, name: nameof(TileMapWidth));
             TileMapHeight = s.Serialize<ushort>(TileMapHeight, name: nameof(TileMapHeight));
             BPP = s.Serialize<byte>(BPP, name: nameof(BPP));
@@ -40,7 +40,18 @@
 
             s.DoAt(Offset + PaletteOffset, () => Palette = s.SerializeObjectArray<RGBA5551Color>(Palette, PalettesCount * 16, name: nameof(Palette)));
             s.DoAt(Offset + TileSetOffset, () => TileSet = s.SerializeArray<byte>(TileSet, TileSetLength, name: nameof(TileSet)));
-            s.DoAt(Offset + TileMapOffset, () => TileMap = s.SerializeObjectArray<GraphicsTile>(TileMap, TileMapLength / 2, name: nameof(TileMap)));
+            s.DoAt(Offset + TileMapOffset, () =>
+            {
+                // In affine mode each tile is 8-bit rather than 16-bit
+                int tilesCount = (TileMapWidth / GBAConstants.TileSize) * (TileMapHeight / GBAConstants.TileSize);
+                
+                IsAffine = tilesCount == TileMapLength;
+
+                if (!HasTileMap)
+                    tilesCount = 0;
+
+                return TileMap = s.SerializeObjectArray<MapTile>(TileMap, tilesCount, x => x.Pre_IsAffine = IsAffine, name: nameof(TileMap));
+            });
             
             if (TileMapOffset != 0)
                 s.Goto(Offset + TileMapOffset + TileMapLength);
