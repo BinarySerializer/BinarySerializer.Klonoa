@@ -25,6 +25,9 @@ namespace BinarySerializer.Klonoa
         public Pointer KH_KW_SharedDataPointer { get; set; } // Shared data between the maps, such as common tilesets. Appears after the map files.
         public KH_KW_Entry[] KH_KW_Entries { get; set; }
 
+        // Klonoa Heroes WMAP
+        public KH_WMAP_Entry[] KH_WMAP_Entries { get; set; }
+
         public override void SerializeImpl(SerializerObject s)
         {
             Pointer offsetsAnchor = Offset;
@@ -64,6 +67,13 @@ namespace BinarySerializer.Klonoa
                 FilePointers = KH_KW_Entries.Select(x => new Pointer(x.FileOffset, Offset.File, Offset)).ToArray();
                 return;
             }
+            else if (Pre_Type == ArchiveFileType.KH_WMAP)
+            {
+                KH_WMAP_Entries = s.SerializeObjectArrayUntil<KH_WMAP_Entry>(KH_WMAP_Entries, x => x.FileLength == 0, name: nameof(KH_WMAP_Entries));
+                FilesCount = KH_WMAP_Entries.Length;
+                FilePointers = KH_WMAP_Entries.Select(x => new Pointer(x.FileOffset, Offset.File, Offset)).ToArray();
+                return;
+            }
             else
             {
                 FilesCount = s.Serialize<int>(FilesCount, name: nameof(FilesCount));
@@ -100,6 +110,22 @@ namespace BinarySerializer.Klonoa
                 Byte_03 = s.Serialize<byte>(Byte_03, name: nameof(Byte_03));
                 FileOffset = s.Serialize<uint>(FileOffset, name: nameof(FileOffset));
                 s.SerializePadding(8, logIfNotNull: true);
+            }
+        }        
+        
+        public class KH_WMAP_Entry : BinarySerializable
+        {
+            public string Name { get; set; }
+            public int ID { get; set; }
+            public int FileLength { get; set; }
+            public uint FileOffset { get; set; }
+
+            public override void SerializeImpl(SerializerObject s)
+            {
+                Name = s.SerializeString(Name, 4, name: nameof(Name));
+                ID = s.Serialize<int>(ID, name: nameof(ID));
+                FileLength = s.Serialize<int>(FileLength, name: nameof(FileLength));
+                FileOffset = s.Serialize<uint>(FileOffset, name: nameof(FileOffset));
             }
         }
     }

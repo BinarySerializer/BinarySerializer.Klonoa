@@ -24,5 +24,10 @@
         /// The KW archive type in Klonoa Heroes. Used for level maps and identifies them based on their ID. Has an end pointer.
         /// </summary>
         KH_KW,
+
+        /// <summary>
+        /// The world map archive type in Klonoa Heroes.
+        /// </summary>
+        KH_WMAP,
     }
 }

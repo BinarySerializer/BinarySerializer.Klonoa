@@ -13,6 +13,7 @@ namespace BinarySerializer.Klonoa.KH
             [DefinedPointer.UIPack] = 0x0828fd20,
             [DefinedPointer.StoryPack] = 0x0873d350,
             [DefinedPointer.MapsPack] = 0x08b30fd0,
+            [DefinedPointer.WorldMapPack] = 0x082f9870,
             [DefinedPointer.EnemyObjectDefinitions] = 0x08068720,
         };
     }

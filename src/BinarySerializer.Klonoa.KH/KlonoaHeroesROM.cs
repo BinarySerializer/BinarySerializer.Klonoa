@@ -17,17 +17,13 @@ namespace BinarySerializer.Klonoa.KH
         public UIPack_ArchiveFile UIPack { get; set; }
         public StoryPack_ArchiveFile StoryPack { get; set; }
         public MapsPack_ArchiveFile MapsPack { get; set; }
+        public WorldMapPack_ArchiveFile WorldMapPack { get; set; }
 
         public EnemyObjectTypeDefinition[] EnemyObjectDefinitions { get; set; }
 
         public override void SerializeImpl(SerializerObject s)
         {
             base.SerializeImpl(s);
-
-            // TODO: Move pointers to pointer table to avoid hard-coding them
-
-            // TODO: Parse remaining data
-            // 082f9870 - offset table with names
 
             if (Pre_SerializeFlags.HasFlag(SerializeDataFlags.MenuPack))
                 s.DoAt(s.GetPreDefinedPointer(DefinedPointer.MenuPack), () => 
@@ -57,6 +53,10 @@ namespace BinarySerializer.Klonoa.KH
                 s.DoAt(s.GetPreDefinedPointer(DefinedPointer.MapsPack), () => 
                     MapsPack = s.SerializeObject<MapsPack_ArchiveFile>(MapsPack, name: nameof(MapsPack)));
 
+            if (Pre_SerializeFlags.HasFlag(SerializeDataFlags.WorldMapPack))
+                s.DoAt(s.GetPreDefinedPointer(DefinedPointer.WorldMapPack), () =>
+                    WorldMapPack = s.SerializeObject<WorldMapPack_ArchiveFile>(WorldMapPack, name: nameof(WorldMapPack)));
+
             if (Pre_SerializeFlags.HasFlag(SerializeDataFlags.EnemyObjectDefinitions))
                 s.DoAt(s.GetPreDefinedPointer(DefinedPointer.EnemyObjectDefinitions), () => 
                     EnemyObjectDefinitions = s.SerializeObjectArray<EnemyObjectTypeDefinition>(EnemyObjectDefinitions, 182, name: nameof(EnemyObjectDefinitions)));
@@ -74,9 +74,10 @@ namespace BinarySerializer.Klonoa.KH
             UIPack = 1 << 4,
             StoryPack = 1 << 5,
             MapsPack = 1 << 6,
-            EnemyObjectDefinitions = 1 << 7,
+            WorldMapPack = 1 << 7,
+            EnemyObjectDefinitions = 1 << 8,
 
-            Packs = MenuPack | EnemyAnimationsPack | GameplayPack | ItemsPack | UIPack | StoryPack | MapsPack,
+            Packs = MenuPack | EnemyAnimationsPack | GameplayPack | ItemsPack | UIPack | StoryPack | MapsPack | WorldMapPack,
             CodeData = EnemyObjectDefinitions,
             All = Packs | CodeData,
         }

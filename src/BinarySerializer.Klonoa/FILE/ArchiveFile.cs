@@ -131,6 +131,12 @@ namespace BinarySerializer.Klonoa
 
                 return;
             }
+            else if (Pre_Type == ArchiveFileType.KH_WMAP)
+            {
+                _fileEndPointers = Enumerable.Range(0, OffsetTable.FilesCount).Select(i => OffsetTable.FilePointers[i] + OffsetTable.KH_WMAP_Entries[i].FileLength).ToArray();
+
+                return;
+            }
 
             KlonoaSettings settings = Context.GetKlonoaSettings(false);
             HashSet<KlonoaSettings.RelocatedFile> relocatedFiles = null;
@@ -204,8 +210,8 @@ namespace BinarySerializer.Klonoa
         /// </summary>
         public void RecalculateFileOffsets()
         {
-            if (Pre_Type == ArchiveFileType.KH_KW)
-                throw new NotImplementedException("KW archives are currently not supported for recalculating the offsets");
+            if (Pre_Type == ArchiveFileType.KH_KW || Pre_Type == ArchiveFileType.KH_WMAP)
+                throw new NotImplementedException($"Archives of type {Pre_Type} are currently not supported for recalculating the offsets");
 
             // Recalculate the size of the offset table. This is needed if the files count has changed.
             OffsetTable.RecalculateSize();

@@ -9,6 +9,7 @@
         UIPack,
         StoryPack,
         MapsPack,
+        WorldMapPack,
         EnemyObjectDefinitions,
     }
 }
