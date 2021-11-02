@@ -58,7 +58,7 @@ namespace BinarySerializer.Klonoa.KH
 
             switch (Type)
             {
-                case CommandType.CMD_00_00: // Interacts with some other cutscene
+                case CommandType.CreateContextAt: // The cutscene can have 16 "contexts" which all run commands from different offsets in the script
                     CommandOffset1 = s.Serialize<short>(CommandOffset1, name: nameof(CommandOffset1));
                     break;
 
@@ -592,7 +592,7 @@ namespace BinarySerializer.Klonoa.KH
 
         public enum CommandType
         {
-            CMD_00_00 = 0000, 
+            CreateContextAt = 0000, 
             End_0 = 0001,
             End_1 = 0002,
             Wait = 0003,
