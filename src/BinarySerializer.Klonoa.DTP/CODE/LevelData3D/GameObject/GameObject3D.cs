@@ -209,11 +209,11 @@ namespace BinarySerializer.Klonoa.DTP
                 case GlobalGameObjectType.RongoLango:
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, x => x.Pre_HasBones = true, name: nameof(Data_TMD));
                     ModelAnimations = SerializeDataFile<ArchiveFile<ModelBoneAnimation_ArchiveFile>>(s, ModelAnimations, name: nameof(ModelAnimations));
-                    SkipDataFile<RawData_File>(s); // TODO: Unknown data
+                    Data_MovementPaths = SerializeDataFile<MovementPath_File>(s, Data_MovementPaths, name: nameof(Data_MovementPaths));
                     SkipDataFile<RawData_File>(s); // TODO: Unknown data
                     SkipDataFile<RawData_File>(s); // TODO: Unknown data
                     SkipDataFile<RawData_ArchiveFile>(s); // TODO: Unknown data
-                    SkipDataFile<RawData_ArchiveFile>(s); // TODO: Palettes
+                    SkipDataFile<RawData_ArchiveFile>(s); // TODO: Palettes (for when hitting the boss)
                     break;
 
                 case GlobalGameObjectType.Bell:
