@@ -1,6 +1,6 @@
 ﻿namespace BinarySerializer.Klonoa.DTP
 {
-    public class ObjTransformInfo_File : BaseFile
+    public class ModelAnimationInfo_File : BaseFile
     {
         public ushort ObjectsCount { get; set; } // The number of objects the transform is for
         public ushort FramesCount { get; set; }

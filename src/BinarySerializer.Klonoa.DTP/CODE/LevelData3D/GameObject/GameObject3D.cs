@@ -41,15 +41,15 @@ namespace BinarySerializer.Klonoa.DTP
         public CollisionTriangles_File Data_Collision { get; set; }
         public MovementPath_File Data_MovementPaths { get; set; }
         public UnknownModelObjectsData_File Data_UnknownModelObjectsData { get; set; }
-        public ArchiveFile<ModelAnimation> ModelAnimations { get; set; }
+        public ArchiveFile<ModelBoneAnimation_ArchiveFile> ModelAnimations { get; set; }
         public PS1_TIM Data_TIM { get; set; }
         public TIM_ArchiveFile Data_TIMArchive { get; set; }
-        public ObjPositions_File Data_LightPositions { get; set; } // Each light has two positions, source and destination
-        public ObjTransform_ArchiveFile Data_LocalTransform { get; set; }
-        public ObjTransform_ArchiveFile Data_LocalTransform_Secondary { get; set; } // TODO: Get rid of and use fake archive
-        public ObjTransform_ArchiveFile Data_AbsoluteTransform { get; set; }
-        public ArchiveFile<ObjTransform_ArchiveFile> Data_LocalTransforms { get; set; }
-        public ArchiveFile<ObjTransform_ArchiveFile> Data_AbsoluteTransforms { get; set; }
+        public VectorAnimation_File Data_LightPositions { get; set; } // Each light has two positions, source and destination
+        public ModelAnimation_ArchiveFile Data_LocalTransform { get; set; }
+        public ModelAnimation_ArchiveFile Data_LocalTransform_Secondary { get; set; } // TODO: Get rid of and use fake archive
+        public ModelAnimation_ArchiveFile Data_AbsoluteTransform { get; set; }
+        public ArchiveFile<ModelAnimation_ArchiveFile> Data_LocalTransforms { get; set; }
+        public ArchiveFile<ModelAnimation_ArchiveFile> Data_AbsoluteTransforms { get; set; }
         public KlonoaVector16 Data_Position { get; set; }
         public CameraAnimations_File Data_CameraAnimations { get; set; }
         public TIM_ArchiveFile Data_TextureAnimation { get; set; }
@@ -57,7 +57,7 @@ namespace BinarySerializer.Klonoa.DTP
         public PaletteAnimations_ArchiveFile Data_PaletteAnimations { get; set; }
         public UVScrollAnimation_File Data_UVScrollAnimation { get; set; }
         public RGBAnimations_File Data_RGBAnimations { get; set; }
-        public ObjPositions_File Data_ScenerySprites { get; set; }
+        public VectorAnimation_File Data_ScenerySprites { get; set; }
 
         // Custom
         public GlobalGameObjectType GlobalGameObjectType { get; set; }
@@ -153,16 +153,16 @@ namespace BinarySerializer.Klonoa.DTP
                 
                 case GlobalGameObjectType.BigWindmill:
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
-                    Data_AbsoluteTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform, 
-                        onPreSerialize: x => x.Pre_UsesTransformInfo = true, name: nameof(Data_AbsoluteTransform));
+                    Data_AbsoluteTransform = SerializeDataFile<ModelAnimation_ArchiveFile>(s, Data_AbsoluteTransform, 
+                        onPreSerialize: x => x.Pre_UsesInfo = true, name: nameof(Data_AbsoluteTransform));
                     Data_TIM = SerializeDataFile<PS1_TIM>(s, Data_TIM, name: nameof(Data_TIM));
                     ConstantRotationZ = -9;
                     break;
 
                 case GlobalGameObjectType.SmallWindmill:
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
-                    Data_AbsoluteTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform,
-                        onPreSerialize: x => x.Pre_UsesTransformInfo = true, name: nameof(Data_AbsoluteTransform));
+                    Data_AbsoluteTransform = SerializeDataFile<ModelAnimation_ArchiveFile>(s, Data_AbsoluteTransform,
+                        onPreSerialize: x => x.Pre_UsesInfo = true, name: nameof(Data_AbsoluteTransform));
                     ConstantRotationZ = -24;
                     break;
 
@@ -170,24 +170,24 @@ namespace BinarySerializer.Klonoa.DTP
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
                     Data_Collision = SerializeDataFile<CollisionTriangles_File>(s, Data_Collision, name: nameof(Data_Collision));
                     Data_MovementPaths = SerializeDataFile<MovementPath_File>(s, Data_MovementPaths, name: nameof(Data_MovementPaths));
-                    Data_AbsoluteTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform,
-                        onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_AbsoluteTransform));
+                    Data_AbsoluteTransform = SerializeDataFile<ModelAnimation_ArchiveFile>(s, Data_AbsoluteTransform,
+                        onPreSerialize: x => x.Pre_UsesInfo = false, name: nameof(Data_AbsoluteTransform));
 
                     AnimatedAbsoluteTransformSpeed = 1;
                     break;
 
                 case GlobalGameObjectType.RoadSign:
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
-                    Data_AbsoluteTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform,
-                        onPreSerialize: x => x.Pre_UsesTransformInfo = true, name: nameof(Data_AbsoluteTransform));
+                    Data_AbsoluteTransform = SerializeDataFile<ModelAnimation_ArchiveFile>(s, Data_AbsoluteTransform,
+                        onPreSerialize: x => x.Pre_UsesInfo = true, name: nameof(Data_AbsoluteTransform));
                     break;
 
                 case GlobalGameObjectType.TiltRock: // FUN_4_8__8011fff8
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
                     Data_Collision = SerializeDataFile<CollisionTriangles_File>(s, Data_Collision, name: nameof(Data_Collision));
                     Data_MovementPaths = SerializeDataFile<MovementPath_File>(s, Data_MovementPaths, name: nameof(Data_MovementPaths));
-                    Data_AbsoluteTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform,
-                        onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_AbsoluteTransform));
+                    Data_AbsoluteTransform = SerializeDataFile<ModelAnimation_ArchiveFile>(s, Data_AbsoluteTransform,
+                        onPreSerialize: x => x.Pre_UsesInfo = false, name: nameof(Data_AbsoluteTransform));
                     Data_CameraAnimations = SerializeDataFile<CameraAnimations_File>(s, Data_CameraAnimations, name: nameof(Data_CameraAnimations));
 
                     AnimatedAbsoluteTransformSpeed = 0.5f;
@@ -197,18 +197,18 @@ namespace BinarySerializer.Klonoa.DTP
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
                     Data_Collision = SerializeDataFile<CollisionTriangles_File>(s, Data_Collision, name: nameof(Data_Collision));
                     Data_MovementPaths = SerializeDataFile<MovementPath_File>(s, Data_MovementPaths, name: nameof(Data_MovementPaths));
-                    Data_AbsoluteTransforms = SerializeDataFile<ArchiveFile<ObjTransform_ArchiveFile>>(s, Data_AbsoluteTransforms,
-                        onPreSerialize: x => x.Pre_OnPreSerializeAction = t => t.Pre_UsesTransformInfo = true, name: nameof(Data_AbsoluteTransforms));
+                    Data_AbsoluteTransforms = SerializeDataFile<ArchiveFile<ModelAnimation_ArchiveFile>>(s, Data_AbsoluteTransforms,
+                        onPreSerialize: x => x.Pre_OnPreSerializeAction = t => t.Pre_UsesInfo = true, name: nameof(Data_AbsoluteTransforms));
                     Data_CameraAnimations = SerializeDataFile<CameraAnimations_File>(s, Data_CameraAnimations, name: nameof(Data_CameraAnimations));
-                    Data_LocalTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_LocalTransform,
-                        onPreSerialize: x => x.Pre_UsesTransformInfo = true, name: nameof(Data_LocalTransform));
+                    Data_LocalTransform = SerializeDataFile<ModelAnimation_ArchiveFile>(s, Data_LocalTransform,
+                        onPreSerialize: x => x.Pre_UsesInfo = true, name: nameof(Data_LocalTransform));
 
                     AnimatedAbsoluteTransformSpeed = 1;
                     break;
 
                 case GlobalGameObjectType.RongoLango:
-                    Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, x => x.Pre_HasParts = true, name: nameof(Data_TMD));
-                    ModelAnimations = SerializeDataFile<ArchiveFile<ModelAnimation>>(s, ModelAnimations, name: nameof(ModelAnimations));
+                    Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, x => x.Pre_HasBones = true, name: nameof(Data_TMD));
+                    ModelAnimations = SerializeDataFile<ArchiveFile<ModelBoneAnimation_ArchiveFile>>(s, ModelAnimations, name: nameof(ModelAnimations));
                     SkipDataFile<RawData_File>(s); // TODO: Unknown data
                     SkipDataFile<RawData_File>(s); // TODO: Unknown data
                     SkipDataFile<RawData_File>(s); // TODO: Unknown data
@@ -228,11 +228,11 @@ namespace BinarySerializer.Klonoa.DTP
                     Data_Collision = SerializeDataFile<CollisionTriangles_File>(s, Data_Collision, name: nameof(Data_Collision));
 
                     if (GlobalGameObjectType != GlobalGameObjectType.LockedDoor_2)
-                        Data_LocalTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_LocalTransform,
-                            onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_LocalTransform));
+                        Data_LocalTransform = SerializeDataFile<ModelAnimation_ArchiveFile>(s, Data_LocalTransform,
+                            onPreSerialize: x => x.Pre_UsesInfo = false, name: nameof(Data_LocalTransform));
 
-                    Data_AbsoluteTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform,
-                        onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_AbsoluteTransform));
+                    Data_AbsoluteTransform = SerializeDataFile<ModelAnimation_ArchiveFile>(s, Data_AbsoluteTransform,
+                        onPreSerialize: x => x.Pre_UsesInfo = false, name: nameof(Data_AbsoluteTransform));
 
                     if (GlobalGameObjectType == GlobalGameObjectType.LockedDoor_0)
                         SkipDataFile<RawData_File>(s); // TODO: Unused?
@@ -246,34 +246,34 @@ namespace BinarySerializer.Klonoa.DTP
 
                 case GlobalGameObjectType.WaterWheel:
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
-                    Data_AbsoluteTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform,
-                        onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_AbsoluteTransform));
+                    Data_AbsoluteTransform = SerializeDataFile<ModelAnimation_ArchiveFile>(s, Data_AbsoluteTransform,
+                        onPreSerialize: x => x.Pre_UsesInfo = false, name: nameof(Data_AbsoluteTransform));
                     ConstantRotationZ = -2;
                     break;
 
                 case GlobalGameObjectType.Crate:
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
                     Data_Collision = SerializeDataFile<CollisionTriangles_File>(s, Data_Collision, name: nameof(Data_Collision));
-                    Data_AbsoluteTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform,
-                        onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_AbsoluteTransform));
+                    Data_AbsoluteTransform = SerializeDataFile<ModelAnimation_ArchiveFile>(s, Data_AbsoluteTransform,
+                        onPreSerialize: x => x.Pre_UsesInfo = false, name: nameof(Data_AbsoluteTransform));
 
                     AnimatedAbsoluteTransformSpeed = 0.5f;
                     break;
 
                 case GlobalGameObjectType.MultiWheel:
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
-                    Data_AbsoluteTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform,
-                        onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_AbsoluteTransform));
+                    Data_AbsoluteTransform = SerializeDataFile<ModelAnimation_ArchiveFile>(s, Data_AbsoluteTransform,
+                        onPreSerialize: x => x.Pre_UsesInfo = false, name: nameof(Data_AbsoluteTransform));
                     break;
 
                 case GlobalGameObjectType.Gondola: // FUN_9_8__80120d24
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
                     Data_Collision = SerializeDataFile<CollisionTriangles_File>(s, Data_Collision, name: nameof(Data_Collision));
                     Data_MovementPaths = SerializeDataFile<MovementPath_File>(s, Data_MovementPaths, name: nameof(Data_MovementPaths));
-                    Data_LocalTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_LocalTransform,
-                        onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_LocalTransform));
-                    Data_AbsoluteTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform,
-                        onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_AbsoluteTransform));
+                    Data_LocalTransform = SerializeDataFile<ModelAnimation_ArchiveFile>(s, Data_LocalTransform,
+                        onPreSerialize: x => x.Pre_UsesInfo = false, name: nameof(Data_LocalTransform));
+                    Data_AbsoluteTransform = SerializeDataFile<ModelAnimation_ArchiveFile>(s, Data_AbsoluteTransform,
+                        onPreSerialize: x => x.Pre_UsesInfo = false, name: nameof(Data_AbsoluteTransform));
                     // TODO: Sometimes has two additional transforms - unused?
 
                     AnimatedLocalTransformSpeed = Params_MovingPlatform.AnimSpeed;
@@ -282,8 +282,8 @@ namespace BinarySerializer.Klonoa.DTP
 
                 case GlobalGameObjectType.FallingTreePart: // FUN_9_8__80122870
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
-                    Data_AbsoluteTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform,
-                        onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_AbsoluteTransform));
+                    Data_AbsoluteTransform = SerializeDataFile<ModelAnimation_ArchiveFile>(s, Data_AbsoluteTransform,
+                        onPreSerialize: x => x.Pre_UsesInfo = false, name: nameof(Data_AbsoluteTransform));
 
                     AnimatedAbsoluteTransformSpeed = 0.5f;
                     break;
@@ -292,15 +292,15 @@ namespace BinarySerializer.Klonoa.DTP
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
                     Data_Collision = SerializeDataFile<CollisionTriangles_File>(s, Data_Collision, name: nameof(Data_Collision));
                     Data_MovementPaths = SerializeDataFile<MovementPath_File>(s, Data_MovementPaths, name: nameof(Data_MovementPaths));
-                    Data_AbsoluteTransforms = SerializeDataFile<ArchiveFile<ObjTransform_ArchiveFile>>(s, Data_AbsoluteTransforms,
-                        onPreSerialize: x => x.Pre_OnPreSerializeAction = t => t.Pre_UsesTransformInfo = false, name: nameof(Data_AbsoluteTransforms));
+                    Data_AbsoluteTransforms = SerializeDataFile<ArchiveFile<ModelAnimation_ArchiveFile>>(s, Data_AbsoluteTransforms,
+                        onPreSerialize: x => x.Pre_OnPreSerializeAction = t => t.Pre_UsesInfo = false, name: nameof(Data_AbsoluteTransforms));
                     Data_CameraAnimations = SerializeDataFile<CameraAnimations_File>(s, Data_CameraAnimations, name: nameof(Data_CameraAnimations));
                     // NOTE: The positions file in here only has one entry. The game parses 3.
-                    Data_LocalTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_LocalTransform,
-                        onPreSerialize: x => x.Pre_UsesTransformInfo = true, name: nameof(Data_LocalTransform));
+                    Data_LocalTransform = SerializeDataFile<ModelAnimation_ArchiveFile>(s, Data_LocalTransform,
+                        onPreSerialize: x => x.Pre_UsesInfo = true, name: nameof(Data_LocalTransform));
 
                     // Correct overflow values
-                    foreach (var pos in Data_LocalTransform.Positions.Positions.SelectMany(x => x))
+                    foreach (var pos in Data_LocalTransform.Positions.Vectors.SelectMany(x => x))
                     {
                         pos.X = 0;
                         pos.Y = 0;
@@ -314,8 +314,8 @@ namespace BinarySerializer.Klonoa.DTP
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
                     Data_Collision = SerializeDataFile<CollisionTriangles_File>(s, Data_Collision, name: nameof(Data_Collision));
                     Data_MovementPaths = SerializeDataFile<MovementPath_File>(s, Data_MovementPaths, name: nameof(Data_MovementPaths));
-                    Data_LocalTransforms = SerializeDataFile<ArchiveFile<ObjTransform_ArchiveFile>>(s, Data_LocalTransforms,
-                        onPreSerialize: x => x.Pre_OnPreSerializeAction = f => f.Pre_UsesTransformInfo = false, name: nameof(Data_LocalTransforms));
+                    Data_LocalTransforms = SerializeDataFile<ArchiveFile<ModelAnimation_ArchiveFile>>(s, Data_LocalTransforms,
+                        onPreSerialize: x => x.Pre_OnPreSerializeAction = f => f.Pre_UsesInfo = false, name: nameof(Data_LocalTransforms));
                     Data_CameraAnimations = SerializeDataFile<CameraAnimations_File>(s, Data_CameraAnimations, name: nameof(Data_CameraAnimations));
 
                     AnimatedLocalTransformSpeed = 0.5f;
@@ -325,8 +325,8 @@ namespace BinarySerializer.Klonoa.DTP
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
                     Data_Collision = SerializeDataFile<CollisionTriangles_File>(s, Data_Collision, name: nameof(Data_Collision));
                     Data_MovementPaths = SerializeDataFile<MovementPath_File>(s, Data_MovementPaths, name: nameof(Data_MovementPaths));
-                    Data_LocalTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_LocalTransform,
-                        onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_LocalTransform));
+                    Data_LocalTransform = SerializeDataFile<ModelAnimation_ArchiveFile>(s, Data_LocalTransform,
+                        onPreSerialize: x => x.Pre_UsesInfo = false, name: nameof(Data_LocalTransform));
 
                     AnimatedLocalTransformSpeed = Params_MovingPlatform.AnimSpeed;
                     DoesAnimatedLocalTransformPingPong = true;
@@ -334,8 +334,8 @@ namespace BinarySerializer.Klonoa.DTP
 
                 case GlobalGameObjectType.Cogwheel: // FUN_10_8__8011f560
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
-                    Data_AbsoluteTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform,
-                        onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_AbsoluteTransform));
+                    Data_AbsoluteTransform = SerializeDataFile<ModelAnimation_ArchiveFile>(s, Data_AbsoluteTransform,
+                        onPreSerialize: x => x.Pre_UsesInfo = false, name: nameof(Data_AbsoluteTransform));
 
                     var sector = loader.GlobalSectorIndex;
 
@@ -352,8 +352,8 @@ namespace BinarySerializer.Klonoa.DTP
                 case GlobalGameObjectType.SpinningWood: // FUN_10_8__8012059c
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
                     Data_Collision = SerializeDataFile<CollisionTriangles_File>(s, Data_Collision, name: nameof(Data_Collision));
-                    Data_AbsoluteTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform,
-                        onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_AbsoluteTransform));
+                    Data_AbsoluteTransform = SerializeDataFile<ModelAnimation_ArchiveFile>(s, Data_AbsoluteTransform,
+                        onPreSerialize: x => x.Pre_UsesInfo = false, name: nameof(Data_AbsoluteTransform));
 
                     if (Short_02 == 0)
                     {
@@ -370,8 +370,8 @@ namespace BinarySerializer.Klonoa.DTP
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
                     Data_Collision = SerializeDataFile<CollisionTriangles_File>(s, Data_Collision, name: nameof(Data_Collision));
                     Data_MovementPaths = SerializeDataFile<MovementPath_File>(s, Data_MovementPaths, name: nameof(Data_MovementPaths));
-                    Data_LocalTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform,
-                        onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_AbsoluteTransform));
+                    Data_LocalTransform = SerializeDataFile<ModelAnimation_ArchiveFile>(s, Data_AbsoluteTransform,
+                        onPreSerialize: x => x.Pre_UsesInfo = false, name: nameof(Data_AbsoluteTransform));
 
                     AnimatedLocalTransformSpeed = 0.5f;
                     DoesAnimatedLocalTransformPingPong = true;
@@ -380,8 +380,8 @@ namespace BinarySerializer.Klonoa.DTP
                 case GlobalGameObjectType.MovingLedge: // FUN_10_8__8011f198
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
                     Data_Collision = SerializeDataFile<CollisionTriangles_File>(s, Data_Collision, name: nameof(Data_Collision));
-                    Data_AbsoluteTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform,
-                        onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_AbsoluteTransform));
+                    Data_AbsoluteTransform = SerializeDataFile<ModelAnimation_ArchiveFile>(s, Data_AbsoluteTransform,
+                        onPreSerialize: x => x.Pre_UsesInfo = false, name: nameof(Data_AbsoluteTransform));
 
                     AnimatedAbsoluteTransformSpeed = 1;
                     break;
@@ -389,8 +389,8 @@ namespace BinarySerializer.Klonoa.DTP
                 case GlobalGameObjectType.Ledge: // FUN_12_8__8011a74c
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
                     Data_Collision = SerializeDataFile<CollisionTriangles_File>(s, Data_Collision, name: nameof(Data_Collision));
-                    Data_AbsoluteTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform,
-                        onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_AbsoluteTransform));
+                    Data_AbsoluteTransform = SerializeDataFile<ModelAnimation_ArchiveFile>(s, Data_AbsoluteTransform,
+                        onPreSerialize: x => x.Pre_UsesInfo = false, name: nameof(Data_AbsoluteTransform));
                     Data_TMD_Secondary = SerializeDataFile<PS1_TMD>(s, Data_TMD_Secondary, name: nameof(Data_TMD_Secondary));
                     break;
 
@@ -398,10 +398,10 @@ namespace BinarySerializer.Klonoa.DTP
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
                     Data_Collision = SerializeDataFile<CollisionTriangles_File>(s, Data_Collision, name: nameof(Data_Collision));
                     Data_MovementPaths = SerializeDataFile<MovementPath_File>(s, Data_MovementPaths, name: nameof(Data_MovementPaths));
-                    Data_LocalTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_LocalTransform,
-                        onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_LocalTransform));
-                    Data_LocalTransform_Secondary = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_LocalTransform_Secondary,
-                        onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_LocalTransform_Secondary));
+                    Data_LocalTransform = SerializeDataFile<ModelAnimation_ArchiveFile>(s, Data_LocalTransform,
+                        onPreSerialize: x => x.Pre_UsesInfo = false, name: nameof(Data_LocalTransform));
+                    Data_LocalTransform_Secondary = SerializeDataFile<ModelAnimation_ArchiveFile>(s, Data_LocalTransform_Secondary,
+                        onPreSerialize: x => x.Pre_UsesInfo = false, name: nameof(Data_LocalTransform_Secondary));
 
                     AnimatedLocalTransformSpeed = 0.5f;
                     break;
@@ -410,10 +410,10 @@ namespace BinarySerializer.Klonoa.DTP
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
                     Data_Collision = SerializeDataFile<CollisionTriangles_File>(s, Data_Collision, name: nameof(Data_Collision));
                     Data_MovementPaths = SerializeDataFile<MovementPath_File>(s, Data_MovementPaths, name: nameof(Data_MovementPaths));
-                    Data_AbsoluteTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform,
-                        onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_AbsoluteTransform));
-                    Data_LocalTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_LocalTransform,
-                        onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_LocalTransform));
+                    Data_AbsoluteTransform = SerializeDataFile<ModelAnimation_ArchiveFile>(s, Data_AbsoluteTransform,
+                        onPreSerialize: x => x.Pre_UsesInfo = false, name: nameof(Data_AbsoluteTransform));
+                    Data_LocalTransform = SerializeDataFile<ModelAnimation_ArchiveFile>(s, Data_LocalTransform,
+                        onPreSerialize: x => x.Pre_UsesInfo = false, name: nameof(Data_LocalTransform));
 
                     AnimatedLocalTransformSpeed = 0xb00 / (float)0x1000;
                     break;
@@ -421,15 +421,15 @@ namespace BinarySerializer.Klonoa.DTP
                 case GlobalGameObjectType.Bone:
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
                     Data_Collision = SerializeDataFile<CollisionTriangles_File>(s, Data_Collision, name: nameof(Data_Collision));
-                    Data_AbsoluteTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform,
-                        onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_AbsoluteTransform));
+                    Data_AbsoluteTransform = SerializeDataFile<ModelAnimation_ArchiveFile>(s, Data_AbsoluteTransform,
+                        onPreSerialize: x => x.Pre_UsesInfo = false, name: nameof(Data_AbsoluteTransform));
                     break;
 
                 case GlobalGameObjectType.GreenBoulder:
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
                     Data_Collision = SerializeDataFile<CollisionTriangles_File>(s, Data_Collision, name: nameof(Data_Collision));
-                    Data_AbsoluteTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform,
-                        onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_AbsoluteTransform));
+                    Data_AbsoluteTransform = SerializeDataFile<ModelAnimation_ArchiveFile>(s, Data_AbsoluteTransform,
+                        onPreSerialize: x => x.Pre_UsesInfo = false, name: nameof(Data_AbsoluteTransform));
                     Data_TMD_Secondary = SerializeDataFile<PS1_TMD>(s, Data_TMD_Secondary, name: nameof(Data_TMD_Secondary));
                     break;
 
@@ -437,8 +437,8 @@ namespace BinarySerializer.Klonoa.DTP
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
                     Data_TMD_Secondary = SerializeDataFile<PS1_TMD>(s, Data_TMD_Secondary, name: nameof(Data_TMD_Secondary));
                     Data_Collision = SerializeDataFile<CollisionTriangles_File>(s, Data_Collision, name: nameof(Data_Collision));
-                    Data_AbsoluteTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform,
-                        onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_AbsoluteTransform));
+                    Data_AbsoluteTransform = SerializeDataFile<ModelAnimation_ArchiveFile>(s, Data_AbsoluteTransform,
+                        onPreSerialize: x => x.Pre_UsesInfo = false, name: nameof(Data_AbsoluteTransform));
                     break;
 
                 case GlobalGameObjectType.DestroyedHouse:
@@ -449,8 +449,8 @@ namespace BinarySerializer.Klonoa.DTP
                 case GlobalGameObjectType.BlockingBoulder:
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
                     Data_Collision = SerializeDataFile<CollisionTriangles_File>(s, Data_Collision, name: nameof(Data_Collision));
-                    Data_AbsoluteTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform,
-                        onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_AbsoluteTransform));
+                    Data_AbsoluteTransform = SerializeDataFile<ModelAnimation_ArchiveFile>(s, Data_AbsoluteTransform,
+                        onPreSerialize: x => x.Pre_UsesInfo = false, name: nameof(Data_AbsoluteTransform));
                     break;
 
                 case GlobalGameObjectType.SwingingWoodPlank: // FUN_14_7__8011648c
@@ -461,15 +461,15 @@ namespace BinarySerializer.Klonoa.DTP
 
                 case GlobalGameObjectType.Collision: // FUN_14_7__801170a8
                     Data_Collision = SerializeDataFile<CollisionTriangles_File>(s, Data_Collision, name: nameof(Data_Collision));
-                    Data_AbsoluteTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform,
-                        onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_AbsoluteTransform));
+                    Data_AbsoluteTransform = SerializeDataFile<ModelAnimation_ArchiveFile>(s, Data_AbsoluteTransform,
+                        onPreSerialize: x => x.Pre_UsesInfo = false, name: nameof(Data_AbsoluteTransform));
                     break;
 
                 case GlobalGameObjectType.Rocks: // FUN_14_7__8011724c
                     Data_TMD_Secondary = SerializeDataFile<PS1_TMD>(s, Data_TMD_Secondary, name: nameof(Data_TMD_Secondary));
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
-                    Data_LocalTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_LocalTransform,
-                        onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_LocalTransform));
+                    Data_LocalTransform = SerializeDataFile<ModelAnimation_ArchiveFile>(s, Data_LocalTransform,
+                        onPreSerialize: x => x.Pre_UsesInfo = false, name: nameof(Data_LocalTransform));
                     SkipDataFile<RawData_File>(s, isUnused: true);
                     break;
 
@@ -477,10 +477,10 @@ namespace BinarySerializer.Klonoa.DTP
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
                     Data_Collision = SerializeDataFile<CollisionTriangles_File>(s, Data_Collision, name: nameof(Data_Collision));
                     Data_MovementPaths = SerializeDataFile<MovementPath_File>(s, Data_MovementPaths, name: nameof(Data_MovementPaths));
-                    Data_AbsoluteTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform,
-                        onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_AbsoluteTransform));
-                    Data_LocalTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_LocalTransform,
-                        onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_LocalTransform));
+                    Data_AbsoluteTransform = SerializeDataFile<ModelAnimation_ArchiveFile>(s, Data_AbsoluteTransform,
+                        onPreSerialize: x => x.Pre_UsesInfo = false, name: nameof(Data_AbsoluteTransform));
+                    Data_LocalTransform = SerializeDataFile<ModelAnimation_ArchiveFile>(s, Data_LocalTransform,
+                        onPreSerialize: x => x.Pre_UsesInfo = false, name: nameof(Data_LocalTransform));
 
                     AnimatedLocalTransformSpeed = 0.5f;
                     AnimatedAbsoluteTransformSpeed = Params_MovingPlatform.AnimSpeed;
@@ -491,8 +491,8 @@ namespace BinarySerializer.Klonoa.DTP
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
                     Data_Collision = SerializeDataFile<CollisionTriangles_File>(s, Data_Collision, name: nameof(Data_Collision));
                     Data_MovementPaths = SerializeDataFile<MovementPath_File>(s, Data_MovementPaths, name: nameof(Data_MovementPaths));
-                    Data_AbsoluteTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform,
-                        onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_AbsoluteTransform));
+                    Data_AbsoluteTransform = SerializeDataFile<ModelAnimation_ArchiveFile>(s, Data_AbsoluteTransform,
+                        onPreSerialize: x => x.Pre_UsesInfo = false, name: nameof(Data_AbsoluteTransform));
 
                     ConstantRotationZ = 24;
                     AnimatedAbsoluteTransformSpeed = 0.5f;
@@ -501,20 +501,20 @@ namespace BinarySerializer.Klonoa.DTP
                 case GlobalGameObjectType.FallingTargetPlatform: // FUN_15_8__8011af24
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
                     Data_Collision = SerializeDataFile<CollisionTriangles_File>(s, Data_Collision, name: nameof(Data_Collision));
-                    Data_AbsoluteTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform,
-                        onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_AbsoluteTransform));
+                    Data_AbsoluteTransform = SerializeDataFile<ModelAnimation_ArchiveFile>(s, Data_AbsoluteTransform,
+                        onPreSerialize: x => x.Pre_UsesInfo = false, name: nameof(Data_AbsoluteTransform));
 
-                    Data_LocalTransforms = new ArchiveFile<ObjTransform_ArchiveFile>()
+                    Data_LocalTransforms = new ArchiveFile<ModelAnimation_ArchiveFile>()
                     {
-                        Files = new ObjTransform_ArchiveFile[3]
+                        Files = new ModelAnimation_ArchiveFile[3]
                     };
 
-                    Data_LocalTransforms.Files[0] = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_LocalTransforms.Files[0],
-                        onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: $"{nameof(Data_LocalTransforms)}[{0}]");
-                    Data_LocalTransforms.Files[1] = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_LocalTransforms.Files[1],
-                        onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: $"{nameof(Data_LocalTransforms)}[{1}]");
-                    Data_LocalTransforms.Files[2] = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_LocalTransforms.Files[2],
-                        onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: $"{nameof(Data_LocalTransforms)}[{2}]");
+                    Data_LocalTransforms.Files[0] = SerializeDataFile<ModelAnimation_ArchiveFile>(s, Data_LocalTransforms.Files[0],
+                        onPreSerialize: x => x.Pre_UsesInfo = false, name: $"{nameof(Data_LocalTransforms)}[{0}]");
+                    Data_LocalTransforms.Files[1] = SerializeDataFile<ModelAnimation_ArchiveFile>(s, Data_LocalTransforms.Files[1],
+                        onPreSerialize: x => x.Pre_UsesInfo = false, name: $"{nameof(Data_LocalTransforms)}[{1}]");
+                    Data_LocalTransforms.Files[2] = SerializeDataFile<ModelAnimation_ArchiveFile>(s, Data_LocalTransforms.Files[2],
+                        onPreSerialize: x => x.Pre_UsesInfo = false, name: $"{nameof(Data_LocalTransforms)}[{2}]");
 
                     AnimatedLocalTransformSpeed = 0.5f;
                     break;
@@ -522,8 +522,8 @@ namespace BinarySerializer.Klonoa.DTP
                 case GlobalGameObjectType.LockedDoor_3: // FUN_15_8__8011e0c0
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
                     Data_Collision = SerializeDataFile<CollisionTriangles_File>(s, Data_Collision, name: nameof(Data_Collision));
-                    Data_AbsoluteTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform,
-                        onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_AbsoluteTransform));
+                    Data_AbsoluteTransform = SerializeDataFile<ModelAnimation_ArchiveFile>(s, Data_AbsoluteTransform,
+                        onPreSerialize: x => x.Pre_UsesInfo = false, name: nameof(Data_AbsoluteTransform));
 
                     AnimatedAbsoluteTransformSpeed = 0.5f;
                     break;
@@ -531,8 +531,8 @@ namespace BinarySerializer.Klonoa.DTP
                 case GlobalGameObjectType.BlockingLedge: // FUN_15_8__8011ee5c
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
                     Data_Collision = SerializeDataFile<CollisionTriangles_File>(s, Data_Collision, name: nameof(Data_Collision));
-                    Data_AbsoluteTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform,
-                        onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_AbsoluteTransform));
+                    Data_AbsoluteTransform = SerializeDataFile<ModelAnimation_ArchiveFile>(s, Data_AbsoluteTransform,
+                        onPreSerialize: x => x.Pre_UsesInfo = false, name: nameof(Data_AbsoluteTransform));
                     SkipDataFile<RawData_File>(s, isUnused: true);
 
                     AnimatedAbsoluteTransformSpeed = 0xf00 / (float)0x1000;
@@ -542,15 +542,15 @@ namespace BinarySerializer.Klonoa.DTP
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
                     Data_Collision = SerializeDataFile<CollisionTriangles_File>(s, Data_Collision, name: nameof(Data_Collision));
 
-                    Data_AbsoluteTransforms = new ArchiveFile<ObjTransform_ArchiveFile>()
+                    Data_AbsoluteTransforms = new ArchiveFile<ModelAnimation_ArchiveFile>()
                     {
-                        Files = new ObjTransform_ArchiveFile[2]
+                        Files = new ModelAnimation_ArchiveFile[2]
                     };
 
-                    Data_AbsoluteTransforms.Files[0] = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransforms.Files[0],
-                        onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: $"{nameof(Data_AbsoluteTransforms)}[{0}]");
-                    Data_AbsoluteTransforms.Files[1] = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransforms.Files[1],
-                        onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: $"{nameof(Data_AbsoluteTransforms)}[{1}]");
+                    Data_AbsoluteTransforms.Files[0] = SerializeDataFile<ModelAnimation_ArchiveFile>(s, Data_AbsoluteTransforms.Files[0],
+                        onPreSerialize: x => x.Pre_UsesInfo = false, name: $"{nameof(Data_AbsoluteTransforms)}[{0}]");
+                    Data_AbsoluteTransforms.Files[1] = SerializeDataFile<ModelAnimation_ArchiveFile>(s, Data_AbsoluteTransforms.Files[1],
+                        onPreSerialize: x => x.Pre_UsesInfo = false, name: $"{nameof(Data_AbsoluteTransforms)}[{1}]");
 
                     AnimatedLocalTransformSpeed = 0x2aa / (float)0x1000;
                     break;
@@ -559,12 +559,12 @@ namespace BinarySerializer.Klonoa.DTP
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
                     Data_Collision = SerializeDataFile<CollisionTriangles_File>(s, Data_Collision, name: nameof(Data_Collision));
                     Data_MovementPaths = SerializeDataFile<MovementPath_File>(s, Data_MovementPaths, name: nameof(Data_MovementPaths));
-                    Data_AbsoluteTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform,
-                        onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_AbsoluteTransform));
+                    Data_AbsoluteTransform = SerializeDataFile<ModelAnimation_ArchiveFile>(s, Data_AbsoluteTransform,
+                        onPreSerialize: x => x.Pre_UsesInfo = false, name: nameof(Data_AbsoluteTransform));
 
                     if (Short_02 == 1)
-                        Data_LocalTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_LocalTransform,
-                        onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_LocalTransform));
+                        Data_LocalTransform = SerializeDataFile<ModelAnimation_ArchiveFile>(s, Data_LocalTransform,
+                        onPreSerialize: x => x.Pre_UsesInfo = false, name: nameof(Data_LocalTransform));
                     else if (DataFileIndices[4] != 0)
                         SkipDataFile<RawData_File>(s, isUnused: true);
 
@@ -576,10 +576,10 @@ namespace BinarySerializer.Klonoa.DTP
                 case GlobalGameObjectType.MovingWallPillars: // FUN_16_8__80120140
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
                     Data_Collision = SerializeDataFile<CollisionTriangles_File>(s, Data_Collision, name: nameof(Data_Collision));
-                    Data_AbsoluteTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform,
-                        onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_AbsoluteTransform));
-                    Data_LocalTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_LocalTransform,
-                        onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_LocalTransform));
+                    Data_AbsoluteTransform = SerializeDataFile<ModelAnimation_ArchiveFile>(s, Data_AbsoluteTransform,
+                        onPreSerialize: x => x.Pre_UsesInfo = false, name: nameof(Data_AbsoluteTransform));
+                    Data_LocalTransform = SerializeDataFile<ModelAnimation_ArchiveFile>(s, Data_LocalTransform,
+                        onPreSerialize: x => x.Pre_UsesInfo = false, name: nameof(Data_LocalTransform));
 
                     AnimatedLocalTransformSpeed = 0.5f;
                     DoesAnimatedLocalTransformPingPong = true;
@@ -589,8 +589,8 @@ namespace BinarySerializer.Klonoa.DTP
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
                     Data_Collision = SerializeDataFile<CollisionTriangles_File>(s, Data_Collision, name: nameof(Data_Collision));
                     Data_TMD_Secondary = SerializeDataFile<PS1_TMD>(s, Data_TMD_Secondary, name: nameof(Data_TMD_Secondary));
-                    Data_AbsoluteTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform,
-                        onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_AbsoluteTransform));
+                    Data_AbsoluteTransform = SerializeDataFile<ModelAnimation_ArchiveFile>(s, Data_AbsoluteTransform,
+                        onPreSerialize: x => x.Pre_UsesInfo = false, name: nameof(Data_AbsoluteTransform));
                     break;
 
                 case GlobalGameObjectType.DarkLightSwitcher: // FUN_16_8__801229b8
@@ -601,19 +601,19 @@ namespace BinarySerializer.Klonoa.DTP
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
                     Data_Collision = SerializeDataFile<CollisionTriangles_File>(s, Data_Collision, name: nameof(Data_Collision));
 
-                    Data_AbsoluteTransforms = new ArchiveFile<ObjTransform_ArchiveFile>()
+                    Data_AbsoluteTransforms = new ArchiveFile<ModelAnimation_ArchiveFile>()
                     {
-                        Files = new ObjTransform_ArchiveFile[4]
+                        Files = new ModelAnimation_ArchiveFile[4]
                     };
 
-                    Data_AbsoluteTransforms.Files[0] = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransforms.Files[0],
-                        onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: $"{nameof(Data_AbsoluteTransforms)}[{0}]");
-                    Data_AbsoluteTransforms.Files[1] = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransforms.Files[1],
-                        onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: $"{nameof(Data_AbsoluteTransforms)}[{1}]");
-                    Data_AbsoluteTransforms.Files[2] = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransforms.Files[2],
-                        onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: $"{nameof(Data_AbsoluteTransforms)}[{2}]");
-                    Data_AbsoluteTransforms.Files[3] = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransforms.Files[3],
-                        onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: $"{nameof(Data_AbsoluteTransforms)}[{3}]");
+                    Data_AbsoluteTransforms.Files[0] = SerializeDataFile<ModelAnimation_ArchiveFile>(s, Data_AbsoluteTransforms.Files[0],
+                        onPreSerialize: x => x.Pre_UsesInfo = false, name: $"{nameof(Data_AbsoluteTransforms)}[{0}]");
+                    Data_AbsoluteTransforms.Files[1] = SerializeDataFile<ModelAnimation_ArchiveFile>(s, Data_AbsoluteTransforms.Files[1],
+                        onPreSerialize: x => x.Pre_UsesInfo = false, name: $"{nameof(Data_AbsoluteTransforms)}[{1}]");
+                    Data_AbsoluteTransforms.Files[2] = SerializeDataFile<ModelAnimation_ArchiveFile>(s, Data_AbsoluteTransforms.Files[2],
+                        onPreSerialize: x => x.Pre_UsesInfo = false, name: $"{nameof(Data_AbsoluteTransforms)}[{2}]");
+                    Data_AbsoluteTransforms.Files[3] = SerializeDataFile<ModelAnimation_ArchiveFile>(s, Data_AbsoluteTransforms.Files[3],
+                        onPreSerialize: x => x.Pre_UsesInfo = false, name: $"{nameof(Data_AbsoluteTransforms)}[{3}]");
 
                     AnimatedAbsoluteTransformSpeed = 0.5f;
                     break;
@@ -625,8 +625,8 @@ namespace BinarySerializer.Klonoa.DTP
 
                 case GlobalGameObjectType.JokaSpinningCore: // FUN_17_7__80113854
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
-                    Data_AbsoluteTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform,
-                        onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_AbsoluteTransform));
+                    Data_AbsoluteTransform = SerializeDataFile<ModelAnimation_ArchiveFile>(s, Data_AbsoluteTransform,
+                        onPreSerialize: x => x.Pre_UsesInfo = false, name: nameof(Data_AbsoluteTransform));
 
                     ConstantRotationY = 8;
                     break;
@@ -634,16 +634,16 @@ namespace BinarySerializer.Klonoa.DTP
                 case GlobalGameObjectType.TransparentGemPlatform: // FUN_18_8__8011eaec, FUN_19_8__8011d9b0
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
                     Data_Collision = SerializeDataFile<CollisionTriangles_File>(s, Data_Collision, name: nameof(Data_Collision));
-                    Data_AbsoluteTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform,
-                        onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_AbsoluteTransform));
+                    Data_AbsoluteTransform = SerializeDataFile<ModelAnimation_ArchiveFile>(s, Data_AbsoluteTransform,
+                        onPreSerialize: x => x.Pre_UsesInfo = false, name: nameof(Data_AbsoluteTransform));
                     SkipDataFile<RawData_File>(s); // TODO: 20 byte structs
                     break;
 
                 case GlobalGameObjectType.BirdStatueWithSwitch: // FUN_18_8__80121694
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
                     Data_Collision = SerializeDataFile<CollisionTriangles_File>(s, Data_Collision, name: nameof(Data_Collision));
-                    Data_AbsoluteTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform,
-                        onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_AbsoluteTransform));
+                    Data_AbsoluteTransform = SerializeDataFile<ModelAnimation_ArchiveFile>(s, Data_AbsoluteTransform,
+                        onPreSerialize: x => x.Pre_UsesInfo = false, name: nameof(Data_AbsoluteTransform));
                     // NOTE: This loads a block into VRAM, seems to be for an effect only?
                     break;
 
@@ -651,8 +651,8 @@ namespace BinarySerializer.Klonoa.DTP
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
                     Data_Collision = SerializeDataFile<CollisionTriangles_File>(s, Data_Collision, name: nameof(Data_Collision));
                     Data_MovementPaths = SerializeDataFile<MovementPath_File>(s, Data_MovementPaths, name: nameof(Data_MovementPaths));
-                    Data_AbsoluteTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform,
-                        onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_AbsoluteTransform));
+                    Data_AbsoluteTransform = SerializeDataFile<ModelAnimation_ArchiveFile>(s, Data_AbsoluteTransform,
+                        onPreSerialize: x => x.Pre_UsesInfo = false, name: nameof(Data_AbsoluteTransform));
                     Data_PaletteAnimation = SerializeDataFile<PaletteAnimation_ArchiveFile>(s, Data_PaletteAnimation, name: nameof(Data_PaletteAnimation));
 
                     AnimatedAbsoluteTransformSpeed = Params_MovingPlatform.AnimSpeed;
@@ -669,16 +669,16 @@ namespace BinarySerializer.Klonoa.DTP
                 case GlobalGameObjectType.LightField: // FUN_18_8__801226ec
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
                     Data_Collision = SerializeDataFile<CollisionTriangles_File>(s, Data_Collision, name: nameof(Data_Collision));
-                    Data_AbsoluteTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform,
-                        onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_AbsoluteTransform));
+                    Data_AbsoluteTransform = SerializeDataFile<ModelAnimation_ArchiveFile>(s, Data_AbsoluteTransform,
+                        onPreSerialize: x => x.Pre_UsesInfo = false, name: nameof(Data_AbsoluteTransform));
                     break;
 
                 case GlobalGameObjectType.MovingCavePlatform: // FUN_18_8__8012323c
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
                     Data_Collision = SerializeDataFile<CollisionTriangles_File>(s, Data_Collision, name: nameof(Data_Collision));
                     Data_MovementPaths = SerializeDataFile<MovementPath_File>(s, Data_MovementPaths, name: nameof(Data_MovementPaths));
-                    Data_AbsoluteTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform,
-                        onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_AbsoluteTransform));
+                    Data_AbsoluteTransform = SerializeDataFile<ModelAnimation_ArchiveFile>(s, Data_AbsoluteTransform,
+                        onPreSerialize: x => x.Pre_UsesInfo = false, name: nameof(Data_AbsoluteTransform));
 
                     AnimatedAbsoluteTransformSpeed = Params_MovingPlatform.AnimSpeed;
                     DoesAnimatedAbsoluteTransformPingPong = true;
@@ -686,10 +686,10 @@ namespace BinarySerializer.Klonoa.DTP
 
                 case GlobalGameObjectType.ColoredStatue: // FUN_19_8__80120a20
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
-                    Data_AbsoluteTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform,
-                        onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_AbsoluteTransform));
-                    Data_LocalTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_LocalTransform,
-                        onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_LocalTransform));
+                    Data_AbsoluteTransform = SerializeDataFile<ModelAnimation_ArchiveFile>(s, Data_AbsoluteTransform,
+                        onPreSerialize: x => x.Pre_UsesInfo = false, name: nameof(Data_AbsoluteTransform));
+                    Data_LocalTransform = SerializeDataFile<ModelAnimation_ArchiveFile>(s, Data_LocalTransform,
+                        onPreSerialize: x => x.Pre_UsesInfo = false, name: nameof(Data_LocalTransform));
 
                     AnimatedLocalTransformSpeed = 0x80 / (float)0x1000;
                     break;
@@ -697,20 +697,20 @@ namespace BinarySerializer.Klonoa.DTP
                 case GlobalGameObjectType.ColoredPillar: // FUN_19_8__8011bf40
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
                     Data_Collision = SerializeDataFile<CollisionTriangles_File>(s, Data_Collision, name: nameof(Data_Collision));
-                    Data_AbsoluteTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform,
-                        onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_AbsoluteTransform));
-                    Data_LocalTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_LocalTransform,
-                        onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_LocalTransform));
+                    Data_AbsoluteTransform = SerializeDataFile<ModelAnimation_ArchiveFile>(s, Data_AbsoluteTransform,
+                        onPreSerialize: x => x.Pre_UsesInfo = false, name: nameof(Data_AbsoluteTransform));
+                    Data_LocalTransform = SerializeDataFile<ModelAnimation_ArchiveFile>(s, Data_LocalTransform,
+                        onPreSerialize: x => x.Pre_UsesInfo = false, name: nameof(Data_LocalTransform));
 
                     AnimatedLocalTransformSpeed = 0.5f;
                     break;
 
                 case GlobalGameObjectType.ColoredDoor: // FUN_19_8__8011fc90
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
-                    Data_LocalTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_LocalTransform,
-                        onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_LocalTransform));
-                    Data_AbsoluteTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform,
-                        onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_AbsoluteTransform));
+                    Data_LocalTransform = SerializeDataFile<ModelAnimation_ArchiveFile>(s, Data_LocalTransform,
+                        onPreSerialize: x => x.Pre_UsesInfo = false, name: nameof(Data_LocalTransform));
+                    Data_AbsoluteTransform = SerializeDataFile<ModelAnimation_ArchiveFile>(s, Data_AbsoluteTransform,
+                        onPreSerialize: x => x.Pre_UsesInfo = false, name: nameof(Data_AbsoluteTransform));
 
                     AnimatedLocalTransformSpeed = 0xC00 / (float)0x1000;
                     DoesAnimatedLocalTransformPingPong = true;
@@ -719,10 +719,10 @@ namespace BinarySerializer.Klonoa.DTP
                 case GlobalGameObjectType.OnWayMovingWallPillar: // FUN_19_8__8011f8fc
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
                     Data_Collision = SerializeDataFile<CollisionTriangles_File>(s, Data_Collision, name: nameof(Data_Collision));
-                    Data_AbsoluteTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform,
-                        onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_AbsoluteTransform));
-                    Data_LocalTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_LocalTransform,
-                        onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_LocalTransform));
+                    Data_AbsoluteTransform = SerializeDataFile<ModelAnimation_ArchiveFile>(s, Data_AbsoluteTransform,
+                        onPreSerialize: x => x.Pre_UsesInfo = false, name: nameof(Data_AbsoluteTransform));
+                    Data_LocalTransform = SerializeDataFile<ModelAnimation_ArchiveFile>(s, Data_LocalTransform,
+                        onPreSerialize: x => x.Pre_UsesInfo = false, name: nameof(Data_LocalTransform));
 
                     AnimatedLocalTransformSpeed = 0.5f;
                     break;
@@ -730,18 +730,18 @@ namespace BinarySerializer.Klonoa.DTP
                 case GlobalGameObjectType.DoorWithPillar: // FUN_19_8__8012011c
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
                     Data_TMD_Secondary = SerializeDataFile<PS1_TMD>(s, Data_TMD_Secondary, name: nameof(Data_TMD_Secondary));
-                    Data_LocalTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_LocalTransform,
-                        onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_LocalTransform));
-                    Data_AbsoluteTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform,
-                        onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_AbsoluteTransform));
+                    Data_LocalTransform = SerializeDataFile<ModelAnimation_ArchiveFile>(s, Data_LocalTransform,
+                        onPreSerialize: x => x.Pre_UsesInfo = false, name: nameof(Data_LocalTransform));
+                    Data_AbsoluteTransform = SerializeDataFile<ModelAnimation_ArchiveFile>(s, Data_AbsoluteTransform,
+                        onPreSerialize: x => x.Pre_UsesInfo = false, name: nameof(Data_AbsoluteTransform));
 
                     AnimatedLocalTransformSpeed = 0.5f;
                     break;
 
                 case GlobalGameObjectType.CutsceneCrystal: // FUN_20_8__80117918
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
-                    Data_AbsoluteTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform,
-                        onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_AbsoluteTransform));
+                    Data_AbsoluteTransform = SerializeDataFile<ModelAnimation_ArchiveFile>(s, Data_AbsoluteTransform,
+                        onPreSerialize: x => x.Pre_UsesInfo = false, name: nameof(Data_AbsoluteTransform));
                     break;
 
                 case GlobalGameObjectType.GhadiusCirclePlatform: // FUN_20_8__80116070
@@ -753,8 +753,8 @@ namespace BinarySerializer.Klonoa.DTP
                 case GlobalGameObjectType.NahatombSphere: // FUN_22_8__8011549c
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
                     Data_TMD_Secondary = SerializeDataFile<PS1_TMD>(s, Data_TMD_Secondary, name: nameof(Data_TMD_Secondary));
-                    Data_AbsoluteTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_AbsoluteTransform,
-                        onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_AbsoluteTransform));
+                    Data_AbsoluteTransform = SerializeDataFile<ModelAnimation_ArchiveFile>(s, Data_AbsoluteTransform,
+                        onPreSerialize: x => x.Pre_UsesInfo = false, name: nameof(Data_AbsoluteTransform));
                     //Data_LocalTransform = SerializeDataFile<ObjTransform_ArchiveFile>(s, Data_LocalTransform,
                     //    onPreSerialize: x => x.Pre_UsesTransformInfo = false, name: nameof(Data_LocalTransform));
                     SkipDataFile<RawData_File>(s); // TODO: Transform
@@ -789,7 +789,7 @@ namespace BinarySerializer.Klonoa.DTP
 
                 case GlobalGameObjectType.Light:
                     if (Short_00 == 0x11)
-                        Data_LightPositions = SerializeDataFile<ObjPositions_File>(s, Data_LightPositions, name: nameof(Data_LightPositions));
+                        Data_LightPositions = SerializeDataFile<VectorAnimation_File>(s, Data_LightPositions, name: nameof(Data_LightPositions));
                     else
                         Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, name: nameof(Data_TMD));
                     break;
@@ -836,7 +836,7 @@ namespace BinarySerializer.Klonoa.DTP
                     break;
 
                 case GlobalGameObjectType.ScenerySprites:
-                    Data_ScenerySprites = SerializeDataFile<ObjPositions_File>(s, Data_ScenerySprites, name: nameof(Data_ScenerySprites));
+                    Data_ScenerySprites = SerializeDataFile<VectorAnimation_File>(s, Data_ScenerySprites, name: nameof(Data_ScenerySprites));
                     break;
 
                 case GlobalGameObjectType.TextureAnimation:

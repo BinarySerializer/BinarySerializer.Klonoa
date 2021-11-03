@@ -1,15 +1,17 @@
 ﻿namespace BinarySerializer.Klonoa.DTP
 {
-    public class ModelAnimationKeyFrame
+    public class VectorAnimationKeyFrame
     {
         public bool Flag0 { get; set; }
         public bool Flag1 { get; set; }
         public bool Flag2 { get; set; }
 
-        public byte DecrementCount { get; set; }
+        public byte ChangeBy1Count { get; set; }
         public byte RepeatCount { get; set; }
         public int ValueChange { get; set; }
         public bool Sign { get; set; }
+
+        public int ActualValueChange { get; set; }
 
         public void Serialize(SerializerObject.SerializeBits64 bitFunc)
         {
@@ -17,7 +19,8 @@
 
             if (!Flag0)
             {
-                ValueChange = (int)bitFunc(ValueChange, 7, name: nameof(ValueChange)); // Shift left by 1
+                ValueChange = (int)bitFunc(ValueChange, 7, name: nameof(ValueChange));
+                ActualValueChange = (ActualValueChange << (0x18 + 1)) >> 0x17;
                 return;
             }
 
@@ -26,6 +29,7 @@
             if (!Flag1)
             {
                 ValueChange = (int)bitFunc(ValueChange, 10, name: nameof(ValueChange));
+                ActualValueChange = ValueChange << 2;
                 return;
             }
 
@@ -35,13 +39,16 @@
             {
                 RepeatCount = (byte)bitFunc(RepeatCount, 5, name: nameof(RepeatCount));
                 ValueChange = (int)bitFunc(ValueChange, 8, name: nameof(ValueChange));
+                ActualValueChange = (ValueChange << 0x18) >> 0x18;
                 return;
             }
 
-            DecrementCount = (byte)bitFunc(DecrementCount, 5, name: nameof(DecrementCount));
+            ChangeBy1Count = (byte)bitFunc(ChangeBy1Count, 5, name: nameof(ChangeBy1Count));
             RepeatCount = (byte)bitFunc(RepeatCount, 5, name: nameof(RepeatCount));
             ValueChange = (int)bitFunc(ValueChange, 7, name: nameof(ValueChange));
             Sign = bitFunc(Sign ? 1 : 0, 1, name: nameof(Sign)) != 0;
+
+            ActualValueChange = ValueChange * (Sign ? -1 : 1);
         }
     }
 }

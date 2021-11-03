@@ -1,15 +1,15 @@
 ﻿namespace BinarySerializer.Klonoa.DTP
 {
-    public class ObjPositions_File : BaseFile
+    public class VectorAnimation_File : BaseFile
     {
         // One of these files in block 9 is shorter than what the game reads. The game corrects this by setting the values to 0 afterwards.
         public override bool DisableNotFullySerializedWarning => Loader.GetLoader(Context).BINBlock == 9;
 
-        public ObjTransformInfo_File Pre_Info { get; set; }
+        public ModelAnimationInfo_File Pre_Info { get; set; }
 
         public ushort ObjectsCount { get; set; }
         public ushort FramesCount { get; set; }
-        public KlonoaVector16[][] Positions { get; set; }
+        public KlonoaVector16[][] Vectors { get; set; }
 
         public override void SerializeImpl(SerializerObject s)
         {
@@ -24,10 +24,10 @@
                 FramesCount = Pre_Info.FramesCount;
             }
 
-            Positions ??= new KlonoaVector16[FramesCount][];
+            Vectors ??= new KlonoaVector16[FramesCount][];
 
-            for (int i = 0; i < Positions.Length; i++)
-                Positions[i] = s.SerializeObjectArray<KlonoaVector16>(Positions[i], ObjectsCount, name: $"{nameof(Positions)}[{i}]");
+            for (int i = 0; i < Vectors.Length; i++)
+                Vectors[i] = s.SerializeObjectArray<KlonoaVector16>(Vectors[i], ObjectsCount, name: $"{nameof(Vectors)}[{i}]");
         }
     }
 }
