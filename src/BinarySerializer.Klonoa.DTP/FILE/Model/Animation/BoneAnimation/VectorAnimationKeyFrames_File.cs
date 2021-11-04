@@ -73,7 +73,7 @@ namespace BinarySerializer.Klonoa.DTP
 
                 if (keyFrame.ChangeBy1Count > 0)
                 {
-                    valueChange = keyFrame.Sign ? -1 : 1;
+                    valueChange += keyFrame.Sign ? -1 : 1;
                     changeBy1Count--;
                 }
 
@@ -90,7 +90,7 @@ namespace BinarySerializer.Klonoa.DTP
 
                     if (changeBy1Count > 0)
                     {
-                        valueChange = keyFrame.Sign ? -1 : 1;
+                        valueChange += keyFrame.Sign ? -1 : 1;
                         changeBy1Count--;
                     }
 
