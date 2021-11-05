@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace BinarySerializer.Klonoa.DTP
 {
@@ -59,45 +60,73 @@ namespace BinarySerializer.Klonoa.DTP
             int[] values = new int[FramesCount];
             int frameIndex = 0;
 
-            void setValue(int change)
-            {
-                int prevValue = frameIndex > 0 ? values[frameIndex - 1] : 0;
-                values[frameIndex] = prevValue + change;
-                frameIndex++;
-            }
-
             foreach (VectorAnimationKeyFrame keyFrame in KeyFrames[index])
             {
-                int valueChange = keyFrame.ActualValueChange;
-                int changeBy1Count = keyFrame.ChangeBy1Count;
-
-                if (keyFrame.ChangeBy1Count > 0)
+                void setValue(int change, bool isRelative)
                 {
-                    valueChange += keyFrame.Sign ? -1 : 1;
-                    changeBy1Count--;
+                    if (!isRelative)
+                    {
+                        values[frameIndex] = change;
+                    }
+                    else
+                    {
+                        int prevValue = frameIndex > 0 ? values[frameIndex - 1] : 0;
+                        values[frameIndex] = prevValue + change;
+                    }
+                    frameIndex++;
                 }
 
-                setValue(valueChange);
-
-                if (keyFrame.RepeatCount == 0)
-                    continue;
-
+                int valueChange = keyFrame.ActualValueChange;
                 int timer = 1;
+                int repeat = keyFrame.RepeatCount + 1;
 
-                do
+                switch (keyFrame.Type)
                 {
-                    valueChange = keyFrame.ActualValueChange;
+                    case VectorAnimationKeyFrame.CommandType.Relative:
+                        setValue(valueChange, true);
+                        break;
 
-                    if (changeBy1Count > 0)
-                    {
-                        valueChange += keyFrame.Sign ? -1 : 1;
-                        changeBy1Count--;
-                    }
+                    case VectorAnimationKeyFrame.CommandType.Absolute:
+                        setValue(valueChange, false);
+                        break;
 
-                    setValue(valueChange);
-                    timer++;
-                } while (timer < keyFrame.RepeatCount);
+                    case VectorAnimationKeyFrame.CommandType.RelativeRepeat:
+                        setValue(valueChange, true);
+
+                        do
+                        {
+                            setValue(valueChange, true);
+                            timer++;
+                        } while (timer < repeat);
+                        break;
+
+                    case VectorAnimationKeyFrame.CommandType.RelativeRepeatWithChangeBy1:
+                        setValue(valueChange + (keyFrame.Sign ? -1 : 1), true);
+
+                        int changeBy1CountDown = keyFrame.ChangeBy1Count - 1;
+
+                        do
+                        {
+                            int v = valueChange;
+
+                            if (changeBy1CountDown > 0)
+                            {
+                                v += keyFrame.Sign ? -1 : 1;
+                                changeBy1CountDown--;
+                            }
+
+                            setValue(v, true);
+                            timer++;
+                        } while (timer < repeat);
+                        break;
+
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
             }
+
+            if (frameIndex != values.Length)
+                throw new Exception($"Frame index: {frameIndex}, frames count: {FramesCount}");
 
             return values;
         }

@@ -2,6 +2,8 @@
 {
     public class VectorAnimationKeyFrame
     {
+        public CommandType Type { get; set; }
+
         public bool Flag0 { get; set; }
         public bool Flag1 { get; set; }
         public bool Flag2 { get; set; }
@@ -20,7 +22,8 @@
             if (!Flag0)
             {
                 ValueChange = (int)bitFunc(ValueChange, 7, name: nameof(ValueChange));
-                ActualValueChange = (ActualValueChange << (0x18 + 1)) >> 0x17;
+                ActualValueChange = (ValueChange << (0x18 + 1)) >> 0x17;
+                Type = CommandType.Relative;
                 return;
             }
 
@@ -30,6 +33,7 @@
             {
                 ValueChange = (int)bitFunc(ValueChange, 10, name: nameof(ValueChange));
                 ActualValueChange = ValueChange << 2;
+                Type = CommandType.Absolute;
                 return;
             }
 
@@ -40,6 +44,7 @@
                 RepeatCount = (byte)bitFunc(RepeatCount, 5, name: nameof(RepeatCount));
                 ValueChange = (int)bitFunc(ValueChange, 8, name: nameof(ValueChange));
                 ActualValueChange = (ValueChange << 0x18) >> 0x18;
+                Type = CommandType.RelativeRepeat;
                 return;
             }
 
@@ -49,6 +54,15 @@
             Sign = bitFunc(Sign ? 1 : 0, 1, name: nameof(Sign)) != 0;
 
             ActualValueChange = ValueChange * (Sign ? -1 : 1);
+            Type = CommandType.RelativeRepeatWithChangeBy1;
+        }
+
+        public enum CommandType
+        {
+            Relative,
+            Absolute,
+            RelativeRepeat,
+            RelativeRepeatWithChangeBy1,
         }
     }
 }
