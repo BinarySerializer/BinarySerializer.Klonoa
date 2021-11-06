@@ -178,13 +178,13 @@ namespace BinarySerializer.Klonoa.DTP
 
                         break;
 
-                    case CutsceneInstruction.InstructionType.SetObjAnimation:
+                    case CutsceneInstruction.InstructionType.SetObj2DAnimation:
                         var data_SetObjAnimation = (CutsceneInstructionData_SetObjAnimation)instruction.Data;
                         writeLine($"Object = {data_SetObjAnimation.ObjIndex}");
                         writeLine($"Animation = {data_SetObjAnimation.AnimIndex}");
                         break;
 
-                    case CutsceneInstruction.InstructionType.CreateObj:
+                    case CutsceneInstruction.InstructionType.CreateObj2D:
                         var data_CreateObj = (CutsceneInstructionData_CreateObj)instruction.Data;
                         writeLine($"Object = {data_CreateObj.ObjIndex}");
                         writeLine($"Unknown = {data_CreateObj.Int_02}");

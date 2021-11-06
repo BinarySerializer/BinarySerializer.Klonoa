@@ -19,11 +19,11 @@
                     serializeData<CutsceneInstructionData_DrawText>();
                     break;
 
-                case InstructionType.SetObjAnimation:
+                case InstructionType.SetObj2DAnimation:
                     serializeData<CutsceneInstructionData_SetObjAnimation>();
                     break;
 
-                case InstructionType.CreateObj:
+                case InstructionType.CreateObj2D:
                     serializeData<CutsceneInstructionData_CreateObj>();
                     break;
 
@@ -57,9 +57,12 @@
         public enum InstructionType : short
         {
             DrawText = 0,
+            PlayCameraAnimation = 1, // TODO: Parse
 
-            SetObjAnimation = 7,
-            CreateObj = 8,
+            CreateObj3D = 4, // TODO: Parse
+
+            SetObj2DAnimation = 7,
+            CreateObj2D = 8,
 
             CreateBackgroundObjects = 10, // Creates two background objects for the cutscene of type 0xC (text and text border)
 
