@@ -41,7 +41,8 @@ namespace BinarySerializer.Klonoa.DTP
         public CollisionTriangles_File Data_Collision { get; set; }
         public MovementPath_File Data_MovementPaths { get; set; }
         public UnknownModelObjectsData_File Data_UnknownModelObjectsData { get; set; }
-        public ArchiveFile<ModelBoneAnimation_ArchiveFile> ModelAnimations { get; set; }
+        public ArchiveFile<ModelBoneAnimation_ArchiveFile> Data_ModelAnimations { get; set; }
+        public ModelVertexAnimation Data_VertexAnimation { get; set; }
         public PS1_TIM Data_TIM { get; set; }
         public TIM_ArchiveFile Data_TIMArchive { get; set; }
         public VectorAnimation_File Data_LightPositions { get; set; } // Each light has two positions, source and destination
@@ -58,6 +59,7 @@ namespace BinarySerializer.Klonoa.DTP
         public UVScrollAnimation_File Data_UVScrollAnimation { get; set; }
         public RGBAnimations_File Data_RGBAnimations { get; set; }
         public VectorAnimation_File Data_ScenerySprites { get; set; }
+        public RawTextureAnimation Data_RawTextureAnimation { get; set; }
 
         // Custom
         public GlobalGameObjectType GlobalGameObjectType { get; set; }
@@ -208,7 +210,7 @@ namespace BinarySerializer.Klonoa.DTP
 
                 case GlobalGameObjectType.RongoLango:
                     Data_TMD = SerializeDataFile<PS1_TMD>(s, Data_TMD, x => x.Pre_HasBones = true, name: nameof(Data_TMD));
-                    ModelAnimations = SerializeDataFile<ArchiveFile<ModelBoneAnimation_ArchiveFile>>(s, ModelAnimations, name: nameof(ModelAnimations));
+                    Data_ModelAnimations = SerializeDataFile<ArchiveFile<ModelBoneAnimation_ArchiveFile>>(s, Data_ModelAnimations, name: nameof(Data_ModelAnimations));
                     Data_MovementPaths = SerializeDataFile<MovementPath_File>(s, Data_MovementPaths, name: nameof(Data_MovementPaths));
                     SkipDataFile<RawData_File>(s); // TODO: Unknown data
                     SkipDataFile<RawData_File>(s); // TODO: Unknown data
@@ -953,6 +955,35 @@ namespace BinarySerializer.Klonoa.DTP
                 Position = s.SerializeObject<KlonoaVector16>(Position, name: nameof(Position));
                 Ushort_06 = s.Serialize<ushort>(Ushort_06, name: nameof(Ushort_06));
             }
+        }
+
+        public class RawTextureAnimation
+        {
+            public RawTextureAnimation(byte[][] frames, PS1_VRAMRegion region)
+            {
+                Frames = frames;
+                Region = region;
+            }
+
+            public byte[][] Frames { get; }
+            public PS1_VRAMRegion Region { get; }
+        }
+
+        public class ModelVertexAnimation
+        {
+            public ModelVertexAnimation(TMDVertices_File[] vertexFrames, TMDNormals_File[] normalFrames, int[] frameIndices, int[] frameSpeeds)
+            {
+                VertexFrames = vertexFrames;
+                NormalFrames = normalFrames;
+                FrameIndices = frameIndices;
+                FrameSpeeds = frameSpeeds;
+            }
+
+            public TMDVertices_File[] VertexFrames { get; }
+            public TMDNormals_File[] NormalFrames { get; }
+
+            public int[] FrameIndices { get; }
+            public int[] FrameSpeeds { get; }
         }
     }
 }

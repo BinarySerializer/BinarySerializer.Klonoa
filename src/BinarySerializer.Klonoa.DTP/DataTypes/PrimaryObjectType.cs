@@ -12,5 +12,7 @@
         // Handled almost the same. 40 seems to be more for moving platforms and such that you can interact with.
         Object_3D_40 = 40,
         Object_3D_41 = 41,
+
+        CutsceneObject = 45,
     }
 }

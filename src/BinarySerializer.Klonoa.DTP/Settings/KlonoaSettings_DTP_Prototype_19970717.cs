@@ -65,5 +65,11 @@ namespace BinarySerializer.Klonoa.DTP
 
         public override uint Address_LevelData3DFunction => 0x80111d50;
         public override uint Address_LevelData2DPointerTable => 0x800b3c94;
+
+        public override BaseHardCodedObjectsLoader GetHardCodedObjectsLoader(LevelPack_ArchiveFile levelPack, int binBlock) => 
+            throw new System.NotImplementedException();
+
+        public override Dictionary<int, int[]> CutsceneSectors =>
+            throw new System.NotImplementedException();
     }
 }

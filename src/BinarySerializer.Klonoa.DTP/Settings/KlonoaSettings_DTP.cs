@@ -1,6 +1,5 @@
-﻿using System.Collections.Generic;
-using BinarySerializer.Klonoa.DTP;
-using BinarySerializer.PS1;
+﻿using BinarySerializer.PS1;
+using System.Collections.Generic;
 
 namespace BinarySerializer.Klonoa.DTP
 {
@@ -21,6 +20,10 @@ namespace BinarySerializer.Klonoa.DTP
 
         public abstract uint Address_LevelData3DFunction { get; }
         public abstract uint Address_LevelData2DPointerTable { get; }
+
+        public abstract BaseHardCodedObjectsLoader GetHardCodedObjectsLoader(LevelPack_ArchiveFile levelPack, int binBlock);
+
+        public abstract Dictionary<int, int[]> CutsceneSectors { get; }
 
         public virtual Dictionary<int, Dictionary<int, GlobalGameObjectType>> GlobalGameObjectTypes { get; } = new Dictionary<int, Dictionary<int, GlobalGameObjectType>>()
         {
