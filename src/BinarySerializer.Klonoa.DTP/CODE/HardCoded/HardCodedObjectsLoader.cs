@@ -8,7 +8,13 @@ namespace BinarySerializer.Klonoa.DTP
     /// </summary>
     public class HardCodedObjectsLoader : BaseHardCodedObjectsLoader
     {
+        #region Constructor
+
         public HardCodedObjectsLoader(Loader loader, bool loadVramData = true) : base(loader, loadVramData) { }
+
+        #endregion
+
+        #region Cutscenes
 
         private void LoadCutsceneObjects_3_0()
         {
@@ -103,7 +109,7 @@ namespace BinarySerializer.Klonoa.DTP
             AddGameObject(GlobalGameObjectType.Cutscene_Karal_Pamela, obj =>
             {
                 obj.Data_TMD = LoadCutsceneAsset<PS1_TMD>(tmdIndex, x => x.Pre_HasBones = true);
-                
+
                 obj.Data_Position = pos;
 
                 var modelAnim = LoadCutsceneAsset<KaralModelBoneAnimation_ArchiveFile>(animIndex);
@@ -222,7 +228,7 @@ namespace BinarySerializer.Klonoa.DTP
             LoadCutsceneObject_Airplane(0, 1, new KlonoaVector16(-768, -768, -1024)); // Defined in script
 
             // Level geometry
-            AddGameObject(GlobalGameObjectType.Cutscene_BeamSource, obj =>
+            AddGameObject(GlobalGameObjectType.Cutscene_Geometry, obj =>
             {
                 obj.Data_TMD = LoadCutsceneAsset<PS1_TMD>(2);
             });
@@ -286,64 +292,94 @@ namespace BinarySerializer.Klonoa.DTP
             });
         }
 
+        #endregion
+
+        #region Bosses
+
+        private void LoadBossObjects_8_0()
+        {
+            // Pamela
+            AddGameObject(GlobalGameObjectType.Boss_Pamela, obj =>
+            {
+                obj.Data_TMD = LoadBossAsset<PS1_TMD>(0, x => x.Pre_HasBones = true); // Note: File 4 is a duplicate of this
+                var anim = LoadBossAsset<PamelaBossModelBoneAnimation_ArchiveFile>(1);
+                obj.Data_ModelAnimations = new ArchiveFile<ModelBoneAnimation_ArchiveFile>()
+                {
+                    Files = Enumerable.Range(0, anim.Rotations.Length).Select(x => new ModelBoneAnimation_ArchiveFile
+                    {
+                        File_0 = anim.File_0,
+                        Rotations = anim.Rotations[x],
+                        Positions = anim.Positions[x],
+                    }).ToArray()
+                };
+            });
+        }
+
+        #endregion
+
+        #region Public Methods
+
         public override void LoadObjects()
         {
             switch (BinBlock)
             {
-                case 3 when LevelSector is 0: 
-                    LoadCutsceneObjects_3_0(); 
-                    break;
-                
-                case 3 when LevelSector is 1: 
-                    LoadCutsceneObjects_3_1(); 
-                    break;
-                
-                case 5 when LevelSector is 0: 
-                    LoadCutsceneObjects_5_0(); 
+                case 3 when LevelSector is 0:
+                    LoadCutsceneObjects_3_0();
                     break;
 
-                case 7 when LevelSector is 5: 
-                    LoadCutsceneObjects_7_5(); 
+                case 3 when LevelSector is 1:
+                    LoadCutsceneObjects_3_1();
+                    break;
+
+                // TODO: 3 & 4 have boss assets defined, but they are unused - what are they? Seems to be some cutscene asset duplicates?
+
+                case 5 when LevelSector is 0:
+                    LoadCutsceneObjects_5_0();
+                    break;
+
+                case 7 when LevelSector is 5:
+                    LoadCutsceneObjects_7_5();
                     break;
 
                 case 8 when LevelSector is 0:
-                    LoadCutsceneObjects_8_0(); 
+                    LoadCutsceneObjects_8_0();
+                    LoadBossObjects_8_0();
                     break;
 
                 case 8 when LevelSector is 1:
-                    LoadCutsceneObjects_8_1(); 
+                    LoadCutsceneObjects_8_1();
                     break;
 
-                case 9 when LevelSector is 3: 
+                case 9 when LevelSector is 3:
                     LoadCutsceneObjects_9_3();
                     break;
 
                 case 10 when LevelSector is 0:
-                    LoadCutsceneObjects_10_0(); 
+                    LoadCutsceneObjects_10_0();
                     break;
 
                 // TODO: 10 files 1-5 have VRAM textures and palette for end transition
 
-                case 11 when LevelSector is 0: 
-                    LoadCutsceneObjects_11_0(); 
+                case 11 when LevelSector is 0:
+                    LoadCutsceneObjects_11_0();
                     break;
 
-                case 13 when LevelSector is 7: 
+                case 13 when LevelSector is 7:
                     LoadCutsceneObjects_13_7();
                     break;
 
                 // TODO: 13 2-4 have VRAM textures and palette for end transition
 
-                case 14 when LevelSector is 0: 
-                    LoadCutsceneObjects_14_0(); 
+                case 14 when LevelSector is 0:
+                    LoadCutsceneObjects_14_0();
                     break;
 
-                case 14 when LevelSector is 1: 
-                    LoadCutsceneObjects_14_1(); 
+                case 14 when LevelSector is 1:
+                    LoadCutsceneObjects_14_1();
                     break;
 
-                case 15 when LevelSector is 0: 
-                    LoadCutsceneObjects_15_0(); 
+                case 15 when LevelSector is 0:
+                    LoadCutsceneObjects_15_0();
                     break;
 
                 // TODO: 16 0-2 have VRAM textures and palette for end transition
@@ -375,5 +411,7 @@ namespace BinarySerializer.Klonoa.DTP
                     break;
             }
         }
+
+        #endregion
     }
 }

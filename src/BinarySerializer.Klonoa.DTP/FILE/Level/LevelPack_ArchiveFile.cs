@@ -4,16 +4,15 @@
     public class LevelPack_ArchiveFile : ArchiveFile
     {
         public ArchiveFile ObjectAssets { get; set; } // Referenced from objects
-        public ArchiveFile<RawData_File> AdditionalAssets { get; set; } // Additional assets. Parsed from hard-coded functions. Has the boss data.
+        public ArchiveFile BossAssets { get; set; } // Referenced from boss objects
         
         public CutscenePack_ArchiveFile CutscenePack { get; set; }
 
-        // TODO: Parse these - not available in all levels
-        public RawData_File File_3 { get; set; }
-        public RawData_ArchiveFile File_4 { get; set; }
-        public RawData_ArchiveFile File_5 { get; set; }
-        public RawData_File File_6 { get; set; }
-        public RawData_File File_7 { get; set; }
+        public RawData_File File_3 { get; set; } // TODO: Parse. Has sprites in BIN 17.
+        public RawData_ArchiveFile File_4 { get; set; } // TODO: Parse. Read from BIN 8, 9, 15, 16, 19, 22, 24. Has models in some of them.
+        public RawData_ArchiveFile File_5 { get; set; } // TODO: Parse. Game loads into a common array. Used in BIN 7.
+        public RawData_File File_6 { get; set; } // TODO: Parse. Game seems to ignore it? Does it ever have data?
+        public RawData_File File_7 { get; set; } // TODO: Parse. Game seems to ignore it? Does it ever have data?
 
         // A level is made out of multiple sectors (changes when Klonoa walks through a door etc.)
         public Sector_ArchiveFile[] Sectors { get; set; }
@@ -21,7 +20,7 @@
         protected override void SerializeFiles(SerializerObject s)
         {
             ObjectAssets = SerializeFile<ArchiveFile>(s, ObjectAssets, 0, name: nameof(ObjectAssets));
-            AdditionalAssets = SerializeFile<ArchiveFile<RawData_File>>(s, AdditionalAssets, 1, name: nameof(AdditionalAssets));
+            BossAssets = SerializeFile<ArchiveFile>(s, BossAssets, 1, name: nameof(BossAssets));
             CutscenePack = SerializeFile<CutscenePack_ArchiveFile>(s, CutscenePack, 2, name: nameof(CutscenePack));
             File_3 = SerializeFile<RawData_File>(s, File_3, 3, name: nameof(File_3));
             File_4 = SerializeFile<RawData_ArchiveFile>(s, File_4, 4, name: nameof(File_4));

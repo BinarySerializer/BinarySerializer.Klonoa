@@ -94,6 +94,9 @@
         Cutscene_Karal_Pamela,
         Cutscene_Airplane,
         Cutscene_MovingPlatform,
+        Cutscene_Geometry,
         Cutscene_BeamSource,
+
+        Boss_Pamela,
     }
 }
