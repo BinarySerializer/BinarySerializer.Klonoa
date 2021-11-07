@@ -7,7 +7,7 @@
         public Sprites_ArchiveFile Sprites { get; set; } // Cutscene sprites
         public ArchiveFile<CutscenePlayerSprite_File> PlayerFramesImgData { get; set; } // Klonoa sprites
         public RawData_File CharacterNamesImgData { get; set; } // Raw image data, gets loaded at (0x3f4, 0x180, 0xc, 0x50)
-        public RawData_ArchiveFile CutsceneAssets { get; set; } // Used by hard-coded functions for each cutscene. Contains obj models etc.
+        public ArchiveFile CutsceneAssets { get; set; } // Used by hard-coded functions for each cutscene. Contains obj models etc.
         public Cutscene[] Cutscenes { get; set; }
 
         // Transition cutscene
@@ -32,7 +32,7 @@
                 Sprites = SerializeFile<Sprites_ArchiveFile>(s, Sprites, 1, name: nameof(Sprites));
                 PlayerFramesImgData = SerializeFile<ArchiveFile<CutscenePlayerSprite_File>>(s, PlayerFramesImgData, 2, name: nameof(PlayerFramesImgData));
                 CharacterNamesImgData = SerializeFile<RawData_File>(s, CharacterNamesImgData, 3, name: nameof(CharacterNamesImgData));
-                CutsceneAssets = SerializeFile<RawData_ArchiveFile>(s, CutsceneAssets, 4, name: nameof(CutsceneAssets));
+                CutsceneAssets = SerializeFile<ArchiveFile>(s, CutsceneAssets, 4, name: nameof(CutsceneAssets));
 
                 var cutsceneFilesCount = Loader.GetLoader(s.Context).GameVersion == KlonoaGameVersion.DTP_Prototype_19970717 ? 5 : 3;
 

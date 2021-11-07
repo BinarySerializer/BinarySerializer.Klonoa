@@ -554,6 +554,16 @@ namespace BinarySerializer.Klonoa.DTP
         }
 
         /// <summary>
+        /// Adds the data to the VRAM
+        /// </summary>
+        /// <param name="data">The data to add</param>
+        /// <param name="region">The region to add to</param>
+        public void AddToVRAM(byte[] data, PS1_VRAMRegion region)
+        {
+            VRAM.AddDataAt(0, 0, region.XPos * 2, region.YPos, data, region.Width * 2, region.Height);
+        }
+
+        /// <summary>
         /// Gets the first loaded file of the specified type, or null if none was found
         /// </summary>
         /// <typeparam name="T">The file type</typeparam>

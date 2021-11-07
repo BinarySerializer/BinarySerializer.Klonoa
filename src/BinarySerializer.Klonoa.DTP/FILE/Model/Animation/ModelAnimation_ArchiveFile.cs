@@ -17,8 +17,16 @@
             else
                 File_0 = SerializeFile<RawData_File>(s, File_0, 0, name: nameof(File_0));
             
-            Rotations = SerializeFile<VectorAnimation_File>(s, Rotations, 1, onPreSerialize: x => x.Pre_Info = Info, name: nameof(Rotations));
-            Positions = SerializeFile<VectorAnimation_File>(s, Positions, 2, onPreSerialize: x => x.Pre_Info = Info, name: nameof(Positions));
+            Rotations = SerializeFile<VectorAnimation_File>(s, Rotations, 1, onPreSerialize: x =>
+            {
+                x.Pre_ObjectsCount = Info?.ObjectsCount;
+                x.Pre_FramesCount = Info?.FramesCount;
+            }, name: nameof(Rotations));
+            Positions = SerializeFile<VectorAnimation_File>(s, Positions, 2, onPreSerialize: x =>
+            {
+                x.Pre_ObjectsCount = Info?.ObjectsCount;
+                x.Pre_FramesCount = Info?.FramesCount;
+            }, name: nameof(Positions));
         }
     }
 }

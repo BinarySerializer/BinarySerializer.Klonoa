@@ -21,7 +21,7 @@ namespace BinarySerializer.Klonoa.DTP
         public abstract uint Address_LevelData3DFunction { get; }
         public abstract uint Address_LevelData2DPointerTable { get; }
 
-        public abstract BaseHardCodedObjectsLoader GetHardCodedObjectsLoader(LevelPack_ArchiveFile levelPack, int binBlock);
+        public abstract BaseHardCodedObjectsLoader GetHardCodedObjectsLoader(Loader loader);
 
         public abstract Dictionary<int, int[]> CutsceneSectors { get; }
 

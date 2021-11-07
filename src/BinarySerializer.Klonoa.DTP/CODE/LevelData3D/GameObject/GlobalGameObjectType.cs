@@ -86,5 +86,11 @@
         WeatherEffect,
         LevelTimer,
         Fireworks,
+
+        Cutscene_Camera,
+        Cutscene_3_0_Window,
+        Cutscene_5_0_Ghadius,
+        Cutscene_7_1_Karal,
+        Cutscene_7_1_CageFence,
     }
 }

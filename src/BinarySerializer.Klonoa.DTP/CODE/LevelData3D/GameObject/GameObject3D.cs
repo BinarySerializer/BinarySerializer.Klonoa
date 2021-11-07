@@ -60,6 +60,10 @@ namespace BinarySerializer.Klonoa.DTP
         public RGBAnimations_File Data_RGBAnimations { get; set; }
         public VectorAnimation_File Data_ScenerySprites { get; set; }
         public RawTextureAnimation Data_RawTextureAnimation { get; set; }
+        public RawData_File Data_RawVRAMData { get; set; }
+        public PS1_VRAMRegion Data_RawVRAMDataRegion { get; set; }
+        public VectorAnimation_File Data_Positions { get; set; }
+        public VectorAnimation_File Data_Rotations { get; set; }
 
         // Custom
         public GlobalGameObjectType GlobalGameObjectType { get; set; }

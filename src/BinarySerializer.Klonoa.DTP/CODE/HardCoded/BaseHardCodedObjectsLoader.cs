@@ -5,17 +5,21 @@ namespace BinarySerializer.Klonoa.DTP
 {
     public abstract class BaseHardCodedObjectsLoader
     {
-        protected BaseHardCodedObjectsLoader(LevelPack_ArchiveFile levelPack, int binBlock)
+        protected BaseHardCodedObjectsLoader(Loader loader, LevelPack_ArchiveFile levelPack, int binBlock, bool loadVramData = true)
         {
+            Loader = loader;
             LevelPack = levelPack;
             BinBlock = binBlock;
+            LoadVRAMData = loadVramData;
 
             CutsceneGameObjects3D = new List<GameObject3D>();
         }
 
         // Properties
+        public Loader Loader { get; }
         public LevelPack_ArchiveFile LevelPack { get; }
         public int BinBlock { get; }
+        public bool LoadVRAMData { get; }
         protected Context Context => LevelPack.Context;
         protected BinaryDeserializer Deserializer => Context.Deserializer;
 
@@ -34,11 +38,12 @@ namespace BinarySerializer.Klonoa.DTP
             return LoadAsset<T>(LevelPack.CutscenePack.CutsceneAssets, index, onPreSerialize);
         }
 
-        protected void AddCutsceneGameObject3D(Action<GameObject3D> initAction)
+        protected void AddCutsceneGameObject3D(GlobalGameObjectType type, Action<GameObject3D> initAction)
         {
             var obj = new GameObject3D()
             {
-                PrimaryType = PrimaryObjectType.CutsceneObject
+                PrimaryType = PrimaryObjectType.CutsceneObject,
+                GlobalGameObjectType = type,
             };
 
             initAction(obj);

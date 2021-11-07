@@ -5,7 +5,8 @@
         // One of these files in block 9 is shorter than what the game reads. The game corrects this by setting the values to 0 afterwards.
         public override bool DisableNotFullySerializedWarning => Loader.GetLoader(Context).BINBlock == 9;
 
-        public ModelAnimationInfo_File Pre_Info { get; set; }
+        public ushort? Pre_ObjectsCount { get; set; }
+        public ushort? Pre_FramesCount { get; set; }
 
         public ushort ObjectsCount { get; set; }
         public ushort FramesCount { get; set; }
@@ -13,15 +14,15 @@
 
         public override void SerializeImpl(SerializerObject s)
         {
-            if (Pre_Info == null)
+            if (Pre_ObjectsCount == null || Pre_FramesCount == null)
             {
                 ObjectsCount = s.Serialize<ushort>(ObjectsCount, name: nameof(ObjectsCount));
                 FramesCount = s.Serialize<ushort>(FramesCount, name: nameof(FramesCount));
             }
             else
             {
-                ObjectsCount = Pre_Info.ObjectsCount;
-                FramesCount = Pre_Info.FramesCount;
+                ObjectsCount = Pre_ObjectsCount.Value;
+                FramesCount = Pre_FramesCount.Value;
             }
 
             Vectors ??= new KlonoaVector16[FramesCount][];
