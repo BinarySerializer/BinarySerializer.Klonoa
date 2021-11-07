@@ -3,28 +3,29 @@ using System.Collections.Generic;
 
 namespace BinarySerializer.Klonoa.DTP
 {
+    // Ugly class for loading hard-coded objects and their assets. Primarily for map viewer so those objects can be included.
+    // Ideally everything would be loaded based on the object type, spawned from either the cutscene script or other objects.
     public abstract class BaseHardCodedObjectsLoader
     {
-        protected BaseHardCodedObjectsLoader(Loader loader, LevelPack_ArchiveFile levelPack, int binBlock, bool loadVramData = true)
+        protected BaseHardCodedObjectsLoader(Loader loader, bool loadVramData = true)
         {
             Loader = loader;
-            LevelPack = levelPack;
-            BinBlock = binBlock;
             LoadVRAMData = loadVramData;
 
-            CutsceneGameObjects3D = new List<GameObject3D>();
+            GameObjects = new List<GameObject3D>();
         }
 
         // Properties
         public Loader Loader { get; }
-        public LevelPack_ArchiveFile LevelPack { get; }
-        public int BinBlock { get; }
+        public LevelPack_ArchiveFile LevelPack => Loader.LevelPack;
+        public int BinBlock => Loader.BINBlock;
+        public int LevelSector => Loader.LevelSector;
         public bool LoadVRAMData { get; }
         protected Context Context => LevelPack.Context;
         protected BinaryDeserializer Deserializer => Context.Deserializer;
 
         // Data
-        public List<GameObject3D> CutsceneGameObjects3D { get; }
+        public List<GameObject3D> GameObjects { get; }
 
         protected T LoadAsset<T>(ArchiveFile pack, int index, Action<T> onPreSerialize = null)
             where T : BinarySerializable, new()
@@ -38,7 +39,7 @@ namespace BinarySerializer.Klonoa.DTP
             return LoadAsset<T>(LevelPack.CutscenePack.CutsceneAssets, index, onPreSerialize);
         }
 
-        protected void AddCutsceneGameObject3D(GlobalGameObjectType type, Action<GameObject3D> initAction)
+        protected void AddGameObject(GlobalGameObjectType type, Action<GameObject3D> initAction)
         {
             var obj = new GameObject3D()
             {
@@ -48,9 +49,9 @@ namespace BinarySerializer.Klonoa.DTP
 
             initAction(obj);
 
-            CutsceneGameObjects3D.Add(obj);
+            GameObjects.Add(obj);
         }
 
-        public abstract void LoadCutscene(int cutsceneIndex);
+        public abstract void LoadObjects();
     }
 }

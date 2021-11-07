@@ -87,10 +87,13 @@
         LevelTimer,
         Fireworks,
 
+        Cutscene_Window,
         Cutscene_Camera,
-        Cutscene_3_0_Window,
-        Cutscene_5_0_Ghadius,
-        Cutscene_7_1_Karal,
-        Cutscene_7_1_CageFence,
+        Cutscene_Ghadius,
+        Cutscene_CageFence,
+        Cutscene_Karal_Pamela,
+        Cutscene_Airplane,
+        Cutscene_MovingPlatform,
+        Cutscene_BeamSource,
     }
 }

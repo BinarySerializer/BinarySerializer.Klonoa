@@ -60,14 +60,6 @@ namespace BinarySerializer.Klonoa.DTP
         public override uint Address_LevelData2DPointerTable => 0x800b6328;
 
         public override BaseHardCodedObjectsLoader GetHardCodedObjectsLoader(Loader loader) =>
-            new HardCodedObjectsLoader(loader, loader.LevelPack, loader.BINBlock);
-
-        public override Dictionary<int, int[]> CutsceneSectors => new Dictionary<int, int[]>()
-        {
-            [3] = new int[] { 0, 1 },
-            [5] = new int[] { 0, 1 },
-            //[6] = new int[] { ?, ?, ? }, // TODO: Define
-            [7] = new int[] { 0, 5, 5 },
-        };
+            new HardCodedObjectsLoader(loader);
     }
 }

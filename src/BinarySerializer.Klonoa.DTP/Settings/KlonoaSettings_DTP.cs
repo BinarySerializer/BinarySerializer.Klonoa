@@ -23,8 +23,6 @@ namespace BinarySerializer.Klonoa.DTP
 
         public abstract BaseHardCodedObjectsLoader GetHardCodedObjectsLoader(Loader loader);
 
-        public abstract Dictionary<int, int[]> CutsceneSectors { get; }
-
         public virtual Dictionary<int, Dictionary<int, GlobalGameObjectType>> GlobalGameObjectTypes { get; } = new Dictionary<int, Dictionary<int, GlobalGameObjectType>>()
         {
             [3] = new Dictionary<int, GlobalGameObjectType>()

@@ -69,6 +69,8 @@
             ChangeSector = 16,
             SetObjPos = 17,
 
+            MoveObj = 23, // TODO: Parse, creates an animation where the object moves to a new position
+
             SetCutsceneState = 31,
 
             Terminator = 777,

@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using BinarySerializer.Klonoa.DTP;
 
 namespace BinarySerializer.Klonoa.DTP
 {
@@ -67,9 +66,6 @@ namespace BinarySerializer.Klonoa.DTP
         public override uint Address_LevelData2DPointerTable => 0x800b3c94;
 
         public override BaseHardCodedObjectsLoader GetHardCodedObjectsLoader(Loader loader) => 
-            throw new System.NotImplementedException();
-
-        public override Dictionary<int, int[]> CutsceneSectors =>
             throw new System.NotImplementedException();
     }
 }
