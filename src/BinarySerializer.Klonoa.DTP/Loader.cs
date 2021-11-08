@@ -522,10 +522,10 @@ namespace BinarySerializer.Klonoa.DTP
             if (LevelSector != -1)
             {
                 // Add TIM data to VRAM for each object which references a single TIM file. If there are multiple then it's animated and should get added later.
-                foreach (var tim in LevelData3D.SectorGameObjects3D[LevelSector].Objects.Select(x => x.Data_TIM).Where(x => x != null))
+                foreach (var tim in LevelData3D.SectorGameObjectDefinition[LevelSector].ObjectsDefinitions.Select(x => x.Data?.TIM).Where(x => x != null))
                     AddToVRAM(tim);
 
-                foreach (var tim in LevelData3D.SectorGameObjects3D[LevelSector].Objects.Select(x => x.Data_TIMArchive).Where(x => x != null).SelectMany(x => x.Files))
+                foreach (var tim in LevelData3D.SectorGameObjectDefinition[LevelSector].ObjectsDefinitions.Select(x => x.Data?.TIMArchive).Where(x => x != null).SelectMany(x => x.Files))
                     AddToVRAM(tim);
             }
 

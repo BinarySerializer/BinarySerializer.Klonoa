@@ -1,6 +1,6 @@
 ﻿namespace BinarySerializer.Klonoa.DTP
 {
-    public class GameObject3DObjectParams_MovingPlatform : BinarySerializable
+    public class GameObjectDefinitionParams_MovingPlatform : BinarySerializable
     {
         public uint Flags { get; set; }
         public Pointer MovementPathIndicesPointer_0 { get; set; }

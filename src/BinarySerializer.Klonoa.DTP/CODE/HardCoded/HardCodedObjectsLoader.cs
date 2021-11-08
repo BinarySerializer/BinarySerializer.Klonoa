@@ -21,15 +21,21 @@ namespace BinarySerializer.Klonoa.DTP
             // Window object
             AddGameObject(GlobalGameObjectType.Cutscene_Window, obj =>
             {
-                // TODO: Add rotation
-                obj.Data_TMD = LoadCutsceneAsset<PS1_TMD>(0);
-                obj.Data_Position = new KlonoaVector16(-0x10b0, -0x440, 0xdc0);
+                obj.Models = new GameObjectData_Model[]
+                {
+                    new GameObjectData_Model()
+                    {
+                        TMD = LoadCutsceneAsset<PS1_TMD>(0),
+                        Position = new KlonoaVector16(-0x10b0, -0x440, 0xdc0),
+                        // TODO: Add rotation
+                    },
+                };
             });
 
             // Camera animation
             AddGameObject(GlobalGameObjectType.Cutscene_Camera, obj =>
             {
-                obj.Data_CameraAnimations = LoadCutsceneAsset<CameraAnimations_File>(1);
+                obj.CameraAnimations = LoadCutsceneAsset<CameraAnimations_File>(1);
             });
 
             // TODO: Paths archive in file 3, used for some sprite object
@@ -40,7 +46,7 @@ namespace BinarySerializer.Klonoa.DTP
             // Camera animation
             AddGameObject(GlobalGameObjectType.Cutscene_Camera, obj =>
             {
-                obj.Data_CameraAnimations = LoadCutsceneAsset<CameraAnimations_File>(2);
+                obj.CameraAnimations = LoadCutsceneAsset<CameraAnimations_File>(2);
             });
         }
 
@@ -48,9 +54,21 @@ namespace BinarySerializer.Klonoa.DTP
         {
             AddGameObject(GlobalGameObjectType.Cutscene_Ghadius, obj =>
             {
-                obj.Data_TMD = LoadCutsceneAsset<PS1_TMD>(bodyTmdIndex); // Body
-                obj.Data_TMD_Secondary = LoadCutsceneAsset<PS1_TMD>(headTmdIndex); // Head
-                obj.Data_Position = pos;
+                obj.Models = new GameObjectData_Model[]
+                {
+                    // Head
+                    new GameObjectData_Model()
+                    {
+                        TMD = LoadCutsceneAsset<PS1_TMD>(headTmdIndex),
+                    },
+                    // Body
+                    new GameObjectData_Model()
+                    {
+                        TMD = LoadCutsceneAsset<PS1_TMD>(bodyTmdIndex),
+                    },
+                };
+
+                obj.Position = pos;
 
                 if (textureAnimIndex != -1)
                 {
@@ -61,13 +79,13 @@ namespace BinarySerializer.Klonoa.DTP
                     for (int i = 0; i < 4; i++)
                         frames[i] = LoadCutsceneAsset<RawData_File>(textureAnimIndex + i).Data;
 
-                    obj.Data_RawTextureAnimation = new GameObject3D.RawTextureAnimation(frames, vramRegion);
+                    obj.RawTextureAnimation = new GameObjectData_RawTextureAnimation(frames, vramRegion);
                 }
 
                 if (animIndex != -1)
                 {
                     // Vertex animation (FUN_5_7__8011cbf0)
-                    obj.Data_VertexAnimation = new GameObject3D.ModelVertexAnimation(
+                    obj.Models[1].VertexAnimation = new GameObjectData_ModelVertexAnimation(
                         vertexFrames: new TMDVertices_File[11],
                         normalFrames: new TMDNormals_File[11],
                         frameIndices: new int[]
@@ -89,8 +107,8 @@ namespace BinarySerializer.Klonoa.DTP
 
                     for (int i = 0; i < 11; i++)
                     {
-                        obj.Data_VertexAnimation.VertexFrames[i] = LoadCutsceneAsset<TMDVertices_File>(animIndex + i, x => x.Pre_VerticesCount = 0x63);
-                        obj.Data_VertexAnimation.NormalFrames[i] = LoadCutsceneAsset<TMDNormals_File>(animIndex + 11 + i, x => x.Pre_NormalsCount = 0x140);
+                        obj.Models[1].VertexAnimation.VertexFrames[i] = LoadCutsceneAsset<TMDVertices_File>(animIndex + i, x => x.Pre_VerticesCount = 0x63);
+                        obj.Models[1].VertexAnimation.NormalFrames[i] = LoadCutsceneAsset<TMDNormals_File>(animIndex + 11 + i, x => x.Pre_NormalsCount = 0x140);
                     }
                 }
             });
@@ -108,14 +126,20 @@ namespace BinarySerializer.Klonoa.DTP
         {
             AddGameObject(GlobalGameObjectType.Cutscene_Karal_Pamela, obj =>
             {
-                obj.Data_TMD = LoadCutsceneAsset<PS1_TMD>(tmdIndex, x => x.Pre_HasBones = true);
+                obj.Models = new GameObjectData_Model[]
+                {
+                    new GameObjectData_Model()
+                    {
+                        TMD = LoadCutsceneAsset<PS1_TMD>(tmdIndex, x => x.Pre_HasBones = true),
+                    }
+                };
 
-                obj.Data_Position = pos;
+                obj.Position = pos;
 
                 var modelAnim = LoadCutsceneAsset<KaralModelBoneAnimation_ArchiveFile>(animIndex);
 
                 // Convert to normal model animation format
-                obj.Data_ModelAnimations = new ArchiveFile<ModelBoneAnimation_ArchiveFile>()
+                obj.Models[0].ModelAnimations = new ArchiveFile<ModelBoneAnimation_ArchiveFile>()
                 {
                     Files = modelAnim.Rotations.Select(x => new ModelBoneAnimation_ArchiveFile
                     {
@@ -128,11 +152,11 @@ namespace BinarySerializer.Klonoa.DTP
                 // Some palette (Karal only)
                 if (palIndex != -1)
                 {
-                    obj.Data_RawVRAMData = LoadCutsceneAsset<RawData_File>(palIndex);
-                    obj.Data_RawVRAMDataRegion = new PS1_VRAMRegion(0x110, 0x1eb, 0x10, 0x04);
+                    obj.RawVRAMData = LoadCutsceneAsset<RawData_File>(palIndex);
+                    obj.RawVRAMDataRegion = new PS1_VRAMRegion(0x110, 0x1eb, 0x10, 0x04);
 
                     if (LoadVRAMData)
-                        Loader.AddToVRAM(obj.Data_RawVRAMData.Data, obj.Data_RawVRAMDataRegion);
+                        Loader.AddToVRAM(obj.RawVRAMData.Data, obj.RawVRAMDataRegion);
                 }
             });
         }
@@ -145,13 +169,22 @@ namespace BinarySerializer.Klonoa.DTP
             // Cage fence part
             AddGameObject(GlobalGameObjectType.Cutscene_CageFence, obj =>
             {
-                obj.Data_TMD = LoadCutsceneAsset<PS1_TMD>(2);
-                obj.Data_Positions = LoadCutsceneAsset<VectorAnimation_File>(3);
-                obj.Data_Rotations = LoadCutsceneAsset<VectorAnimation_File>(4, x =>
+                obj.Positions = LoadCutsceneAsset<VectorAnimation_File>(3);
+                obj.Rotations = LoadCutsceneAsset<VectorAnimation_File>(4, x =>
                 {
-                    x.Pre_ObjectsCount = obj.Data_Positions.ObjectsCount;
-                    x.Pre_FramesCount = obj.Data_Positions.FramesCount;
+                    x.Pre_ObjectsCount = obj.Positions.ObjectsCount;
+                    x.Pre_FramesCount = obj.Positions.FramesCount;
                 });
+
+                PS1_TMD tmd = LoadCutsceneAsset<PS1_TMD>(2);
+
+                obj.Models = Enumerable.Range(0, obj.Positions.ObjectsCount).Select(x => new GameObjectData_Model()
+                {
+                    TMD = tmd,
+                    Position = obj.Positions.Vectors[0][x],
+                    Rotation = obj.Rotations.Vectors[0][x],
+                }).ToArray();
+
             });
 
             // TODO: File 5 has VRAM textures for end transition, file 6 has palettes
@@ -172,9 +205,16 @@ namespace BinarySerializer.Klonoa.DTP
             // Moving platform
             AddGameObject(GlobalGameObjectType.Cutscene_MovingPlatform, obj =>
             {
-                obj.Data_TMD = LoadCutsceneAsset<PS1_TMD>(0);
-                obj.Data_Collision = LoadCutsceneAsset<CollisionTriangles_File>(1);
-                obj.Data_Position = new KlonoaVector16(-6910, -1458, 462); // Defined in script
+                obj.Models = new GameObjectData_Model[]
+                {
+                    new GameObjectData_Model()
+                    {
+                        TMD = LoadCutsceneAsset<PS1_TMD>(0),
+                    }
+                };
+
+                obj.Collision = LoadCutsceneAsset<CollisionTriangles_File>(1);
+                obj.Position = new KlonoaVector16(-6910, -1458, 462); // Defined in script
             });
         }
 
@@ -183,8 +223,15 @@ namespace BinarySerializer.Klonoa.DTP
             // Moving platform
             AddGameObject(GlobalGameObjectType.Cutscene_MovingPlatform, obj =>
             {
-                obj.Data_TMD = LoadCutsceneAsset<PS1_TMD>(0);
-                obj.Data_Position = new KlonoaVector16(34, -366, 2746); // Defined in script
+                obj.Models = new GameObjectData_Model[]
+                {
+                    new GameObjectData_Model()
+                    {
+                        TMD = LoadCutsceneAsset<PS1_TMD>(0),
+                    }
+                };
+
+                obj.Position = new KlonoaVector16(34, -366, 2746); // Defined in script
             });
         }
 
@@ -192,10 +239,20 @@ namespace BinarySerializer.Klonoa.DTP
         {
             AddGameObject(GlobalGameObjectType.Cutscene_MovingPlatform, obj =>
             {
-                obj.Data_TMD = LoadCutsceneAsset<PS1_TMD>(0);
-                obj.Data_TMD_Secondary = LoadCutsceneAsset<PS1_TMD>(1);
-                obj.Data_Collision = LoadCutsceneAsset<CollisionTriangles_File>(2);
-                obj.Data_Position = new KlonoaVector16(-192, 1280, 616); // Defined in script
+                obj.Models = new GameObjectData_Model[]
+                {
+                    new GameObjectData_Model()
+                    {
+                        TMD = LoadCutsceneAsset<PS1_TMD>(0),
+                    },
+                    new GameObjectData_Model()
+                    {
+                        TMD = LoadCutsceneAsset<PS1_TMD>(1),
+                    },
+                };
+
+                obj.Collision = LoadCutsceneAsset<CollisionTriangles_File>(2);
+                obj.Position = new KlonoaVector16(-192, 1280, 616); // Defined in script
             });
         }
 
@@ -204,14 +261,21 @@ namespace BinarySerializer.Klonoa.DTP
             // Airplane
             AddGameObject(GlobalGameObjectType.Cutscene_Airplane, obj =>
             {
-                obj.Data_TMD = LoadCutsceneAsset<PS1_TMD>(tmdIndex);
-                obj.Data_Position = pos;
-            });
-            // Propeller
-            AddGameObject(GlobalGameObjectType.Cutscene_Airplane, obj =>
-            {
-                obj.Data_TMD = LoadCutsceneAsset<PS1_TMD>(propellerTmdIndex);
-                obj.Data_Position = new KlonoaVector16((short)(pos.X + 0), (short)(pos.Y + (-0x86000 >> 12)), (short)(pos.Z + (0x240000 >> 12)));
+                obj.Models = new GameObjectData_Model[]
+                {
+                    // Body
+                    new GameObjectData_Model()
+                    {
+                        TMD = LoadCutsceneAsset<PS1_TMD>(tmdIndex),
+                        Position = pos,
+                    },
+                    // Propeller
+                    new GameObjectData_Model()
+                    {
+                        TMD = LoadCutsceneAsset<PS1_TMD>(propellerTmdIndex),
+                        Position = new KlonoaVector16((short)(pos.X + 0), (short)(pos.Y + (-0x86000 >> 12)), (short)(pos.Z + (0x240000 >> 12))),
+                    },
+                };
             });
         }
 
@@ -230,7 +294,13 @@ namespace BinarySerializer.Klonoa.DTP
             // Level geometry
             AddGameObject(GlobalGameObjectType.Cutscene_Geometry, obj =>
             {
-                obj.Data_TMD = LoadCutsceneAsset<PS1_TMD>(2);
+                obj.Models = new GameObjectData_Model[]
+                {
+                    new GameObjectData_Model()
+                    {
+                        TMD = LoadCutsceneAsset<PS1_TMD>(2),
+                    },
+                };
             });
         }
 
@@ -264,7 +334,13 @@ namespace BinarySerializer.Klonoa.DTP
             // Canon platform
             AddGameObject(GlobalGameObjectType.Cutscene_BeamSource, obj =>
             {
-                obj.Data_TMD = LoadCutsceneAsset<PS1_TMD>(0);
+                obj.Models = new GameObjectData_Model[]
+                {
+                    new GameObjectData_Model()
+                    {
+                        TMD = LoadCutsceneAsset<PS1_TMD>(0),
+                    },
+                };
             });
         }
 
@@ -288,7 +364,13 @@ namespace BinarySerializer.Klonoa.DTP
             // Beam source
             AddGameObject(GlobalGameObjectType.Cutscene_BeamSource, obj =>
             {
-                obj.Data_TMD = LoadCutsceneAsset<PS1_TMD>(0);
+                obj.Models = new GameObjectData_Model[]
+                {
+                    new GameObjectData_Model()
+                    {
+                        TMD = LoadCutsceneAsset<PS1_TMD>(0),
+                    },
+                };
             });
         }
 
@@ -301,16 +383,23 @@ namespace BinarySerializer.Klonoa.DTP
             // Pamela
             AddGameObject(GlobalGameObjectType.Boss_Pamela, obj =>
             {
-                obj.Data_TMD = LoadBossAsset<PS1_TMD>(0, x => x.Pre_HasBones = true); // Note: File 4 is a duplicate of this
                 var anim = LoadBossAsset<PamelaBossModelBoneAnimation_ArchiveFile>(1);
-                obj.Data_ModelAnimations = new ArchiveFile<ModelBoneAnimation_ArchiveFile>()
+
+                obj.Models = new GameObjectData_Model[]
                 {
-                    Files = Enumerable.Range(0, anim.Rotations.Length).Select(x => new ModelBoneAnimation_ArchiveFile
+                    new GameObjectData_Model()
                     {
-                        File_0 = anim.File_0,
-                        Rotations = anim.Rotations[x],
-                        Positions = anim.Positions[x],
-                    }).ToArray()
+                        TMD = LoadBossAsset<PS1_TMD>(0, x => x.Pre_HasBones = true), // Note: File 4 is a duplicate of this
+                        ModelAnimations = new ArchiveFile<ModelBoneAnimation_ArchiveFile>()
+                        {
+                            Files = Enumerable.Range(0, anim.Rotations.Length).Select(x => new ModelBoneAnimation_ArchiveFile
+                            {
+                                File_0 = anim.File_0,
+                                Rotations = anim.Rotations[x],
+                                Positions = anim.Positions[x],
+                            }).ToArray()
+                        }
+                    },
                 };
             });
         }

@@ -11,7 +11,7 @@
         public Pointer MovementPathFOVsPointer { get; set; }
 
         // Serialized from pointers
-        public SectorGameObjects3D[] SectorGameObjects3D { get; set; } // One for each sector
+        public SectorGameObjectDefinitions[] SectorGameObjectDefinition { get; set; } // One for each sector
         public MovementPathCameras MovementPathCameras { get; set; }
         public Data2Structs[] Data2 { get; set; } // One for each sector
         public MovementPathFOVs[] MovementPathFOVs { get; set; } // One for each sector
@@ -25,19 +25,19 @@
 
             s.DoAt(SectorGameObjectsPointer, () =>
             {
-                SectorGameObjects3D = s.SerializeObjectArrayUntil<SectorGameObjects3D>(
-                    obj: SectorGameObjects3D, 
-                    conditionCheckFunc: x => x.Objects[0].Short_0E == -1, 
+                SectorGameObjectDefinition = s.SerializeObjectArrayUntil<SectorGameObjectDefinitions>(
+                    obj: SectorGameObjectDefinition, 
+                    conditionCheckFunc: x => x.ObjectsDefinitions[0].Short_0E == -1, 
                     onPreSerialize: x => x.Pre_ObjectAssets = Pre_ObjectAssets,
-                    name: nameof(SectorGameObjects3D));
+                    name: nameof(SectorGameObjectDefinition));
 
                 var sectorToParse = Loader.GetLoader(s.Context).LevelSector;
-                for (int i = 0; i < SectorGameObjects3D.Length; i++)
+                for (int i = 0; i < SectorGameObjectDefinition.Length; i++)
                 {
                     if (sectorToParse == -1 || sectorToParse == i)
                     {
-                        foreach (var m in SectorGameObjects3D[i].Objects)
-                            m.SerializeDataFiles(s);
+                        foreach (var m in SectorGameObjectDefinition[i].ObjectsDefinitions)
+                            m.SerializeData(s);
                     }
                 }
             });

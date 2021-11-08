@@ -12,7 +12,7 @@ namespace BinarySerializer.Klonoa.DTP
             Loader = loader;
             LoadVRAMData = loadVramData;
 
-            GameObjects = new List<GameObject3D>();
+            GameObjects = new List<GameObjectData>();
         }
 
         // Properties
@@ -25,7 +25,7 @@ namespace BinarySerializer.Klonoa.DTP
         protected BinaryDeserializer Deserializer => Context.Deserializer;
 
         // Data
-        public List<GameObject3D> GameObjects { get; }
+        public List<GameObjectData> GameObjects { get; }
 
         protected T LoadAsset<T>(ArchiveFile pack, int index, Action<T> onPreSerialize = null, string name = null)
             where T : BinarySerializable, new()
@@ -45,11 +45,10 @@ namespace BinarySerializer.Klonoa.DTP
             return LoadAsset<T>(LevelPack.BossAssets, index, onPreSerialize, nameof(LevelPack.BossAssets));
         }
 
-        protected void AddGameObject(GlobalGameObjectType type, Action<GameObject3D> initAction)
+        protected void AddGameObject(GlobalGameObjectType type, Action<GameObjectData> initAction)
         {
-            var obj = new GameObject3D()
+            var obj = new GameObjectData()
             {
-                PrimaryType = PrimaryObjectType.CutsceneObject,
                 GlobalGameObjectType = type,
             };
 
