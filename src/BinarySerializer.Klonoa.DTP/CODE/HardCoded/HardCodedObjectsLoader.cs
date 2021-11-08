@@ -139,15 +139,11 @@ namespace BinarySerializer.Klonoa.DTP
                 var modelAnim = LoadCutsceneAsset<KaralModelBoneAnimation_ArchiveFile>(animIndex);
 
                 // Convert to normal model animation format
-                obj.Models[0].ModelAnimations = new ArchiveFile<ModelBoneAnimation_ArchiveFile>()
+                obj.Models[0].ModelBoneAnimations = modelAnim.Rotations.Select(x => new GameObjectData_ModelBoneAnimation
                 {
-                    Files = modelAnim.Rotations.Select(x => new ModelBoneAnimation_ArchiveFile
-                    {
-                        File_0 = modelAnim.File_0,
-                        Rotations = x,
-                        Positions = modelAnim.Positions
-                    }).ToArray()
-                };
+                    BoneRotations = x,
+                    BonePositions = modelAnim.Positions
+                }).ToArray();
 
                 // Some palette (Karal only)
                 if (palIndex != -1)
@@ -390,18 +386,102 @@ namespace BinarySerializer.Klonoa.DTP
                     new GameObjectData_Model()
                     {
                         TMD = LoadBossAsset<PS1_TMD>(0, x => x.Pre_HasBones = true), // Note: File 4 is a duplicate of this
-                        ModelAnimations = new ArchiveFile<ModelBoneAnimation_ArchiveFile>()
+                        ModelBoneAnimations = Enumerable.Range(0, anim.Rotations.Length).Select(x => new GameObjectData_ModelBoneAnimation
                         {
-                            Files = Enumerable.Range(0, anim.Rotations.Length).Select(x => new ModelBoneAnimation_ArchiveFile
-                            {
-                                File_0 = anim.File_0,
-                                Rotations = anim.Rotations[x],
-                                Positions = anim.Positions[x],
-                            }).ToArray()
-                        }
+                            BoneRotations = anim.Rotations[x],
+                            BonePositions = anim.Positions[x],
+                        }).ToArray()
                     },
                 };
+
+                // TODO: Files 3 and 5 have palettes
             });
+
+            // TODO: Sprites - for Seadoph?
+            LoadBossAsset<ArchiveFile<Sprites_ArchiveFile>>(2);
+        }
+
+        private void LoadBossObjects_11_0()
+        {
+            // Gelg Bolm
+            AddGameObject(GlobalGameObjectType.Boss_GelgBolm, obj =>
+            {
+                var anim = LoadBossAsset<GelgBolmBossModelBoneAnimation_ArchiveFile>(12);
+
+                obj.Models = new GameObjectData_Model[]
+                {
+                    // Legs
+                    new GameObjectData_Model()
+                    {
+                        TMD = LoadBossAsset<PS1_TMD>(8, x => x.Pre_HasBones = true), // 10 bones
+
+                        // Note: This animation includes the other models as well
+                        ModelBoneAnimations = Enumerable.Range(0, anim.Rotations.Length).Select(x => new GameObjectData_ModelBoneAnimation
+                        {
+                            BoneRotations = anim.Rotations[x],
+                            BonePositions = new VectorAnimation_File
+                            {
+                                ObjectsCount = 14,
+                                FramesCount = anim.ModelPositions[x].FramesCount,
+                                Vectors = Enumerable.Range(0, anim.ModelPositions[x].FramesCount).Select(frame =>
+                                {
+                                    return new KlonoaVector16[]
+                                    {
+                                        anim.ModelPositions[x].Vectors[frame][0] + anim.Positions.Vectors[0][0],
+                                    }.Concat(anim.Positions.Vectors[0].Skip(1).Take(10)).Concat(new KlonoaVector16[]
+                                    {
+                                        anim.ModelPositions[x].Vectors[frame][1] + anim.Positions.Vectors[0][11],
+                                        anim.ModelPositions[x].Vectors[frame][2] + anim.Positions.Vectors[0][12],
+                                        anim.ModelPositions[x].Vectors[frame][3] + anim.Positions.Vectors[0][13],
+                                    }).ToArray();
+                                }).ToArray(),
+                            },
+                        }).ToArray()
+                    },
+
+                    // Body inside
+                    new GameObjectData_Model()
+                    {
+                        TMD = LoadBossAsset<PS1_TMD>(9),
+                    },
+
+                    // Shell 1
+                    new GameObjectData_Model()
+                    {
+                        TMD = LoadBossAsset<PS1_TMD>(10),
+                    },
+
+                    // Shell 2
+                    new GameObjectData_Model()
+                    {
+                        TMD = LoadBossAsset<PS1_TMD>(11),
+                    },
+                };
+
+                //obj.Position = new KlonoaVector16(0x500000 >> 12, 0x300000 >> 12, 0x200000 >> 12);
+                obj.Position = new KlonoaVector16(0, -50, 0); // Custom
+            });
+
+            // Attack ball
+            AddGameObject(GlobalGameObjectType.Boss_GelgBolmAttack, obj =>
+            {
+                obj.Models = new GameObjectData_Model[]
+                {
+                    new GameObjectData_Model()
+                    {
+                        TMD = LoadBossAsset<PS1_TMD>(14),
+                    },
+                };
+                obj.Position = new KlonoaVector16(1280, -768, 640); // Custom position so it's out of the way
+            });
+
+            // TODO: File 5 has TIM of some eye texture
+            // TODO: File 13 has TIM archive - tex animation?
+            // TODO: Files 15, 18, 19 has unknown data belonging to the TMDs in files 9, 10, 11
+            // TODO: File 16 has an archive with 4 TMDs
+            // TODO: File 17 has what seems to palette data
+            // TODO: File 20 has an archive with 3+2 TMDs
+            // TODO: File 21 has unknown data
         }
 
         #endregion
@@ -451,6 +531,7 @@ namespace BinarySerializer.Klonoa.DTP
 
                 case 11 when LevelSector is 0:
                     LoadCutsceneObjects_11_0();
+                    LoadBossObjects_11_0();
                     break;
 
                 case 13 when LevelSector is 7:

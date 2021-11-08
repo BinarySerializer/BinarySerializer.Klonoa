@@ -25,10 +25,10 @@
                 FramesCount = Pre_FramesCount.Value;
             }
 
-            Vectors ??= new KlonoaVector16[FramesCount][];
+            Vectors ??= new KlonoaVector16[Pre_FramesCount ?? FramesCount][];
 
             for (int i = 0; i < Vectors.Length; i++)
-                Vectors[i] = s.SerializeObjectArray<KlonoaVector16>(Vectors[i], ObjectsCount, name: $"{nameof(Vectors)}[{i}]");
+                Vectors[i] = s.SerializeObjectArray<KlonoaVector16>(Vectors[i], Pre_ObjectsCount ?? ObjectsCount, name: $"{nameof(Vectors)}[{i}]");
         }
     }
 }

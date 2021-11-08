@@ -1,6 +1,6 @@
 ﻿namespace BinarySerializer.Klonoa.DTP
 {
-    public class ModelBoneAnimation_ArchiveFile : ArchiveFile
+    public class RongoLangoModelBoneAnimation_ArchiveFile : ArchiveFile
     {
         public RawData_File File_0 { get; set; }
         public VectorAnimationKeyFrames_File Rotations { get; set; }

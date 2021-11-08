@@ -6,7 +6,7 @@ namespace BinarySerializer.Klonoa.DTP
     {
         public PS1_TMD TMD { get; set; }
         public UnknownModelObjectsData_File UnknownModelObjectsData { get; set; }
-        public ArchiveFile<ModelBoneAnimation_ArchiveFile> ModelAnimations { get; set; }
+        public ArchiveFile<RongoLangoModelBoneAnimation_ArchiveFile> RongoLangoModelAnimations { get; set; }
         public GameObjectData_ModelVertexAnimation VertexAnimation { get; set; }
 
         public ModelAnimation_ArchiveFile LocalTransform { get; set; }
@@ -15,6 +15,7 @@ namespace BinarySerializer.Klonoa.DTP
         public KlonoaVector16 Position { get; set; }
         public KlonoaVector16 Rotation { get; set; }
 
+        public GameObjectData_ModelBoneAnimation[] ModelBoneAnimations { get; set; }
         public GameObjectData_ConstantRotation ConstantRotation { get; set; }
 
         public float AnimatedLocalTransformSpeed { get; set; } = 1;

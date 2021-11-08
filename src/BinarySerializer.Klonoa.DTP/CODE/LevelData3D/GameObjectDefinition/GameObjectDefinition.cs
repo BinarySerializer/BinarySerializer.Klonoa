@@ -201,7 +201,7 @@ namespace BinarySerializer.Klonoa.DTP
                     CreateModels(1);
 
                     Data.Models[0].TMD = SerializeDataFile<PS1_TMD>(s, Data.Models[0].TMD, modelIndex: 0, name: nameof(GameObjectData_Model.TMD));
-                    Data.Models[0].ModelAnimations = SerializeDataFile<ArchiveFile<ModelBoneAnimation_ArchiveFile>>(s, Data.Models[0].ModelAnimations, modelIndex: 0, name: nameof(GameObjectData_Model.ModelAnimations));
+                    Data.Models[0].RongoLangoModelAnimations = SerializeDataFile<ArchiveFile<RongoLangoModelBoneAnimation_ArchiveFile>>(s, Data.Models[0].RongoLangoModelAnimations, modelIndex: 0, name: nameof(GameObjectData_Model.RongoLangoModelAnimations));
                     Data.MovementPaths = SerializeDataFile<MovementPath_File>(s, Data.MovementPaths, name: nameof(Data.MovementPaths));
                     SkipDataFile<RawData_File>(s); // TODO: Unknown data
                     SkipDataFile<RawData_File>(s); // TODO: Unknown data

@@ -98,5 +98,7 @@
         Cutscene_BeamSource,
 
         Boss_Pamela,
+        Boss_GelgBolm,
+        Boss_GelgBolmAttack,
     }
 }

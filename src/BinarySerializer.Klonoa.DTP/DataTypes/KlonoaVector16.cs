@@ -27,5 +27,8 @@
             Y = s.Serialize<short>(Y, name: nameof(Y));
             Z = s.Serialize<short>(Z, name: nameof(Z));
         }
+
+        public static KlonoaVector16 operator +(KlonoaVector16 v1, KlonoaVector16 v2) => 
+            new KlonoaVector16((short)(v1.X + v2.X), (short)(v1.Y + v2.Y), (short)(v1.Z + v2.Z));
     }
 }
