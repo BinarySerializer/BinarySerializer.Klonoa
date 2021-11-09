@@ -460,6 +460,18 @@ namespace BinarySerializer.Klonoa.DTP
 
                 //obj.Position = new KlonoaVector16(0x500000 >> 12, 0x300000 >> 12, 0x200000 >> 12);
                 obj.Position = new KlonoaVector16(0, -50, 0); // Custom
+
+                // What is the below data for? Appears unused?
+                obj.TIM = LoadBossAsset<PS1_TIM>(5);
+                obj.TIMArchive = LoadBossAsset<TIM_ArchiveFile>(13);
+
+                if (LoadVRAMData)
+                {
+                    Loader.AddToVRAM(obj.TIM);
+
+                    foreach (var t in obj.TIMArchive.Files)
+                        Loader.AddToVRAM(t);
+                }
             });
 
             // Attack ball
@@ -475,13 +487,64 @@ namespace BinarySerializer.Klonoa.DTP
                 obj.Position = new KlonoaVector16(1280, -768, 640); // Custom position so it's out of the way
             });
 
-            // TODO: File 5 has TIM of some eye texture
-            // TODO: File 13 has TIM archive - tex animation?
-            // TODO: Files 15, 18, 19 has unknown data belonging to the TMDs in files 9, 10, 11
-            // TODO: File 16 has an archive with 4 TMDs
+            // TODO: Files 15, 18, 19 has vertex anim data belonging to the TMDs in files 9, 10, 11
+            // 0-3: Pairs of vertices/normals
+            // 4-> ??
+            // 10-> ??
+            LoadBossAsset<RawData_ArchiveFile>(15);
+            LoadBossAsset<RawData_ArchiveFile>(18);
+            LoadBossAsset<RawData_ArchiveFile>(19);
+            
+            // Background leafs
+            var leaves = LoadBossAsset<GelgBolmBossLeaves_ArchiveFile>(16);
+            var leafPositions = new KlonoaVector16[]
+            {
+                new KlonoaVector16(-1088, 768, 2016),
+                new KlonoaVector16(-179, 1216, 1344),
+                new KlonoaVector16(441, 723, 2093),
+                new KlonoaVector16(1440, 1094, 1798),
+            };
+
+            for (int i = 0; i < 4; i++)
+            {
+                AddGameObject(GlobalGameObjectType.Boss_GelgBolmLeaf, obj =>
+                {
+                    obj.Models = new GameObjectData_Model[]
+                    {
+                        new GameObjectData_Model()
+                        {
+                            TMD = leaves.Models[i]
+                        },
+                    };
+                    obj.Position = leafPositions[i];
+                    // TODO: Vertex animations
+                });
+            }
+
             // TODO: File 17 has what seems to palette data
-            // TODO: File 20 has an archive with 3+2 TMDs
+            LoadBossAsset<RawData_File>(17);
+
+            // TODO: What are the two last models? White rectangles?
+            var totemModels = LoadBossAsset<ArchiveFile<PS1_TMD>>(20); // 3+2
+            var totemModelPositions = new KlonoaVector16[]
+            {
+                new KlonoaVector16(0, 0, 0),
+                new KlonoaVector16(-90, -2298, 0),
+                new KlonoaVector16(83, -2298, 0),
+            };
+
+            AddGameObject(GlobalGameObjectType.Boss_GelgBolmTotem, obj =>
+            {
+                obj.Models = totemModels.Files.Take(3).Select((x, i) => new GameObjectData_Model()
+                {
+                    TMD = x,
+                    Position = totemModelPositions[i]
+                }).ToArray();
+                obj.Position = new KlonoaVector16(0, 1530, 851);
+            });
+
             // TODO: File 21 has unknown data
+            LoadBossAsset<RawData_File>(21);
         }
 
         #endregion

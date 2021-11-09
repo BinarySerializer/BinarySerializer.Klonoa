@@ -100,5 +100,7 @@
         Boss_Pamela,
         Boss_GelgBolm,
         Boss_GelgBolmAttack,
+        Boss_GelgBolmLeaf,
+        Boss_GelgBolmTotem,
     }
 }
