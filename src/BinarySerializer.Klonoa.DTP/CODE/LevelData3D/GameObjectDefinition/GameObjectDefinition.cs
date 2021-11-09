@@ -200,13 +200,19 @@ namespace BinarySerializer.Klonoa.DTP
                 case GlobalGameObjectType.RongoLango:
                     CreateModels(1);
 
-                    Data.Models[0].TMD = SerializeDataFile<PS1_TMD>(s, Data.Models[0].TMD, modelIndex: 0, name: nameof(GameObjectData_Model.TMD));
+                    Data.Models[0].TMD = SerializeDataFile<PS1_TMD>(s, Data.Models[0].TMD, onPreSerialize: x => x.Pre_HasBones = true, modelIndex: 0, name: nameof(GameObjectData_Model.TMD));
                     Data.Models[0].RongoLangoModelAnimations = SerializeDataFile<ArchiveFile<RongoLangoModelBoneAnimation_ArchiveFile>>(s, Data.Models[0].RongoLangoModelAnimations, modelIndex: 0, name: nameof(GameObjectData_Model.RongoLangoModelAnimations));
                     Data.MovementPaths = SerializeDataFile<MovementPath_File>(s, Data.MovementPaths, name: nameof(Data.MovementPaths));
                     SkipDataFile<RawData_File>(s); // TODO: Unknown data
                     SkipDataFile<RawData_File>(s); // TODO: Unknown data
                     SkipDataFile<RawData_ArchiveFile>(s); // TODO: Unknown data
                     SkipDataFile<RawData_ArchiveFile>(s); // TODO: Palettes (for when hitting the boss)
+
+                    Data.Models[0].ModelBoneAnimations = Data.Models[0].RongoLangoModelAnimations.Files.Select(x => new GameObjectData_ModelBoneAnimation
+                    {
+                        BoneRotations = x.Rotations,
+                        BonePositions = x.Positions,
+                    }).ToArray();
                     break;
 
                 case GlobalGameObjectType.Bell:

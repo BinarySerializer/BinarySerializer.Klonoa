@@ -2,8 +2,10 @@
 
 namespace BinarySerializer.Klonoa.DTP
 {
-    public class GelgBolmBossModelBoneAnimation_ArchiveFile : ArchiveFile
+    public class GelgBolmBaladiumBossModelBoneAnimation_ArchiveFile : ArchiveFile
     {
+        public ushort Pre_ModelsCount { get; set; }
+
         public RawData_File File_0 { get; set; }
         public VectorAnimation_File Positions { get; set; }
         public VectorAnimationKeyFrames_File[] Rotations { get; set; }
@@ -23,7 +25,7 @@ namespace BinarySerializer.Klonoa.DTP
                 Rotations[i] = SerializeFile<VectorAnimationKeyFrames_File>(s, Rotations[i], 2 + (i * 2), name: $"{nameof(Rotations)}[{i}]");
                 ModelPositions[i] = SerializeFile<VectorAnimation_File>(s, ModelPositions[i], 2 + (i * 2) + 1, onPreSerialize: x =>
                 {
-                    x.Pre_ObjectsCount = 4;
+                    x.Pre_ObjectsCount = Pre_ModelsCount;
                 }, name: $"{nameof(ModelPositions)}[{i}]");
             }
 

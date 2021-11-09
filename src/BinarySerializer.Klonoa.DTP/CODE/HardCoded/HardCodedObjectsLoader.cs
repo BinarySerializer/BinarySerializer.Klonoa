@@ -406,7 +406,7 @@ namespace BinarySerializer.Klonoa.DTP
             // Gelg Bolm
             AddGameObject(GlobalGameObjectType.Boss_GelgBolm, obj =>
             {
-                var anim = LoadBossAsset<GelgBolmBossModelBoneAnimation_ArchiveFile>(12);
+                var anim = LoadBossAsset<GelgBolmBaladiumBossModelBoneAnimation_ArchiveFile>(12, x => x.Pre_ModelsCount = 4);
 
                 obj.Models = new GameObjectData_Model[]
                 {
@@ -419,23 +419,8 @@ namespace BinarySerializer.Klonoa.DTP
                         ModelBoneAnimations = Enumerable.Range(0, anim.Rotations.Length).Select(x => new GameObjectData_ModelBoneAnimation
                         {
                             BoneRotations = anim.Rotations[x],
-                            BonePositions = new VectorAnimation_File
-                            {
-                                ObjectsCount = 14,
-                                FramesCount = anim.ModelPositions[x].FramesCount,
-                                Vectors = Enumerable.Range(0, anim.ModelPositions[x].FramesCount).Select(frame =>
-                                {
-                                    return new KlonoaVector16[]
-                                    {
-                                        anim.ModelPositions[x].Vectors[frame][0] + anim.Positions.Vectors[0][0],
-                                    }.Concat(anim.Positions.Vectors[0].Skip(1).Take(10)).Concat(new KlonoaVector16[]
-                                    {
-                                        anim.ModelPositions[x].Vectors[frame][1] + anim.Positions.Vectors[0][11],
-                                        anim.ModelPositions[x].Vectors[frame][2] + anim.Positions.Vectors[0][12],
-                                        anim.ModelPositions[x].Vectors[frame][3] + anim.Positions.Vectors[0][13],
-                                    }).ToArray();
-                                }).ToArray(),
-                            },
+                            BonePositions = anim.Positions,
+                            ModelPositions = anim.ModelPositions[x],
                         }).ToArray()
                     },
 
@@ -547,6 +532,41 @@ namespace BinarySerializer.Klonoa.DTP
             LoadBossAsset<RawData_File>(21);
         }
 
+        private void LoadBossObjects_14_0()
+        {
+            // Baladium
+            AddGameObject(GlobalGameObjectType.Boss_Baladium, obj =>
+            {
+                var anim = LoadBossAsset<GelgBolmBaladiumBossModelBoneAnimation_ArchiveFile>(9, x => x.Pre_ModelsCount = 1);
+
+                obj.Models = new GameObjectData_Model[]
+                {
+                    new GameObjectData_Model()
+                    {
+                        TMD = LoadBossAsset<PS1_TMD>(2, x => x.Pre_HasBones = true),
+
+                        ModelBoneAnimations = Enumerable.Range(0, anim.Rotations.Length).Select(x => new GameObjectData_ModelBoneAnimation
+                        {
+                            BoneRotations = anim.Rotations[x],
+                            BonePositions = anim.Positions,
+                            ModelPositions = anim.ModelPositions[x],
+                        }).ToArray()
+                    }
+                };
+
+                // TODO: File 9: Archive
+                // TODO: File 18: VRAM data
+            });
+
+            // TODO: File 2: TMD
+            // TODO: File 6: TMD
+            // TODO: File 8: Archive
+            // TODO: File 15: Archive
+            // TODO: File 17: Archive
+            // TODO: File 20: TMD
+            // TODO: File 23: ?
+        }
+
         #endregion
 
         #region Public Methods
@@ -605,6 +625,7 @@ namespace BinarySerializer.Klonoa.DTP
 
                 case 14 when LevelSector is 0:
                     LoadCutsceneObjects_14_0();
+                    LoadBossObjects_14_0();
                     break;
 
                 case 14 when LevelSector is 1:

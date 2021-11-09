@@ -102,5 +102,6 @@
         Boss_GelgBolmAttack,
         Boss_GelgBolmLeaf,
         Boss_GelgBolmTotem,
+        Boss_Baladium,
     }
 }
