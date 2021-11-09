@@ -406,7 +406,7 @@ namespace BinarySerializer.Klonoa.DTP
             // Gelg Bolm
             AddGameObject(GlobalGameObjectType.Boss_GelgBolm, obj =>
             {
-                var anim = LoadBossAsset<GelgBolmBaladiumBossModelBoneAnimation_ArchiveFile>(12, x => x.Pre_ModelsCount = 4);
+                var anim = LoadBossAsset<CommonBossModelBoneAnimation_ArchiveFile>(12, x => x.Pre_ModelsCount = 4);
 
                 obj.Models = new GameObjectData_Model[]
                 {
@@ -537,7 +537,7 @@ namespace BinarySerializer.Klonoa.DTP
             // Baladium
             AddGameObject(GlobalGameObjectType.Boss_Baladium, obj =>
             {
-                var anim = LoadBossAsset<GelgBolmBaladiumBossModelBoneAnimation_ArchiveFile>(9, x => x.Pre_ModelsCount = 1);
+                var anim = LoadBossAsset<CommonBossModelBoneAnimation_ArchiveFile>(9, x => x.Pre_ModelsCount = 1);
 
                 obj.Models = new GameObjectData_Model[]
                 {
@@ -550,21 +550,95 @@ namespace BinarySerializer.Klonoa.DTP
                             BoneRotations = anim.Rotations[x],
                             BonePositions = anim.Positions,
                             ModelPositions = anim.ModelPositions[x],
-                        }).ToArray()
+                        }).ToArray(),
+
+                        Rotation = new KlonoaVector16(0, 0x800, 0) // Custom
                     }
                 };
 
-                // TODO: File 9: Archive
+                obj.Position = new KlonoaVector16(0, -0x300000 >> 12, 0xa00000 >> 12);
+
                 // TODO: File 18: VRAM data
             });
 
-            // TODO: File 2: TMD
-            // TODO: File 6: TMD
-            // TODO: File 8: Archive
-            // TODO: File 15: Archive
-            // TODO: File 17: Archive
-            // TODO: File 20: TMD
-            // TODO: File 23: ?
+            // Obstacles
+            AddGameObject(GlobalGameObjectType.Boss_BaladiumObstacle, obj =>
+            {
+                obj.Models = new GameObjectData_Model[]
+                {
+                    new GameObjectData_Model()
+                    {
+                        TMD = LoadBossAsset<PS1_TMD>(6),
+                        Position = new KlonoaVector16(0, -500, 1000), // Custom
+                    },
+                    new GameObjectData_Model()
+                    {
+                        TMD = LoadBossAsset<PS1_TMD>(20),
+                        Position = new KlonoaVector16(300, -500, 1000), // Custom
+                    },
+                };
+            });
+
+            // Attack part
+            AddGameObject(GlobalGameObjectType.Boss_BaladiumAttackPart, obj =>
+            {
+                var models = LoadBossAsset<ArchiveFile<PS1_TMD>>(8);
+
+                obj.Models = models.Files.Select(x => new GameObjectData_Model()
+                {
+                    TMD = x
+                }).ToArray();
+
+                obj.Position = new KlonoaVector16(600, -500, 1000); // Custom
+            });
+
+            // TODO: Palettes
+            LoadBossAsset<RawData_ArchiveFile>(15); // Palettes
+
+            // TODO: Sprites
+            LoadBossAsset<ArchiveFile<Sprites_ArchiveFile>>(17);
+
+            // TODO: Palette
+            LoadBossAsset<RawData_File>(23); // Palette
+        }
+
+        private void LoadBossObjects_17_0()
+        {
+            // Joka
+            AddGameObject(GlobalGameObjectType.Boss_Joka, obj =>
+            {
+                var anim = LoadBossAsset<CommonBossModelBoneAnimation_ArchiveFile>(1, x =>
+                {
+                    x.Pre_ModelsCount = 3;
+                    x.DoModelPositionsComeFirst = true;
+                    x.DoesPositionsFileHaveHeader = true;
+                });
+
+                obj.Models = new GameObjectData_Model[]
+                {
+                    // Body
+                    new GameObjectData_Model()
+                    {
+                        TMD = LoadBossAsset<PS1_TMD>(0, x => x.Pre_HasBones = true),
+                        ModelBoneAnimations = Enumerable.Range(0, anim.Rotations.Length).Select(x => new GameObjectData_ModelBoneAnimation
+                        {
+                            BoneRotations = anim.Rotations[x],
+                            BonePositions = anim.Positions,
+                            ModelPositions = anim.ModelPositions[x],
+                        }).ToArray(),
+                    },
+
+                    // Hands
+                    new GameObjectData_Model()
+                    {
+                        TMD = LoadBossAsset<PS1_TMD>(2),
+                    },
+                    new GameObjectData_Model()
+                    {
+                        TMD = LoadBossAsset<PS1_TMD>(3),
+                    },
+                };
+            });
         }
 
         #endregion
@@ -640,6 +714,7 @@ namespace BinarySerializer.Klonoa.DTP
 
                 case 17 when LevelSector is 0:
                     LoadCutsceneObjects_17_0();
+                    LoadBossObjects_17_0();
                     break;
 
                 case 18 when LevelSector is 0:

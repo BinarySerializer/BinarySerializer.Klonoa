@@ -103,5 +103,8 @@
         Boss_GelgBolmLeaf,
         Boss_GelgBolmTotem,
         Boss_Baladium,
+        Boss_BaladiumObstacle,
+        Boss_BaladiumAttackPart,
+        Boss_Joka,
     }
 }
