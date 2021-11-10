@@ -423,15 +423,7 @@ namespace BinarySerializer.Klonoa.DTP
                         TMD = LoadBossAsset<PS1_TMD>(8, x => x.Pre_HasBones = true), // 10 bones
 
                         // Note: This animation includes the other models as well
-                        ModelBoneAnimations = new GameObjectData_ModelBoneAnimations()
-                        {
-                            InitialBonePositions = anim.Positions,
-                            Animations = Enumerable.Range(0, anim.Rotations.Length).Select(x => new GameObjectData_ModelBoneAnimation
-                            {
-                                BoneRotations = anim.Rotations[x],
-                                ModelPositions = anim.ModelPositions[x],
-                            }).ToArray()
-                        }
+                        ModelBoneAnimations = GameObjectData_ModelBoneAnimations.FromCommonBossModelBoneAnimation(anim)
                     },
 
                     // Body inside
@@ -554,17 +546,7 @@ namespace BinarySerializer.Klonoa.DTP
                     new GameObjectData_Model()
                     {
                         TMD = LoadBossAsset<PS1_TMD>(2, x => x.Pre_HasBones = true),
-
-                        ModelBoneAnimations = new GameObjectData_ModelBoneAnimations()
-                        {
-                            InitialBonePositions = anim.Positions,
-                            Animations = Enumerable.Range(0, anim.Rotations.Length).Select(x => new GameObjectData_ModelBoneAnimation
-                            {
-                                BoneRotations = anim.Rotations[x],
-                                ModelPositions = anim.ModelPositions[x],
-                            }).ToArray()
-                        },
-
+                        ModelBoneAnimations = GameObjectData_ModelBoneAnimations.FromCommonBossModelBoneAnimation(anim),
                         Rotation = new KlonoaVector16(0, 0x800, 0) // Custom
                     }
                 };
@@ -633,15 +615,7 @@ namespace BinarySerializer.Klonoa.DTP
                     new GameObjectData_Model()
                     {
                         TMD = LoadBossAsset<PS1_TMD>(0, x => x.Pre_HasBones = true),
-                        ModelBoneAnimations = new GameObjectData_ModelBoneAnimations()
-                        {
-                            InitialBonePositions = anim.Positions,
-                            Animations = Enumerable.Range(0, anim.Rotations.Length).Select(x => new GameObjectData_ModelBoneAnimation
-                            {
-                                BoneRotations = anim.Rotations[x],
-                                ModelPositions = anim.ModelPositions[x],
-                            }).ToArray()
-                        },
+                        ModelBoneAnimations = GameObjectData_ModelBoneAnimations.FromCommonBossModelBoneAnimation(anim),
                     },
 
                     // Hands
@@ -672,15 +646,7 @@ namespace BinarySerializer.Klonoa.DTP
                     new GameObjectData_Model()
                     {
                         TMD = LoadBossAsset<PS1_TMD>(4, x => x.Pre_HasBones = true),
-                        ModelBoneAnimations = new GameObjectData_ModelBoneAnimations()
-                        {
-                            InitialBonePositions = anim.Positions,
-                            Animations = Enumerable.Range(0, anim.Rotations.Length).Select(x => new GameObjectData_ModelBoneAnimation
-                            {
-                                BoneRotations = anim.Rotations[x],
-                                ModelPositions = anim.ModelPositions[x],
-                            }).ToArray()
-                        },
+                        ModelBoneAnimations = GameObjectData_ModelBoneAnimations.FromCommonBossModelBoneAnimation(anim),
                     },
 
                     // Claws
@@ -737,6 +703,152 @@ namespace BinarySerializer.Klonoa.DTP
 
             // TODO: File 16 has sprites
             LoadBossAsset<ArchiveFile<Sprites_ArchiveFile>>(16);
+        }
+
+        private void LoadBossObjects_20_1()
+        {
+            var mainModels = LoadBossAsset<ArchiveFile<PS1_TMD>>(0);
+
+            // Ghadius head and hands
+            AddGameObject(GlobalGameObjectType.Boss_Ghadius, obj =>
+            {
+                var anim = LoadBossAsset<CommonBossModelBoneAnimation_ArchiveFile>(5, x =>
+                {
+                    x.Pre_ModelsCount = 3;
+                });
+
+                obj.Models = new GameObjectData_Model[]
+                {
+                    // Head
+                    new GameObjectData_Model()
+                    {
+                        TMD = mainModels.Files[0],
+                        ModelBoneAnimations = GameObjectData_ModelBoneAnimations.FromCommonBossModelBoneAnimation(anim)
+                    },
+
+                    // Hands
+                    new GameObjectData_Model()
+                    {
+                        TMD = mainModels.Files[1]
+                    },
+                    new GameObjectData_Model()
+                    {
+                        TMD = mainModels.Files[2]
+                    },
+                };
+
+                obj.Position = new KlonoaVector16(0, 0, 2500); // Custom
+                obj.Rotation = new KlonoaVector16(0, 0x800, 0); // Custom
+            });
+
+            // Ghadius other parts
+            AddGameObject(GlobalGameObjectType.Boss_GhadiusParts, obj =>
+            {
+                obj.Models = new GameObjectData_Model[]
+                {
+                    // Red head
+                    new GameObjectData_Model()
+                    {
+                        TMD = mainModels.Files[3],
+                        Position = new KlonoaVector16(2000, 0, 2500), // Custom
+                        Rotation = new KlonoaVector16(0, 0x800, 0), // Custom
+                    },
+
+                    // Back of heads
+                    new GameObjectData_Model()
+                    {
+                        TMD = mainModels.Files[4],
+                        Position = new KlonoaVector16(3000, 0, 2500), // Custom
+                        Rotation = new KlonoaVector16(0, 0x800, 0), // Custom
+                    },
+                    new GameObjectData_Model()
+                    {
+                        TMD = mainModels.Files[5],
+                        Position = new KlonoaVector16(4000, 0, 2500), // Custom
+                        Rotation = new KlonoaVector16(0, 0x800, 0), // Custom
+                    },
+                };
+            });
+
+            // Ghadius body
+            AddGameObject(GlobalGameObjectType.Boss_GhadiusParts, obj =>
+            {
+                // TODO: Other files in archive are vertex animations
+                var archive = LoadBossAsset<RawData_ArchiveFile>(1);
+
+                obj.Models = new GameObjectData_Model[]
+                {
+                    new GameObjectData_Model()
+                    {
+                        TMD = archive.SerializeFile<PS1_TMD>(Deserializer, default, 0),
+                    },
+                };
+
+                obj.Position = new KlonoaVector16(0, 0, 2500); // Custom
+                obj.Rotation = new KlonoaVector16(0, 0x800, 0); // Custom
+            });
+
+            // Attack part
+            AddGameObject(GlobalGameObjectType.Boss_GhadiusAttack, obj =>
+            {
+                var tmds = LoadBossAsset<ArchiveFile<PS1_TMD>>(3);
+
+                obj.Models = tmds.Files.Select(x => new GameObjectData_Model()
+                {
+                    TMD = x,
+
+                    Position = new KlonoaVector16(5000, 0, 2500), // Custom
+                    Rotation = new KlonoaVector16(0, 0x800, 0), // Custom
+                }).ToArray();
+            });
+
+            // TODO: File 6 has sprites
+            LoadBossAsset<ArchiveFile<Sprites_ArchiveFile>>(6);
+
+            var tmds7 = LoadBossAsset<ArchiveFile<PS1_TMD>>(7);
+
+            AddGameObject(GlobalGameObjectType.Boss_GhadiusAttack, obj =>
+            {
+                obj.Models = new GameObjectData_Model[]
+                {
+                    new GameObjectData_Model()
+                    {
+                        TMD = tmds7.Files[0],
+
+                        Position = new KlonoaVector16(6000, 0, 2500), // Custom
+                        Rotation = new KlonoaVector16(0, 0x800, 0), // Custom
+                    }
+                };
+            });
+
+            AddGameObject(GlobalGameObjectType.Boss_GhadiusAttack, obj =>
+            {
+                obj.Models = new GameObjectData_Model[]
+                {
+                    new GameObjectData_Model()
+                    {
+                        TMD = tmds7.Files[1],
+
+                        Position = new KlonoaVector16(6500, 0, 2500), // Custom
+                        Rotation = new KlonoaVector16(0, 0x800, 0), // Custom
+                    }
+                };
+            });
+
+            // TODO: File 9 has palettes
+            LoadBossAsset<RawData_File>(9);
+
+            // TODO: File 11 has TIM
+            LoadBossAsset<PS1_TIM>(11);
+
+            // TODO: File 12 has TIM
+            LoadBossAsset<PS1_TIM>(12);
+
+            // TODO: File 13 has texture data
+            LoadBossAsset<RawData_File>(13);
+
+            // TODO: File 14 has palettes
+            LoadBossAsset<RawData_File>(14);
         }
 
         #endregion
@@ -820,6 +932,10 @@ namespace BinarySerializer.Klonoa.DTP
                     break;
 
                 // TODO: 19 0 has VRAM textures for end transition
+
+                case 20 when LevelSector is 1:
+                    LoadBossObjects_20_1();
+                    break;
 
                 case 21 when LevelSector is 0:
                     LoadCutsceneObjects_21_0();

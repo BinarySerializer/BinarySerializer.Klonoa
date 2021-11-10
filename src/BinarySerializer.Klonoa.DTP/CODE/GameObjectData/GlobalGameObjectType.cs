@@ -109,5 +109,8 @@
         Boss_JokaCreature,
         Boss_JokaTransformation,
         Boss_Geometry,
+        Boss_Ghadius,
+        Boss_GhadiusParts,
+        Boss_GhadiusAttack,
     }
 }
