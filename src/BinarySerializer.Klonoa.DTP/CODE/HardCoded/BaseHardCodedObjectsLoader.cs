@@ -27,22 +27,22 @@ namespace BinarySerializer.Klonoa.DTP
         // Data
         public List<GameObjectData> GameObjects { get; }
 
-        protected T LoadAsset<T>(ArchiveFile pack, int index, Action<T> onPreSerialize = null, string name = null)
+        protected T LoadAsset<T>(ArchiveFile pack, int index, Action<T> onPreSerialize = null, IStreamEncoder encoder = null, string name = null)
             where T : BinarySerializable, new()
         {
-            return pack.SerializeFile<T>(Deserializer, default, index, onPreSerialize: onPreSerialize, name: $"{name}[{index}]");
+            return pack.SerializeFile<T>(Deserializer, default, index, onPreSerialize: onPreSerialize, fileEncoder: encoder, name: $"{name}[{index}]");
         }
 
-        protected T LoadCutsceneAsset<T>(int index, Action<T> onPreSerialize = null)
+        protected T LoadCutsceneAsset<T>(int index, Action<T> onPreSerialize = null, IStreamEncoder encoder = null)
             where T : BinarySerializable, new()
         {
-            return LoadAsset<T>(LevelPack.CutscenePack.CutsceneAssets, index, onPreSerialize, nameof(LevelPack.CutscenePack.CutsceneAssets));
+            return LoadAsset<T>(LevelPack.CutscenePack.CutsceneAssets, index, onPreSerialize, encoder, nameof(LevelPack.CutscenePack.CutsceneAssets));
         }
 
-        protected T LoadBossAsset<T>(int index, Action<T> onPreSerialize = null)
+        protected T LoadBossAsset<T>(int index, Action<T> onPreSerialize = null, IStreamEncoder encoder = null)
             where T : BinarySerializable, new()
         {
-            return LoadAsset<T>(LevelPack.BossAssets, index, onPreSerialize, nameof(LevelPack.BossAssets));
+            return LoadAsset<T>(LevelPack.BossAssets, index, onPreSerialize, encoder, nameof(LevelPack.BossAssets));
         }
 
         protected void AddGameObject(GlobalGameObjectType type, Action<GameObjectData> initAction)

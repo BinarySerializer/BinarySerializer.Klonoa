@@ -605,8 +605,8 @@ namespace BinarySerializer.Klonoa.DTP
                 var anim = LoadBossAsset<CommonBossModelBoneAnimation_ArchiveFile>(1, x =>
                 {
                     x.Pre_ModelsCount = 3;
-                    x.DoModelPositionsComeFirst = true;
-                    x.DoesPositionsFileHaveHeader = true;
+                    x.Pre_DoModelPositionsComeFirst = true;
+                    x.Pre_DoesPositionsFileHaveHeader = true;
                 });
 
                 obj.Models = new GameObjectData_Model[]
@@ -636,8 +636,8 @@ namespace BinarySerializer.Klonoa.DTP
                 var anim = LoadBossAsset<CommonBossModelBoneAnimation_ArchiveFile>(5, x =>
                 {
                     x.Pre_ModelsCount = 3;
-                    x.DoModelPositionsComeFirst = true;
-                    x.DoesPositionsFileHaveHeader = true;
+                    x.Pre_DoModelPositionsComeFirst = true;
+                    x.Pre_DoesPositionsFileHaveHeader = true;
                 });
 
                 obj.Models = new GameObjectData_Model[]
@@ -851,6 +851,63 @@ namespace BinarySerializer.Klonoa.DTP
             LoadBossAsset<RawData_File>(14);
         }
 
+        private void LoadBossObjects_23_0()
+        {
+            // Nahatomb
+            AddGameObject(GlobalGameObjectType.Boss_GhadiusAttack, obj =>
+            {
+                var anim = LoadBossAsset<CommonBossModelBoneAnimation_ArchiveFile>(2, x =>
+                {
+                    x.Pre_ModelsCount = 1;
+                    x.Pre_DoModelPositionsComeFirst = true;
+                    x.Pre_HasInitialPositions = false;
+                }, encoder: new LevelSectorEncoder());
+
+                var tmd = LoadBossAsset<PS1_TMD>(0, x =>
+                {
+                    x.Pre_HasColorTable = true;
+                    x.Pre_HasBones = true;
+                    x.Pre_HasBonePositions = true;
+                }, encoder: new LevelSectorEncoder());
+
+                obj.Models = new GameObjectData_Model[]
+                {
+                    new GameObjectData_Model()
+                    {
+                        TMD = tmd,
+                        ModelBoneAnimations = GameObjectData_ModelBoneAnimations.FromCommonBossModelBoneAnimation(anim),
+                    }
+                };
+            });
+
+            LoadBossAsset<RawData_ArchiveFile>(1, encoder: new LevelSectorEncoder());
+            LoadBossAsset<PS1_TMD>(3, encoder: new LevelSectorEncoder()); // No bones
+            LoadBossAsset<RawData_ArchiveFile>(4, encoder: new LevelSectorEncoder());
+            LoadBossAsset<RawData_ArchiveFile>(5, encoder: new LevelSectorEncoder());
+            LoadBossAsset<PS1_TMD>(6, x => x.Pre_HasBones = true, encoder: new LevelSectorEncoder()); // 4 bones
+            LoadBossAsset<RawData_ArchiveFile>(7, encoder: new LevelSectorEncoder());
+            LoadBossAsset<PS1_TMD>(8, encoder: new LevelSectorEncoder()); // No bones
+            LoadBossAsset<PS1_TMD>(9, encoder: new LevelSectorEncoder()); // No bones
+            LoadBossAsset<RawData_ArchiveFile>(10, encoder: new LevelSectorEncoder());
+            LoadBossAsset<RawData_ArchiveFile>(11, encoder: new LevelSectorEncoder());
+            LoadBossAsset<RawData_File>(12, encoder: new LevelSectorEncoder()); // Weird TMD
+            LoadBossAsset<RawData_ArchiveFile>(13, encoder: new LevelSectorEncoder());
+            LoadBossAsset<RawData_ArchiveFile>(14, encoder: new LevelSectorEncoder());
+
+            // TODO: File 15 has sprites
+            LoadBossAsset<ArchiveFile<Sprites_ArchiveFile>>(15);
+
+            LoadBossAsset<RawData_ArchiveFile>(16); // 6 models + 3 files
+
+            LoadBossAsset<RawData_File>(17, encoder: new LevelSectorEncoder()); // TMD
+            LoadBossAsset<PS1_TMD>(18, encoder: new LevelSectorEncoder()); // No bones
+            LoadBossAsset<PS1_TMD>(19, encoder: new LevelSectorEncoder()); // No bones
+            LoadBossAsset<RawData_ArchiveFile>(20, encoder: new LevelSectorEncoder());
+            LoadBossAsset<RawData_ArchiveFile>(21, encoder: new LevelSectorEncoder());
+
+            LoadBossAsset<TIM_ArchiveFile>(22);
+        }
+
         #endregion
 
         #region Public Methods
@@ -951,6 +1008,7 @@ namespace BinarySerializer.Klonoa.DTP
 
                 case 23 when LevelSector is 0:
                     LoadCutsceneObjects_23_0();
+                    LoadBossObjects_23_0();
                     break;
             }
         }
