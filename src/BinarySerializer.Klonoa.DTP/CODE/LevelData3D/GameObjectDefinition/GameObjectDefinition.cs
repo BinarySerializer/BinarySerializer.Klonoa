@@ -208,11 +208,14 @@ namespace BinarySerializer.Klonoa.DTP
                     SkipDataFile<RawData_ArchiveFile>(s); // TODO: Unknown data
                     SkipDataFile<RawData_ArchiveFile>(s); // TODO: Palettes (for when hitting the boss)
 
-                    Data.Models[0].ModelBoneAnimations = Data.Models[0].RongoLangoModelAnimations.Files.Select(x => new GameObjectData_ModelBoneAnimation
+                    Data.Models[0].ModelBoneAnimations = new GameObjectData_ModelBoneAnimations()
                     {
-                        BoneRotations = x.Rotations,
-                        BonePositions = x.Positions,
-                    }).ToArray();
+                        Animations = Data.Models[0].RongoLangoModelAnimations.Files.Select(x => new GameObjectData_ModelBoneAnimation
+                        {
+                            BoneRotations = x.Rotations,
+                            BonePositions = x.Positions,
+                        }).ToArray()
+                    };
                     break;
 
                 case GlobalGameObjectType.Bell:

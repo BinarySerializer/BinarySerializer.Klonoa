@@ -139,11 +139,14 @@ namespace BinarySerializer.Klonoa.DTP
                 var modelAnim = LoadCutsceneAsset<KaralModelBoneAnimation_ArchiveFile>(animIndex);
 
                 // Convert to normal model animation format
-                obj.Models[0].ModelBoneAnimations = modelAnim.Rotations.Select(x => new GameObjectData_ModelBoneAnimation
+                obj.Models[0].ModelBoneAnimations = new GameObjectData_ModelBoneAnimations()
                 {
-                    BoneRotations = x,
-                    BonePositions = modelAnim.Positions
-                }).ToArray();
+                    InitialBonePositions = modelAnim.Positions,
+                    Animations = modelAnim.Rotations.Select(x => new GameObjectData_ModelBoneAnimation
+                    {
+                        BoneRotations = x,
+                    }).ToArray(),
+                };
 
                 // Some palette (Karal only)
                 if (palIndex != -1)
@@ -386,11 +389,14 @@ namespace BinarySerializer.Klonoa.DTP
                     new GameObjectData_Model()
                     {
                         TMD = LoadBossAsset<PS1_TMD>(0, x => x.Pre_HasBones = true), // Note: File 4 is a duplicate of this
-                        ModelBoneAnimations = Enumerable.Range(0, anim.Rotations.Length).Select(x => new GameObjectData_ModelBoneAnimation
+                        ModelBoneAnimations = new GameObjectData_ModelBoneAnimations()
                         {
-                            BoneRotations = anim.Rotations[x],
-                            BonePositions = anim.Positions[x],
-                        }).ToArray()
+                            Animations = Enumerable.Range(0, anim.Rotations.Length).Select(x => new GameObjectData_ModelBoneAnimation
+                            {
+                                BoneRotations = anim.Rotations[x],
+                                BonePositions = anim.Positions[x],
+                            }).ToArray()
+                        }
                     },
                 };
 
@@ -416,12 +422,15 @@ namespace BinarySerializer.Klonoa.DTP
                         TMD = LoadBossAsset<PS1_TMD>(8, x => x.Pre_HasBones = true), // 10 bones
 
                         // Note: This animation includes the other models as well
-                        ModelBoneAnimations = Enumerable.Range(0, anim.Rotations.Length).Select(x => new GameObjectData_ModelBoneAnimation
+                        ModelBoneAnimations = new GameObjectData_ModelBoneAnimations()
                         {
-                            BoneRotations = anim.Rotations[x],
-                            BonePositions = anim.Positions,
-                            ModelPositions = anim.ModelPositions[x],
-                        }).ToArray()
+                            InitialBonePositions = anim.Positions,
+                            Animations = Enumerable.Range(0, anim.Rotations.Length).Select(x => new GameObjectData_ModelBoneAnimation
+                            {
+                                BoneRotations = anim.Rotations[x],
+                                ModelPositions = anim.ModelPositions[x],
+                            }).ToArray()
+                        }
                     },
 
                     // Body inside
@@ -545,12 +554,15 @@ namespace BinarySerializer.Klonoa.DTP
                     {
                         TMD = LoadBossAsset<PS1_TMD>(2, x => x.Pre_HasBones = true),
 
-                        ModelBoneAnimations = Enumerable.Range(0, anim.Rotations.Length).Select(x => new GameObjectData_ModelBoneAnimation
+                        ModelBoneAnimations = new GameObjectData_ModelBoneAnimations()
                         {
-                            BoneRotations = anim.Rotations[x],
-                            BonePositions = anim.Positions,
-                            ModelPositions = anim.ModelPositions[x],
-                        }).ToArray(),
+                            InitialBonePositions = anim.Positions,
+                            Animations = Enumerable.Range(0, anim.Rotations.Length).Select(x => new GameObjectData_ModelBoneAnimation
+                            {
+                                BoneRotations = anim.Rotations[x],
+                                ModelPositions = anim.ModelPositions[x],
+                            }).ToArray()
+                        },
 
                         Rotation = new KlonoaVector16(0, 0x800, 0) // Custom
                     }
@@ -620,12 +632,15 @@ namespace BinarySerializer.Klonoa.DTP
                     new GameObjectData_Model()
                     {
                         TMD = LoadBossAsset<PS1_TMD>(0, x => x.Pre_HasBones = true),
-                        ModelBoneAnimations = Enumerable.Range(0, anim.Rotations.Length).Select(x => new GameObjectData_ModelBoneAnimation
+                        ModelBoneAnimations = new GameObjectData_ModelBoneAnimations()
                         {
-                            BoneRotations = anim.Rotations[x],
-                            BonePositions = anim.Positions,
-                            ModelPositions = anim.ModelPositions[x],
-                        }).ToArray(),
+                            InitialBonePositions = anim.Positions,
+                            Animations = Enumerable.Range(0, anim.Rotations.Length).Select(x => new GameObjectData_ModelBoneAnimation
+                            {
+                                BoneRotations = anim.Rotations[x],
+                                ModelPositions = anim.ModelPositions[x],
+                            }).ToArray()
+                        },
                     },
 
                     // Hands

@@ -15,7 +15,7 @@ namespace BinarySerializer.Klonoa.DTP
         public KlonoaVector16 Position { get; set; }
         public KlonoaVector16 Rotation { get; set; }
 
-        public GameObjectData_ModelBoneAnimation[] ModelBoneAnimations { get; set; }
+        public GameObjectData_ModelBoneAnimations ModelBoneAnimations { get; set; }
         public GameObjectData_ConstantRotation ConstantRotation { get; set; }
 
         public float AnimatedLocalTransformSpeed { get; set; } = 1;
