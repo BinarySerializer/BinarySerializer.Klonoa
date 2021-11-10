@@ -50,7 +50,7 @@ namespace BinarySerializer.Klonoa.DTP
             });
         }
 
-        private void LoadCutsceneObject_Ghadius(int headTmdIndex, int bodyTmdIndex, int animIndex, int textureAnimIndex, KlonoaVector16 pos, PS1_VRAMRegion vramRegion)
+        private void LoadCutsceneObject_Ghadius(int headTmdIndex, int bodyTmdIndex, int animIndex, int textureAnimIndex, KlonoaVector16 pos, KlonoaVector16 rot, PS1_VRAMRegion vramRegion)
         {
             AddGameObject(GlobalGameObjectType.Cutscene_Ghadius, obj =>
             {
@@ -69,6 +69,7 @@ namespace BinarySerializer.Klonoa.DTP
                 };
 
                 obj.Position = pos;
+                obj.Rotation = rot;
 
                 if (textureAnimIndex != -1)
                 {
@@ -117,7 +118,7 @@ namespace BinarySerializer.Klonoa.DTP
         private void LoadCutsceneObjects_5_0()
         {
             // Ghadius (FUN_5_7__8011bf00)
-            LoadCutsceneObject_Ghadius(0, 1, 2, 25, new KlonoaVector16(24, -40, 0), new PS1_VRAMRegion(0x240, 0x100, 0x10, 0x40)); // TODO: Fix pos
+            LoadCutsceneObject_Ghadius(0, 1, 2, 25, new KlonoaVector16(24, -40, 0), null, new PS1_VRAMRegion(0x240, 0x100, 0x10, 0x40)); // TODO: Fix pos
 
             // TODO: What is file 24? 12 bytes.
         }
@@ -318,7 +319,7 @@ namespace BinarySerializer.Klonoa.DTP
         private void LoadCutsceneObjects_17_0()
         {
             // Ghadius
-            LoadCutsceneObject_Ghadius(0, 1, 2, 24, new KlonoaVector16(-32, -64, 0), new PS1_VRAMRegion(0x2C0, 0x100, 0x10, 0x40));
+            LoadCutsceneObject_Ghadius(0, 1, 2, 24, new KlonoaVector16(-32, 3800, 0), new KlonoaVector16(0, 0x800, 0), new PS1_VRAMRegion(0x2C0, 0x100, 0x10, 0x40));
         }
 
         private void LoadCutsceneObjects_18_0()
@@ -352,7 +353,7 @@ namespace BinarySerializer.Klonoa.DTP
             LoadCutsceneObject_Karal_Pamela(4, 5, -1, new KlonoaVector16(0x70000 >> 12, (0x57b000 >> 12) + 1500, 0xf30000 >> 12));
 
             // Ghadius (on floor)
-            LoadCutsceneObject_Ghadius(2, 3, -1, -1, new KlonoaVector16(-0xf0000 >> 12, -0x8000 >> 12, 0x11a000 >> 12), null);
+            LoadCutsceneObject_Ghadius(2, 3, -1, -1, new KlonoaVector16(-0xf0000 >> 12, -0x8000 >> 12, 0x11a000 >> 12), null, null);
         }
 
         private void LoadCutsceneObjects_23_0()
@@ -654,6 +655,88 @@ namespace BinarySerializer.Klonoa.DTP
                     },
                 };
             });
+
+            // Joka creature form
+            AddGameObject(GlobalGameObjectType.Boss_JokaCreature, obj =>
+            {
+                var anim = LoadBossAsset<CommonBossModelBoneAnimation_ArchiveFile>(5, x =>
+                {
+                    x.Pre_ModelsCount = 3;
+                    x.DoModelPositionsComeFirst = true;
+                    x.DoesPositionsFileHaveHeader = true;
+                });
+
+                obj.Models = new GameObjectData_Model[]
+                {
+                    // Body
+                    new GameObjectData_Model()
+                    {
+                        TMD = LoadBossAsset<PS1_TMD>(4, x => x.Pre_HasBones = true),
+                        ModelBoneAnimations = new GameObjectData_ModelBoneAnimations()
+                        {
+                            InitialBonePositions = anim.Positions,
+                            Animations = Enumerable.Range(0, anim.Rotations.Length).Select(x => new GameObjectData_ModelBoneAnimation
+                            {
+                                BoneRotations = anim.Rotations[x],
+                                ModelPositions = anim.ModelPositions[x],
+                            }).ToArray()
+                        },
+                    },
+
+                    // Claws
+                    new GameObjectData_Model()
+                    {
+                        TMD = LoadBossAsset<PS1_TMD>(6),
+                    },
+                    new GameObjectData_Model()
+                    {
+                        TMD = LoadBossAsset<PS1_TMD>(7),
+                    },
+                };
+
+                obj.Position = new KlonoaVector16(3000, 0, 0); // Custom
+            });
+
+            // Joka transformation
+            AddGameObject(GlobalGameObjectType.Boss_JokaTransformation, obj =>
+            {
+                // TODO: Model has 2 objects. Other files in archive are vertex animations. Defines vertices and normals for both objects?
+                var archive = LoadBossAsset<RawData_ArchiveFile>(8);
+
+                obj.Models = new GameObjectData_Model[]
+                {
+                    new GameObjectData_Model()
+                    {
+                        TMD = archive.SerializeFile<PS1_TMD>(Deserializer, default, 0),
+                    },
+                };
+
+                obj.Position = new KlonoaVector16(4500, 0, 0); // Custom
+            });
+
+            // Level geometry
+            AddGameObject(GlobalGameObjectType.Boss_Geometry, obj =>
+            { 
+                obj.Models = new GameObjectData_Model[]
+                {
+                    // Claws
+                    new GameObjectData_Model()
+                    {
+                        TMD = LoadBossAsset<PS1_TMD>(9),
+                    },
+                    new GameObjectData_Model()
+                    {
+                        TMD = LoadBossAsset<PS1_TMD>(10),
+                    },
+                };
+            });
+
+            // TODO: File 13 has pal
+            // TODO: File 14 has pal?
+            // TODO: File 15 has pal? Unused?
+
+            // TODO: File 16 has sprites
+            LoadBossAsset<ArchiveFile<Sprites_ArchiveFile>>(16);
         }
 
         #endregion

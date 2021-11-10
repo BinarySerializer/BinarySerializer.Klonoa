@@ -22,6 +22,7 @@ namespace BinarySerializer.Klonoa.DTP
         public ModelAnimation_ArchiveFile AbsoluteTransform { get; set; }
         public ArchiveFile<ModelAnimation_ArchiveFile> AbsoluteTransforms { get; set; }
         public KlonoaVector16 Position { get; set; }
+        public KlonoaVector16 Rotation { get; set; }
         public CameraAnimations_File CameraAnimations { get; set; }
         public TIM_ArchiveFile TextureAnimation { get; set; }
         public PaletteAnimation_ArchiveFile PaletteAnimation { get; set; }

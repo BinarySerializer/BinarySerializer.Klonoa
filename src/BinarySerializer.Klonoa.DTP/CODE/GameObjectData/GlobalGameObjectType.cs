@@ -106,5 +106,8 @@
         Boss_BaladiumObstacle,
         Boss_BaladiumAttackPart,
         Boss_Joka,
+        Boss_JokaCreature,
+        Boss_JokaTransformation,
+        Boss_Geometry,
     }
 }
