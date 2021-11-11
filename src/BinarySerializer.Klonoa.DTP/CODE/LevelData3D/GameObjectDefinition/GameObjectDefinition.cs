@@ -286,6 +286,11 @@ namespace BinarySerializer.Klonoa.DTP
                     CreateModels(1);
 
                     Data.Models[0].TMD = SerializeDataFile<PS1_TMD>(s, Data.Models[0].TMD, modelIndex: 0, name: nameof(GameObjectData_Model.TMD));
+                    Data.Models[0].TMDObjectPositionOffsets = new KlonoaVector16[]
+                    {
+                        null,
+                        new KlonoaVector16(0, -0x120, 0),
+                    };
                     Data.Collision = SerializeDataFile<CollisionTriangles_File>(s, Data.Collision, name: nameof(Data.Collision));
                     Data.MovementPaths = SerializeDataFile<MovementPath_File>(s, Data.MovementPaths, name: nameof(Data.MovementPaths));
                     Data.Models[0].LocalTransform = SerializeDataFile<ModelAnimation_ArchiveFile>(s, Data.Models[0].LocalTransform,
