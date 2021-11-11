@@ -2,7 +2,7 @@
 {
     public class MovementPathCamera : BinarySerializable
     {
-        public int Int_00 { get; set; }
+        public int Int_00 { get; set; } // Position from path start
         public short Short_04 { get; set; }
         public short Short_06 { get; set; }
         public short Short_08 { get; set; }
@@ -10,11 +10,12 @@
         public short Short_0C { get; set; }
         public short Short_0E { get; set; }
         public short Short_10 { get; set; }
-        public short Short_12 { get; set; } // Is 1 when the pointer is valid
-        public Pointer Pointer_14 { get; set; }
+        public short Short_12 { get; set; } // Is 1 when there is an absolute position/rotation, can be 0, 1 or 2
+        public Pointer PositionPointer { get; set; }
 
         // Serialized from pointers
-        public UnknownStruct[] Structs { get; set; }
+        public KlonoaVector16 AbsolutePosition { get; set; }
+        public KlonoaVector16 AbsoluteRotation { get; set; }
 
         public override void SerializeImpl(SerializerObject s)
         {
@@ -27,25 +28,15 @@
             Short_0E = s.Serialize<short>(Short_0E, name: nameof(Short_0E));
             Short_10 = s.Serialize<short>(Short_10, name: nameof(Short_10));
             Short_12 = s.Serialize<short>(Short_12, name: nameof(Short_12));
-            Pointer_14 = s.SerializePointer(Pointer_14, allowInvalid: true, name: nameof(Pointer_14));
+            PositionPointer = s.SerializePointer(PositionPointer, allowInvalid: true, name: nameof(PositionPointer));
 
-            s.DoAt(Pointer_14, () => Structs = s.SerializeObjectArray<UnknownStruct>(Structs, 2, name: nameof(Structs)));
-        }
-
-        // Vector?
-        public class UnknownStruct : BinarySerializable
-        {
-            public short Short_00 { get; set; }
-            public short Short_02 { get; set; }
-            public short Short_04 { get; set; }
-
-            public override void SerializeImpl(SerializerObject s)
+            s.DoAt(PositionPointer, () =>
             {
-                Short_00 = s.Serialize<short>(Short_00, name: nameof(Short_00));
-                Short_02 = s.Serialize<short>(Short_02, name: nameof(Short_02));
-                Short_04 = s.Serialize<short>(Short_04, name: nameof(Short_04));
-                s.SerializePadding(2, logIfNotNull: true);
-            }
+                AbsolutePosition = s.SerializeObject<KlonoaVector16>(AbsolutePosition, name: nameof(AbsolutePosition));
+                s.SerializePadding(2);
+                AbsoluteRotation = s.SerializeObject<KlonoaVector16>(AbsoluteRotation, name: nameof(AbsoluteRotation));
+                s.SerializePadding(2);
+            });
         }
     }
 }

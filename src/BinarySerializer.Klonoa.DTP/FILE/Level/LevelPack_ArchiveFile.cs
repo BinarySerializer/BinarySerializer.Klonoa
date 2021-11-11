@@ -11,7 +11,7 @@
         public RawData_File File_3 { get; set; } // TODO: Parse. Has sprites in BIN 17.
         public RawData_ArchiveFile File_4 { get; set; } // TODO: Parse. Read from BIN 8, 9, 15, 16, 19, 22, 24. Has models in some of them.
         public RawData_ArchiveFile File_5 { get; set; } // TODO: Parse. Game loads into a common array. Used in BIN 7.
-        public RawData_File File_6 { get; set; } // TODO: Parse. Camera related, overrides normal camera data.
+        public RawData_File File_6 { get; set; } // TODO: Parse. Game seems to ignore it? Does it ever have data?
         public RawData_File File_7 { get; set; } // TODO: Parse. Game seems to ignore it? Does it ever have data?
 
         // A level is made out of multiple sectors (changes when Klonoa walks through a door etc.)
