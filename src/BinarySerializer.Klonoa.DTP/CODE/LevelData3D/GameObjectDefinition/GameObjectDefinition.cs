@@ -294,8 +294,8 @@ namespace BinarySerializer.Klonoa.DTP
                         onPreSerialize: x => x.Pre_UsesInfo = false, name: nameof(Data.AbsoluteTransform));
                     // TODO: Sometimes has two additional transforms - unused?
 
-                    Data.Models[0].AnimatedLocalTransformSpeed = Params_MovingPlatform.AnimSpeed;
-                    Data.Models[0].DoesAnimatedLocalTransformPingPong = true;
+                    Data.AnimatedAbsoluteTransformSpeed = Params_MovingPlatform.AnimSpeed;
+                    Data.DoesAnimatedAbsoluteTransformPingPong = true;
                     break;
 
                 case GlobalGameObjectType.FallingTreePart: // FUN_9_8__80122870
