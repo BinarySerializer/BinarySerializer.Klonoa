@@ -8,9 +8,11 @@ namespace BinarySerializer.Klonoa.DTP
         public bool Pre_DoModelPositionsComeFirst { get; set; } = false;
         public bool Pre_DoesPositionsFileHaveHeader { get; set; } = false;
         public bool Pre_HasInitialPositions { get; set; } = true;
+        public bool Pre_HasInitialRotations { get; set; } = false;
 
         public RawData_File File_0 { get; set; }
-        public VectorAnimation_File Positions { get; set; }
+        public VectorAnimation_File InitialPositions { get; set; }
+        public VectorAnimationKeyFrames_File InitialRotations { get; set; }
         public VectorAnimationKeyFrames_File[] Rotations { get; set; }
         public VectorAnimation_File[] ModelPositions { get; set; }
 
@@ -18,7 +20,14 @@ namespace BinarySerializer.Klonoa.DTP
         {
             File_0 = SerializeFile<RawData_File>(s, File_0, 0, name: nameof(File_0));
 
-            var startFileIndex = Pre_HasInitialPositions ? 2 : 1;
+            int startFileIndex = 1;
+
+            if (Pre_HasInitialPositions)
+                startFileIndex++;
+
+            if (Pre_HasInitialRotations)
+                startFileIndex++;
+
             var animsCount = (OffsetTable.FilesCount - startFileIndex) / 2;
 
             Rotations ??= new VectorAnimationKeyFrames_File[animsCount];
@@ -33,16 +42,20 @@ namespace BinarySerializer.Klonoa.DTP
                 }, name: $"{nameof(ModelPositions)}[{i}]");
             }
 
+            // TODO: Parse this first, use file 0 to determine parts count (file 0 has the parts count, unknown values, parent indices, unknown values)
             if (Pre_HasInitialPositions)
             {
-                Positions = SerializeFile<VectorAnimation_File>(s, Positions, 1, onPreSerialize: x =>
+                InitialPositions = SerializeFile<VectorAnimation_File>(s, InitialPositions, 1, onPreSerialize: x =>
                 {
                     if (!Pre_DoesPositionsFileHaveHeader)
                     {
                         x.Pre_ObjectsCount = Rotations.First().BonesCount;
                         x.Pre_FramesCount = 1;
                     }
-                }, name: nameof(Positions));
+                }, name: nameof(InitialPositions));
+
+                if (Pre_HasInitialRotations)
+                    InitialRotations = SerializeFile<VectorAnimationKeyFrames_File>(s, InitialRotations, 2, name: nameof(InitialRotations));
             }
         }
     }

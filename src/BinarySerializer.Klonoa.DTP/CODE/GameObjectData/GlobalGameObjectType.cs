@@ -112,5 +112,12 @@
         Boss_Ghadius,
         Boss_GhadiusParts,
         Boss_GhadiusAttack,
+        Boss_Nahatomb,
+        Boss_NahatombTongue,
+        Boss_NahatombAttack,
+        Boss_NahatombCanon,
+        Boss_NahatombGem,
+        Boss_NahatombFace,
+        Boss_NahatombPlatform,
     }
 }

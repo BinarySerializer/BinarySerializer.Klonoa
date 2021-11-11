@@ -361,8 +361,9 @@ namespace BinarySerializer.Klonoa.DTP
             // Pamela
             LoadCutsceneObject_Karal_Pamela(0, 1, -1, new KlonoaVector16(0x70000 >> 12, 0x57b000 >> 12, 0xf30000 >> 12));
 
+            // TODO: Check no animations? Position better, right now inside of boss.
             // Beam source
-            AddGameObject(GlobalGameObjectType.Cutscene_BeamSource, obj =>
+            AddGameObject(GlobalGameObjectType.Cutscene_Karal_Pamela, obj =>
             {
                 obj.Models = new GameObjectData_Model[]
                 {
@@ -853,8 +854,8 @@ namespace BinarySerializer.Klonoa.DTP
 
         private void LoadBossObjects_23_0()
         {
-            // Nahatomb
-            AddGameObject(GlobalGameObjectType.Boss_GhadiusAttack, obj =>
+            // Nahatomb (boss)
+            AddGameObject(GlobalGameObjectType.Boss_Nahatomb, obj =>
             {
                 var anim = LoadBossAsset<CommonBossModelBoneAnimation_ArchiveFile>(2, x =>
                 {
@@ -878,34 +879,236 @@ namespace BinarySerializer.Klonoa.DTP
                         ModelBoneAnimations = GameObjectData_ModelBoneAnimations.FromCommonBossModelBoneAnimation(anim),
                     }
                 };
+
+                // TODO: Vertex animation
+                LoadBossAsset<ArchiveFile<DVF_File>>(1, encoder: new LevelSectorEncoder()); // DVF
             });
 
-            LoadBossAsset<RawData_ArchiveFile>(1, encoder: new LevelSectorEncoder());
-            LoadBossAsset<PS1_TMD>(3, encoder: new LevelSectorEncoder()); // No bones
-            LoadBossAsset<RawData_ArchiveFile>(4, encoder: new LevelSectorEncoder());
-            LoadBossAsset<RawData_ArchiveFile>(5, encoder: new LevelSectorEncoder());
-            LoadBossAsset<PS1_TMD>(6, x => x.Pre_HasBones = true, encoder: new LevelSectorEncoder()); // 4 bones
-            LoadBossAsset<RawData_ArchiveFile>(7, encoder: new LevelSectorEncoder());
-            LoadBossAsset<PS1_TMD>(8, encoder: new LevelSectorEncoder()); // No bones
-            LoadBossAsset<PS1_TMD>(9, encoder: new LevelSectorEncoder()); // No bones
-            LoadBossAsset<RawData_ArchiveFile>(10, encoder: new LevelSectorEncoder());
-            LoadBossAsset<RawData_ArchiveFile>(11, encoder: new LevelSectorEncoder());
-            LoadBossAsset<RawData_File>(12, encoder: new LevelSectorEncoder()); // Weird TMD
-            LoadBossAsset<RawData_ArchiveFile>(13, encoder: new LevelSectorEncoder());
-            LoadBossAsset<RawData_ArchiveFile>(14, encoder: new LevelSectorEncoder());
+            // Nahatomb (after beating boss)
+            AddGameObject(GlobalGameObjectType.Boss_Nahatomb, obj =>
+            {
+                var anim = LoadBossAsset<CommonBossModelBoneAnimation_ArchiveFile>(5, x =>
+                {
+                    x.Pre_ModelsCount = 1;
+                    x.Pre_DoModelPositionsComeFirst = true;
+                    x.Pre_HasInitialPositions = false;
+                }, encoder: new LevelSectorEncoder());
+
+                obj.Models = new GameObjectData_Model[]
+                {
+                    new GameObjectData_Model()
+                    {
+                        TMD = LoadBossAsset<PS1_TMD>(3, encoder: new LevelSectorEncoder()),
+                        ModelBoneAnimations = GameObjectData_ModelBoneAnimations.FromCommonBossModelBoneAnimation(anim),
+                    }
+                };
+
+                // TODO: Vertex animation
+                LoadBossAsset<RawData_ArchiveFile>(4, encoder: new LevelSectorEncoder()); // Vertex animation
+
+                obj.Position = new KlonoaVector16(3000, 0, 0); // Custom
+            });
+
+            // Tongue
+            AddGameObject(GlobalGameObjectType.Boss_NahatombTongue, obj =>
+            {
+                // TODO: Fix animation - it doesn't look correct, rotations are handled wrong
+                var anim = LoadBossAsset<CommonBossModelBoneAnimation_ArchiveFile>(7, x =>
+                {
+                    x.Pre_ModelsCount = 1;
+                    x.Pre_DoModelPositionsComeFirst = true;
+                    x.Pre_HasInitialPositions = true;
+                    x.Pre_HasInitialRotations = true; // TODO: Check if prev two objects use this too
+                }, encoder: new LevelSectorEncoder());
+
+                obj.Models = new GameObjectData_Model[]
+                {
+                    new GameObjectData_Model()
+                    {
+                        TMD = LoadBossAsset<PS1_TMD>(6, x => x.Pre_HasBones = true, encoder: new LevelSectorEncoder()),
+                        ModelBoneAnimations = GameObjectData_ModelBoneAnimations.FromCommonBossModelBoneAnimation(anim),
+                    }
+                };
+            });
+
+            // Attack
+            AddGameObject(GlobalGameObjectType.Boss_NahatombAttack, obj =>
+            {
+                obj.Models = new GameObjectData_Model[]
+                {
+                    new GameObjectData_Model()
+                    {
+                        TMD = LoadBossAsset<PS1_TMD>(19, encoder: new LevelSectorEncoder()),
+                    }
+                };
+                 
+                obj.Position = new KlonoaVector16(0, 0, -3000); // Custom
+            });
+
+            // TODO: Vertex animations
+            var canonArchive = LoadBossAsset<NahatombBossCanons_ArchiveFile>(16);
+
+            for (int i = 0; i < 5; i++)
+            {
+                AddGameObject(GlobalGameObjectType.Boss_NahatombCanon, obj =>
+                {
+                    obj.Models = new GameObjectData_Model[]
+                    {
+                        new GameObjectData_Model()
+                        {
+                            TMD = canonArchive.CanonBase,
+                        },
+                        new GameObjectData_Model()
+                        {
+                            TMD = canonArchive.Canons[i],
+                        },
+                    };
+
+                    obj.Position = new KlonoaVector16((short)(500 + (500 * i)), 0, -3000); // Custom
+                });
+            }
 
             // TODO: File 15 has sprites
             LoadBossAsset<ArchiveFile<Sprites_ArchiveFile>>(15);
 
-            LoadBossAsset<RawData_ArchiveFile>(16); // 6 models + 3 files
-
-            LoadBossAsset<RawData_File>(17, encoder: new LevelSectorEncoder()); // TMD
-            LoadBossAsset<PS1_TMD>(18, encoder: new LevelSectorEncoder()); // No bones
-            LoadBossAsset<PS1_TMD>(19, encoder: new LevelSectorEncoder()); // No bones
-            LoadBossAsset<RawData_ArchiveFile>(20, encoder: new LevelSectorEncoder());
-            LoadBossAsset<RawData_ArchiveFile>(21, encoder: new LevelSectorEncoder());
-
+            // TODO: TIM files (not an animation, they reference different VRAM locations)
             LoadBossAsset<TIM_ArchiveFile>(22);
+        }
+
+        private void LoadBossObjects_23_1()
+        {
+            // Face
+            AddGameObject(GlobalGameObjectType.Boss_NahatombFace, obj =>
+            {
+                var anim = LoadBossAsset<CommonBossModelBoneAnimation_ArchiveFile>(11, x =>
+                {
+                    x.Pre_ModelsCount = 1;
+                    x.Pre_DoModelPositionsComeFirst = true;
+                    x.Pre_HasInitialPositions = true;
+                    x.Pre_HasInitialRotations = true;
+                }, encoder: new LevelSectorEncoder());
+
+                var boneAnim = GameObjectData_ModelBoneAnimations.FromCommonBossModelBoneAnimation(anim);
+
+                // TODO: Would be better to only set the bone animation once for the entire object
+                obj.Models = new GameObjectData_Model[]
+                {
+                    // Eyes
+                    new GameObjectData_Model()
+                    {
+                        TMD = LoadBossAsset<PS1_TMD>(8, encoder: new LevelSectorEncoder()),
+                        ModelBoneAnimations = boneAnim,
+                    },
+                    // Mouth
+                    new GameObjectData_Model()
+                    {
+                        TMD = LoadBossAsset<PS1_TMD>(9, encoder: new LevelSectorEncoder()),
+                        ModelBoneAnimations = boneAnim,
+                    },
+                };
+
+                obj.Position = new KlonoaVector16(0, 0, 500); // Custom
+
+                // TODO: Vertex animation
+                LoadBossAsset<RawData_ArchiveFile>(10, encoder: new LevelSectorEncoder()); // Vertex animation
+            });
+
+            // Gem
+            AddGameObject(GlobalGameObjectType.Boss_NahatombGem, obj =>
+            {
+                obj.Models = new GameObjectData_Model[]
+                {
+                    new GameObjectData_Model()
+                    {
+                        TMD = LoadBossAsset<PS1_TMD>(17, encoder: new LevelSectorEncoder()),
+                    }
+                };
+
+                obj.Position = new KlonoaVector16(0, 0, -500); // Custom
+            });
+        }
+
+        private void LoadBossObjects_23_2()
+        {
+            // Nahatomb (boss)
+            AddGameObject(GlobalGameObjectType.Boss_Nahatomb, obj =>
+            {
+                var anim = LoadBossAsset<CommonBossModelBoneAnimation_ArchiveFile>(14, x =>
+                {
+                    x.Pre_ModelsCount = 1;
+                    x.Pre_DoModelPositionsComeFirst = true;
+                    x.Pre_HasInitialPositions = false;
+                }, encoder: new LevelSectorEncoder());
+
+                var tmd = LoadBossAsset<PS1_TMD>(12, x =>
+                {
+                    x.Pre_HasColorTable = true;
+                    x.Pre_HasBones = true;
+                    x.Pre_HasBonePositions = true;
+                }, encoder: new LevelSectorEncoder());
+
+                obj.Models = new GameObjectData_Model[]
+                {
+                    new GameObjectData_Model()
+                    {
+                        TMD = tmd,
+                        ModelBoneAnimations = GameObjectData_ModelBoneAnimations.FromCommonBossModelBoneAnimation(anim),
+                    }
+                };
+
+                // TODO: Vertex animation
+                LoadBossAsset<ArchiveFile<DVF_File>>(13, encoder: new LevelSectorEncoder()); // DVF
+            });
+
+            // Green platform
+            AddGameObject(GlobalGameObjectType.Boss_NahatombPlatform, obj =>
+            {
+                obj.Models = new GameObjectData_Model[]
+                {
+                    new GameObjectData_Model()
+                    {
+                        TMD = LoadBossAsset<PS1_TMD>(18, encoder: new LevelSectorEncoder()),
+                    }
+                };
+
+                obj.Position = new KlonoaVector16(2500, 0, 0); // Custom
+            });
+
+            // 8 * 4
+            PS1_TMD[] platformTMDPieces = LoadBossAsset<ArchiveFile<PS1_TMD>>(20, encoder: new LevelSectorEncoder()).Files;
+
+            var platformAnim = LoadBossAsset<CommonBossModelBoneAnimation_ArchiveFile>(21, x =>
+            {
+                x.Pre_ModelsCount = 9;
+                x.Pre_DoModelPositionsComeFirst = true;
+                x.Pre_HasInitialPositions = false;
+            }, encoder: new LevelSectorEncoder());
+
+            for (int i = 0; i < 8; i++)
+            {
+                // Platform
+                AddGameObject(GlobalGameObjectType.Boss_NahatombPlatform, obj =>
+                {
+                    KlonoaVector16[][] positions = platformAnim.ModelPositions[i].Vectors;
+                    VectorAnimationKeyFrames_File rotations = platformAnim.Rotations[i];
+
+                    obj.Models = platformTMDPieces.Skip(8 * (i % 4)).Take(8).Select((x, pieceIndex) => new GameObjectData_Model()
+                    {
+                        TMD = x,
+                        Position = positions[0][1 + pieceIndex],
+                        Rotation = new KlonoaVector16(
+                            (short)rotations.GetValues((1 + pieceIndex) * 3 + 0)[0],
+                            (short)rotations.GetValues((1 + pieceIndex) * 3 + 1)[0],
+                            (short)rotations.GetValues((1 + pieceIndex) * 3 + 2)[0])
+                    }).ToArray();
+
+                    obj.Position = positions[0][0];
+                    obj.Rotation = new KlonoaVector16(
+                        (short)rotations.GetValues(0 * 3 + 0)[0],
+                        (short)rotations.GetValues(0 * 3 + 1)[0],
+                        (short)rotations.GetValues(0 * 3 + 2)[0]);
+                });
+            }
         }
 
         #endregion
@@ -1009,6 +1212,14 @@ namespace BinarySerializer.Klonoa.DTP
                 case 23 when LevelSector is 0:
                     LoadCutsceneObjects_23_0();
                     LoadBossObjects_23_0();
+                    break;
+
+                case 23 when LevelSector is 1:
+                    LoadBossObjects_23_1();
+                    break;
+
+                case 23 when LevelSector is 2:
+                    LoadBossObjects_23_2();
                     break;
             }
         }
