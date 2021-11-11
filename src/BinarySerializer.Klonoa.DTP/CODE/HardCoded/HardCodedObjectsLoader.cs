@@ -912,11 +912,11 @@ namespace BinarySerializer.Klonoa.DTP
             // Tongue
             AddGameObject(GlobalGameObjectType.Boss_NahatombTongue, obj =>
             {
-                // TODO: Fix animation - it doesn't look correct, rotations are handled wrong
                 var anim = LoadBossAsset<CommonBossModelBoneAnimation_ArchiveFile>(7, x =>
                 {
                     x.Pre_ModelsCount = 1;
                     x.Pre_DoModelPositionsComeFirst = true;
+                    x.Pre_DoesPositionsFileHaveHeader = true;
                     x.Pre_HasInitialPositions = true;
                     x.Pre_HasInitialRotations = true; // TODO: Check if prev two objects use this too
                 }, encoder: new LevelSectorEncoder());
