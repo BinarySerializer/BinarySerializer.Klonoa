@@ -20,7 +20,7 @@ namespace BinarySerializer.Klonoa.DTP
 
         protected override void SerializeFiles(SerializerObject s)
         {
-            LevelModel = SerializeFile<PS1_TMD>(s, LevelModel, 0, logIfNotFullyParsed: false, name: nameof(LevelModel));
+            LevelModel = SerializeFile<PS1_TMD>(s, LevelModel, 0, name: nameof(LevelModel));
             LevelModelObjectSectorMap = SerializeFile<LevelModelObjectSectorMap_File>(s, LevelModelObjectSectorMap, 1, name: nameof(LevelModelObjectSectorMap));
             LevelCollisionSectorMap = SerializeFile<LevelCollisionSectorMap_File>(s, LevelCollisionSectorMap, 2, name: nameof(LevelCollisionSectorMap));
             LevelCollisionTriangles = SerializeFile<CollisionTriangles_File>(s, LevelCollisionTriangles, 3, onPreSerialize: x => x.Pre_HasCount = false, name: nameof(LevelCollisionTriangles));

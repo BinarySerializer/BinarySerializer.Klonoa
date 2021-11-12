@@ -1069,9 +1069,6 @@ namespace BinarySerializer.Klonoa.DTP
         private T SerializeDataFile<T>(SerializerObject s, T obj, Action<T> onPreSerialize = null, bool logIfNotFullyParsed = true, int? modelIndex = null, string name = null)
             where T : BinarySerializable, new()
         {
-            if (typeof(T) == typeof(PS1_TMD))
-                logIfNotFullyParsed = false;
-
             return Pre_ObjectAssets.SerializeFile<T>(
                 s: s, 
                 obj: obj, 
