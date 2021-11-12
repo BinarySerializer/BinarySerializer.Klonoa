@@ -114,8 +114,11 @@ namespace BinarySerializer.Klonoa.DTP
                     Data.Models[1].TMD = SerializeDataFile<PS1_TMD>(s, Data.Models[1].TMD, modelIndex: 1, name: nameof(GameObjectData_Model.TMD));
                     Data.Position = SerializeDataFile<KlonoaVector16>(s, Data.Position, name: nameof(Data.Position));
 
-                    // TODO: Add constant rotation to second model
                     Data.Models[0].ConstantRotation = new GameObjectData_ConstantRotation()
+                    {
+                        RotY = 128,
+                    };
+                    Data.Models[1].ConstantRotation = new GameObjectData_ConstantRotation()
                     {
                         RotY = 128,
                     };
