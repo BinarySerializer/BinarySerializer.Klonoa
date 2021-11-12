@@ -10,7 +10,7 @@
         public short Short_0C { get; set; }
         public short Short_0E { get; set; }
         public short Short_10 { get; set; }
-        public short Short_12 { get; set; } // Is 1 when there is an absolute position/rotation, can be 0, 1 or 2
+        public CameraType Type { get; set; }
         public Pointer PositionPointer { get; set; }
 
         // Serialized from pointers
@@ -27,7 +27,7 @@
             Short_0C = s.Serialize<short>(Short_0C, name: nameof(Short_0C));
             Short_0E = s.Serialize<short>(Short_0E, name: nameof(Short_0E));
             Short_10 = s.Serialize<short>(Short_10, name: nameof(Short_10));
-            Short_12 = s.Serialize<short>(Short_12, name: nameof(Short_12));
+            Type = s.Serialize<CameraType>(Type, name: nameof(Type));
             PositionPointer = s.SerializePointer(PositionPointer, allowInvalid: true, name: nameof(PositionPointer));
 
             s.DoAt(PositionPointer, () =>
@@ -37,6 +37,13 @@
                 AbsoluteRotation = s.SerializeObject<KlonoaVector16>(AbsoluteRotation, name: nameof(AbsoluteRotation));
                 s.SerializePadding(2);
             });
+        }
+
+        public enum CameraType : short
+        {
+            RelativeToPath = 0,
+            Absolute = 1,
+            Unknown = 2,
         }
     }
 }
