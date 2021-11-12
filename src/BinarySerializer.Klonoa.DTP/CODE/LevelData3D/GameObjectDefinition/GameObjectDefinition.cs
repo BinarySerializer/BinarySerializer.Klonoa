@@ -206,8 +206,8 @@ namespace BinarySerializer.Klonoa.DTP
                     Data.Models[0].TMD = SerializeDataFile<PS1_TMD>(s, Data.Models[0].TMD, onPreSerialize: x => x.Pre_HasBones = true, modelIndex: 0, name: nameof(GameObjectData_Model.TMD));
                     Data.Models[0].RongoLangoModelAnimations = SerializeDataFile<ArchiveFile<RongoLangoModelBoneAnimation_ArchiveFile>>(s, Data.Models[0].RongoLangoModelAnimations, modelIndex: 0, name: nameof(GameObjectData_Model.RongoLangoModelAnimations));
                     Data.MovementPaths = SerializeDataFile<MovementPath_File>(s, Data.MovementPaths, name: nameof(Data.MovementPaths));
-                    SkipDataFile<RawData_File>(s); // TODO: Unknown data
-                    SkipDataFile<RawData_File>(s); // TODO: Unknown data
+                    SkipDataFile<RawData_File>(s); // TODO: Vertex animation data
+                    SkipDataFile<RawData_File>(s); // TODO: Vertex animation data
                     SkipDataFile<RawData_ArchiveFile>(s); // TODO: Unknown data
                     SkipDataFile<RawData_ArchiveFile>(s); // TODO: Palettes (for when hitting the boss)
 
@@ -528,8 +528,6 @@ namespace BinarySerializer.Klonoa.DTP
                     break;
 
                 case GlobalGameObjectType.Collision: // FUN_14_7__801170a8
-                    CreateModels(1);
-
                     Data.Collision = SerializeDataFile<CollisionTriangles_File>(s, Data.Collision, name: nameof(Data.Collision));
                     Data.AbsoluteTransform = SerializeDataFile<ModelAnimation_ArchiveFile>(s, Data.AbsoluteTransform,
                         onPreSerialize: x => x.Pre_UsesInfo = false, name: nameof(Data.AbsoluteTransform));
@@ -920,12 +918,17 @@ namespace BinarySerializer.Klonoa.DTP
                     break;
 
                 case GlobalGameObjectType.Light:
-                    CreateModels(1);
 
                     if (Short_00 == 0x11)
+                    {
                         Data.LightPositions = SerializeDataFile<VectorAnimation_File>(s, Data.LightPositions, name: nameof(Data.LightPositions));
+                    }
                     else
+                    {
+                        CreateModels(1);
                         Data.Models[0].TMD = SerializeDataFile<PS1_TMD>(s, Data.Models[0].TMD, modelIndex: 0, name: nameof(GameObjectData_Model.TMD));
+                    }
+
                     break;
 
                 case GlobalGameObjectType.GeyserPlatform:
