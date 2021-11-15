@@ -67,5 +67,8 @@ namespace BinarySerializer.Klonoa.DTP
 
         public override BaseHardCodedObjectsLoader GetHardCodedObjectsLoader(Loader loader) => 
             throw new System.NotImplementedException();
+
+        public override Dictionary<int, int[]> CutsceneStartSectors =>
+            throw new System.NotImplementedException();
     }
 }

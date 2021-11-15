@@ -22,6 +22,8 @@ namespace BinarySerializer.Klonoa.DTP
         public abstract uint Address_LevelData2DPointerTable { get; }
 
         public abstract BaseHardCodedObjectsLoader GetHardCodedObjectsLoader(Loader loader);
+        
+        public abstract Dictionary<int, int[]> CutsceneStartSectors { get; }
 
         public virtual Dictionary<int, Dictionary<int, GlobalGameObjectType>> GlobalGameObjectTypes { get; } = new Dictionary<int, Dictionary<int, GlobalGameObjectType>>()
         {

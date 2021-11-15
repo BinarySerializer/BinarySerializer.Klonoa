@@ -61,5 +61,29 @@ namespace BinarySerializer.Klonoa.DTP
 
         public override BaseHardCodedObjectsLoader GetHardCodedObjectsLoader(Loader loader) =>
             new HardCodedObjectsLoader(loader);
+
+        public override Dictionary<int, int[]> CutsceneStartSectors => new Dictionary<int, int[]>()
+        {
+            [3] = new int[] { 0, 1, },
+            [5] = new int[] { 0, 0, },
+            [6] = new int[] { 3, 2, -1 },
+            [7] = new int[] { 0, 5, 5, },
+            [8] = new int[] { 0, 0, },
+            [9] = new int[] { 0, 0, 3, 3, },
+            [10] = new int[] { 0, 4, 9, 9, 8, },
+            [11] = new int[] { 0, 1, },
+            [13] = new int[] { 7, 7, },
+            [14] = new int[] { 0, 0, },
+            [15] = new int[] { 0, 4, 4, 5, 2, 2, 6, },
+            [16] = new int[] { 0, 8, },
+            [17] = new int[] { 0, 0, },
+            [18] = new int[] { 0, },
+            [19] = new int[] { 0, 7, 7, 7, 4, 5, 6, 0, },
+            [20] = new int[] { 0, },
+            [21] = new int[] { 0, },
+            [22] = new int[] { 0, },
+            [23] = new int[] { 0, 0, -1, 2, 2, },
+            [24] = new int[] { 0, 8, },
+        };
     }
 }
