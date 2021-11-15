@@ -10,7 +10,7 @@
 
         public RawData_File File_3 { get; set; } // TODO: Parse. Has sprites in BIN 17.
         public RawData_ArchiveFile File_4 { get; set; } // TODO: Parse. Read from BIN 8, 9, 15, 16, 19, 22, 24. Has models in some of them.
-        public RawData_ArchiveFile File_5 { get; set; } // TODO: Parse. Game loads into a common array. Used in BIN 7.
+        public ArchiveFile<MovementPath_File> File_5 { get; set; } // TODO: What is this for? Used in BIN 7.
         public RawData_File File_6 { get; set; } // TODO: Parse. Game seems to ignore it? Does it ever have data?
         public RawData_File File_7 { get; set; } // TODO: Parse. Game seems to ignore it? Does it ever have data?
 
@@ -24,7 +24,7 @@
             CutscenePack = SerializeFile<CutscenePack_ArchiveFile>(s, CutscenePack, 2, name: nameof(CutscenePack));
             File_3 = SerializeFile<RawData_File>(s, File_3, 3, name: nameof(File_3));
             File_4 = SerializeFile<RawData_ArchiveFile>(s, File_4, 4, name: nameof(File_4));
-            File_5 = SerializeFile<RawData_ArchiveFile>(s, File_5, 5, name: nameof(File_5));
+            File_5 = SerializeFile<ArchiveFile<MovementPath_File>>(s, File_5, 5, name: nameof(File_5));
             File_6 = SerializeFile<RawData_File>(s, File_6, 6, name: nameof(File_6));
             File_7 = SerializeFile<RawData_File>(s, File_7, 7, name: nameof(File_7));
 
