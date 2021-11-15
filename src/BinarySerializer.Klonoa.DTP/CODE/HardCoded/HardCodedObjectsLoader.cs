@@ -27,7 +27,7 @@ namespace BinarySerializer.Klonoa.DTP
                     {
                         TMD = LoadCutsceneAsset<PS1_TMD>(0),
                         Position = new KlonoaVector16(-0x10b0, -0x440, 0xdc0),
-                        // TODO: Add rotation
+                        Rotation = new KlonoaVector16(0, -1195, 0), // Custom
                     },
                 };
             });
