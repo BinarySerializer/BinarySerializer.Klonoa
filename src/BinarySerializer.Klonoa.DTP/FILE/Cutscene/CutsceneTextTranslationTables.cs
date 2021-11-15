@@ -136,7 +136,7 @@ namespace BinarySerializer.Klonoa.DTP
                     case CutsceneInstruction.InstructionType.DrawText:
                         var data_DrawText = (CutsceneInstructionData_DrawText)instruction.Data;
                         writeLine($"Character = {data_DrawText.CharacterName}");
-                        writeLine($"Unknown2 = {data_DrawText.Byte_01}");
+                        writeLine($"Value_02 = {data_DrawText.Byte_01}");
 
                         indent++;
 
@@ -178,6 +178,42 @@ namespace BinarySerializer.Klonoa.DTP
 
                         break;
 
+                    case CutsceneInstruction.InstructionType.Instruction_2:
+                        var data_2 = (CutsceneInstructionData_2)instruction.Data;
+                        writeLine($"Object = {data_2.ObjIndex}");
+                        writeLine($"Param_00 = {data_2.Short_Param00}");
+                        writeLine($"Param_02 = {data_2.Short_Param02}");
+                        writeLine($"Param_04 = {data_2.Short_Param04}");
+                        break;
+
+                    case CutsceneInstruction.InstructionType.Instruction_3:
+                        var data_3 = (CutsceneInstructionData_3)instruction.Data;
+                        writeLine($"Flags = {data_3.Flags}");
+                        writeLine($"Value_02 = {data_3.Int_02}");
+                        break;
+
+                    case CutsceneInstruction.InstructionType.CreateObj3D:
+                        var data_CreateObj3D = (CutsceneInstructionData_CreateObj3D)instruction.Data;
+                        writeLine($"SecondaryType = {data_CreateObj3D.SecondaryType}");
+                        writeLine($"Value_02 = {data_CreateObj3D.Int_02}");
+                        break;
+
+                    case CutsceneInstruction.InstructionType.Instruction_5:
+                        var data_5 = (CutsceneInstructionData_5)instruction.Data;
+                        writeLine($"Value_00 = {data_5.Byte_00}");
+                        break;
+
+                    case CutsceneInstruction.InstructionType.SetObjPosFromPath:
+                        var data_6 = (CutsceneInstructionData_SetObjPosFromPath)instruction.Data;
+                        writeLine($"Object = {data_6.ObjIndex}");
+                        writeLine($"MovementPathIndex = {data_6.MovementPathIndex}");
+                        writeLine($"MovementPathDistance = {data_6.MovementPathDistance}");
+                        writeLine($"Param_04 = {data_6.Short_Param04}");
+
+                        if (data_6.FlipX != null)
+                            writeLine($"FlipX = {data_6.FlipX}");
+                        break;
+
                     case CutsceneInstruction.InstructionType.SetObj2DAnimation:
                         var data_SetObjAnimation = (CutsceneInstructionData_SetObjAnimation)instruction.Data;
                         writeLine($"Object = {data_SetObjAnimation.ObjIndex}");
@@ -187,7 +223,16 @@ namespace BinarySerializer.Klonoa.DTP
                     case CutsceneInstruction.InstructionType.CreateObj2D:
                         var data_CreateObj = (CutsceneInstructionData_CreateObj)instruction.Data;
                         writeLine($"Object = {data_CreateObj.ObjIndex}");
-                        writeLine($"Unknown = {data_CreateObj.Int_02}");
+                        writeLine($"Value_02 = {data_CreateObj.Int_02}");
+                        break;
+
+                    case CutsceneInstruction.InstructionType.Instruction_9:
+                        var data_9 = (CutsceneInstructionData_9)instruction.Data;
+                        writeLine($"Object = {data_9.ObjIndex}");
+                        break;
+
+                    case CutsceneInstruction.InstructionType.CreateTextBox:
+                        // Nothing to log
                         break;
 
                     case CutsceneInstruction.InstructionType.ChangeSector:
@@ -202,6 +247,12 @@ namespace BinarySerializer.Klonoa.DTP
                         writeLine($"Position = ({data_SetObjPos.Position.X}, {data_SetObjPos.Position.Y}, {data_SetObjPos.Position.Z})");
                         break;
 
+                    case CutsceneInstruction.InstructionType.ClearVRAM:
+                        var data_ClearVRAM = (CutsceneInstructionData_ClearVRAM)instruction.Data;
+                        writeLine($"Value_00 = {data_ClearVRAM.Byte_00}");
+                        writeLine($"Value_02 = {data_ClearVRAM.Int_02}");
+                        break;
+
                     case CutsceneInstruction.InstructionType.SetCutsceneState:
                         var data_SetCutsceneState = (CutsceneInstructionData_SetCutsceneState)instruction.Data;
                         writeLine($"State = {data_SetCutsceneState.State}");
@@ -212,7 +263,6 @@ namespace BinarySerializer.Klonoa.DTP
                         // Do nothing
                         break;
 
-                    case CutsceneInstruction.InstructionType.CreateBackgroundObjects:
                     default:
                         var data_Default = (CutsceneInstructionData_Default)instruction.Data;
                         writeLine($"Data = {data_Default.RawBytes.ToHexString()}");
