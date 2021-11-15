@@ -219,6 +219,9 @@ namespace BinarySerializer.Klonoa.DTP
                             BonePositions = x.Positions,
                         }).ToArray()
                     };
+
+                    Data.Models[0].Position = new KlonoaVector16(0, -128, 1024); // Custom
+                    Data.Models[0].Rotation = new KlonoaVector16(0, -990, 0); // Custom
                     break;
 
                 case GlobalGameObjectType.Bell:

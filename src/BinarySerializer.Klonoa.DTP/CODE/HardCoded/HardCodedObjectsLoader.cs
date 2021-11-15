@@ -27,7 +27,7 @@ namespace BinarySerializer.Klonoa.DTP
                     {
                         TMD = LoadCutsceneAsset<PS1_TMD>(0),
                         Position = new KlonoaVector16(-0x10b0, -0x440, 0xdc0),
-                        Rotation = new KlonoaVector16(0, -1195, 0), // Custom
+                        Rotation = new KlonoaVector16(0, 2892, 0),
                     },
                 };
             });
@@ -118,7 +118,10 @@ namespace BinarySerializer.Klonoa.DTP
         private void LoadCutsceneObjects_5_0()
         {
             // Ghadius (FUN_5_7__8011bf00)
-            LoadCutsceneObject_Ghadius(0, 1, 2, 25, new KlonoaVector16(24, -40, 0), null, new PS1_VRAMRegion(0x240, 0x100, 0x10, 0x40)); // TODO: Fix pos
+            LoadCutsceneObject_Ghadius(0, 1, 2, 25, 
+                new KlonoaVector16(0, (-0x8000 >> 12) - (0x259000 >> 12), -0x400), // Custom z value 
+                new KlonoaVector16(0, 0xa40000 >> 12, 0), 
+                new PS1_VRAMRegion(0x240, 0x100, 0x10, 0x40));
 
             // TODO: What is file 24? 12 bytes.
         }
