@@ -30,5 +30,8 @@
 
         public static KlonoaVector16 operator +(KlonoaVector16 v1, KlonoaVector16 v2) => 
             new KlonoaVector16((short)(v1.X + v2.X), (short)(v1.Y + v2.Y), (short)(v1.Z + v2.Z));
+
+        public override bool UseShortLog => true;
+        public override string ToString() => $"({X}, {Y}, {Z})";
     }
 }

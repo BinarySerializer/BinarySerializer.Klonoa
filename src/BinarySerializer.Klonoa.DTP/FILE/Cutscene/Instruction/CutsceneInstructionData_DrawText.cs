@@ -3,14 +3,13 @@
     public class CutsceneInstructionData_DrawText : BaseCutsceneInstructionData
     {
         public byte CharacterName { get; set; }
-        public byte Byte_01 { get; set; }
         
         public TextCommand[] TextCommands { get; set; }
 
         public override void SerializeImpl(SerializerObject s)
         {
             CharacterName = s.Serialize<byte>(CharacterName, name: nameof(CharacterName));
-            Byte_01 = s.Serialize<byte>(Byte_01, name: nameof(Byte_01));
+            s.SerializePadding(1, logIfNotNull: false);
             ParamsBufferOffset = s.Serialize<uint>(ParamsBufferOffset, name: nameof(ParamsBufferOffset));
             DoAtParams(s, () =>
             {

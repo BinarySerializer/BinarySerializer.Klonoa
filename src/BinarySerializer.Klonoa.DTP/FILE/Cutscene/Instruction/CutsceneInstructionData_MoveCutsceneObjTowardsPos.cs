@@ -1,21 +1,24 @@
 ﻿namespace BinarySerializer.Klonoa.DTP
 {
-    public class CutsceneInstructionData_SetObjPos : BaseCutsceneInstructionData
+    public class CutsceneInstructionData_MoveCutsceneObjTowardsPos : BaseCutsceneInstructionData
     {
         public byte ObjIndex { get; set; }
+        public byte Byte_01 { get; set; } // Unused?
 
-        public short PositionRelativeObjIndex { get; set; } // If less than 0 then it's absolute
         public KlonoaVector16 Position { get; set; }
+        public short Short_Param06 { get; set; }
+        public short Short_Param08 { get; set; } // Value to divide position differences by
 
         public override void SerializeImpl(SerializerObject s)
         {
             ObjIndex = s.Serialize<byte>(ObjIndex, name: nameof(ObjIndex));
-            s.SerializePadding(1, logIfNotNull: false);
+            Byte_01 = s.Serialize<byte>(Byte_01, name: nameof(Byte_01));
             ParamsBufferOffset = s.Serialize<uint>(ParamsBufferOffset, name: nameof(ParamsBufferOffset));
             DoAtParams(s, () =>
             {
-                PositionRelativeObjIndex = s.Serialize<short>(PositionRelativeObjIndex, name: nameof(PositionRelativeObjIndex));
                 Position = s.SerializeObject<KlonoaVector16>(Position, name: nameof(Position));
+                Short_Param06 = s.Serialize<short>(Short_Param06, name: nameof(Short_Param06));
+                Short_Param08 = s.Serialize<short>(Short_Param08, name: nameof(Short_Param08));
             });
         }
     }

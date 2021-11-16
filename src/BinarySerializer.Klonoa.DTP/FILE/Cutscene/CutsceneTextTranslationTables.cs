@@ -136,7 +136,6 @@ namespace BinarySerializer.Klonoa.DTP
                     case CutsceneInstruction.InstructionType.DrawText:
                         var data_DrawText = (CutsceneInstructionData_DrawText)instruction.Data;
                         writeLine($"Character = {data_DrawText.CharacterName}");
-                        writeLine($"Value_02 = {data_DrawText.Byte_01}");
 
                         indent++;
 
@@ -178,6 +177,11 @@ namespace BinarySerializer.Klonoa.DTP
 
                         break;
 
+                    case CutsceneInstruction.InstructionType.SetCameraAnimation:
+                        var data_SetCameraAnimation = (CutsceneInstructionData_SetCameraAnimation)instruction.Data;
+                        writeLine($"Animation = {data_SetCameraAnimation.AnimIndex}");
+                        break;
+
                     case CutsceneInstruction.InstructionType.Instruction_2:
                         var data_2 = (CutsceneInstructionData_2)instruction.Data;
                         writeLine($"Object = {data_2.ObjIndex}");
@@ -192,10 +196,10 @@ namespace BinarySerializer.Klonoa.DTP
                         writeLine($"Value_02 = {data_3.Int_02}");
                         break;
 
-                    case CutsceneInstruction.InstructionType.CreateObj3D:
-                        var data_CreateObj3D = (CutsceneInstructionData_CreateObj3D)instruction.Data;
-                        writeLine($"SecondaryType = {data_CreateObj3D.SecondaryType}");
-                        writeLine($"Value_02 = {data_CreateObj3D.Int_02}");
+                    case CutsceneInstruction.InstructionType.CreateGameObject_12:
+                        var data_CreateGameObject_12 = (CutsceneInstructionData_CreateGameObject_12)instruction.Data;
+                        writeLine($"SecondaryType = {data_CreateGameObject_12.SecondaryType + 12}");
+                        writeLine($"Value_02 = {data_CreateGameObject_12.Int_02}");
                         break;
 
                     case CutsceneInstruction.InstructionType.Instruction_5:
@@ -203,27 +207,27 @@ namespace BinarySerializer.Klonoa.DTP
                         writeLine($"Value_00 = {data_5.Byte_00}");
                         break;
 
-                    case CutsceneInstruction.InstructionType.SetObjPosFromPath:
-                        var data_6 = (CutsceneInstructionData_SetObjPosFromPath)instruction.Data;
-                        writeLine($"Object = {data_6.ObjIndex}");
-                        writeLine($"MovementPathIndex = {data_6.MovementPathIndex}");
-                        writeLine($"MovementPathDistance = {data_6.MovementPathDistance}");
-                        writeLine($"Param_04 = {data_6.Short_Param04}");
+                    case CutsceneInstruction.InstructionType.SetCutsceneObjPosFromPath:
+                        var data_SetCutsceneObjPosFromPath = (CutsceneInstructionData_SetCutsceneObjPosFromPath)instruction.Data;
+                        writeLine($"Object = {data_SetCutsceneObjPosFromPath.ObjIndex}");
+                        writeLine($"MovementPathIndex = {data_SetCutsceneObjPosFromPath.MovementPathIndex}");
+                        writeLine($"MovementPathDistance = {data_SetCutsceneObjPosFromPath.MovementPathDistance}");
+                        writeLine($"Param_04 = {data_SetCutsceneObjPosFromPath.Short_Param04}");
 
-                        if (data_6.FlipX != null)
-                            writeLine($"FlipX = {data_6.FlipX}");
+                        if (data_SetCutsceneObjPosFromPath.FlipX != null)
+                            writeLine($"FlipX = {data_SetCutsceneObjPosFromPath.FlipX}");
                         break;
 
-                    case CutsceneInstruction.InstructionType.SetObj2DAnimation:
-                        var data_SetObjAnimation = (CutsceneInstructionData_SetObjAnimation)instruction.Data;
-                        writeLine($"Object = {data_SetObjAnimation.ObjIndex}");
-                        writeLine($"Animation = {data_SetObjAnimation.AnimIndex}");
+                    case CutsceneInstruction.InstructionType.SetCutsceneObjAnimation:
+                        var data_SetCutsceneObjAnimation = (CutsceneInstructionData_SetCutsceneObjAnimation)instruction.Data;
+                        writeLine($"Object = {data_SetCutsceneObjAnimation.ObjIndex}");
+                        writeLine($"Animation = {data_SetCutsceneObjAnimation.AnimIndex}");
                         break;
 
-                    case CutsceneInstruction.InstructionType.CreateObj2D:
-                        var data_CreateObj = (CutsceneInstructionData_CreateObj)instruction.Data;
-                        writeLine($"Object = {data_CreateObj.ObjIndex}");
-                        writeLine($"Value_02 = {data_CreateObj.Int_02}");
+                    case CutsceneInstruction.InstructionType.CreateCutsceneObj:
+                        var data_CreateCutsceneObj = (CutsceneInstructionData_CreateCutsceneObj)instruction.Data;
+                        writeLine($"Object = {data_CreateCutsceneObj.ObjIndex}");
+                        writeLine($"Value_02 = {data_CreateCutsceneObj.Int_02}");
                         break;
 
                     case CutsceneInstruction.InstructionType.Instruction_9:
@@ -235,22 +239,146 @@ namespace BinarySerializer.Klonoa.DTP
                         // Nothing to log
                         break;
 
+                    case CutsceneInstruction.InstructionType.ModifyCameraAnimation:
+                        var data_ModifyCameraAnimation = (CutsceneInstructionData_ModifyCameraAnimation)instruction.Data;
+                        writeLine($"Animation = {data_ModifyCameraAnimation.AnimIndex}");
+                        writeLine($"Value_02 = {data_ModifyCameraAnimation.Int_02}");
+                        break;
+
+                    case CutsceneInstruction.InstructionType.Instruction_12:
+                        var data_12 = (CutsceneInstructionData_12)instruction.Data;
+                        writeLine($"Value_00 = {data_12.Byte_00}");
+                        break;
+
+                    case CutsceneInstruction.InstructionType.ModifyCutsceneObj_0:
+                        var data_ModifyCutsceneObj_0 = (CutsceneInstructionData_ModifyCutsceneObj_0)instruction.Data;
+                        writeLine($"Object = {data_ModifyCutsceneObj_0.ObjIndex}");
+                        writeLine($"ActionType = {data_ModifyCutsceneObj_0.ActionType}");
+                        break;
+
+                    case CutsceneInstruction.InstructionType.CreateGameObject_4:
+                        var data_CreateGameObject_4 = (CutsceneInstructionData_CreateGameObject_4)instruction.Data;
+                        writeLine($"SecondaryType = {data_CreateGameObject_4.SecondaryType + 4}");
+                        break;
+
+                    case CutsceneInstruction.InstructionType.ModifyCutsceneObj_1:
+                        var data_ModifyCutsceneObj_1 = (CutsceneInstructionData_ModifyCutsceneObj_1)instruction.Data;
+                        writeLine($"Object = {data_ModifyCutsceneObj_1.ObjIndex}");
+                        writeLine($"ActionType = {data_ModifyCutsceneObj_1.ActionType}");
+                        break;
+
                     case CutsceneInstruction.InstructionType.ChangeSector:
                         var data_ChangeSector = (CutsceneInstructionData_ChangeSector)instruction.Data;
                         writeLine($"Sector = {data_ChangeSector.SectorIndex}");
                         break;
 
-                    case CutsceneInstruction.InstructionType.SetObjPos:
-                        var data_SetObjPos = (CutsceneInstructionData_SetObjPos)instruction.Data;
-                        writeLine($"Object = {data_SetObjPos.ObjIndex}");
-                        writeLine($"RelativeObject = {data_SetObjPos.PositionRelativeObjIndex}");
-                        writeLine($"Position = ({data_SetObjPos.Position.X}, {data_SetObjPos.Position.Y}, {data_SetObjPos.Position.Z})");
+                    case CutsceneInstruction.InstructionType.SetCutsceneObjPos:
+                        var data_SetCutsceneObjPos = (CutsceneInstructionData_SetCutsceneObjPos)instruction.Data;
+                        writeLine($"Object = {data_SetCutsceneObjPos.ObjIndex}");
+                        writeLine($"RelativeObject = {data_SetCutsceneObjPos.PositionRelativeObjIndex}");
+                        writeLine($"Position = ({data_SetCutsceneObjPos.Position.X}, {data_SetCutsceneObjPos.Position.Y}, {data_SetCutsceneObjPos.Position.Z})");
                         break;
 
-                    case CutsceneInstruction.InstructionType.ClearVRAM:
-                        var data_ClearVRAM = (CutsceneInstructionData_ClearVRAM)instruction.Data;
-                        writeLine($"Value_00 = {data_ClearVRAM.Byte_00}");
-                        writeLine($"Value_02 = {data_ClearVRAM.Int_02}");
+                    case CutsceneInstruction.InstructionType.Instruction_18:
+                        var data_18 = (CutsceneInstructionData_18)instruction.Data;
+                        writeLine($"Object = {data_18.ObjIndex}");
+                        writeLine($"Param_00 = {data_18.Short_Param00}");
+                        writeLine($"Param_02 = {data_18.Short_Param02}");
+                        break;
+
+                    case CutsceneInstruction.InstructionType.MoveCutsceneObjTowardsRelativeObj:
+                        var data_19 = (CutsceneInstructionData_MoveCutsceneObjTowardsRelativeObj)instruction.Data;
+                        writeLine($"Object = {data_19.ObjIndex}");
+                        writeLine($"RelativeObject = {data_19.RelativeObjIndex}");
+                        writeLine($"Param_02 = {data_19.Short_Param02}");
+                        writeLine($"Param_04 = {data_19.Short_Param04}");
+                        break;
+
+                    case CutsceneInstruction.InstructionType.Instruction_20:
+                        var data_20 = (CutsceneInstructionData_20)instruction.Data;
+                        writeLine($"Object = {data_20.ObjIndex}");
+                        writeLine($"Param_00 = {data_20.Short_Param00}");
+                        writeLine($"Param_02 = {data_20.Short_Param02}");
+                        writeLine($"Param_04 = {data_20.Short_Param04}");
+                        break;
+
+                    case CutsceneInstruction.InstructionType.FlipCutsceneObj:
+                        var data_FlipCutsceneObj = (CutsceneInstructionData_FlipCutsceneObj)instruction.Data;
+                        writeLine($"Object = {data_FlipCutsceneObj.ObjIndex}");
+                        writeLine($"FlipX = {data_FlipCutsceneObj.FlipX != 0}");
+                        break;
+
+                    case CutsceneInstruction.InstructionType.Instruction_22:
+                        var data_22 = (CutsceneInstructionData_22)instruction.Data;
+                        writeLine($"Object = {data_22.ObjIndex}");
+                        writeLine($"Param_00 = {data_22.Short_Param00}");
+                        writeLine($"Param_02 = {data_22.Short_Param02}");
+                        writeLine($"Param_04 = {data_22.Short_Param04}");
+                        break;
+
+                    case CutsceneInstruction.InstructionType.MoveCutsceneObjTowardsPos:
+                        var data_MoveCutsceneObjTowardsPos = (CutsceneInstructionData_MoveCutsceneObjTowardsPos)instruction.Data;
+                        writeLine($"Object = {data_MoveCutsceneObjTowardsPos.ObjIndex}");
+                        writeLine($"Position = {data_MoveCutsceneObjTowardsPos.Position}");
+                        writeLine($"Param_06 = {data_MoveCutsceneObjTowardsPos.Short_Param06}");
+                        writeLine($"Param_08 = {data_MoveCutsceneObjTowardsPos.Short_Param08}");
+                        break;
+
+                    case CutsceneInstruction.InstructionType.RepeatJump:
+                        var data_RepeatJump = (CutsceneInstructionData_RepeatJump)instruction.Data;
+                        writeLine($"JumpOffset = {data_RepeatJump.JumpOffset}");
+                        writeLine($"RepeatCount = {data_RepeatJump.RepeatCount}");
+                        break;
+
+                    case CutsceneInstruction.InstructionType.MoveCamera:
+                        var data_MoveCamera = (CutsceneInstructionData_MoveCamera)instruction.Data;
+                        writeLine($"SnapToPos = {!data_MoveCamera.Animate}");
+                        writeLine($"Position = {data_MoveCamera.Position}");
+                        writeLine($"Rotation = ({data_MoveCamera.RotX}, {data_MoveCamera.RotY}, 0)");
+                        break;
+
+                    case CutsceneInstruction.InstructionType.Instruction_26:
+                        var data_26 = (CutsceneInstructionData_26)instruction.Data;
+                        writeLine($"Object = {data_26.ObjIndex}");
+                        writeLine($"Value_02 = {data_26.Int_02}");
+                        break;
+
+                    case CutsceneInstruction.InstructionType.ModifyVRAM:
+                        var data_ModifyVRAM = (CutsceneInstructionData_ModifyVRAM)instruction.Data;
+
+                        writeLine($"Type = {data_ModifyVRAM.Type}");
+
+                        if (data_ModifyVRAM.Type == CutsceneInstructionData_ModifyVRAM.ModifyType.ClearImage)
+                        {
+                            writeLine($"Region = {data_ModifyVRAM.ClearRegion}");
+                        }
+                        else
+                        {
+                            writeLine($"SourceRegion = {data_ModifyVRAM.MoveRegion_Source}");
+                            writeLine($"DestinationRegion = {data_ModifyVRAM.MoveRegion_Destination}");
+                        }
+
+                        break;
+
+                    case CutsceneInstruction.InstructionType.Instruction_28:
+                        var data_28 = (CutsceneInstructionData_28)instruction.Data;
+                        writeLine($"Object = {data_28.ObjIndex}");
+                        writeLine($"Value_02 = {data_28.Int_02}");
+                        break;
+
+                    case CutsceneInstruction.InstructionType.Instruction_29:
+                        var data_29 = (CutsceneInstructionData_29)instruction.Data;
+                        writeLine($"Object = {data_29.ObjIndex}");
+                        writeLine($"Param_00 = {data_29.Short_Param00}");
+                        writeLine($"Param_02 = {data_29.Short_Param02}");
+                        writeLine($"Param_04 = {data_29.Short_Param04}");
+                        writeLine($"Param_06 = {data_29.Short_Param06}");
+                        break;
+
+                    case CutsceneInstruction.InstructionType.Instruction_30:
+                        var data_30 = (CutsceneInstructionData_30)instruction.Data;
+                        writeLine($"Object = {data_30.ObjIndex}");
+                        writeLine($"Value_02 = {data_30.Int_02}");
                         break;
 
                     case CutsceneInstruction.InstructionType.SetCutsceneState:

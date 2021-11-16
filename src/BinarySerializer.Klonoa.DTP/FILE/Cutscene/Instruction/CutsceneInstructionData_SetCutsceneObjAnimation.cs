@@ -1,6 +1,6 @@
 ﻿namespace BinarySerializer.Klonoa.DTP
 {
-    public class CutsceneInstructionData_SetObjAnimation : BaseCutsceneInstructionData
+    public class CutsceneInstructionData_SetCutsceneObjAnimation : BaseCutsceneInstructionData
     {
         public byte ObjIndex { get; set; }
         public int AnimIndex { get; set; }
