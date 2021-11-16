@@ -347,6 +347,18 @@ namespace BinarySerializer.Klonoa.DTP
             });
         }
 
+        private void LoadCutsceneObjects_21_1()
+        {
+            for (int i = 0; i < 3; i++)
+            {
+                RawData_File vramData = LoadCutsceneAsset<RawData_File>(12 + i);
+
+                // Overwrites sprite data so the sprites in this sector will work
+                if (LoadVRAMData)
+                    Loader.AddToVRAM(vramData.Data, new PS1_VRAMRegion((short)(0x200 + (0x40 * i)), 0, 0x40, 0x100));
+            }
+        }
+
         private void LoadCutsceneObjects_22_0()
         {
             // Karal
@@ -1204,7 +1216,11 @@ namespace BinarySerializer.Klonoa.DTP
                     LoadCutsceneObjects_21_0();
                     break;
 
-                // TODO: 21 1-14 have VRAM textures and palette for end transition
+                case 21 when LevelSector is 1:
+                    LoadCutsceneObjects_21_1();
+                    break;
+
+                // TODO: 21 1-11 have VRAM textures and palette for end transition
 
                 case 22 when LevelSector is 0:
                     LoadCutsceneObjects_22_0();
