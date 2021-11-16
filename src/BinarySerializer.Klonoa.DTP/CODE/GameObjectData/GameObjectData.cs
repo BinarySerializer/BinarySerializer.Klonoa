@@ -18,6 +18,7 @@ namespace BinarySerializer.Klonoa.DTP
         public MovementPath_File MovementPaths { get; set; }
         public PS1_TIM TIM { get; set; }
         public TIM_ArchiveFile TIMArchive { get; set; }
+        public GameObjectData_Sprites[] Sprites { get; set; }
         public VectorAnimation_File LightPositions { get; set; } // Each light has two positions, source and destination
         public ModelAnimation_ArchiveFile AbsoluteTransform { get; set; }
         public ArchiveFile<ModelAnimation_ArchiveFile> AbsoluteTransforms { get; set; }

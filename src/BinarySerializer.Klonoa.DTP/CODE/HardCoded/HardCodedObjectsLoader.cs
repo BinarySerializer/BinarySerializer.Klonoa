@@ -38,7 +38,19 @@ namespace BinarySerializer.Klonoa.DTP
                 obj.CameraAnimations = LoadCutsceneAsset<CameraAnimations_File>(1);
             });
 
-            // TODO: Paths archive in file 3, used for some sprite object
+            // Sprites movement paths
+            ArchiveFile<MovementPath_File> paths = LoadCutsceneAsset<ArchiveFile<MovementPath_File>>(3);
+
+            // The game seems to only use the first one - are the rest unused?
+            for (int i = 0; i < 1; i++)
+            {
+                MovementPath_File file = paths.Files[i];
+
+                AddGameObject(GlobalGameObjectType.Cutscene_Paths, obj =>
+                {
+                    obj.MovementPaths = file;
+                });
+            }
         }
 
         private void LoadCutsceneObjects_3_1()
@@ -123,7 +135,28 @@ namespace BinarySerializer.Klonoa.DTP
                 new KlonoaVector16(0, 0xa40000 >> 12, 0), 
                 new PS1_VRAMRegion(0x240, 0x100, 0x10, 0x40));
 
-            // TODO: What is file 24? 12 bytes.
+            // Sprite
+            AddGameObject(GlobalGameObjectType.Cutscene_Sprites, obj =>
+            {
+                SpriteTexture tex = LoadCutsceneAsset<SpriteTexture>(24);
+
+                obj.Sprites = new GameObjectData_Sprites[]
+                {
+                    new GameObjectData_Sprites()
+                    {
+                        Sprites = new Sprite_File[]
+                        {
+                            new Sprite_File()
+                            {
+                                Textures = new SpriteTexture[]
+                                {
+                                    tex
+                                }
+                            }
+                        }
+                    }
+                };
+            });
         }
 
         private void LoadCutsceneObject_Karal_Pamela(int tmdIndex, int animIndex, int palIndex, KlonoaVector16 pos)
@@ -335,7 +368,7 @@ namespace BinarySerializer.Klonoa.DTP
         {
             // TODO: Position and duplicate
             // Canon platform
-            AddGameObject(GlobalGameObjectType.Cutscene_BeamSource, obj =>
+            AddGameObject(GlobalGameObjectType.Cutscene_Canon, obj =>
             {
                 obj.Models = new GameObjectData_Model[]
                 {
@@ -394,6 +427,20 @@ namespace BinarySerializer.Klonoa.DTP
 
         #region Bosses
 
+        private void LoadBossObject_Sprites(int index)
+        {
+            // Sprites
+            AddGameObject(GlobalGameObjectType.Cutscene_Sprites, obj =>
+            {
+                var sprites = LoadBossAsset<ArchiveFile<Sprites_ArchiveFile>>(index);
+
+                obj.Sprites = sprites.Files.Select(x => new GameObjectData_Sprites()
+                {
+                    Sprites = x.Files
+                }).ToArray();
+            });
+        }
+
         private void LoadBossObjects_8_0()
         {
             // Pamela
@@ -420,8 +467,8 @@ namespace BinarySerializer.Klonoa.DTP
                 // TODO: Files 3 and 5 have palettes
             });
 
-            // TODO: Sprites - for Seadoph?
-            LoadBossAsset<ArchiveFile<Sprites_ArchiveFile>>(2);
+            // Sprites
+            LoadBossObject_Sprites(2);
         }
 
         private void LoadBossObjects_11_0()
@@ -568,8 +615,6 @@ namespace BinarySerializer.Klonoa.DTP
                 };
 
                 obj.Position = new KlonoaVector16(0, -0x300000 >> 12, 0xa00000 >> 12);
-
-                // TODO: File 18: VRAM data
             });
 
             // Obstacles
@@ -606,8 +651,11 @@ namespace BinarySerializer.Klonoa.DTP
             // TODO: Palettes
             LoadBossAsset<RawData_ArchiveFile>(15); // Palettes
 
-            // TODO: Sprites
-            LoadBossAsset<ArchiveFile<Sprites_ArchiveFile>>(17);
+            // Sprites
+            LoadBossObject_Sprites(17);
+
+            // TODO: Palettes
+            LoadBossAsset<RawData_File>(18); // Palettes
 
             // TODO: Palette
             LoadBossAsset<RawData_File>(23); // Palette
@@ -717,8 +765,14 @@ namespace BinarySerializer.Klonoa.DTP
             // TODO: File 14 has pal?
             // TODO: File 15 has pal? Unused?
 
-            // TODO: File 16 has sprites
-            LoadBossAsset<ArchiveFile<Sprites_ArchiveFile>>(16);
+            LoadBossObject_Sprites(16);
+        }
+
+        private void LoadBossObjects_20_0()
+        {
+            // Note: These do not really get used here, but to allow them to be viewed in Ray1Map it's easier to load them here as well
+            // Sprites
+            LoadBossObject_Sprites(6);
         }
 
         private void LoadBossObjects_20_1()
@@ -818,8 +872,8 @@ namespace BinarySerializer.Klonoa.DTP
                 }).ToArray();
             });
 
-            // TODO: File 6 has sprites
-            LoadBossAsset<ArchiveFile<Sprites_ArchiveFile>>(6);
+            // Sprites
+            LoadBossObject_Sprites(6);
 
             var tmds7 = LoadBossAsset<ArchiveFile<PS1_TMD>>(7);
 
@@ -983,8 +1037,7 @@ namespace BinarySerializer.Klonoa.DTP
                 });
             }
 
-            // TODO: File 15 has sprites
-            LoadBossAsset<ArchiveFile<Sprites_ArchiveFile>>(15);
+            LoadBossObject_Sprites(15);
 
             // TODO: TIM files (not an animation, they reference different VRAM locations)
             LoadBossAsset<TIM_ArchiveFile>(22);
@@ -1207,6 +1260,10 @@ namespace BinarySerializer.Klonoa.DTP
                     break;
 
                 // TODO: 19 0 has VRAM textures for end transition
+
+                case 20 when LevelSector is 0:
+                    LoadBossObjects_20_0();
+                    break;
 
                 case 20 when LevelSector is 1:
                     LoadBossObjects_20_1();
