@@ -1,11 +1,12 @@
-﻿namespace BinarySerializer.Klonoa.DTP;
-
-public class EnemyData_11 : BaseEnemyData
+﻿namespace BinarySerializer.Klonoa.DTP
 {
-    public byte[] Bytes_08 { get; set; }
-
-    protected override void SerializeData(SerializerObject s)
+    public class EnemyData_11 : BaseEnemyData
     {
-        Bytes_08 = s.SerializeArray<byte>(Bytes_08, 0x24 - 8, name: nameof(Bytes_08));
+        public byte[] Bytes_08 { get; set; }
+
+        protected override void SerializeData(SerializerObject s)
+        {
+            Bytes_08 = s.SerializeArray<byte>(Bytes_08, 0x24 - 8, name: nameof(Bytes_08));
+        }
     }
 }
