@@ -13,7 +13,7 @@
 
         public short MovementDataIndex { get; set; }
         public short MovementDataCount { get; set; }
-        public EnemyMovementData[] AdditionalData { get; set; }
+        public EnemyMovementData[] MovementData { get; set; }
 
         public override void SerializeImpl(SerializerObject s)
         {
@@ -29,7 +29,7 @@
 
             if (MovementDataCount > 0)
                 s.DoAt(Pre_LevelData2D.Enemy_AdditionalDataPointer + MovementDataIndex * 0x14, () =>
-                    AdditionalData = s.SerializeObjectArray<EnemyMovementData>(AdditionalData, MovementDataCount, name: nameof(AdditionalData)));
+                    MovementData = s.SerializeObjectArray<EnemyMovementData>(MovementData, MovementDataCount, name: nameof(MovementData)));
         }
 
         protected abstract void SerializeData(SerializerObject s);
