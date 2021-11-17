@@ -2,7 +2,7 @@
 {
     public class CutsceneInstructionData_MoveCamera : BaseCutsceneInstructionData
     {
-        public bool Animate { get; set; } // If false it goes to directly
+        public byte Time { get; set; } // If 0 it goes to position directly
 
         public KlonoaVector16 Position { get; set; }
         public short RotX { get; set; }
@@ -10,7 +10,7 @@
 
         public override void SerializeImpl(SerializerObject s)
         {
-            Animate = s.Serialize<bool>(Animate, name: nameof(Animate));
+            Time = s.Serialize<byte>(Time, name: nameof(Time));
             s.SerializePadding(1, logIfNotNull: false);
             ParamsBufferOffset = s.Serialize<uint>(ParamsBufferOffset, name: nameof(ParamsBufferOffset));
             DoAtParams(s, () =>

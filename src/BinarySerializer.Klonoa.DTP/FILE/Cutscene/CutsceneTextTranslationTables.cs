@@ -77,7 +77,14 @@ namespace BinarySerializer.Klonoa.DTP
             ["iZNuH162Ncgkqd1ghijWORNhafM="] = '”',
         };
 
-        public static string CutsceneToText(Cutscene cutscene, Dictionary<string, char> translationTable, bool includeInstructionIndex = false, bool normalCutscene = true)
+        public delegate void InstructionFormatter(Action<string> writeLineAction, CutsceneInstruction instruction, string[] fontHashes);
+
+        public static string CutsceneToText(
+            Cutscene cutscene, 
+            Dictionary<string, char> translationTable, 
+            bool includeInstructionIndex = false, 
+            bool normalCutscene = true, 
+            Dictionary<CutsceneInstruction.InstructionType, InstructionFormatter> overrideFormatters = null)
         {
             var str = new StringBuilder();
 
@@ -117,7 +124,7 @@ namespace BinarySerializer.Klonoa.DTP
 
             var instructionIndex = 0;
 
-            foreach (var instruction in normalCutscene ? cutscene.Cutscene_Normal.Instructions : cutscene.Cutscene_Skip.Instructions)
+            foreach (CutsceneInstruction instruction in normalCutscene ? cutscene.Cutscene_Normal.Instructions : cutscene.Cutscene_Skip.Instructions)
             {
                 if (includeInstructionIndex)
                     write($"{$"[{instructionIndex}] ",-7}");
@@ -130,6 +137,21 @@ namespace BinarySerializer.Klonoa.DTP
                     writeLine($"Instruction_{(int)instruction.Type}");
 
                 indent++;
+
+                if (overrideFormatters != null)
+                {
+                    var overrideFormatter = overrideFormatters.TryGetValue(instruction.Type, out InstructionFormatter f) ? f : null;
+
+                    if (overrideFormatter != null)
+                    {
+                        overrideFormatter(writeLine, instruction, fontHashes);
+
+                        indent--;
+                        instructionIndex++;
+
+                        continue;
+                    }
+                }
 
                 switch (instruction.Type)
                 {
@@ -332,7 +354,7 @@ namespace BinarySerializer.Klonoa.DTP
 
                     case CutsceneInstruction.InstructionType.MoveCamera:
                         var data_MoveCamera = (CutsceneInstructionData_MoveCamera)instruction.Data;
-                        writeLine($"SnapToPos = {!data_MoveCamera.Animate}");
+                        writeLine($"Time = {data_MoveCamera.Time}");
                         writeLine($"Position = {data_MoveCamera.Position}");
                         writeLine($"Rotation = ({data_MoveCamera.RotX}, {data_MoveCamera.RotY}, 0)");
                         break;
@@ -354,8 +376,8 @@ namespace BinarySerializer.Klonoa.DTP
                         }
                         else
                         {
-                            writeLine($"SourceRegion = {data_ModifyVRAM.MoveRegion_Source}");
-                            writeLine($"DestinationRegion = {data_ModifyVRAM.MoveRegion_Destination}");
+                            writeLine($"SrcRegion = {data_ModifyVRAM.MoveRegion_Source}");
+                            writeLine($"DstRegion = {data_ModifyVRAM.MoveRegion_Destination}");
                         }
 
                         break;
