@@ -6,7 +6,10 @@
 
         public override void SerializeImpl(SerializerObject s)
         {
-            Blocks = s.SerializeObjectArray<MovementPathBlock>(Blocks, Pre_FileSize / 28, name: nameof(Blocks));
+            if (Pre_FileSize == 4)
+                s.SerializePadding(4, logIfNotNull: true);
+            else
+                Blocks = s.SerializeObjectArray<MovementPathBlock>(Blocks, Pre_FileSize / 28, name: nameof(Blocks));
         }
     }
 }
