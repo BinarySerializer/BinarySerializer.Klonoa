@@ -71,7 +71,7 @@ namespace BinarySerializer.Klonoa.DTP
             [7] = new Dictionary<int, GlobalGameObjectType>()
             {
                 [4101] = GlobalGameObjectType.GeyserPlatform,
-                // TODO: 4102 is archive of movement path files, seems to be for water drops in cave
+                [4102] = GlobalGameObjectType.MovementPaths,
                 [4103] = GlobalGameObjectType.PaletteAnimations,
                 [4104] = GlobalGameObjectType.TextureAnimation,
                 [4116] = GlobalGameObjectType.VRAMScrollAnimation,

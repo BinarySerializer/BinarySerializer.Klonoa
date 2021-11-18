@@ -1071,6 +1071,10 @@ namespace BinarySerializer.Klonoa.DTP
                 case GlobalGameObjectType.Fireworks: // FUN_24_7__80119734
                     break;
 
+                case GlobalGameObjectType.MovementPaths:
+                    Data.MovementPathsArchive = SerializeDataFile<ArchiveFile<MovementPath_File>>(s, Data.MovementPathsArchive, name: nameof(Data.MovementPathsArchive));
+                    break;
+
                 default:
                     throw new ArgumentOutOfRangeException();
             }

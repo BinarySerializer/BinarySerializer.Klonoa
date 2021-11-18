@@ -16,6 +16,7 @@ namespace BinarySerializer.Klonoa.DTP
         public RawData_File[] UnknownData { get; set; }
         public CollisionTriangles_File Collision { get; set; }
         public MovementPath_File MovementPaths { get; set; }
+        public ArchiveFile<MovementPath_File> MovementPathsArchive { get; set; }
         public PS1_TIM TIM { get; set; }
         public TIM_ArchiveFile TIMArchive { get; set; }
         public GameObjectData_Sprites[] Sprites { get; set; }

@@ -86,6 +86,7 @@
         WeatherEffect,
         LevelTimer,
         Fireworks,
+        MovementPaths, // Usually to define the path of certain graphical effects, such as water drops
 
         Cutscene_Window,
         Cutscene_Camera,
