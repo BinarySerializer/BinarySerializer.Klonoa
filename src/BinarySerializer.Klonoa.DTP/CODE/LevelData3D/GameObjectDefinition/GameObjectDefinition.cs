@@ -953,13 +953,15 @@ namespace BinarySerializer.Klonoa.DTP
 
                     PS1_TMD tmd = SerializeDataFile<PS1_TMD>(s, Data.Models[0].TMD, modelIndex: 0, name: nameof(GameObjectData_Model.TMD));
 
+                    Data.Models[0].Collision = SerializeDataFile<CollisionTriangles_File>(s, Data.Collision, name: nameof(Data.Collision));
+
                     for (int i = 0; i < count; i++)
                     {
                         Data.Models[i].TMD = tmd;
                         Data.Models[i].Position = Data.GeyserPlatformPositions[i].Position;
+                        Data.Models[i].Collision = Data.Models[0].Collision;
                     }
 
-                    Data.Collision = SerializeDataFile<CollisionTriangles_File>(s, Data.Collision, name: nameof(Data.Collision));
                     break;
 
                 case GlobalGameObjectType.ScrollAnimation:

@@ -5,6 +5,7 @@ namespace BinarySerializer.Klonoa.DTP
     public class GameObjectData_Model
     {
         public PS1_TMD TMD { get; set; }
+        public CollisionTriangles_File Collision { get; set; }
         public KlonoaVector16[] TMDObjectPositionOffsets { get; set; }
         public UnknownModelObjectsData_File UnknownModelObjectsData { get; set; }
         public ArchiveFile<RongoLangoModelBoneAnimation_ArchiveFile> RongoLangoModelAnimations { get; set; }
