@@ -252,9 +252,9 @@ namespace BinarySerializer.Klonoa.DTP
                         writeLine($"Value_02 = {data_CreateCutsceneObj.Int_02}");
                         break;
 
-                    case CutsceneInstruction.InstructionType.Instruction_9:
-                        var data_9 = (CutsceneInstructionData_9)instruction.Data;
-                        writeLine($"Object = {data_9.ObjIndex}");
+                    case CutsceneInstruction.InstructionType.StopAnimation:
+                        var data_StopAnimation = (CutsceneInstructionData_StopAnimation)instruction.Data;
+                        writeLine($"Object = {data_StopAnimation.ObjIndex}");
                         break;
 
                     case CutsceneInstruction.InstructionType.CreateTextBox:
@@ -272,10 +272,10 @@ namespace BinarySerializer.Klonoa.DTP
                         writeLine($"Value_00 = {data_12.Byte_00}");
                         break;
 
-                    case CutsceneInstruction.InstructionType.ModifyCutsceneObj_0:
-                        var data_ModifyCutsceneObj_0 = (CutsceneInstructionData_ModifyCutsceneObj_0)instruction.Data;
-                        writeLine($"Object = {data_ModifyCutsceneObj_0.ObjIndex}");
-                        writeLine($"ActionType = {data_ModifyCutsceneObj_0.ActionType}");
+                    case CutsceneInstruction.InstructionType.DestroyCutsceneObj:
+                        var data_DestroyCutsceneObj = (CutsceneInstructionData_DestroyCutsceneObj)instruction.Data;
+                        writeLine($"Object = {data_DestroyCutsceneObj.ObjIndex}");
+                        writeLine($"ActionType = {data_DestroyCutsceneObj.ActionType}");
                         break;
 
                     case CutsceneInstruction.InstructionType.CreateGameObject_4:
@@ -283,10 +283,10 @@ namespace BinarySerializer.Klonoa.DTP
                         writeLine($"SecondaryType = {data_CreateGameObject_4.SecondaryType + 4}");
                         break;
 
-                    case CutsceneInstruction.InstructionType.ModifyCutsceneObj_1:
-                        var data_ModifyCutsceneObj_1 = (CutsceneInstructionData_ModifyCutsceneObj_1)instruction.Data;
-                        writeLine($"Object = {data_ModifyCutsceneObj_1.ObjIndex}");
-                        writeLine($"ActionType = {data_ModifyCutsceneObj_1.ActionType}");
+                    case CutsceneInstruction.InstructionType.ModifyCutsceneObjRendering:
+                        var data_ModifyCutsceneObjRendering = (CutsceneInstructionData_ModifyCutsceneObjRendering)instruction.Data;
+                        writeLine($"Object = {data_ModifyCutsceneObjRendering.ObjIndex}");
+                        writeLine($"ActionType = {data_ModifyCutsceneObjRendering.ActionType}");
                         break;
 
                     case CutsceneInstruction.InstructionType.ChangeSector:

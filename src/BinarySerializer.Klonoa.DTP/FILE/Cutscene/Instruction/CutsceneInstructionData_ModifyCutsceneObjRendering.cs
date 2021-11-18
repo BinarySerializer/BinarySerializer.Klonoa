@@ -1,6 +1,6 @@
 ﻿namespace BinarySerializer.Klonoa.DTP
 {
-    public class CutsceneInstructionData_ModifyCutsceneObj_1 : BaseCutsceneInstructionData
+    public class CutsceneInstructionData_ModifyCutsceneObjRendering : BaseCutsceneInstructionData
     {
         public byte ObjIndex { get; set; }
         public int ActionType { get; set; } // 0-4, 5-8, -1
