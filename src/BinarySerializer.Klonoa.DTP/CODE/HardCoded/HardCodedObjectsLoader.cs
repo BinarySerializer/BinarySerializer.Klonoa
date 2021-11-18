@@ -159,7 +159,7 @@ namespace BinarySerializer.Klonoa.DTP
             });
         }
 
-        private void LoadCutsceneObject_Karal_Pamela(int tmdIndex, int animIndex, int palIndex, KlonoaVector16 pos)
+        private void LoadCutsceneObject_Karal_Pamela(int tmdIndex, int animIndex, int palIndex, KlonoaVector16 pos, KlonoaVector16 rot = null)
         {
             AddGameObject(GlobalGameObjectType.Cutscene_Karal_Pamela, obj =>
             {
@@ -172,6 +172,7 @@ namespace BinarySerializer.Klonoa.DTP
                 };
 
                 obj.Position = pos;
+                obj.Rotation = rot;
 
                 var modelAnim = LoadCutsceneAsset<KaralModelBoneAnimation_ArchiveFile>(animIndex);
 
@@ -200,7 +201,7 @@ namespace BinarySerializer.Klonoa.DTP
         private void LoadCutsceneObjects_7_5()
         {
             // Karal
-            LoadCutsceneObject_Karal_Pamela(0, 1, 7, new KlonoaVector16(0x70000 >> 12, 0x57b000 >> 12, 0xf30000 >> 12));
+            LoadCutsceneObject_Karal_Pamela(0, 1, 7, new KlonoaVector16(0x70000 >> 12, 0x57b000 >> 12, 0xf30000 >> 12), new KlonoaVector16(0, 0x6000 >> 12, 0));
 
             // Cage fence part
             AddGameObject(GlobalGameObjectType.Cutscene_CageFence, obj =>
