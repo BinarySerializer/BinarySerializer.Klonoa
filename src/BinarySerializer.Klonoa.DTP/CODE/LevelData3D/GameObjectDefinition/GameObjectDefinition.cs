@@ -351,8 +351,8 @@ namespace BinarySerializer.Klonoa.DTP
                     CreateModels(1);
 
                     Data.Models[0].TMD = SerializeDataFile<PS1_TMD>(s, Data.Models[0].TMD, modelIndex: 0, name: nameof(GameObjectData_Model.TMD));
-                    Data.Collision = SerializeDataFile<CollisionTriangles_File>(s, Data.Collision, name: nameof(Data.Collision));
-                    Data.MovementPaths = SerializeDataFile<MovementPath_File>(s, Data.MovementPaths, name: nameof(Data.MovementPaths));
+                    Data.Models[0].Collision = SerializeDataFile<CollisionTriangles_File>(s, Data.Models[0].Collision, modelIndex: 0, name: nameof(GameObjectData_Model.Collision));
+                    Data.Models[0].MovementPaths = SerializeDataFile<MovementPath_File>(s, Data.Models[0].MovementPaths, modelIndex: 0, name: nameof(GameObjectData_Model.MovementPaths));
                     Data.Models[0].LocalTransforms = SerializeDataFile<ArchiveFile<ModelAnimation_ArchiveFile>>(s, Data.Models[0].LocalTransforms, onPreSerialize: x => x.Pre_OnPreSerializeAction = f => f.Pre_UsesInfo = false, modelIndex: 0, name: nameof(GameObjectData_Model.LocalTransforms));
                     Data.CameraAnimations = SerializeDataFile<CameraAnimations_File>(s, Data.CameraAnimations, name: nameof(Data.CameraAnimations));
 
