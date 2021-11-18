@@ -310,6 +310,7 @@ namespace BinarySerializer.Klonoa.DTP
 
                     Data.AnimatedAbsoluteTransformSpeed = Params_MovingPlatform.AnimSpeed;
                     Data.DoesAnimatedAbsoluteTransformPingPong = true;
+                    Data.Models[0].AnimatedLocalTransformSpeed = 0.5f;
                     break;
 
                 case GlobalGameObjectType.FallingTreePart: // FUN_9_8__80122870

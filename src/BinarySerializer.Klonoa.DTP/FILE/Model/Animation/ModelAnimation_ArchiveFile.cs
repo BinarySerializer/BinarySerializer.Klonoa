@@ -4,6 +4,10 @@
     {
         public bool Pre_UsesInfo { get; set; } // If the info is not used then the info is prepended to each file
 
+        // TODO: Parse these correctly. Seems to always be a header with 3 values (parts count, type, unknown).
+        //       Type determines (usually) the format of this archive (same for bone animations!). This is followed by an
+        //       array of parent indices for each part (usually -1, unless it's a bone animation). Sometimes has
+        //       additional data as well.
         public RawData_File File_0 { get; set; }
         public ModelAnimationInfo_File Info { get; set; }
         
