@@ -94,10 +94,12 @@
         Cutscene_Paths,
         Cutscene_Ghadius,
         Cutscene_CageFence,
-        Cutscene_Karal_Pamela,
+        Cutscene_Karal,
+        Cutscene_Pamela,
         Cutscene_Airplane,
         Cutscene_MovingPlatform,
         Cutscene_Geometry,
+        Cutscene_BeamSource,
         Cutscene_Canon,
 
         Boss_Pamela,

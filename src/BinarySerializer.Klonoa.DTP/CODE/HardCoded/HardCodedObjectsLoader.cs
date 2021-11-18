@@ -159,9 +159,9 @@ namespace BinarySerializer.Klonoa.DTP
             });
         }
 
-        private void LoadCutsceneObject_Karal_Pamela(int tmdIndex, int animIndex, int palIndex, KlonoaVector16 pos, KlonoaVector16 rot = null)
+        private void LoadCutsceneObject_Karal_Pamela(GlobalGameObjectType type, int tmdIndex, int animIndex, int palIndex, KlonoaVector16 pos, KlonoaVector16 rot = null)
         {
-            AddGameObject(GlobalGameObjectType.Cutscene_Karal_Pamela, obj =>
+            AddGameObject(type, obj =>
             {
                 obj.Models = new GameObjectData_Model[]
                 {
@@ -201,7 +201,7 @@ namespace BinarySerializer.Klonoa.DTP
         private void LoadCutsceneObjects_7_5()
         {
             // Karal
-            LoadCutsceneObject_Karal_Pamela(0, 1, 7, new KlonoaVector16(0x70000 >> 12, 0x57b000 >> 12, 0xf30000 >> 12), new KlonoaVector16(0, 0x6000 >> 12, 0));
+            LoadCutsceneObject_Karal_Pamela(GlobalGameObjectType.Cutscene_Karal, 0, 1, 7, new KlonoaVector16(0x70000 >> 12, 0x57b000 >> 12, 0xf30000 >> 12), new KlonoaVector16(0, 0x6000 >> 12, 0));
 
             // Cage fence part
             AddGameObject(GlobalGameObjectType.Cutscene_CageFence, obj =>
@@ -229,12 +229,12 @@ namespace BinarySerializer.Klonoa.DTP
 
         private void LoadCutsceneObjects_8_0()
         {
-            LoadCutsceneObject_Karal_Pamela(0, 1, 2, new KlonoaVector16(0, 354, -1701));
+            LoadCutsceneObject_Karal_Pamela(GlobalGameObjectType.Cutscene_Karal, 0, 1, 2, new KlonoaVector16(0, 354, -2500), new KlonoaVector16(0, 0x800, 0)); // Custom position and rotation
         }
 
         private void LoadCutsceneObjects_8_1()
         {
-            LoadCutsceneObject_Karal_Pamela(0, 1, 2, new KlonoaVector16(-13897, -1120, -1143));
+            LoadCutsceneObject_Karal_Pamela(GlobalGameObjectType.Cutscene_Karal, 0, 1, 2, new KlonoaVector16(-13897, -1120, -1143));
         }
 
         private void LoadCutsceneObjects_9_3()
@@ -344,13 +344,13 @@ namespace BinarySerializer.Klonoa.DTP
         private void LoadCutsceneObjects_14_1()
         {
             // Pamela
-            LoadCutsceneObject_Karal_Pamela(3, 4, -1, new KlonoaVector16(-3689, -468, 447));
+            LoadCutsceneObject_Karal_Pamela(GlobalGameObjectType.Cutscene_Pamela, 3, 4, -1, new KlonoaVector16(-3689, -468, 447));
         }
 
         private void LoadCutsceneObjects_15_0()
         {
             // Pamela
-            LoadCutsceneObject_Karal_Pamela(0, 1, -1, new KlonoaVector16(-5246, 279, 606));
+            LoadCutsceneObject_Karal_Pamela(GlobalGameObjectType.Cutscene_Pamela, 0, 1, -1, new KlonoaVector16(-5246, 279, 606));
         }
 
         private void LoadCutsceneObjects_17_0()
@@ -362,7 +362,7 @@ namespace BinarySerializer.Klonoa.DTP
         private void LoadCutsceneObjects_18_0()
         {
             // Pamela
-            LoadCutsceneObject_Karal_Pamela(0, 1, -1, new KlonoaVector16(-2877, 1007, 5868));
+            LoadCutsceneObject_Karal_Pamela(GlobalGameObjectType.Cutscene_Pamela, 0, 1, -1, new KlonoaVector16(-2877, 1007, 5868));
         }
 
         private void LoadCutsceneObjects_21_0()
@@ -396,10 +396,10 @@ namespace BinarySerializer.Klonoa.DTP
         private void LoadCutsceneObjects_22_0()
         {
             // Karal
-            LoadCutsceneObject_Karal_Pamela(0, 1, -1, new KlonoaVector16(0x70000 >> 12, 0x57b000 >> 12, 0xf30000 >> 12));
+            LoadCutsceneObject_Karal_Pamela(GlobalGameObjectType.Cutscene_Karal, 0, 1, -1, new KlonoaVector16(0x70000 >> 12, 0x57b000 >> 12, 0xf30000 >> 12));
 
             // Pamela (offset y slightly)
-            LoadCutsceneObject_Karal_Pamela(4, 5, -1, new KlonoaVector16(0x70000 >> 12, (0x57b000 >> 12) + 1500, 0xf30000 >> 12));
+            LoadCutsceneObject_Karal_Pamela(GlobalGameObjectType.Cutscene_Pamela, 4, 5, -1, new KlonoaVector16(0x70000 >> 12, (0x57b000 >> 12) + 1500, 0xf30000 >> 12));
 
             // Ghadius (on floor)
             LoadCutsceneObject_Ghadius(2, 3, -1, -1, new KlonoaVector16(-0xf0000 >> 12, -0x8000 >> 12, 0x11a000 >> 12), null, null);
@@ -408,11 +408,11 @@ namespace BinarySerializer.Klonoa.DTP
         private void LoadCutsceneObjects_23_0()
         {
             // Pamela
-            LoadCutsceneObject_Karal_Pamela(0, 1, -1, new KlonoaVector16(0x70000 >> 12, 0x57b000 >> 12, 0xf30000 >> 12));
+            LoadCutsceneObject_Karal_Pamela(GlobalGameObjectType.Cutscene_Pamela, 0, 1, -1, new KlonoaVector16(0x70000 >> 12, 0x57b000 >> 12, 0xf30000 >> 12));
 
             // TODO: Check no animations? Position better, right now inside of boss.
             // Beam source
-            AddGameObject(GlobalGameObjectType.Cutscene_Karal_Pamela, obj =>
+            AddGameObject(GlobalGameObjectType.Cutscene_BeamSource, obj =>
             {
                 obj.Models = new GameObjectData_Model[]
                 {
