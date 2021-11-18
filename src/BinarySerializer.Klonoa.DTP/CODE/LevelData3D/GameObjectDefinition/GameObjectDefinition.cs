@@ -102,6 +102,8 @@ namespace BinarySerializer.Klonoa.DTP
 
             var loader = Loader.GetLoader(s.Context);
 
+            bool checkForUnparsedFiles = true;
+
             switch (Data.GlobalGameObjectType)
             {
                 case GlobalGameObjectType.Unknown:
@@ -1057,6 +1059,7 @@ namespace BinarySerializer.Klonoa.DTP
                     break;
 
                 case GlobalGameObjectType.WeatherEffect:
+                    checkForUnparsedFiles = false; // References a file used by another object, probably a leftover
                     break;
 
                 case GlobalGameObjectType.LevelTimer:
@@ -1069,7 +1072,7 @@ namespace BinarySerializer.Klonoa.DTP
                     throw new ArgumentOutOfRangeException();
             }
 
-            if (DataFileIndices != null && DataFileIndices[_dataFileIndex] != 0)
+            if (checkForUnparsedFiles && DataFileIndices != null && DataFileIndices[_dataFileIndex] != 0)
                 s.LogWarning($"Game object of type {Data.GlobalGameObjectType} has unparsed data file(s)");
         }
 
