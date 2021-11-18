@@ -248,8 +248,9 @@ namespace BinarySerializer.Klonoa.DTP
                     Data.AbsoluteTransform = SerializeDataFile<ModelAnimation_ArchiveFile>(s, Data.AbsoluteTransform,
                         onPreSerialize: x => x.Pre_UsesInfo = false, name: nameof(Data.AbsoluteTransform));
 
+                    // Unused?
                     if (Data.GlobalGameObjectType == GlobalGameObjectType.LockedDoor_0)
-                        SkipDataFile<RawData_File>(s); // TODO: Unused?
+                        Data.RGBAnimations = SerializeDataFile<RGBAnimations_File>(s, Data.RGBAnimations, name: nameof(Data.RGBAnimations));
 
                     if (Data.GlobalGameObjectType != GlobalGameObjectType.LockedDoor_2)
                         Data.Models[0].AnimatedLocalTransformSpeed = 1;
