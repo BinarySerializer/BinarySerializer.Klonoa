@@ -45,7 +45,7 @@
         FallingTargetPlatform,
         LockedDoor_3,
         BlockingLedge,
-        UnknownOrbRelatedObj,
+        OrbDoorPart,
         MovingPlatformWithOptionalLocal,
         MovingWallPillars,
         DarkLightPlatform,

@@ -152,7 +152,7 @@ namespace BinarySerializer.Klonoa.DTP
                 [4002] = GlobalGameObjectType.SpinningWheel,
                 [4003] = GlobalGameObjectType.FallingTargetPlatform,
                 [4004] = GlobalGameObjectType.BlockingLedge,
-                [4005] = GlobalGameObjectType.UnknownOrbRelatedObj,
+                [4005] = GlobalGameObjectType.OrbDoorPart,
                 [4007] = GlobalGameObjectType.LockedDoor_3,
 
                 [4101] = GlobalGameObjectType.ScenerySprites,
