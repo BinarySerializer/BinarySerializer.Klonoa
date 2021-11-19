@@ -11,7 +11,6 @@ namespace BinarySerializer.Klonoa.DTP
         public GameObjectData_ModelVertexAnimation VertexAnimation { get; set; }
 
         public ModelAnimation_ArchiveFile LocalTransform { get; set; }
-        public ModelAnimation_ArchiveFile LocalTransform_Secondary { get; set; } // TODO: Get rid of this
         public ArchiveFile<ModelAnimation_ArchiveFile> LocalTransforms { get; set; }
         public KlonoaVector16 Position { get; set; }
         public KlonoaVector16 Rotation { get; set; }
