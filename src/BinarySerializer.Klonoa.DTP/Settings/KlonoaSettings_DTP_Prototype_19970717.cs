@@ -70,5 +70,18 @@ namespace BinarySerializer.Klonoa.DTP
 
         public override Dictionary<int, int[]> CutsceneStartSectors =>
             throw new System.NotImplementedException();
+
+        public override Dictionary<int, Dictionary<int, PaletteAnimationInfo>> PaletteAnimationInfos { get; } = new Dictionary<int, Dictionary<int, PaletteAnimationInfo>>()
+        {
+            // TODO: Fill out
+        };
+        public override Dictionary<int, PaletteAnimationInfo> ObjectWithPaletteAnimationInfos { get; } = new Dictionary<int, PaletteAnimationInfo>()
+        {
+            // TODO: Fill out
+        };
+        public override Dictionary<int, uint> GeyserPlatformPositionsPointers { get; } = new Dictionary<int, uint>()
+        {
+            // TODO: Fill out
+        };
     }
 }
