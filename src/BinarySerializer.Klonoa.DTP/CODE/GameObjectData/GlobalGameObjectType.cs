@@ -51,7 +51,7 @@
         DarkLightPlatform,
         DarkLightSwitcher,
         IronGate,
-        BossUnknown,
+        JokaBossArenaCollision,
         JokaSpinningCore,
         TransparentGemPlatform,
         BirdStatueWithSwitch,

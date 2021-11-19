@@ -179,7 +179,7 @@ namespace BinarySerializer.Klonoa.DTP
             },
             [17] = new Dictionary<int, GlobalGameObjectType>()
             {
-                [4001] = GlobalGameObjectType.BossUnknown,
+                [4001] = GlobalGameObjectType.JokaBossArenaCollision,
 
                 [4101] = GlobalGameObjectType.JokaSpinningCore,
             },
@@ -215,7 +215,7 @@ namespace BinarySerializer.Klonoa.DTP
             [20] = new Dictionary<int, GlobalGameObjectType>()
             {
                 [4001] = GlobalGameObjectType.GhadiusCirclePlatform,
-                [4002] = GlobalGameObjectType.BossUnknown,
+                [4002] = GlobalGameObjectType.JokaBossArenaCollision,
 
                 [4101] = GlobalGameObjectType.CutsceneCrystal,
             },

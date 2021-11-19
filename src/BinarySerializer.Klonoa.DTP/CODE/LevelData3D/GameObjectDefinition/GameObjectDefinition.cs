@@ -697,6 +697,8 @@ namespace BinarySerializer.Klonoa.DTP
                     Data.Models[1].TMD = SerializeDataFile<PS1_TMD>(s, Data.Models[1].TMD, modelIndex: 1, name: nameof(GameObjectData_Model.TMD));
                     Data.AbsoluteTransform = SerializeDataFile<ModelAnimation_ArchiveFile>(s, Data.AbsoluteTransform,
                         onPreSerialize: x => x.Pre_UsesInfo = false, name: nameof(Data.AbsoluteTransform));
+
+                    Data.ShowAllModels = false;
                     break;
 
                 case GlobalGameObjectType.DarkLightSwitcher: // FUN_16_8__801229b8
@@ -726,9 +728,9 @@ namespace BinarySerializer.Klonoa.DTP
                     Data.AnimatedAbsoluteTransformSpeed = 0.5f;
                     break;
 
-                case GlobalGameObjectType.BossUnknown: // FUN_17_7__80113b00
-                    SkipDataFile<RawData_File>(s);
-                    SkipDataFile<RawData_File>(s);
+                case GlobalGameObjectType.JokaBossArenaCollision: // FUN_17_7__80113b00
+                    Data.Collision = SerializeDataFile<CollisionTriangles_File>(s, Data.Collision, name: nameof(Data.Collision));
+                    Data.MovementPaths = SerializeDataFile<MovementPath_File>(s, Data.MovementPaths, name: nameof(Data.MovementPaths));
                     break;
 
                 case GlobalGameObjectType.JokaSpinningCore: // FUN_17_7__80113854
@@ -838,8 +840,12 @@ namespace BinarySerializer.Klonoa.DTP
                     Data.Models[0].TMD = SerializeDataFile<PS1_TMD>(s, Data.Models[0].TMD, modelIndex: 0, name: nameof(GameObjectData_Model.TMD));
                     Data.Models[0].LocalTransform = SerializeDataFile<ModelAnimation_ArchiveFile>(s, Data.Models[0].LocalTransform,
                         onPreSerialize: x => x.Pre_UsesInfo = false, modelIndex: 0, name: nameof(GameObjectData_Model.LocalTransform));
-                    Data.AbsoluteTransform = SerializeDataFile<ModelAnimation_ArchiveFile>(s, Data.AbsoluteTransform,
+
+                    if (Short_02 == 0)
+                        Data.AbsoluteTransform = SerializeDataFile<ModelAnimation_ArchiveFile>(s, Data.AbsoluteTransform,
                         onPreSerialize: x => x.Pre_UsesInfo = false, name: nameof(Data.AbsoluteTransform));
+                    else
+                        SkipDataFile<RawData_File>(s, isUnused: true);
 
                     Data.Models[0].AnimatedLocalTransformSpeed = 0xC00 / (float)0x1000;
                     Data.Models[0].DoesAnimatedLocalTransformPingPong = true;
@@ -869,6 +875,7 @@ namespace BinarySerializer.Klonoa.DTP
                         onPreSerialize: x => x.Pre_UsesInfo = false, name: nameof(Data.AbsoluteTransform));
 
                     Data.Models[0].AnimatedLocalTransformSpeed = 0.5f;
+                    Data.Models[1].Position = new KlonoaVector16(100, 0, 300); // Custom
                     break;
 
                 case GlobalGameObjectType.CutsceneCrystal: // FUN_20_8__80117918
@@ -884,7 +891,7 @@ namespace BinarySerializer.Klonoa.DTP
 
                     Data.Models[0].TMD = SerializeDataFile<PS1_TMD>(s, Data.Models[0].TMD, modelIndex: 0, name: nameof(GameObjectData_Model.TMD));
                     Data.Collision = SerializeDataFile<CollisionTriangles_File>(s, Data.Collision, name: nameof(Data.Collision));
-                    SkipDataFile<RawData_File>(s); // TODO: Movement paths? Aligned to 28.
+                    Data.MovementPaths = SerializeDataFile<MovementPath_File>(s, Data.MovementPaths, name: nameof(Data.MovementPaths));
                     break;
 
                 case GlobalGameObjectType.NahatombSphere: // FUN_22_8__8011549c

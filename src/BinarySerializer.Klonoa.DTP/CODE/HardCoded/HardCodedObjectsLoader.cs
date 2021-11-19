@@ -410,7 +410,6 @@ namespace BinarySerializer.Klonoa.DTP
             // Pamela
             LoadCutsceneObject_Karal_Pamela(GlobalGameObjectType.Cutscene_Pamela, 0, 1, -1, new KlonoaVector16(0x70000 >> 12, 0x57b000 >> 12, 0xf30000 >> 12));
 
-            // TODO: Check no animations? Position better, right now inside of boss.
             // Beam source
             AddGameObject(GlobalGameObjectType.Cutscene_BeamSource, obj =>
             {
@@ -418,9 +417,11 @@ namespace BinarySerializer.Klonoa.DTP
                 {
                     new GameObjectData_Model()
                     {
-                        TMD = LoadCutsceneAsset<PS1_TMD>(0),
+                        TMD = LoadCutsceneAsset<PS1_TMD>(2),
                     },
                 };
+
+                obj.Position = new KlonoaVector16((0x70000 >> 12) + 250, 0x57b000 >> 12, 0xf30000 >> 12); // Custom
             });
         }
 
@@ -931,7 +932,9 @@ namespace BinarySerializer.Klonoa.DTP
                 {
                     x.Pre_ModelsCount = 1;
                     x.Pre_DoModelPositionsComeFirst = true;
-                    x.Pre_HasInitialPositions = false;
+                    x.Pre_DoesPositionsFileHaveHeader = true;
+                    x.Pre_HasInitialPositions = true;
+                    x.Pre_HasInitialRotations = true;
                 }, encoder: new LevelSectorEncoder());
 
                 var tmd = LoadBossAsset<PS1_TMD>(0, x =>
@@ -961,7 +964,9 @@ namespace BinarySerializer.Klonoa.DTP
                 {
                     x.Pre_ModelsCount = 1;
                     x.Pre_DoModelPositionsComeFirst = true;
-                    x.Pre_HasInitialPositions = false;
+                    x.Pre_DoesPositionsFileHaveHeader = true;
+                    x.Pre_HasInitialPositions = true;
+                    x.Pre_HasInitialRotations = true;
                 }, encoder: new LevelSectorEncoder());
 
                 obj.Models = new GameObjectData_Model[]
@@ -988,7 +993,7 @@ namespace BinarySerializer.Klonoa.DTP
                     x.Pre_DoModelPositionsComeFirst = true;
                     x.Pre_DoesPositionsFileHaveHeader = true;
                     x.Pre_HasInitialPositions = true;
-                    x.Pre_HasInitialRotations = true; // TODO: Check if prev two objects use this too
+                    x.Pre_HasInitialRotations = true;
                 }, encoder: new LevelSectorEncoder());
 
                 obj.Models = new GameObjectData_Model[]
@@ -999,6 +1004,8 @@ namespace BinarySerializer.Klonoa.DTP
                         ModelBoneAnimations = GameObjectData_ModelBoneAnimations.FromCommonBossModelBoneAnimation(anim),
                     }
                 };
+
+                obj.Position = new KlonoaVector16(-3000, 0, 0); // Custom
             });
 
             // Attack
@@ -1106,7 +1113,9 @@ namespace BinarySerializer.Klonoa.DTP
                 {
                     x.Pre_ModelsCount = 1;
                     x.Pre_DoModelPositionsComeFirst = true;
-                    x.Pre_HasInitialPositions = false;
+                    x.Pre_DoesPositionsFileHaveHeader = true;
+                    x.Pre_HasInitialPositions = true;
+                    x.Pre_HasInitialRotations = true;
                 }, encoder: new LevelSectorEncoder());
 
                 var tmd = LoadBossAsset<PS1_TMD>(12, x =>
@@ -1140,7 +1149,7 @@ namespace BinarySerializer.Klonoa.DTP
                     }
                 };
 
-                obj.Position = new KlonoaVector16(2500, 0, 0); // Custom
+                obj.Position = new KlonoaVector16(5000, 0, 0); // Custom
             });
 
             // 8 * 4
