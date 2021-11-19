@@ -48,5 +48,8 @@ namespace BinarySerializer.Klonoa.DTP
         public uint GeyserPlatformPositionsPointer { get; set; }
         public GameObjectData_GeyserPlatformPosition[] GeyserPlatformPositions { get; set; }
         public KlonoaSettings_DTP.VRAMScrollInfo[] VRAMScrollInfos { get; set; }
+        public bool IsMovementPathAbsolute { get; set; }
+        public bool IsCollisionAbsolute { get; set; }
+        public bool ShowAllModels { get; set; } = true; // If false then only one should show at once
     }
 }
