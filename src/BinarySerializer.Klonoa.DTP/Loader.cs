@@ -236,8 +236,19 @@ namespace BinarySerializer.Klonoa.DTP
                 // Copy the TIM files data to VRAM
                 case IDXLoadCommand.FileType.Archive_TIM_Generic:
                 case IDXLoadCommand.FileType.Archive_TIM_SpriteSheets:
-                    foreach (PS1_TIM tim in ((TIM_ArchiveFile)binFile).Files)
+                    for (var i = 0; i < ((TIM_ArchiveFile)binFile).Files.Length; i++)
+                    {
+                        // Due to a dev oversight an unused texture (106) gets loaded in and replaces actual
+                        // textures! This isn't visible in-game due to you only ever seen the low-res variants of it
+                        // due to the camera never getting close enough. However we usually only want to deal with the
+                        // high-res textures, so it's better to skip this and have it be shown correctly.
+                        if (BINBlock == 19 && i == 106)
+                            continue;
+
+                        PS1_TIM tim = ((TIM_ArchiveFile)binFile).Files[i];
                         AddToVRAM(tim);
+                    }
+
                     break;
 
                 // Copy the TIM files data to VRAM
