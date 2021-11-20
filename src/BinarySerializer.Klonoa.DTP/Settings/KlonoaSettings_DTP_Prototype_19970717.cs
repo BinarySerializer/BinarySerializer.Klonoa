@@ -80,11 +80,11 @@ namespace BinarySerializer.Klonoa.DTP
             [11] = new int[] { 0, 1, },
             [13] = new int[] { 7, 7, },
             [14] = new int[] { 0, 0, },
-            //[15] = new int[] { 0, 4, 4, 5, 2, 2, 6, },
-            //[16] = new int[] { 0, 8, },
-            //[17] = new int[] { 0, 0, },
-            //[18] = new int[] { 0, },
-            //[19] = new int[] { 0, 7, 7, 7, 4, 5, 6, 0, },
+            [15] = new int[] { 0, 4, 4, 5, 2, 2, 6, },
+            [16] = new int[] { 0, 8, },
+            [17] = new int[] { 0, 0, },
+            [18] = new int[] { 0, },
+            [19] = new int[] { 0, 7, 7, 7, 4, 5, -1, },
             //[20] = new int[] { 0, },
             //[21] = new int[] { 0, },
             //[22] = new int[] { 0, },
@@ -108,17 +108,17 @@ namespace BinarySerializer.Klonoa.DTP
             },
             //[15] = new Dictionary<int, PaletteAnimationInfo>()
             //{
-            //    [6] = new PaletteAnimationInfo(0x801261a8, 8),
+            //    [6] = new PaletteAnimationInfo(0x8013e2bc, 8),
             //},
-            //[16] = new Dictionary<int, PaletteAnimationInfo>()
-            //{
-            //    [5] = new PaletteAnimationInfo(0x80110a8c, 12, blocksCount: 6),
-            //},
-            //[18] = new Dictionary<int, PaletteAnimationInfo>()
-            //{
-            //    [1] = new PaletteAnimationInfo(0xFFFFFFFF, 8), // Need to hard-code this...
-            //    [2] = new PaletteAnimationInfo(0x80110b04, 16),
-            //},
+            [16] = new Dictionary<int, PaletteAnimationInfo>()
+            {
+                [5] = new PaletteAnimationInfo(0x80112320, 12, blocksCount: 6),
+            },
+            [18] = new Dictionary<int, PaletteAnimationInfo>()
+            {
+                [1] = new PaletteAnimationInfo(0xFFFFFFFF, 8), // Need to hard-code this...
+                [2] = new PaletteAnimationInfo(0x801123f0, 16),
+            },
             //[23] = new Dictionary<int, PaletteAnimationInfo>()
             //{
             //    [4] = new PaletteAnimationInfo(0x8014f158, 8),
@@ -130,8 +130,8 @@ namespace BinarySerializer.Klonoa.DTP
         };
         public override Dictionary<int, PaletteAnimationInfo> ObjectWithPaletteAnimationInfos { get; } = new Dictionary<int, PaletteAnimationInfo>()
         {
-            //[18] = new PaletteAnimationInfo(0x80110b0c, 8),
-            //[19] = new PaletteAnimationInfo(0x80110a3c, 8),
+            [18] = new PaletteAnimationInfo(0x80112324, 8),
+            [19] = new PaletteAnimationInfo(0x80112324, 8),
         };
         public override Dictionary<int, uint> GeyserPlatformPositionsPointers { get; } = new Dictionary<int, uint>()
         {
@@ -141,5 +141,18 @@ namespace BinarySerializer.Klonoa.DTP
             [8 + (10 * 4) + 3] = 0x8012cba8,
             [8 + (10 * 4) + 4] = 0x8012cbb8,
         };
+
+        public override Dictionary<int, VRAMScrollInfo[]> VRAMScrollInfos
+        {
+            get
+            {
+                var infos = base.VRAMScrollInfos;
+
+                infos.Remove(15);
+                infos.Remove(19);
+
+                return infos;
+            }
+        }
     }
 }

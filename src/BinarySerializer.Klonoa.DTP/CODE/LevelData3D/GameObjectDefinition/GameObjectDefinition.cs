@@ -799,7 +799,10 @@ namespace BinarySerializer.Klonoa.DTP
                     CreateModels(1);
 
                     Data.Models[0].TMD = SerializeDataFile<PS1_TMD>(s, Data.Models[0].TMD, modelIndex: 0, name: nameof(GameObjectData_Model.TMD));
-                    Data.Collision = SerializeDataFile<CollisionTriangles_File>(s, Data.Collision, name: nameof(Data.Collision));
+
+                    if (version != KlonoaGameVersion.DTP_Prototype_19970717)
+                        Data.Collision = SerializeDataFile<CollisionTriangles_File>(s, Data.Collision, name: nameof(Data.Collision));
+
                     Data.AbsoluteTransform = SerializeDataFile<ModelAnimation_ArchiveFile>(s, Data.AbsoluteTransform,
                         onPreSerialize: x => x.Pre_UsesInfo = false, name: nameof(Data.AbsoluteTransform));
                     break;
@@ -995,7 +998,7 @@ namespace BinarySerializer.Klonoa.DTP
                     break;
 
                 case GlobalGameObjectType.VRAMScrollAnimation:
-                    Data.VRAMScrollInfos = loader.Settings.VRAMScrollInfos[loader.BINBlock];
+                    Data.VRAMScrollInfos = loader.Settings.VRAMScrollInfos.TryGetValue(loader.BINBlock, out KlonoaSettings_DTP.VRAMScrollInfo[] v) ? v : null;
                     break;
 
                 case GlobalGameObjectType.VRAMScrollAnimationWithTexture:

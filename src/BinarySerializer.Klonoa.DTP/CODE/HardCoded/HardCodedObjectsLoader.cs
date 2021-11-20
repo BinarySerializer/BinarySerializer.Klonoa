@@ -763,11 +763,15 @@ namespace BinarySerializer.Klonoa.DTP
                 };
             });
 
+            // TODO: 11 and 12 have TIM files with palettes in July prototype
+
             // TODO: File 13 has pal
             // TODO: File 14 has pal?
             // TODO: File 15 has pal? Unused?
 
-            LoadBossObject_Sprites(16);
+            // TODO: July prototype has a TIM file here instead
+            if (Loader.GameVersion != KlonoaGameVersion.DTP_Prototype_19970717)
+                LoadBossObject_Sprites(16);
         }
 
         protected virtual void LoadBossObjects_20_0()

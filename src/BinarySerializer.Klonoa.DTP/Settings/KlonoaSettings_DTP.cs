@@ -194,6 +194,7 @@ namespace BinarySerializer.Klonoa.DTP
 
                 [4101] = GlobalGameObjectType.PaletteAnimation,
                 [4102] = GlobalGameObjectType.PaletteAnimation,
+                [4103] = GlobalGameObjectType.LightField, // July prototype
                 [4120] = GlobalGameObjectType.Special,
                 [4121] = GlobalGameObjectType.LevelModelSection,
             },
