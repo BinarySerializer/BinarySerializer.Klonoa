@@ -91,6 +91,7 @@ namespace BinarySerializer.Klonoa.DTP
                 [4003] = GlobalGameObjectType.WoodenCart,
                 [4004] = GlobalGameObjectType.Crate,
                 [4005] = GlobalGameObjectType.LockedDoor_1,
+                [4006] = GlobalGameObjectType.FallingTreePart, // July prototype
 
                 [4102] = GlobalGameObjectType.MultiWheel,
                 [4103] = GlobalGameObjectType.ScenerySprites,

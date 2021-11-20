@@ -16,7 +16,7 @@ namespace BinarySerializer.Klonoa.DTP
 
         #region Cutscenes
 
-        private void LoadCutsceneObjects_3_0()
+        protected virtual void LoadCutsceneObjects_3_0()
         {
             // Window object
             AddGameObject(GlobalGameObjectType.Cutscene_Window, obj =>
@@ -53,7 +53,7 @@ namespace BinarySerializer.Klonoa.DTP
             }
         }
 
-        private void LoadCutsceneObjects_3_1()
+        protected virtual void LoadCutsceneObjects_3_1()
         {
             // Camera animation
             AddGameObject(GlobalGameObjectType.Cutscene_Camera, obj =>
@@ -62,7 +62,7 @@ namespace BinarySerializer.Klonoa.DTP
             });
         }
 
-        private void LoadCutsceneObject_Ghadius(int headTmdIndex, int bodyTmdIndex, int animIndex, int textureAnimIndex, KlonoaVector16 pos, KlonoaVector16 rot, PS1_VRAMRegion vramRegion)
+        protected virtual void LoadCutsceneObject_Ghadius(int headTmdIndex, int bodyTmdIndex, int animIndex, int textureAnimIndex, KlonoaVector16 pos, KlonoaVector16 rot, PS1_VRAMRegion vramRegion)
         {
             AddGameObject(GlobalGameObjectType.Cutscene_Ghadius, obj =>
             {
@@ -127,7 +127,7 @@ namespace BinarySerializer.Klonoa.DTP
             });
         }
 
-        private void LoadCutsceneObjects_5_0()
+        protected virtual void LoadCutsceneObjects_5_0()
         {
             // Ghadius (FUN_5_7__8011bf00)
             LoadCutsceneObject_Ghadius(0, 1, 2, 25, 
@@ -156,10 +156,10 @@ namespace BinarySerializer.Klonoa.DTP
                         }
                     }
                 };
-            });
+              });
         }
 
-        private void LoadCutsceneObject_Karal_Pamela(GlobalGameObjectType type, int tmdIndex, int animIndex, int palIndex, KlonoaVector16 pos, KlonoaVector16 rot = null)
+        protected virtual void LoadCutsceneObject_Karal_Pamela(GlobalGameObjectType type, int tmdIndex, int animIndex, int palIndex, KlonoaVector16 pos, KlonoaVector16 rot = null)
         {
             AddGameObject(type, obj =>
             {
@@ -198,7 +198,7 @@ namespace BinarySerializer.Klonoa.DTP
             });
         }
 
-        private void LoadCutsceneObjects_7_5()
+        protected virtual void LoadCutsceneObjects_7_5()
         {
             // Karal
             LoadCutsceneObject_Karal_Pamela(GlobalGameObjectType.Cutscene_Karal, 0, 1, 7, new KlonoaVector16(0x70000 >> 12, 0x57b000 >> 12, 0xf30000 >> 12), new KlonoaVector16(0, 0x6000 >> 12, 0));
@@ -227,17 +227,17 @@ namespace BinarySerializer.Klonoa.DTP
             // TODO: File 5 has VRAM textures for end transition, file 6 has palettes
         }
 
-        private void LoadCutsceneObjects_8_0()
+        protected virtual void LoadCutsceneObjects_8_0()
         {
             LoadCutsceneObject_Karal_Pamela(GlobalGameObjectType.Cutscene_Karal, 0, 1, 2, new KlonoaVector16(0, 354, -2500), new KlonoaVector16(0, 0x800, 0)); // Custom position and rotation
         }
 
-        private void LoadCutsceneObjects_8_1()
+        protected virtual void LoadCutsceneObjects_8_1()
         {
             LoadCutsceneObject_Karal_Pamela(GlobalGameObjectType.Cutscene_Karal, 0, 1, 2, new KlonoaVector16(-13897, -1120, -1143));
         }
 
-        private void LoadCutsceneObjects_9_3()
+        protected virtual void LoadCutsceneObjects_9_3()
         {
             // Moving platform
             AddGameObject(GlobalGameObjectType.Cutscene_MovingPlatform, obj =>
@@ -255,7 +255,7 @@ namespace BinarySerializer.Klonoa.DTP
             });
         }
 
-        private void LoadCutsceneObjects_10_0()
+        protected virtual void LoadCutsceneObjects_10_0()
         {
             // Moving platform
             AddGameObject(GlobalGameObjectType.Cutscene_MovingPlatform, obj =>
@@ -272,7 +272,7 @@ namespace BinarySerializer.Klonoa.DTP
             });
         }
 
-        private void LoadCutsceneObjects_11_0()
+        protected virtual void LoadCutsceneObjects_11_0()
         {
             AddGameObject(GlobalGameObjectType.Cutscene_MovingPlatform, obj =>
             {
@@ -293,7 +293,7 @@ namespace BinarySerializer.Klonoa.DTP
             });
         }
 
-        private void LoadCutsceneObject_Airplane(int tmdIndex, int propellerTmdIndex, KlonoaVector16 pos)
+        protected virtual void LoadCutsceneObject_Airplane(int tmdIndex, int propellerTmdIndex, KlonoaVector16 pos)
         {
             // Airplane
             AddGameObject(GlobalGameObjectType.Cutscene_Airplane, obj =>
@@ -316,14 +316,14 @@ namespace BinarySerializer.Klonoa.DTP
             });
         }
 
-        private void LoadCutsceneObjects_13_7()
+        protected virtual void LoadCutsceneObjects_13_7()
         {
-            // NOTE: Positions aren't really accurate and the propeller is duplicated
+            // NOTE: Positions aren't really accurate
             LoadCutsceneObject_Airplane(0, 1, new KlonoaVector16(688, -2304, 4096));
             LoadCutsceneObject_Airplane(5, 1, new KlonoaVector16(688, -1500, 4096));
         }
 
-        private void LoadCutsceneObjects_14_0()
+        protected virtual void LoadCutsceneObjects_14_0()
         {
             // Airplane
             LoadCutsceneObject_Airplane(0, 1, new KlonoaVector16(-768, -768, -1024)); // Defined in script
@@ -341,31 +341,31 @@ namespace BinarySerializer.Klonoa.DTP
             });
         }
 
-        private void LoadCutsceneObjects_14_1()
+        protected virtual void LoadCutsceneObjects_14_1()
         {
             // Pamela
             LoadCutsceneObject_Karal_Pamela(GlobalGameObjectType.Cutscene_Pamela, 3, 4, -1, new KlonoaVector16(-3689, -468, 447));
         }
 
-        private void LoadCutsceneObjects_15_0()
+        protected virtual void LoadCutsceneObjects_15_0()
         {
             // Pamela
             LoadCutsceneObject_Karal_Pamela(GlobalGameObjectType.Cutscene_Pamela, 0, 1, -1, new KlonoaVector16(-5246, 279, 606));
         }
 
-        private void LoadCutsceneObjects_17_0()
+        protected virtual void LoadCutsceneObjects_17_0()
         {
             // Ghadius
             LoadCutsceneObject_Ghadius(0, 1, 2, 24, new KlonoaVector16(-32, 3800, 0), new KlonoaVector16(0, 0x800, 0), new PS1_VRAMRegion(0x2C0, 0x100, 0x10, 0x40));
         }
 
-        private void LoadCutsceneObjects_18_0()
+        protected virtual void LoadCutsceneObjects_18_0()
         {
             // Pamela
             LoadCutsceneObject_Karal_Pamela(GlobalGameObjectType.Cutscene_Pamela, 0, 1, -1, new KlonoaVector16(-2877, 1007, 5868));
         }
 
-        private void LoadCutsceneObjects_21_0()
+        protected virtual void LoadCutsceneObjects_21_0()
         {
             // TODO: Position and duplicate
             // Canon platform
@@ -381,7 +381,7 @@ namespace BinarySerializer.Klonoa.DTP
             });
         }
 
-        private void LoadCutsceneObjects_21_1()
+        protected virtual void LoadCutsceneObjects_21_1()
         {
             for (int i = 0; i < 3; i++)
             {
@@ -393,7 +393,7 @@ namespace BinarySerializer.Klonoa.DTP
             }
         }
 
-        private void LoadCutsceneObjects_22_0()
+        protected virtual void LoadCutsceneObjects_22_0()
         {
             // Karal
             LoadCutsceneObject_Karal_Pamela(GlobalGameObjectType.Cutscene_Karal, 0, 1, -1, new KlonoaVector16(0x70000 >> 12, 0x57b000 >> 12, 0xf30000 >> 12));
@@ -405,7 +405,7 @@ namespace BinarySerializer.Klonoa.DTP
             LoadCutsceneObject_Ghadius(2, 3, -1, -1, new KlonoaVector16(-0xf0000 >> 12, -0x8000 >> 12, 0x11a000 >> 12), null, null);
         }
 
-        private void LoadCutsceneObjects_23_0()
+        protected virtual void LoadCutsceneObjects_23_0()
         {
             // Pamela
             LoadCutsceneObject_Karal_Pamela(GlobalGameObjectType.Cutscene_Pamela, 0, 1, -1, new KlonoaVector16(0x70000 >> 12, 0x57b000 >> 12, 0xf30000 >> 12));
@@ -429,7 +429,7 @@ namespace BinarySerializer.Klonoa.DTP
 
         #region Bosses
 
-        private void LoadBossObject_Sprites(int index)
+        protected virtual void LoadBossObject_Sprites(int index)
         {
             // Sprites
             AddGameObject(GlobalGameObjectType.Cutscene_Sprites, obj =>
@@ -443,7 +443,7 @@ namespace BinarySerializer.Klonoa.DTP
             });
         }
 
-        private void LoadBossObjects_8_0()
+        protected virtual void LoadBossObjects_8_0()
         {
             // Pamela
             AddGameObject(GlobalGameObjectType.Boss_Pamela, obj =>
@@ -473,7 +473,7 @@ namespace BinarySerializer.Klonoa.DTP
             LoadBossObject_Sprites(2);
         }
 
-        private void LoadBossObjects_11_0()
+        protected virtual void LoadBossObjects_11_0()
         {
             // Gelg Bolm
             AddGameObject(GlobalGameObjectType.Boss_GelgBolm, obj =>
@@ -599,7 +599,7 @@ namespace BinarySerializer.Klonoa.DTP
             LoadBossAsset<RawData_File>(21);
         }
 
-        private void LoadBossObjects_14_0()
+        protected virtual void LoadBossObjects_14_0()
         {
             // Baladium
             AddGameObject(GlobalGameObjectType.Boss_Baladium, obj =>
@@ -663,7 +663,7 @@ namespace BinarySerializer.Klonoa.DTP
             LoadBossAsset<RawData_File>(23); // Palette
         }
 
-        private void LoadBossObjects_17_0()
+        protected virtual void LoadBossObjects_17_0()
         {
             // Joka
             AddGameObject(GlobalGameObjectType.Boss_Joka, obj =>
@@ -770,14 +770,14 @@ namespace BinarySerializer.Klonoa.DTP
             LoadBossObject_Sprites(16);
         }
 
-        private void LoadBossObjects_20_0()
+        protected virtual void LoadBossObjects_20_0()
         {
             // Note: These do not really get used here, but to allow them to be viewed in Ray1Map it's easier to load them here as well
             // Sprites
             LoadBossObject_Sprites(6);
         }
 
-        private void LoadBossObjects_20_1()
+        protected virtual void LoadBossObjects_20_1()
         {
             var mainModels = LoadBossAsset<ArchiveFile<PS1_TMD>>(0);
 
@@ -923,7 +923,7 @@ namespace BinarySerializer.Klonoa.DTP
             LoadBossAsset<RawData_File>(14);
         }
 
-        private void LoadBossObjects_23_0()
+        protected virtual void LoadBossObjects_23_0()
         {
             // Nahatomb (boss)
             AddGameObject(GlobalGameObjectType.Boss_Nahatomb, obj =>
@@ -1051,7 +1051,7 @@ namespace BinarySerializer.Klonoa.DTP
             LoadBossAsset<TIM_ArchiveFile>(22);
         }
 
-        private void LoadBossObjects_23_1()
+        protected virtual void LoadBossObjects_23_1()
         {
             // Face
             AddGameObject(GlobalGameObjectType.Boss_NahatombFace, obj =>
@@ -1104,7 +1104,7 @@ namespace BinarySerializer.Klonoa.DTP
             });
         }
 
-        private void LoadBossObjects_23_2()
+        protected virtual void LoadBossObjects_23_2()
         {
             // Nahatomb (boss)
             AddGameObject(GlobalGameObjectType.Boss_Nahatomb, obj =>

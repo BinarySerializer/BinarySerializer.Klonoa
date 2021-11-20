@@ -66,22 +66,80 @@ namespace BinarySerializer.Klonoa.DTP
         public override uint Address_LevelData2DPointerTable => 0x800b3c94;
 
         public override BaseHardCodedObjectsLoader GetHardCodedObjectsLoader(Loader loader) => 
-            throw new System.NotImplementedException();
+            new HardCodedObjectsLoader_Prototype_19970717(loader);
 
-        public override Dictionary<int, int[]> CutsceneStartSectors =>
-            throw new System.NotImplementedException();
+        public override Dictionary<int, int[]> CutsceneStartSectors => new Dictionary<int, int[]>()
+        {
+            [3] = new int[] { 0, 0, 1, },
+            [5] = new int[] { 0, 0, },
+            [6] = new int[] { 1, 2, },
+            [7] = new int[] { 0, 5, 5, },
+            [8] = new int[] { 0, 0, },
+            [9] = new int[] { 0, 0, 3, },
+            [10] = new int[] { 0, 4, 9, 9, 8, },
+            [11] = new int[] { 0, 1, },
+            [13] = new int[] { 7, 7, },
+            //[14] = new int[] { 0, 0, },
+            //[15] = new int[] { 0, 4, 4, 5, 2, 2, 6, },
+            //[16] = new int[] { 0, 8, },
+            //[17] = new int[] { 0, 0, },
+            //[18] = new int[] { 0, },
+            //[19] = new int[] { 0, 7, 7, 7, 4, 5, 6, 0, },
+            //[20] = new int[] { 0, },
+            //[21] = new int[] { 0, },
+            //[22] = new int[] { 0, },
+            //[23] = new int[] { 0, 0, -1, 2, 2, },
+            //[24] = new int[] { 0, 8, },
+        };
 
         public override Dictionary<int, Dictionary<int, PaletteAnimationInfo>> PaletteAnimationInfos { get; } = new Dictionary<int, Dictionary<int, PaletteAnimationInfo>>()
         {
-            // TODO: Fill out
+            [4] = new Dictionary<int, PaletteAnimationInfo>()
+            {
+                [5] = new PaletteAnimationInfo(0x80127d44, 8),
+            },
+            [7] = new Dictionary<int, PaletteAnimationInfo>()
+            {
+                [3] = new PaletteAnimationInfo(0x8012e6c4, 8),
+            },
+            [13] = new Dictionary<int, PaletteAnimationInfo>()
+            {
+                [3] = new PaletteAnimationInfo(0x80112310, 8),
+            },
+            //[15] = new Dictionary<int, PaletteAnimationInfo>()
+            //{
+            //    [6] = new PaletteAnimationInfo(0x801261a8, 8),
+            //},
+            //[16] = new Dictionary<int, PaletteAnimationInfo>()
+            //{
+            //    [5] = new PaletteAnimationInfo(0x80110a8c, 12, blocksCount: 6),
+            //},
+            //[18] = new Dictionary<int, PaletteAnimationInfo>()
+            //{
+            //    [1] = new PaletteAnimationInfo(0xFFFFFFFF, 8), // Need to hard-code this...
+            //    [2] = new PaletteAnimationInfo(0x80110b04, 16),
+            //},
+            //[23] = new Dictionary<int, PaletteAnimationInfo>()
+            //{
+            //    [4] = new PaletteAnimationInfo(0x8014f158, 8),
+            //},
+            //[24] = new Dictionary<int, PaletteAnimationInfo>()
+            //{
+            //    [6] = new PaletteAnimationInfo(0x80127c24, 8),
+            //},
         };
         public override Dictionary<int, PaletteAnimationInfo> ObjectWithPaletteAnimationInfos { get; } = new Dictionary<int, PaletteAnimationInfo>()
         {
-            // TODO: Fill out
+            //[18] = new PaletteAnimationInfo(0x80110b0c, 8),
+            //[19] = new PaletteAnimationInfo(0x80110a3c, 8),
         };
         public override Dictionary<int, uint> GeyserPlatformPositionsPointers { get; } = new Dictionary<int, uint>()
         {
-            // TODO: Fill out
+            // Block 7
+            [8 + (10 * 4) + 0] = 0x8012cb78,
+            [8 + (10 * 4) + 2] = 0x8012cb88,
+            [8 + (10 * 4) + 3] = 0x8012cba8,
+            [8 + (10 * 4) + 4] = 0x8012cbb8,
         };
     }
 }

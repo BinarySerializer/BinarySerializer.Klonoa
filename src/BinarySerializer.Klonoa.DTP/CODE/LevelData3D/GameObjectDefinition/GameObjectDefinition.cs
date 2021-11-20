@@ -104,6 +104,8 @@ namespace BinarySerializer.Klonoa.DTP
 
             bool checkForUnparsedFiles = true;
 
+            KlonoaGameVersion version = loader.GameVersion;
+
             switch (Data.GlobalGameObjectType)
             {
                 case GlobalGameObjectType.Unknown:
@@ -228,10 +230,16 @@ namespace BinarySerializer.Klonoa.DTP
                     break;
 
                 case GlobalGameObjectType.Bell:
-                    CreateModels(1);
+                    CreateModels(version == KlonoaGameVersion.DTP_Prototype_19970717 ? 2 : 1);
 
                     Data.Models[0].TMD = SerializeDataFile<PS1_TMD>(s, Data.Models[0].TMD, modelIndex: 0, name: nameof(GameObjectData_Model.TMD));
                     Data.Position = SerializeDataFile<KlonoaVector16>(s, Data.Position, name: nameof(Data.Position));
+                    
+                    if (version == KlonoaGameVersion.DTP_Prototype_19970717)
+                        Data.Models[1].TMD = SerializeDataFile<PS1_TMD>(s, Data.Models[1].TMD, modelIndex: 1, name: nameof(GameObjectData_Model.TMD));
+
+                    Data.ShowAllModels = false;
+
                     break;
 
                 case GlobalGameObjectType.LockedDoor_0: // FUN_800790e4
