@@ -79,7 +79,7 @@ namespace BinarySerializer.Klonoa.DTP
             [10] = new int[] { 0, 4, 9, 9, 8, },
             [11] = new int[] { 0, 1, },
             [13] = new int[] { 7, 7, },
-            //[14] = new int[] { 0, 0, },
+            [14] = new int[] { 0, 0, },
             //[15] = new int[] { 0, 4, 4, 5, 2, 2, 6, },
             //[16] = new int[] { 0, 8, },
             //[17] = new int[] { 0, 0, },

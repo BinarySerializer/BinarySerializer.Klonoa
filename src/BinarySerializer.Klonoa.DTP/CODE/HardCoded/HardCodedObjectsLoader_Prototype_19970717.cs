@@ -89,6 +89,149 @@ namespace BinarySerializer.Klonoa.DTP
 
         #endregion
 
+        #region Bosses
+
+        protected override void LoadBossObjects_14_0()
+        {
+            PS1_TIM tim = LoadBossAsset<PS1_TIM>(10);
+
+            if (LoadVRAMData)
+                Loader.AddToVRAM(tim);
+
+            TIM_ArchiveFile timArchive = LoadBossAsset<TIM_ArchiveFile>(11);
+
+            if (LoadVRAMData)
+                foreach (PS1_TIM t in timArchive.Files)
+                    Loader.AddToVRAM(t);
+
+            timArchive = LoadBossAsset<TIM_ArchiveFile>(13);
+
+            if (LoadVRAMData)
+                // Note: The last one should not be loaded
+                for (var i = 0; i < 3; i++)
+                {
+                    PS1_TIM t = timArchive.Files[i];
+                    Loader.AddToVRAM(t);
+                }
+
+            timArchive = LoadBossAsset<TIM_ArchiveFile>(16);
+
+            if (LoadVRAMData)
+                foreach (PS1_TIM t in timArchive.Files)
+                    Loader.AddToVRAM(t);
+
+            // Some blue box - leftover debug obj
+            AddGameObject(GlobalGameObjectType.Boss_BaladiumAttackPart, obj =>
+            {
+                obj.Models = new GameObjectData_Model[]
+                {
+                    new GameObjectData_Model()
+                    {
+                        TMD = LoadBossAsset<PS1_TMD>(0),
+                    }
+                };
+
+                obj.Position = new KlonoaVector16(900, -500, 1000); // Custom
+            });
+
+            // A row of blue boxes - leftover debug obj
+            AddGameObject(GlobalGameObjectType.Boss_BaladiumAttackPart, obj =>
+            {
+                obj.Models = new GameObjectData_Model[]
+                {
+                    new GameObjectData_Model()
+                    {
+                        TMD = LoadBossAsset<PS1_TMD>(1),
+                    }
+                };
+
+                obj.Position = new KlonoaVector16(0, -250, 1000); // Custom
+            });
+
+            var ghosts = LoadBossAsset<BaladiumGhost_ArchiveFile>(12);
+
+            // Ghost with animations
+            AddGameObject(GlobalGameObjectType.Boss_BaladiumGhost, obj =>
+            {
+                var anim = LoadBossAsset<CommonBossModelBoneAnimation_ArchiveFile>(14, x => x.Pre_ModelsCount = 1);
+
+                obj.Models = new GameObjectData_Model[]
+                {
+                    new GameObjectData_Model()
+                    {
+                        TMD = ghosts.Models[0],
+                        ModelBoneAnimations = GameObjectData_ModelBoneAnimations.FromCommonBossModelBoneAnimation(anim),
+                    }
+                };
+
+                obj.Position = new KlonoaVector16(0, -1500, 1000); // Custom
+            });
+
+            // Ghost attack parts
+            AddGameObject(GlobalGameObjectType.Boss_BaladiumAttackPart, obj =>
+            {
+                obj.Models = new GameObjectData_Model[]
+                {
+                    new GameObjectData_Model()
+                    {
+                        TMD = ghosts.Models[1],
+                    }
+                };
+
+                obj.Position = new KlonoaVector16(-750, -1500, 1000); // Custom
+            });
+            AddGameObject(GlobalGameObjectType.Boss_BaladiumAttackPart, obj =>
+            {
+                obj.Models = new GameObjectData_Model[]
+                {
+                    new GameObjectData_Model()
+                    {
+                        TMD = ghosts.Models[2],
+                    }
+                };
+
+                obj.Position = new KlonoaVector16(750, -1500, 1000); // Custom
+            });
+
+            // Small ghost
+            AddGameObject(GlobalGameObjectType.Boss_BaladiumAttackPart, obj =>
+            {
+                obj.Models = new GameObjectData_Model[]
+                {
+                    new GameObjectData_Model()
+                    {
+                        TMD = LoadBossAsset<PS1_TMD>(19),
+                    }
+                };
+
+                obj.Position = new KlonoaVector16(0, -2000, 1000); // Custom
+            });
+
+            // Some attack models
+            var tmds = LoadBossAsset<ArchiveFile<PS1_TMD>>(21);
+
+            for (var i = 0; i < tmds.Files.Length; i++)
+            {
+                AddGameObject(GlobalGameObjectType.Boss_BaladiumAttackPart, obj =>
+                {
+                    obj.Models = new GameObjectData_Model[]
+                    {
+                        new GameObjectData_Model()
+                        {
+                            TMD = tmds.Files[i],
+                        }
+                    };
+
+                    obj.Position = new KlonoaVector16((short)(200 + (200 * i)), -2000, 1000); // Custom
+                });
+            }
+
+            // Load base
+            base.LoadBossObjects_14_0();
+        }
+
+        #endregion
+
         #region Public Methods
 
         public override void LoadObjects()

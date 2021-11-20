@@ -110,6 +110,8 @@
         Boss_Baladium,
         Boss_BaladiumObstacle,
         Boss_BaladiumAttackPart,
+        Boss_BaladiumGhost,
+        Boss_BaladiumSmallGhost,
         Boss_Joka,
         Boss_JokaCreature,
         Boss_JokaTransformation,

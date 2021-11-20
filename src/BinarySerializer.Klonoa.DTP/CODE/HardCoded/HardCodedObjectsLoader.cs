@@ -659,7 +659,7 @@ namespace BinarySerializer.Klonoa.DTP
             // TODO: Palettes
             LoadBossAsset<RawData_File>(18); // Palettes
 
-            // TODO: Palette
+            // TODO: Palette (not available in July proto)
             LoadBossAsset<RawData_File>(23); // Palette
         }
 
