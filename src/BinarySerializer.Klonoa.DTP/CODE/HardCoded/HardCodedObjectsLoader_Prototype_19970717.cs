@@ -12,7 +12,7 @@ namespace BinarySerializer.Klonoa.DTP
 
         #region Cutscenes
 
-        protected override void LoadCutsceneObjects_3_0()
+        protected void LoadCutscene_Intro(bool isMissingImageData)
         {
             // Window object
             AddGameObject(GlobalGameObjectType.Cutscene_Window, obj =>
@@ -22,6 +22,7 @@ namespace BinarySerializer.Klonoa.DTP
                     new GameObjectData_Model()
                     {
                         TMD = LoadCutsceneAsset<PS1_TMD>(0),
+                        IsMissingImageData = isMissingImageData,
                         Position = new KlonoaVector16(-0x10b0, -0x440, 0xdc0),
                         Rotation = new KlonoaVector16(0, 2892, 0),
                     },
@@ -37,8 +38,13 @@ namespace BinarySerializer.Klonoa.DTP
             // Sprites movement paths
             AddGameObject(GlobalGameObjectType.Cutscene_Paths, obj =>
             {
-                obj.MovementPaths = LevelPack.CutscenePack.Cutscenes[0].Proto_MovementPaths;
+                obj.MovementPathsArchive = LevelPack.CutscenePack.Cutscenes[0].Proto_MovementPaths;
             });
+        }
+
+        protected override void LoadCutsceneObjects_3_0()
+        {
+            LoadCutscene_Intro(false);
         }
 
         protected override void LoadCutsceneObjects_3_1()
@@ -49,12 +55,11 @@ namespace BinarySerializer.Klonoa.DTP
                 obj.CameraAnimations = LevelPack.CutscenePack.Cutscenes[2].Proto_CameraAnimations;
             });
 
-            // Seems to be mostly broken data, so ignore
-            //// Sprites movement paths
-            //AddGameObject(GlobalGameObjectType.Cutscene_Paths, obj =>
-            //{
-            //    obj.MovementPaths = LevelPack.CutscenePack.Cutscenes[2].Proto_MovementPaths;
-            //});
+            // Sprites movement paths
+            AddGameObject(GlobalGameObjectType.Cutscene_Paths, obj =>
+            {
+                obj.MovementPathsArchive = LevelPack.CutscenePack.Cutscenes[2].Proto_MovementPaths;
+            });
         }
 
         protected virtual void LoadCutsceneObjects_9_0()
@@ -85,6 +90,14 @@ namespace BinarySerializer.Klonoa.DTP
             // NOTE: Positions aren't really accurate
             LoadCutsceneObject_Airplane(0, 1, new KlonoaVector16(688, -2304, 4096));
             LoadCutsceneObject_Airplane(0, 1, new KlonoaVector16(688, -1500, 4096));
+        }
+
+        protected override void LoadCutsceneObjects_21_0()
+        {
+            // NOTE: Cutscene 2 also has cam anims and paths, this time a copy from the second cutscene in the first level
+
+            // The cutscene data is a copy from the intro, so load that
+            LoadCutscene_Intro(true);
         }
 
         #endregion
@@ -228,6 +241,35 @@ namespace BinarySerializer.Klonoa.DTP
 
             // Load base
             base.LoadBossObjects_14_0();
+        }
+
+        protected override void LoadBossObjects_20_1()
+        {
+            TIM_ArchiveFile timArchive = LoadBossAsset<TIM_ArchiveFile>(2);
+
+            if (LoadVRAMData)
+                foreach (PS1_TIM t in timArchive.Files)
+                    Loader.AddToVRAM(t);
+
+            timArchive = LoadBossAsset<TIM_ArchiveFile>(4);
+
+            if (LoadVRAMData)
+                foreach (PS1_TIM t in timArchive.Files)
+                    Loader.AddToVRAM(t);
+
+            timArchive = LoadBossAsset<TIM_ArchiveFile>(8);
+
+            if (LoadVRAMData)
+                foreach (PS1_TIM t in timArchive.Files)
+                    Loader.AddToVRAM(t);
+
+            PS1_TIM tim = LoadBossAsset<PS1_TIM>(10);
+
+            if (LoadVRAMData)
+                Loader.AddToVRAM(tim);
+
+            // Load base
+            base.LoadBossObjects_20_1();
         }
 
         #endregion

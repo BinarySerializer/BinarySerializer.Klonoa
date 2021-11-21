@@ -28,27 +28,44 @@
             }
             else
             {
+                Loader loader = Loader.GetLoader(s.Context);
+                KlonoaGameVersion version = loader.GameVersion;
+                bool isJulyProto = version == KlonoaGameVersion.DTP_Prototype_19970717;
+                int cutsceneFilesCount = isJulyProto ? 5 : 3;
+                int cutscenesStartFile = 5;
+
                 SpriteAnimations = SerializeFile<SpriteAnimations_File>(s, SpriteAnimations, 0, name: nameof(SpriteAnimations));
                 Sprites = SerializeFile<Sprites_ArchiveFile>(s, Sprites, 1, name: nameof(Sprites));
-                PlayerFramesImgData = SerializeFile<ArchiveFile<CutscenePlayerSprite_File>>(s, PlayerFramesImgData, 2, name: nameof(PlayerFramesImgData));
-                CharacterNamesImgData = SerializeFile<RawData_File>(s, CharacterNamesImgData, 3, name: nameof(CharacterNamesImgData));
-                CutsceneAssets = SerializeFile<ArchiveFile>(s, CutsceneAssets, 4, name: nameof(CutsceneAssets));
 
-                var cutsceneFilesCount = Loader.GetLoader(s.Context).GameVersion == KlonoaGameVersion.DTP_Prototype_19970717 ? 5 : 3;
+                if (!(isJulyProto && loader.BINBlock == 21))
+                {
+                    PlayerFramesImgData = SerializeFile<ArchiveFile<CutscenePlayerSprite_File>>(s, PlayerFramesImgData, 2, name: nameof(PlayerFramesImgData));
+                    CharacterNamesImgData = SerializeFile<RawData_File>(s, CharacterNamesImgData, 3, name: nameof(CharacterNamesImgData));
+                    CutsceneAssets = SerializeFile<ArchiveFile>(s, CutsceneAssets, 4, name: nameof(CutsceneAssets));
+                }
+                else
+                {
+                    CutsceneAssets = SerializeFile<ArchiveFile>(s, CutsceneAssets, 2, name: nameof(CutsceneAssets));
 
-                if ((OffsetTable.FilesCount - 5) % cutsceneFilesCount != 0)
+                    // The cutscene files are packed incorrectly here, so shift back by 2
+                    cutscenesStartFile = 3;
+                }
+
+
+                // Make sure the files count if valid
+                if ((OffsetTable.FilesCount - cutscenesStartFile) % cutsceneFilesCount != 0)
                 {
                     s.LogWarning($"Cutscene pack is invalid. Files count is {OffsetTable.FilesCount}");
                     return;
                 }
 
-                var count = (OffsetTable.FilesCount - 5) / cutsceneFilesCount;
+                int count = (OffsetTable.FilesCount - cutscenesStartFile) / cutsceneFilesCount;
 
                 Cutscenes ??= new Cutscene[count];
 
                 for (int i = 0; i < count; i++)
                 {
-                    var fileIndex = 5 + i * cutsceneFilesCount;
+                    var fileIndex = cutscenesStartFile + i * cutsceneFilesCount;
 
                     // Goto to avoid caching
                     s.Goto(OffsetTable.FilePointers[fileIndex]);

@@ -85,11 +85,10 @@ namespace BinarySerializer.Klonoa.DTP
             [17] = new int[] { 0, 0, },
             [18] = new int[] { 0, },
             [19] = new int[] { 0, 7, 7, 7, 4, 5, -1, },
-            //[20] = new int[] { 0, },
-            //[21] = new int[] { 0, },
-            //[22] = new int[] { 0, },
+            [20] = new int[] { 0, },
+            [21] = new int[] { 0, 0, -1, },
+            [22] = new int[] { 0, },
             //[23] = new int[] { 0, 0, -1, 2, 2, },
-            //[24] = new int[] { 0, 8, },
         };
 
         public override Dictionary<int, Dictionary<int, PaletteAnimationInfo>> PaletteAnimationInfos { get; } = new Dictionary<int, Dictionary<int, PaletteAnimationInfo>>()

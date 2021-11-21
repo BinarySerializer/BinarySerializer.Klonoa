@@ -39,18 +39,10 @@ namespace BinarySerializer.Klonoa.DTP
             });
 
             // Sprites movement paths
-            ArchiveFile<MovementPath_File> paths = LoadCutsceneAsset<ArchiveFile<MovementPath_File>>(3);
-
-            // The game seems to only use the first one - are the rest unused?
-            for (int i = 0; i < 1; i++)
+            AddGameObject(GlobalGameObjectType.Cutscene_Paths, obj =>
             {
-                MovementPath_File file = paths.Files[i];
-
-                AddGameObject(GlobalGameObjectType.Cutscene_Paths, obj =>
-                {
-                    obj.MovementPaths = file;
-                });
-            }
+                obj.MovementPathsArchive = LoadCutsceneAsset<ArchiveFile<MovementPath_File>>(3);
+            });
         }
 
         protected virtual void LoadCutsceneObjects_3_1()
@@ -923,7 +915,7 @@ namespace BinarySerializer.Klonoa.DTP
             // TODO: File 13 has texture data
             LoadBossAsset<RawData_File>(13);
 
-            // TODO: File 14 has palettes
+            // TODO: File 14 has palettes (doesn't exist in July proto)
             LoadBossAsset<RawData_File>(14);
         }
 
