@@ -34,7 +34,6 @@ namespace BinarySerializer.Klonoa.KH
         public ushort A_Unknown2 { get; set; } // Seems related to its effect
 
         public ushort I_IconIndex { get; set; }
-        public ushort I_Unknown { get; set; }
 
         public ushort E_IconIndex { get; set; }
 
@@ -87,8 +86,7 @@ namespace BinarySerializer.Klonoa.KH
                 case Item_Category.I:
                     Name = s.SerializeObject<TextCommands>(Name, x => x.Pre_MaxLength = 9, name: nameof(Name));
                     I_IconIndex = s.Serialize<ushort>(I_IconIndex, name: nameof(I_IconIndex));
-                    I_Unknown = s.Serialize<ushort>(I_Unknown, name: nameof(I_Unknown));
-                    Description = s.SerializeObject<TextCommands>(Description, x => x.Pre_MaxLength = 17, name: nameof(Description));
+                    Description = s.SerializeObject<TextCommands>(Description, x => x.Pre_MaxLength = 18, name: nameof(Description));
                     Price = s.Serialize<uint>(Price, name: nameof(Price));
                     ShopDescription = s.SerializeObject<TextCommands>(ShopDescription, x => x.Pre_MaxLength = 24, name: nameof(ShopDescription));
                     break;
