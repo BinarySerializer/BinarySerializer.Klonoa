@@ -2,6 +2,8 @@
 
 namespace BinarySerializer.Klonoa.DTP
 {
+    // TODO: Merge this with the base class. We already have to hard-coded some conditions for the prototype there
+    //       so it's not worth trying to separate it into multiple classes
     public class HardCodedObjectsLoader_Prototype_19970717 : HardCodedObjectsLoader
     {
         #region Constructor
@@ -98,6 +100,40 @@ namespace BinarySerializer.Klonoa.DTP
 
             // The cutscene data is a copy from the intro, so load that
             LoadCutscene_Intro(true);
+        }
+
+        protected override void LoadCutsceneObjects_22_0()
+        {
+            // TODO: There are additional files with data here not in the final version, seems to be vertex animations (for Ghadius)
+
+            // Karal
+            LoadCutsceneObject_Karal_Pamela(GlobalGameObjectType.Cutscene_Karal, 0, 1, -1, new KlonoaVector16(0x70000 >> 12, 0x57b000 >> 12, 0xf30000 >> 12));
+
+            // Pamela (offset y slightly)
+            LoadCutsceneObject_Karal_Pamela(GlobalGameObjectType.Cutscene_Pamela, 10, 11, -1, new KlonoaVector16(0x70000 >> 12, (0x57b000 >> 12) + 1500, 0xf30000 >> 12));
+
+            // Ghadius (on floor)
+            LoadCutsceneObject_Ghadius(2, 3, -1, -1, new KlonoaVector16(-0xf0000 >> 12, -0x8000 >> 12, 0x11a000 >> 12), null, null);
+        }
+
+        protected override void LoadCutsceneObjects_23_0()
+        {
+            // A copy of the level model, ignore for now
+            //AddGameObject(GlobalGameObjectType., obj =>
+            //{
+            //    obj.Models = new GameObjectData_Model[]
+            //    {
+            //        new GameObjectData_Model()
+            //        {
+            //            TMD = LoadCutsceneAsset<PS1_TMD>(3),
+            //        },
+            //    };
+
+            //    obj.Position = new KlonoaVector16((0x70000 >> 12) + 500, 0x57b000 >> 12, 0xf30000 >> 12); // Custom
+            //});
+
+            // Load base
+            base.LoadCutsceneObjects_23_0();
         }
 
         #endregion
