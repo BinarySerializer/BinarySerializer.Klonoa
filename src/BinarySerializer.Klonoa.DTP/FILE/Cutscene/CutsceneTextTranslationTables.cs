@@ -362,7 +362,7 @@ namespace BinarySerializer.Klonoa.DTP
                         writeLine($"Rotation = ({data_MoveCamera.RotX}, {data_MoveCamera.RotY}, 0)");
                         break;
 
-                    case CutsceneInstruction.InstructionType.Instruction_PlaySound:
+                    case CutsceneInstruction.InstructionType.PlaySound:
                         var data_PlaySound = (CutsceneInstructionData_PlaySound)instruction.Data;
                         writeLine($"Object = {data_PlaySound.ObjIndex}");
                         writeLine($"SoundRef_00 = {data_PlaySound.SoundRef.Value_00}");
