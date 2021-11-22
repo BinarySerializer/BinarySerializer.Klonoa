@@ -2,6 +2,8 @@
 
 namespace BinarySerializer.Klonoa.DTP
 {
+    // According to the prototype the source extensions for the data in this is .NAK (nakaj)
+
     /// <summary>
     /// A sector of a level
     /// </summary>
