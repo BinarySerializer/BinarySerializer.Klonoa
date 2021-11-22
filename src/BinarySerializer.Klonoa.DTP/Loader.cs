@@ -300,7 +300,9 @@ namespace BinarySerializer.Klonoa.DTP
                 case IDXLoadCommand.FileType.Archive_WorldMap:
                     foreach (var tim in ((WorldMap_ArchiveFile)binFile).SpriteSheets.Files)
                         AddToVRAM(tim);
-                    AddToVRAM(((WorldMap_ArchiveFile)binFile).Palette1);
+
+                    if (((WorldMap_ArchiveFile)binFile).Palette1 != null)
+                        AddToVRAM(((WorldMap_ArchiveFile)binFile).Palette1);
                     break;
                 
                 // Memory map code files
@@ -557,6 +559,9 @@ namespace BinarySerializer.Klonoa.DTP
         /// <param name="tim">The TIM file to add</param>
         public void AddToVRAM(PS1_TIM tim)
         {
+            if (tim == null) 
+                throw new ArgumentNullException(nameof(tim));
+
             // Add the palette if available
             if (tim.Clut != null)
                 VRAM.AddPalette(tim.Clut.Palette, 0, 0, tim.Clut.Region.XPos * 2, tim.Clut.Region.YPos, tim.Clut.Region.Width * 2, tim.Clut.Region.Height);

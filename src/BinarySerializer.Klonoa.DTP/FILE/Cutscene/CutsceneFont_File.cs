@@ -3,30 +3,29 @@
     public class CutsceneFont_File : BaseFile
     {
         public uint CharactersCount { get; set; }
-        public uint Offset_0 { get; set; }
+        public uint WidthsOffset { get; set; }
         public uint ImgDataOffset { get; set; }
         
-        public byte[] Data_0 { get; set; }
+        public byte[] CharacterWidths { get; set; }
         public byte[][] CharactersImgData { get; set; }
 
         public override void SerializeImpl(SerializerObject s)
         {
             CharactersCount = s.Serialize<uint>(CharactersCount, name: nameof(CharactersCount));
-            Offset_0 = s.Serialize<uint>(Offset_0, name: nameof(Offset_0));
+            WidthsOffset = s.Serialize<uint>(WidthsOffset, name: nameof(WidthsOffset));
             ImgDataOffset = s.Serialize<uint>(ImgDataOffset, name: nameof(ImgDataOffset));
 
-            s.DoAt(Offset + Offset_0, () =>
+            s.DoAt(Offset + WidthsOffset, () =>
             {
-                Data_0 ??= new byte[(ImgDataOffset - Offset_0) * 2];
+                CharacterWidths ??= new byte[CharactersCount];
 
-                for (int i = 0; i < Data_0.Length; i += 2)
+                s.SerializeBitValues(bitFunc =>
                 {
-                    s.SerializeBitValues<byte>(bitFunc =>
-                    {
-                        Data_0[i] = (byte)bitFunc(Data_0[i], 4, name: $"{nameof(Data_0)}[{i}]");
-                        Data_0[i + 1] = (byte)bitFunc(Data_0[i + 1], 4, name: $"{nameof(Data_0)}[{i + 1}]");
-                    });
-                }
+                    for (int i = 0; i < CharacterWidths.Length; i++)
+                        CharacterWidths[i] = (byte)bitFunc(CharacterWidths[i], 4, name: $"{nameof(CharacterWidths)}[{i}]");
+                });
+
+                // Any additional ones (for alignment) are set to 8 (default)
             });
             s.DoAt(Offset + ImgDataOffset, () =>
             {
