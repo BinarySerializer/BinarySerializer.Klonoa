@@ -24,7 +24,8 @@
         {
             public short Command { get; set; }
             public CommandType Type { get; set; }
-            public short CommandParam { get; set; }
+            public short Param_Generic { get; set; }
+            public SoundReference Param_SoundRef { get; set; }
 
             public override void SerializeImpl(SerializerObject s)
             {
@@ -39,8 +40,10 @@
                 Type = (CommandType)~Command;
                 s.Log($"{nameof(Type)}: {Type}");
 
-                if (Type == CommandType.CMD_0 || Type == CommandType.Blank || Type == CommandType.Delay || Type == CommandType.PlaySound)
-                    CommandParam = s.Serialize<short>(CommandParam, name: nameof(CommandParam));
+                if (Type == CommandType.CMD_0 || Type == CommandType.Blank || Type == CommandType.Delay)
+                    Param_Generic = s.Serialize<short>(Param_Generic, name: nameof(Param_Generic));
+                else if (Type == CommandType.PlaySound)
+                    Param_SoundRef = s.SerializeObject<SoundReference>(Param_SoundRef, name: nameof(Param_SoundRef));
             }
 
             public enum CommandType

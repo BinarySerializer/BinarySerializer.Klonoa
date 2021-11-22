@@ -41,7 +41,7 @@
                 InstructionType.MoveCutsceneObjTowardsPos => serializeData<CutsceneInstructionData_MoveCutsceneObjTowardsPos>(),
                 InstructionType.RepeatJump => serializeData<CutsceneInstructionData_RepeatJump>(),
                 InstructionType.MoveCamera => serializeData<CutsceneInstructionData_MoveCamera>(),
-                InstructionType.Instruction_26 => serializeData<CutsceneInstructionData_26>(),
+                InstructionType.Instruction_PlaySound => serializeData<CutsceneInstructionData_PlaySound>(),
                 InstructionType.ModifyVRAM => serializeData<CutsceneInstructionData_ModifyVRAM>(),
                 InstructionType.Instruction_28 => serializeData<CutsceneInstructionData_28>(),
                 InstructionType.Instruction_29 => serializeData<CutsceneInstructionData_29>(),
@@ -86,7 +86,7 @@
             MoveCutsceneObjTowardsPos = 23,
             RepeatJump = 24, // Goes back to a previous buffer position x number of times, basically a for loop
             MoveCamera = 25,
-            Instruction_26 = 26,
+            Instruction_PlaySound = 26,
             ModifyVRAM = 27,
             Instruction_28 = 28,
             Instruction_29 = 29,

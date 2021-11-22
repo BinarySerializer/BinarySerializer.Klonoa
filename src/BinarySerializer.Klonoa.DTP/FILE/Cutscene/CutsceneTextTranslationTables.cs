@@ -177,8 +177,11 @@ namespace BinarySerializer.Klonoa.DTP
                                 case CutsceneInstructionData_DrawText.TextCommand.CommandType.CMD_0:
                                 case CutsceneInstructionData_DrawText.TextCommand.CommandType.Blank:
                                 case CutsceneInstructionData_DrawText.TextCommand.CommandType.Delay:
+                                    write($"[{cmd.Type}:{cmd.Param_Generic}]");
+                                    break;
+
                                 case CutsceneInstructionData_DrawText.TextCommand.CommandType.PlaySound:
-                                    write($"[{cmd.Type}:{cmd.CommandParam}]");
+                                    write($"[{cmd.Type}:{cmd.Param_SoundRef.Value_00},{cmd.Param_SoundRef.Value_04},{cmd.Param_SoundRef.Value_11},{cmd.Param_SoundRef.Value_12},{cmd.Param_SoundRef.Value_15}]");
                                     break;
 
                                 case CutsceneInstructionData_DrawText.TextCommand.CommandType.LineBreak:
@@ -359,10 +362,14 @@ namespace BinarySerializer.Klonoa.DTP
                         writeLine($"Rotation = ({data_MoveCamera.RotX}, {data_MoveCamera.RotY}, 0)");
                         break;
 
-                    case CutsceneInstruction.InstructionType.Instruction_26:
-                        var data_26 = (CutsceneInstructionData_26)instruction.Data;
-                        writeLine($"Object = {data_26.ObjIndex}");
-                        writeLine($"Value_02 = {data_26.Int_02}");
+                    case CutsceneInstruction.InstructionType.Instruction_PlaySound:
+                        var data_PlaySound = (CutsceneInstructionData_PlaySound)instruction.Data;
+                        writeLine($"Object = {data_PlaySound.ObjIndex}");
+                        writeLine($"SoundRef_00 = {data_PlaySound.SoundRef.Value_00}");
+                        writeLine($"SoundRef_04 = {data_PlaySound.SoundRef.Value_04}");
+                        writeLine($"SoundRef_11 = {data_PlaySound.SoundRef.Value_11}");
+                        writeLine($"SoundRef_12 = {data_PlaySound.SoundRef.Value_12}");
+                        writeLine($"SoundRef_15 = {data_PlaySound.SoundRef.Value_15}");
                         break;
 
                     case CutsceneInstruction.InstructionType.ModifyVRAM:
