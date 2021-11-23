@@ -12,10 +12,10 @@
 
         public override void SerializeImpl(SerializerObject s)
         {
-            s.SerializeBitValues<ushort>(bitFunc =>
+            s.DoBits<ushort>(b =>
             {
-                FramesCount = bitFunc(FramesCount, 15, name: nameof(FramesCount));
-                LoopAnimation = bitFunc(LoopAnimation ? 1 : 0, 1, name: nameof(LoopAnimation)) == 1;
+                FramesCount = b.SerializeBits<int>(FramesCount, 15, name: nameof(FramesCount));
+                LoopAnimation = b.SerializeBits<int>(LoopAnimation ? 1 : 0, 1, name: nameof(LoopAnimation)) == 1;
             });
             FramesOffset = s.Serialize<ushort>(FramesOffset, name: nameof(FramesOffset));
 

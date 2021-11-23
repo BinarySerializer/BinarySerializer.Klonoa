@@ -15,10 +15,10 @@
             Function1 = s.SerializePointer(Function1, name: nameof(Function1));
             Function2 = s.SerializePointer(Function2, name: nameof(Function2));
             AnimFileIndex = s.Serialize<byte>(AnimFileIndex, name: nameof(AnimFileIndex));
-            s.SerializeBitValues<byte>(bitFunc =>
+            s.DoBits<byte>(b =>
             {
-                AnimIndex = (byte)bitFunc(AnimIndex, 3, name: nameof(AnimIndex));
-                AnimGroupIndex = (byte)bitFunc(AnimGroupIndex, 5, name: nameof(AnimGroupIndex));
+                AnimIndex = (byte)b.SerializeBits<int>(AnimIndex, 3, name: nameof(AnimIndex));
+                AnimGroupIndex = (byte)b.SerializeBits<int>(AnimGroupIndex, 5, name: nameof(AnimGroupIndex));
             });
             Byte_06 = s.Serialize<byte>(Byte_06, name: nameof(Byte_06));
             Flags = s.Serialize<byte>(Flags, name: nameof(Flags));

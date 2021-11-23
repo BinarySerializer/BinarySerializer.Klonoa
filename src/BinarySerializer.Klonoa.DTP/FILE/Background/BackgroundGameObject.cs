@@ -25,13 +25,13 @@
             YPos = s.Serialize<short>(YPos, name: nameof(YPos));
             Type = s.Serialize<BackgroundGameObjectType>(Type, name: nameof(Type));
 
-            s.SerializeBitValues<ushort>(bitFunc =>
+            s.DoBits<ushort>(b =>
             {
-                BGDIndex = bitFunc(BGDIndex, 5, name: nameof(BGDIndex));
-                UnknownValues = bitFunc(UnknownValues, 7, name: nameof(UnknownValues));
-                CELIndex = bitFunc(CELIndex, 2, name: nameof(CELIndex));
-                UnknownFlag1 = bitFunc(UnknownFlag1 ? 1 : 0, 1, name: nameof(UnknownFlag1)) == 1;
-                UnknownFlag2 = bitFunc(UnknownFlag2 ? 1 : 0, 1, name: nameof(UnknownFlag2)) == 1;
+                BGDIndex = b.SerializeBits<int>(BGDIndex, 5, name: nameof(BGDIndex));
+                UnknownValues = b.SerializeBits<int>(UnknownValues, 7, name: nameof(UnknownValues));
+                CELIndex = b.SerializeBits<int>(CELIndex, 2, name: nameof(CELIndex));
+                UnknownFlag1 = b.SerializeBits<int>(UnknownFlag1 ? 1 : 0, 1, name: nameof(UnknownFlag1)) == 1;
+                UnknownFlag2 = b.SerializeBits<int>(UnknownFlag2 ? 1 : 0, 1, name: nameof(UnknownFlag2)) == 1;
             });
 
             switch (Type)

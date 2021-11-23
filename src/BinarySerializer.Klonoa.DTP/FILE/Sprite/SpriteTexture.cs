@@ -29,17 +29,17 @@
             TexturePageOffsetX = s.Serialize<byte>(TexturePageOffsetX, name: nameof(TexturePageOffsetX));
             Height = s.Serialize<byte>(Height, name: nameof(Height));
             Width = s.Serialize<byte>(Width, name: nameof(Width));
-            s.SerializeBitValues<ushort>(bitFunc =>
+            s.DoBits<ushort>(b =>
             {
-                PalOffsetY = bitFunc(PalOffsetY, 4, name: nameof(PalOffsetY));
-                PalOffsetX = bitFunc(PalOffsetX, 12, name: nameof(PalOffsetX));
+                PalOffsetY = b.SerializeBits<int>(PalOffsetY, 4, name: nameof(PalOffsetY));
+                PalOffsetX = b.SerializeBits<int>(PalOffsetX, 12, name: nameof(PalOffsetX));
             });
-            s.SerializeBitValues<ushort>(bitFunc =>
+            s.DoBits<ushort>(b =>
             {
-                TexturePage = bitFunc(TexturePage, 5, name: nameof(TexturePage));
-                bitFunc(default, 9, name: "Padding");
-                FlipX = bitFunc(FlipX ? 1 : 0, 1, name: nameof(FlipX)) == 1;
-                FlipY = bitFunc(FlipY ? 1 : 0, 1, name: nameof(FlipY)) == 1;
+                TexturePage = b.SerializeBits<int>(TexturePage, 5, name: nameof(TexturePage));
+                b.SerializeBits<int>(default, 9, name: "Padding");
+                FlipX = b.SerializeBits<int>(FlipX ? 1 : 0, 1, name: nameof(FlipX)) == 1;
+                FlipY = b.SerializeBits<int>(FlipY ? 1 : 0, 1, name: nameof(FlipY)) == 1;
             });
         }
     }
