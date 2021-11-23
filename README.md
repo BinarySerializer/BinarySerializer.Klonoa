@@ -10,7 +10,7 @@ Example image is from this library being used in [Ray1Map](https://github.com/Ad
 ## Currently Supported Versions
 * Klonoa: Door to Phantomile (Prototype 1997/07/17, NTSC)
 * Klonoa 2: Lunatea's Veil (NTSC, PAL - _currently limited support only_)
-* Klonoa Heroes (JP - _currently limited support only_)
+* Klonoa Heroes (JP)
 
 ## Planned Versions
 * Klonoa: Door to Phantomile (Prototype 1997/12/18, NTSC-J, PAL, Demo)
