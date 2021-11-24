@@ -17,8 +17,8 @@
             AnimFileIndex = s.Serialize<byte>(AnimFileIndex, name: nameof(AnimFileIndex));
             s.DoBits<byte>(b =>
             {
-                AnimIndex = (byte)b.SerializeBits<int>(AnimIndex, 3, name: nameof(AnimIndex));
-                AnimGroupIndex = (byte)b.SerializeBits<int>(AnimGroupIndex, 5, name: nameof(AnimGroupIndex));
+                AnimIndex = b.SerializeBits<byte>(AnimIndex, 3, name: nameof(AnimIndex));
+                AnimGroupIndex = b.SerializeBits<byte>(AnimGroupIndex, 5, name: nameof(AnimGroupIndex));
             });
             Byte_06 = s.Serialize<byte>(Byte_06, name: nameof(Byte_06));
             Flags = s.Serialize<byte>(Flags, name: nameof(Flags));

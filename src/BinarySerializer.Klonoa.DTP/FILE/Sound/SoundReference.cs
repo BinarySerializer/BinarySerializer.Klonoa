@@ -14,9 +14,9 @@
             {
                 Value_00 = b.SerializeBits<int>(Value_00, 4, name: nameof(Value_00));
                 Value_04 = b.SerializeBits<int>(Value_04, 7, name: nameof(Value_04));
-                Value_11 = b.SerializeBits<int>(Value_11 ? 1 : 0, 1, name: nameof(Value_11)) != 0;
+                Value_11 = b.SerializeBits<bool>(Value_11, 1, name: nameof(Value_11));
                 Value_12 = b.SerializeBits<int>(Value_12, 3, name: nameof(Value_12));
-                Value_15 = b.SerializeBits<int>(Value_15 ? 1 : 0, 1, name: nameof(Value_15)) != 0;
+                Value_15 = b.SerializeBits<bool>(Value_15, 1, name: nameof(Value_15));
             });
         }
     }

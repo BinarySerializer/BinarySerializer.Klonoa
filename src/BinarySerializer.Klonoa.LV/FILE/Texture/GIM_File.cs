@@ -38,12 +38,12 @@ namespace BinarySerializer.Klonoa.LV
             // BITBLTBUF register info
             s.DoBits<int>(b =>
             {
-                Texture_DBP = (ushort)b.SerializeBits<int>(Texture_DBP, 14, name: nameof(Texture_DBP));
-                b.SerializeBits<int>(default, 2, name: "Padding");
-                Texture_DBW = (ushort)b.SerializeBits<int>(Texture_DBW, 6, name: nameof(Texture_DBW));
-                b.SerializeBits<int>(default, 2, name: "Padding");
-                Texture_DPSM = (GS.PixelStorageMode)b.SerializeBits<int>((int)Texture_DPSM, 6, name: nameof(Texture_DPSM));
-                b.SerializeBits<int>(default, 2, name: "Padding");
+                Texture_DBP = b.SerializeBits<ushort>(Texture_DBP, 14, name: nameof(Texture_DBP));
+                b.SerializePadding(2);
+                Texture_DBW = b.SerializeBits<ushort>(Texture_DBW, 6, name: nameof(Texture_DBW));
+                b.SerializePadding(2);
+                Texture_DPSM = b.SerializeBits<GS.PixelStorageMode>(Texture_DPSM, 6, name: nameof(Texture_DPSM));
+                b.SerializePadding(2);
             });
 
             Texture_BPPFlag = s.Serialize<uint>(Texture_BPPFlag, name: nameof(Texture_BPPFlag));
@@ -58,12 +58,12 @@ namespace BinarySerializer.Klonoa.LV
             // BITBLTBUF register info
             s.DoBits<int>(b =>
             {
-                Palette_DBP = (ushort)b.SerializeBits<int>(Palette_DBP, 14, name: nameof(Palette_DBP));
-                b.SerializeBits<int>(default, 2, name: "Padding");
-                Palette_DBW = (ushort)b.SerializeBits<int>(Palette_DBW, 6, name: nameof(Palette_DBW));
-                b.SerializeBits<int>(default, 2, name: "Padding");
-                Palette_DPSM = (GS.PixelStorageMode)b.SerializeBits<int>((int)Palette_DPSM, 6, name: nameof(Palette_DPSM));
-                b.SerializeBits<int>(default, 2, name: "Padding");
+                Palette_DBP = b.SerializeBits<ushort>(Palette_DBP, 14, name: nameof(Palette_DBP));
+                b.SerializePadding(2);
+                Palette_DBW = b.SerializeBits<ushort>(Palette_DBW, 6, name: nameof(Palette_DBW));
+                b.SerializePadding(2);
+                Palette_DPSM = b.SerializeBits<GS.PixelStorageMode>(Palette_DPSM, 6, name: nameof(Palette_DPSM));
+                b.SerializePadding(2);
             });
 
             Palette_BPPFlag = s.Serialize<uint>(Palette_BPPFlag, name: nameof(Palette_BPPFlag));

@@ -20,8 +20,8 @@ namespace BinarySerializer.Klonoa.KH
             ObjAttr = s.SerializeObject<GBA_OBJ_ATTR>(ObjAttr, name: nameof(ObjAttr));
             s.DoBits<byte>(b =>
             {
-                PaletteMode = (byte)b.SerializeBits<int>(PaletteMode, 4, name: nameof(PaletteMode));
-                PaletteIndex = (byte)b.SerializeBits<int>(PaletteIndex, 4, name: nameof(PaletteIndex));
+                PaletteMode = b.SerializeBits<byte>(PaletteMode, 4, name: nameof(PaletteMode));
+                PaletteIndex = b.SerializeBits<byte>(PaletteIndex, 4, name: nameof(PaletteIndex));
             });
             PaletteMemoryIndex = s.Serialize<byte>(PaletteMemoryIndex, name: nameof(PaletteMemoryIndex));
             TileSetLength = s.Serialize<ushort>(TileSetLength, name: nameof(TileSetLength));

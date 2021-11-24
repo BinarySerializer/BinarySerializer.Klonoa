@@ -37,9 +37,9 @@
             s.DoBits<ushort>(b =>
             {
                 TexturePage = b.SerializeBits<int>(TexturePage, 5, name: nameof(TexturePage));
-                b.SerializeBits<int>(default, 9, name: "Padding");
-                FlipX = b.SerializeBits<int>(FlipX ? 1 : 0, 1, name: nameof(FlipX)) == 1;
-                FlipY = b.SerializeBits<int>(FlipY ? 1 : 0, 1, name: nameof(FlipY)) == 1;
+                b.SerializePadding(9, logIfNotNull: true);
+                FlipX = b.SerializeBits<bool>(FlipX, 1, name: nameof(FlipX));
+                FlipY = b.SerializeBits<bool>(FlipY, 1, name: nameof(FlipY));
             });
         }
     }

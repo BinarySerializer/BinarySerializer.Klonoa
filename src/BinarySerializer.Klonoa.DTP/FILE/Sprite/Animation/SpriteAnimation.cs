@@ -15,7 +15,7 @@
             s.DoBits<ushort>(b =>
             {
                 FramesCount = b.SerializeBits<int>(FramesCount, 15, name: nameof(FramesCount));
-                LoopAnimation = b.SerializeBits<int>(LoopAnimation ? 1 : 0, 1, name: nameof(LoopAnimation)) == 1;
+                LoopAnimation = b.SerializeBits<bool>(LoopAnimation, 1, name: nameof(LoopAnimation));
             });
             FramesOffset = s.Serialize<ushort>(FramesOffset, name: nameof(FramesOffset));
 

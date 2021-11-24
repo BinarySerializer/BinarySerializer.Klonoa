@@ -248,10 +248,10 @@ namespace BinarySerializer.Klonoa.KH
                     Arg1_Short = s.Serialize<short>(Arg1_Short, name: nameof(Arg1_Short));
                     s.DoBits<short>(b =>
                     {
-                        FileIndex_2 = (byte)b.SerializeBits<int>(FileIndex_2, 4, name: nameof(FileIndex_2));
-                        FileIndex_1 = (byte)b.SerializeBits<int>(FileIndex_1, 4, name: nameof(FileIndex_1));
-                        FileIndex_0 = (byte)b.SerializeBits<int>(FileIndex_0, 4, name: nameof(FileIndex_0));
-                        FileIndexRelated_3 = (byte)b.SerializeBits<int>(FileIndexRelated_3, 4, name: nameof(FileIndexRelated_3));
+                        FileIndex_2 = b.SerializeBits<short>(FileIndex_2, 4, name: nameof(FileIndex_2));
+                        FileIndex_1 = b.SerializeBits<short>(FileIndex_1, 4, name: nameof(FileIndex_1));
+                        FileIndex_0 = b.SerializeBits<short>(FileIndex_0, 4, name: nameof(FileIndex_0));
+                        FileIndexRelated_3 = b.SerializeBits<short>(FileIndexRelated_3, 4, name: nameof(FileIndexRelated_3));
                     });
                     break;
 

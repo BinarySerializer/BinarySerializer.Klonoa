@@ -30,8 +30,8 @@
                 BGDIndex = b.SerializeBits<int>(BGDIndex, 5, name: nameof(BGDIndex));
                 UnknownValues = b.SerializeBits<int>(UnknownValues, 7, name: nameof(UnknownValues));
                 CELIndex = b.SerializeBits<int>(CELIndex, 2, name: nameof(CELIndex));
-                UnknownFlag1 = b.SerializeBits<int>(UnknownFlag1 ? 1 : 0, 1, name: nameof(UnknownFlag1)) == 1;
-                UnknownFlag2 = b.SerializeBits<int>(UnknownFlag2 ? 1 : 0, 1, name: nameof(UnknownFlag2)) == 1;
+                UnknownFlag1 = b.SerializeBits<bool>(UnknownFlag1, 1, name: nameof(UnknownFlag1));
+                UnknownFlag2 = b.SerializeBits<bool>(UnknownFlag2, 1, name: nameof(UnknownFlag2));
             });
 
             switch (Type)
