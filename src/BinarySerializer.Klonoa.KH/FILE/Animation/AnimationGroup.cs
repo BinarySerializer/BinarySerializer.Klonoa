@@ -16,6 +16,8 @@
             s.SerializePadding(8, logIfNotNull: true);
             AnimationOffsets = s.SerializeArray<int>(AnimationOffsets, AnimationsCount, name: nameof(AnimationOffsets));
 
+            bool hasParsedAnims = Animations != null;
+
             Animations ??= new Animation[AnimationsCount];
 
             for (int i = 0; i < Animations.Length; i++)
@@ -25,9 +27,16 @@
 
                 s.DoAt(Offset + BaseAnimationsOffset + AnimationOffsets[i], () =>
                 {
-                    // TODO: Find better way of handling this which works for writing
+                    // TODO: Potentially find a better solution to this to make both reading and writing work better
+
                     // Verify it's an animation. If all offsets are 0 there might not be any animations to point to.
-                    var isValid = s.DoAt(s.CurrentPointer, () => s.SerializeString(default, 2, name: "AnimCheck") == "AF");
+                    // If the animation is not null (such as if we're writing a read object) then we assume it's valid
+                    bool isValid = Animations[i] != null;
+
+                    // If it's null we check the following bytes, unless we've already parsed the animations in which case
+                    // we assume we're writing the data
+                    if (!isValid && !hasParsedAnims)
+                        isValid = s.DoAt(s.CurrentPointer, () => s.SerializeString(default, 2, name: "AnimCheck") == "AF");
 
                     if (isValid)
                         Animations[i] = s.SerializeObject<Animation>(Animations[i], name: $"{nameof(Animations)}[{i}]");
