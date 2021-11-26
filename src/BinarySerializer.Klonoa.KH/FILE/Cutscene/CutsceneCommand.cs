@@ -114,7 +114,7 @@ namespace BinarySerializer.Klonoa.KH
                         TextCommands = s.SerializeObject<TextCommands>(TextCommands, name: nameof(TextCommands)));
                     break;
 
-                case CommandType.CMD_00_11:
+                case CommandType.WaitForText: // Waits for a pause or prompt text command
                     break;
 
                 case CommandType.CMD_00_12:
@@ -603,7 +603,7 @@ namespace BinarySerializer.Klonoa.KH
             CMD_00_08 = 0008,
             ConditionalGoTo_0 = 0009,
             SetText = 0010,
-            CMD_00_11 = 0011,
+            WaitForText = 0011,
             CMD_00_12 = 0012,
             CMD_00_13 = 0013,
             CMD_00_14 = 0014,
