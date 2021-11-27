@@ -23,7 +23,7 @@ namespace BinarySerializer.Klonoa.KH
             }
         }
 
-        public Map_File GetMap(int id1, int id2, int id3)
+        public Map_File GetMap(int id1, int id2, int id3, bool deserializeIfNull = true)
         {
             int index = -1;
 
@@ -40,6 +40,19 @@ namespace BinarySerializer.Klonoa.KH
 
             if (index == -1)
                 throw new Exception($"Map with ID {id1}-{id2}-{id3} was not found");
+
+            return GetMap(index, deserializeIfNull);
+        }
+
+        public Map_File GetMap(int index, bool deserializeIfNull = true)
+        {
+            if (Maps[index] == null)
+            {
+                if (!deserializeIfNull)
+                    return null;
+
+                Maps[index] = SerializeFile<Map_File>(Context.Deserializer, Maps[index], index, onPreSerialize: x => x.Pre_SharedDataPointer = OffsetTable.KH_KW_SharedDataPointer, fileEncoder: new BytePairEncoder(), name: $"{nameof(Maps)}[{index}]");
+            }
 
             return Maps[index];
         }
