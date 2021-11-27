@@ -54,14 +54,13 @@ namespace BinarySerializer.Klonoa.DTP
 
             var loader = Loader.GetLoader(s.Context);
 
-            Data = new GameObjectData
-            {
-                // Determine the type
-                GlobalGameObjectType = loader.Settings.GetGlobalGameObjectType(loader.BINBlock, (int) PrimaryType, SecondaryType),
-                PrimaryType = PrimaryType,
-                SecondaryType = SecondaryType,
-                DefinitionOffset = Offset
-            };
+            Data ??= new GameObjectData();
+
+            // Determine the type
+            Data.GlobalGameObjectType = loader.Settings.GetGlobalGameObjectType(loader.BINBlock, (int) PrimaryType, SecondaryType);
+            Data.PrimaryType = PrimaryType;
+            Data.SecondaryType = SecondaryType;
+            Data.DefinitionOffset = Offset;
 
             // Serialize the parameters
             switch (Data.GlobalGameObjectType)
@@ -83,6 +82,8 @@ namespace BinarySerializer.Klonoa.DTP
                 return;
 
             s.Log($"Serializing data files for type {Data.GlobalGameObjectType}");
+
+            _dataFileIndex = 0;
 
             if (Data.GlobalGameObjectType == GlobalGameObjectType.Unknown)
             {
