@@ -3,7 +3,7 @@
     public class Animation_File : BaseFile
     {
         public short PalettesCount { get; set; }
-        public short AnimationsCount { get; set; }
+        public short AnimationGroupsCount { get; set; }
         public uint PaletteOffset { get; set; }
         public uint AnimationGroupOffsetsOffset { get; set; }
         public uint TileSetOffset { get; set; }
@@ -19,15 +19,15 @@
             s.SerializePadding(2, logIfNotNull: true);
 
             PalettesCount = s.Serialize<short>(PalettesCount, name: nameof(PalettesCount));
-            AnimationsCount = s.Serialize<short>(AnimationsCount, name: nameof(AnimationsCount));
+            AnimationGroupsCount = s.Serialize<short>(AnimationGroupsCount, name: nameof(AnimationGroupsCount));
             PaletteOffset = s.Serialize<uint>(PaletteOffset, name: nameof(PaletteOffset));
             AnimationGroupOffsetsOffset = s.Serialize<uint>(AnimationGroupOffsetsOffset, name: nameof(AnimationGroupOffsetsOffset));
             TileSetOffset = s.Serialize<uint>(TileSetOffset, name: nameof(TileSetOffset));
             s.SerializePadding(12, logIfNotNull: true);
 
-            s.DoAt(Offset + AnimationGroupOffsetsOffset, () => AnimationGroupOffsets = s.SerializeArray<uint>(AnimationGroupOffsets, AnimationsCount, name: nameof(AnimationGroupOffsets)));
+            s.DoAt(Offset + AnimationGroupOffsetsOffset, () => AnimationGroupOffsets = s.SerializeArray<uint>(AnimationGroupOffsets, AnimationGroupsCount, name: nameof(AnimationGroupOffsets)));
 
-            AnimationGroups ??= new AnimationGroup[AnimationsCount];
+            AnimationGroups ??= new AnimationGroup[AnimationGroupsCount];
 
             for (int i = 0; i < AnimationGroups.Length; i++)
                 s.DoAt(Offset + AnimationGroupOffsets[i], () => AnimationGroups[i] = s.SerializeObject<AnimationGroup>(AnimationGroups[i], name: $"{nameof(AnimationGroups)}[{i}]"));
