@@ -6,6 +6,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\BinarySerializer.PS2\src\BinarySerializer.PS2.csproj" />
+    <ProjectReference Include="..\..\..\BinarySerializer\src\BinarySerializer.csproj" />
     <ProjectReference Include="..\BinarySerializer.Klonoa\BinarySerializer.Klonoa.csproj" />
   </ItemGroup>
   
