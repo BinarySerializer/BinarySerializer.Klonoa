@@ -9,7 +9,7 @@ namespace BinarySerializer.Klonoa
             DecompressedSize = decompressedSize;
         }
 
-        public string Name => $"TextureBlockEncoder";
+        public string Name => $"TextureBlockEncoding";
 
         public uint DecompressedSize { get; }
 

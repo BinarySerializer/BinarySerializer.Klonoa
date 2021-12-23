@@ -7,7 +7,7 @@ namespace BinarySerializer.Klonoa
     {
         public const uint Header = 0x1A7A6C55;
 
-        public string Name => $"ULZEncoder";
+        public string Name => $"ULZ";
 
         // Implemented from https://subversion.assembla.com/svn/transprojects/psx/ace_combat_3/tools/code/ULZ.cs
         public Stream DecodeStream(Stream s)

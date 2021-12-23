@@ -6,7 +6,7 @@ namespace BinarySerializer.Klonoa
     // I have no clue what compression type this actually is. With this ugly code, copied from Ghidra, it at least works...
     public class LevelSectorEncoder : IStreamEncoder
     {
-        public string Name => $"LevelSectorEncoder";
+        public string Name => $"LevelSectorEncoding";
 
         // Re-implemented from 0x8007841c
         public Stream DecodeStream(Stream s)

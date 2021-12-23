@@ -10,7 +10,7 @@ namespace BinarySerializer.Klonoa.KH
     /// </summary>
     public class BytePairEncoder : IStreamEncoder
     {
-        public string Name => nameof(BytePairEncoder);
+        public string Name => "BytePair";
 
         /// <summary>
         /// The block size to use when encoding
