@@ -13,15 +13,12 @@ namespace BinarySerializer.Klonoa
 
         public uint DecompressedSize { get; }
 
-        public Stream DecodeStream(Stream s)
+        public void DecodeStream(Stream input, Stream output)
         {
             // Create a reader for the input
-            var reader = new Reader(s, isLittleEndian: true);
+            using var reader = new Reader(input, isLittleEndian: true, leaveOpen: true);
 
-            // Create a stream to store the decompressed data
-            var decompressedStream = new MemoryStream();
-
-            var writer = new Writer(decompressedStream, isLittleEndian: true, leaveOpen: true);
+            var writer = new Writer(output, isLittleEndian: true, leaveOpen: true);
 
             // Re-implemented from 0x800171f0
             int currentDecompCount = 0;
@@ -96,17 +93,8 @@ namespace BinarySerializer.Klonoa
 
                 bVar1 = uVar7 < 0x20;
             } while (currentDecompCount < DecompressedSize);
-
-            // Set position back to 0
-            decompressedStream.Position = 0;
-
-            // Return the compressed data stream
-            return decompressedStream;
         }
 
-        public Stream EncodeStream(Stream s)
-        {
-            throw new System.NotImplementedException();
-        }
+        public void EncodeStream(Stream input, Stream output) => throw new System.NotImplementedException();
     }
 }

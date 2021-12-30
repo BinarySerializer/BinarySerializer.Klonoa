@@ -9,15 +9,12 @@ namespace BinarySerializer.Klonoa
         public string Name => $"LevelSectorEncoding";
 
         // Re-implemented from 0x8007841c
-        public Stream DecodeStream(Stream s)
+        public void DecodeStream(Stream input, Stream output)
         {
             // Create a reader for the input
-            var reader = new Reader(s, isLittleEndian: true);
+            using var reader = new Reader(input, isLittleEndian: true, leaveOpen: true);
 
-            // Create a stream to store the decompressed data
-            var decompressedStream = new MemoryStream();
-
-            var writer = new Writer(decompressedStream, isLittleEndian: true, leaveOpen: true);
+            var writer = new Writer(output, isLittleEndian: true, leaveOpen: true);
 
             int cycles = reader.ReadByte();
             var buffer0 = new byte[0x14]; // 800E4158
@@ -520,15 +517,9 @@ namespace BinarySerializer.Klonoa
 
                 value = UnknownDecomp2_GetNextValue();
             }
-
-            // Set position back to 0
-            decompressedStream.Position = 0;
-
-            // Return the compressed data stream
-            return decompressedStream;
         }
 
-        public Stream EncodeStream(Stream s)
+        public void EncodeStream(Stream input, Stream output)
         {
             throw new NotImplementedException();
         }

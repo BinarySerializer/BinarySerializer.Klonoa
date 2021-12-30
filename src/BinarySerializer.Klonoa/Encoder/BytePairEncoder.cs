@@ -20,17 +20,16 @@ namespace BinarySerializer.Klonoa.KH
         public const int MaxRecursionCount = 16;
 
         // Decompressed at 0x0804E428 in the ROM
-        public Stream DecodeStream(Stream s)
+        public void DecodeStream(Stream input, Stream output)
         {
-            var initialCompressedPosition = s.Position;
+            var initialCompressedPosition = input.Position;
 
             // Create a reader for the input
-            var reader = new Reader(s, isLittleEndian: true);
+            using var reader = new Reader(input, isLittleEndian: true, leaveOpen: true);
 
-            // Create a stream to store the decompressed data
-            var decompressedStream = new MemoryStream();
+            var writer = new Writer(output, isLittleEndian: true, leaveOpen: true);
 
-            var writer = new Writer(decompressedStream, isLittleEndian: true, leaveOpen: true);
+            var initialOutputPos = output.Position;
 
             // Read the header
             var compressedSize = reader.ReadUInt32();
@@ -46,7 +45,7 @@ namespace BinarySerializer.Klonoa.KH
                 throw new Exception($"Invalid compressed data");
 
             // Decompress until all the data has been parsed
-            while (s.Position - initialCompressedPosition < compressedSize)
+            while (input.Position - initialCompressedPosition < compressedSize)
             {
                 // Create a translation table. Specific bytes will be represented by two other bytes.
                 var translationTable = new Dictionary<byte, byte[]>();
@@ -140,33 +139,26 @@ namespace BinarySerializer.Klonoa.KH
             }
 
             // Verify the size
-            if (decompressedSize != decompressedStream.Length)
+            if (decompressedSize != output.Length - initialOutputPos)
                 throw new Exception($"Data was not decompressed correctly!");
-
-            // Set position back to 0
-            decompressedStream.Position = 0;
-
-            // Return the decompressed data stream
-            return decompressedStream;
         }
 
-        public Stream EncodeStream(Stream s)
+        public void EncodeStream(Stream input, Stream output)
         {
-            long decompressedSize = s.Length - s.Position;
+            long decompressedSize = input.Length - input.Position;
 
-            // Create a stream to store the compressed data
-            var compressedStream = new MemoryStream();
+            var writer = new Writer(output, isLittleEndian: false, leaveOpen: true);
 
-            var writer = new Writer(compressedStream, isLittleEndian: false, leaveOpen: true);
+            var initialOutputPos = output.Position;
 
             // Skip the header for now (we write that last)
-            compressedStream.Position += 8;
+            output.Position += 8;
 
-            while (s.Position < s.Length)
+            while (input.Position < input.Length)
             {
                 // Read a block
                 byte[] originalBlock = new byte[BlockSize];
-                var blockSize = s.Read(originalBlock, 0, originalBlock.Length);
+                var blockSize = input.Read(originalBlock, 0, originalBlock.Length);
                 List<byte> block = originalBlock.Take(blockSize).ToList();
 
                 // Keep track of used bytes
@@ -311,16 +303,10 @@ namespace BinarySerializer.Klonoa.KH
             }
 
             // Write the header
-            compressedStream.Position = 0;
+            output.Position = initialOutputPos;
             writer.IsLittleEndian = true;
-            writer.Write((uint)compressedStream.Length); // Compressed size
+            writer.Write((uint)(output.Length - initialOutputPos)); // Compressed size
             writer.Write((uint)decompressedSize); // Decompressed size
-
-            // Set position back to 0
-            compressedStream.Position = 0;
-
-            // Return the compressed data stream
-            return compressedStream;
         }
     }
 }

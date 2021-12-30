@@ -10,10 +10,10 @@ namespace BinarySerializer.Klonoa
         public string Name => $"ULZ";
 
         // Implemented from https://subversion.assembla.com/svn/transprojects/psx/ace_combat_3/tools/code/ULZ.cs
-        public Stream DecodeStream(Stream s)
+        public void DecodeStream(Stream input, Stream output)
         {
             // Create a reader for the input
-            var reader = new Reader(s, isLittleEndian: true);
+            using var reader = new Reader(input, isLittleEndian: true, leaveOpen: true);
 
             // All offsets are relative to the initial position
             var initialPos = reader.BaseStream.Position;
@@ -159,13 +159,9 @@ namespace BinarySerializer.Klonoa
             // Set position back to 0
             decompressedStream.Position = 0;
 
-            // Return the compressed data stream
-            return decompressedStream;
+            decompressedStream.CopyTo(output);
         }
 
-        public Stream EncodeStream(Stream s)
-        {
-            throw new NotImplementedException();
-        }
+        public void EncodeStream(Stream input, Stream output) => throw new NotImplementedException();
     }
 }
