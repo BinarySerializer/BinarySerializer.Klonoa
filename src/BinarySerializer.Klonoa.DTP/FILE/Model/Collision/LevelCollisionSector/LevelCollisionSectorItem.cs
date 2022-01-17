@@ -18,7 +18,7 @@
             {
                 var v = 0;
 
-                Structures = s.SerializeObjectArrayUntil<LevelCollisionSectorItemStructure>(Structures, x => (v += x.ZOffset) >= Pre_Depth, onPreSerialize: x => x.Pre_CollisionIndicesPointer = Pre_CollisionIndicesPointer, name: nameof(Structures));
+                Structures = s.SerializeObjectArrayUntil<LevelCollisionSectorItemStructure>(Structures, x => (v += x.ZOffset) >= Pre_Depth, onPreSerialize: (x, _) => x.Pre_CollisionIndicesPointer = Pre_CollisionIndicesPointer, name: nameof(Structures));
             });
         }
     }

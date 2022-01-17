@@ -11,7 +11,7 @@
             ObjectsDefinitions = s.SerializeObjectArrayUntil<GameObjectDefinition>(
                 obj: ObjectsDefinitions,
                 conditionCheckFunc: x => x.Short_00 == -1,
-                onPreSerialize: x => x.Pre_ObjectAssets = Pre_ObjectAssets,
+                onPreSerialize: (x, _) => x.Pre_ObjectAssets = Pre_ObjectAssets,
                 name: nameof(ObjectsDefinitions));
         }
     }

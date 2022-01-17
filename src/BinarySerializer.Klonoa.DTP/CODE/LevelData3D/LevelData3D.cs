@@ -28,7 +28,7 @@
                 SectorGameObjectDefinition = s.SerializeObjectArrayUntil<SectorGameObjectDefinitions>(
                     obj: SectorGameObjectDefinition, 
                     conditionCheckFunc: x => x.ObjectsDefinitions[0].Short_0E == -1, 
-                    onPreSerialize: x => x.Pre_ObjectAssets = Pre_ObjectAssets,
+                    onPreSerialize: (x, _) => x.Pre_ObjectAssets = Pre_ObjectAssets,
                     name: nameof(SectorGameObjectDefinition));
 
                 var sectorToParse = Loader.GetLoader(s.Context).LevelSector;
