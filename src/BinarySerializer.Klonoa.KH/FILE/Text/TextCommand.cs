@@ -21,7 +21,7 @@
             return cmd == CommandType.Speaker || 
                    cmd == CommandType.CMD_07 || 
                    cmd == CommandType.BlankSpace ||
-                   cmd == CommandType.CMD_0C || 
+                   cmd == CommandType.Speed || 
                    cmd == CommandType.CMD_0D;
         }
 
@@ -39,7 +39,7 @@
             Prompt = -9,
             Pause = -10,
             CMD_0B = -11,
-            CMD_0C = -12,
+            Speed = -12, // Set speed for each text character, in frames
             CMD_0D = -13,
             CMD_0E = -14,
             CMD_0F = -15,
