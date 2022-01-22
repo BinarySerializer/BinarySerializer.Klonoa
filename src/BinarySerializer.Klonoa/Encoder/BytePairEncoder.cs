@@ -302,11 +302,15 @@ namespace BinarySerializer.Klonoa.KH
                 writer.Write(block.ToArray());
             }
 
+            var outputEndPosition = output.Position;
+
             // Write the header
             output.Position = initialOutputPos;
             writer.IsLittleEndian = true;
-            writer.Write((uint)(output.Length - initialOutputPos)); // Compressed size
+            writer.Write((uint)(outputEndPosition - initialOutputPos)); // Compressed size
             writer.Write((uint)decompressedSize); // Decompressed size
+
+            output.Position = outputEndPosition;
         }
     }
 }
