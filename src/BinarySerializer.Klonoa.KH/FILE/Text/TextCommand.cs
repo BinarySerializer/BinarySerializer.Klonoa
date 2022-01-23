@@ -38,10 +38,10 @@
             BlankSpace = -8, // Pixels specified by argument, if arg is 0 then default to 0x28
             Prompt = -9,
             Pause = -10,
-            CMD_0B = -11,
+            CMD_0B = -11, // Add to speed?
             Speed = -12, // Set speed for each text character, in frames
             CMD_0D = -13,
-            CMD_0E = -14,
+            CMD_0E = -14, // Reset speed?
             CMD_0F = -15,
         }
     }
