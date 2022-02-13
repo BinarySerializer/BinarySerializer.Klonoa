@@ -38,7 +38,7 @@
                 }
 
                 Type = (CommandType)~Command;
-                s.Log($"{nameof(Type)}: {Type}");
+                s.Log("{0}: {1}", nameof(Type), Type);
 
                 if (Type == CommandType.CMD_0 || Type == CommandType.Blank || Type == CommandType.Delay)
                     Param_Generic = s.Serialize<short>(Param_Generic, name: nameof(Param_Generic));

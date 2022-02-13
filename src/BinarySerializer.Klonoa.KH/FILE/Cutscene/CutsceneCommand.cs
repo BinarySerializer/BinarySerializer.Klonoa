@@ -51,7 +51,7 @@ namespace BinarySerializer.Klonoa.KH
             PrimaryType = s.Serialize<byte>(PrimaryType, name: nameof(PrimaryType));
 
             Type = (CommandType)(PrimaryType * 100 + SecondaryType);
-            s.Log($"Type: {Type}");
+            s.Log("Type: {0}", Type);
 
             if (!Enum.IsDefined(typeof(CommandType), Type))
                 throw new BinarySerializableException(this, $"Invalid command type {PrimaryType}-{SecondaryType}");

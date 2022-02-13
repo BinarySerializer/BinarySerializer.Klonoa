@@ -53,7 +53,7 @@ namespace BinarySerializer.Klonoa
                 else
                     fileSize = Pre_EndPointer != null ? Pre_EndPointer - s.CurrentPointer : -1;
 
-                s.Log($"FileSize: {fileSize}");
+                s.Log("FileSize: {0}", fileSize);
 
                 FileData = s.SerializeObject<File>(FileData, x =>
                 {

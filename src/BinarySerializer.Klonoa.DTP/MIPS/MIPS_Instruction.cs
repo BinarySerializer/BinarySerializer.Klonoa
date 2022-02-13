@@ -20,7 +20,7 @@
             Value = s.Serialize<int>(Value, name: nameof(Value));
 
             Opcode = BitHelpers.ExtractBits(Value, 6, 26);
-            s.Log($"{nameof(Opcode)}: {Opcode}");
+            s.Log("{0}: {1}", nameof(Opcode), Opcode);
 
             if (Value == 0x00)
             {
@@ -37,16 +37,16 @@
                 else if (Funct == 0x08)
                     Mnemonic = InstructionMnemonic.jr;
                 else
-                    s.LogWarning($"Unknown MIPS instruction with opcode {Opcode} and funt {Funct}");
+                    s.LogWarning("Unknown MIPS instruction with opcode {0} and funt {1}", Opcode, Funct);
             }
             else if (Opcode == 0x0F)
                 Mnemonic = InstructionMnemonic.lui;
             else if (Opcode == 0x23)
                 Mnemonic = InstructionMnemonic.lw;
             else
-                s.LogWarning($"Unknown MIPS instruction with opcode {Opcode}");
+                s.LogWarning("Unknown MIPS instruction with opcode {0}", Opcode);
 
-            s.Log($"{nameof(Mnemonic)}: {Mnemonic}");
+            s.Log("{0}: {1}", nameof(Mnemonic), Mnemonic);
 
             switch (Mnemonic)
             {
@@ -55,26 +55,26 @@
                 case InstructionMnemonic.addu:
                 case InstructionMnemonic.jr:
                     Funct = BitHelpers.ExtractBits(Value, 6, 0);
-                    s.Log($"{nameof(Funct)}: {Funct}");
+                    s.Log("{0}: {1}", nameof(Funct), Funct);
                     Shift = BitHelpers.ExtractBits(Value, 5, 6);
-                    s.Log($"{nameof(Shift)}: {Shift}");
+                    s.Log("{0}: {1}", nameof(Shift), Shift);
                     RD = BitHelpers.ExtractBits(Value, 5, 11);
-                    s.Log($"{nameof(RD)}: {RD}");
+                    s.Log("{0}: {1}", nameof(RD), RD);
                     RT = BitHelpers.ExtractBits(Value, 5, 16);
-                    s.Log($"{nameof(RT)}: {RT}");
+                    s.Log("{0}: {1}", nameof(RT), RT);
                     RS = BitHelpers.ExtractBits(Value, 5, 21);
-                    s.Log($"{nameof(RS)}: {RS}");
+                    s.Log("{0}: {1}", nameof(RS), RS);
                     break;
 
                 // I Instructions
                 case InstructionMnemonic.lui:
                 case InstructionMnemonic.lw:
                     IMM = BitHelpers.ExtractBits(Value, 16, 0);
-                    s.Log($"{nameof(IMM)}: {IMM}");
+                    s.Log("{0}: {1}", nameof(IMM), IMM);
                     RT = BitHelpers.ExtractBits(Value, 5, 16);
-                    s.Log($"{nameof(RT)}: {RT}");
+                    s.Log("{0}: {1}", nameof(RT), RT);
                     RS = BitHelpers.ExtractBits(Value, 5, 21);
-                    s.Log($"{nameof(RS)}: {RS}");
+                    s.Log("{0}: {1}", nameof(RS), RS);
                     break;
             }
         }

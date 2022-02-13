@@ -81,7 +81,7 @@ namespace BinarySerializer.Klonoa.DTP
             if (Data == null)
                 return;
 
-            s.Log($"Serializing data files for type {Data.GlobalGameObjectType}");
+            s.Log("Serializing data files for type {0}", Data.GlobalGameObjectType);
 
             _dataFileIndex = 0;
 

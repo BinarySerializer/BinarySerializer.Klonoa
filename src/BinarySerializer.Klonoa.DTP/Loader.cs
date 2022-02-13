@@ -496,22 +496,22 @@ namespace BinarySerializer.Klonoa.DTP
                     {
                         case MIPS_Instruction.InstructionMnemonic.sll:
                             registers[instr.RD] = registers[instr.RT] << instr.Shift;
-                            s.Log($"R{instr.RD}: 0x{registers[instr.RD]:X8}");
+                            s.Log("R{0}: 0x{1:X8}", instr.RD, registers[instr.RD]);
                             break;
 
                         case MIPS_Instruction.InstructionMnemonic.addu:
                             registers[instr.RD] = registers[instr.RS] + registers[instr.RT];
-                            s.Log($"R{instr.RD}: 0x{registers[instr.RD]:X8}");
+                            s.Log("R{0}: 0x{1:X8}", instr.RD, registers[instr.RD]);
                             break;
 
                         case MIPS_Instruction.InstructionMnemonic.lui:
                             registers[instr.RT] = (uint)(instr.IMM << 16);
-                            s.Log($"R{instr.RT}: 0x{registers[instr.RT]:X8}");
+                            s.Log("R{0}: 0x{1:X8}", instr.RT, registers[instr.RT]);
                             break;
 
                         case MIPS_Instruction.InstructionMnemonic.lw:
                             registers[instr.RT] = (uint)(instr.IMM + registers[instr.RS]);
-                            s.Log($"R{instr.RT}: 0x{registers[instr.RT]:X8}");
+                            s.Log("R{0}: 0x{1:X8}", instr.RT, registers[instr.RT]);
                             break;
 
                         case MIPS_Instruction.InstructionMnemonic.Unknown:

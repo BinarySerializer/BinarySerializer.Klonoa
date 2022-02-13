@@ -10,7 +10,7 @@
         public override void SerializeImpl(SerializerObject s)
         {
             DestinationPointer = s.Serialize<uint>(DestinationPointer, name: nameof(DestinationPointer));
-            s.Log($"{nameof(DestinationPointer)}: 0x{DestinationPointer:X8}");
+            s.Log("{0}: 0x{1:X8}", nameof(DestinationPointer), DestinationPointer);
             LoadCommandsPointer = s.SerializePointer(LoadCommandsPointer, name: nameof(LoadCommandsPointer));
 
             s.DoAt(LoadCommandsPointer, () =>

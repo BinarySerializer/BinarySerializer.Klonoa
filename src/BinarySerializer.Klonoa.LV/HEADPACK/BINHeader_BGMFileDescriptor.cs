@@ -12,9 +12,9 @@
         public override void SerializeImpl(SerializerObject s)
         {
             FilesOffsetValue = s.Serialize<uint>(FilesOffsetValue, name: nameof(FilesOffsetValue));
-            s.Log($"{nameof(FILE_Offset)}: {FILE_Offset}");
+            s.Log("{0}: {1}", nameof(FILE_Offset), FILE_Offset);
             FileLength = s.Serialize<uint>(FileLength, name: nameof(FileLength));
-            s.Log($"{nameof(FileAbsoluteLength)}: {FileAbsoluteLength}");
+            s.Log("{0}: {1}", nameof(FileAbsoluteLength), FileAbsoluteLength);
             FilesCount = s.Serialize<uint>(FilesCount, name: nameof(FilesCount));
         }
     }

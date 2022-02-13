@@ -29,13 +29,13 @@
             if (Type == 1)
             {
                 BIN_LBA = s.Serialize<uint>(BIN_LBA, name: nameof(BIN_LBA));
-                s.Log($"{nameof(BIN_Offset)}: {BIN_Offset}");
+                s.Log("{0}: {1}", nameof(BIN_Offset), BIN_Offset);
 
                 BIN_UnknownPointerValue = s.Serialize<uint>(BIN_UnknownPointerValue, name: nameof(BIN_UnknownPointerValue));
-                s.Log($"BIN_UnknownPointer: 0x{BIN_UnknownPointerValue:X8}");
+                s.Log("BIN_UnknownPointer: 0x{0:X8}", BIN_UnknownPointerValue);
 
                 BIN_LengthValue = s.Serialize<uint>(BIN_LengthValue, name: nameof(BIN_LengthValue));
-                s.Log($"{nameof(BIN_Length)}: {BIN_Length}");
+                s.Log("{0}: {1}", nameof(BIN_Length), BIN_Length);
             }
             else
             {
@@ -48,17 +48,17 @@
                 if (settings != null)
                 {
                     FILE_Destination = settings.FileAddresses.TryGetValue(FILE_DestinationValue, out uint value) ? value : FILE_DestinationValue;
-                    s.Log($"{nameof(FILE_Destination)}: 0x{FILE_Destination:X8}");
+                    s.Log("{0}: 0x{1:X8}", nameof(FILE_Destination), FILE_Destination);
                 }
 
                 FILE_FunctionPointer = s.Serialize<uint>(FILE_FunctionPointer, name: nameof(FILE_FunctionPointer));
-                s.Log($"{nameof(FILE_FunctionPointer)}: 0x{FILE_FunctionPointer:X8}");
+                s.Log("{0}: 0x{1:X8}", nameof(FILE_FunctionPointer), FILE_FunctionPointer);
 
                 // The game parses the files using the supplied function pointer, so we can use that to determine the file type
                 if (Type == 2 && settings?.FileTypes.ContainsKey(FILE_FunctionPointer) == true)
                 {
                     FILE_Type = settings.FileTypes[FILE_FunctionPointer];
-                    s.Log($"{nameof(FILE_Type)}: {FILE_Type}");
+                    s.Log("{0}: {1}", nameof(FILE_Type), FILE_Type);
                 }
             }
         }

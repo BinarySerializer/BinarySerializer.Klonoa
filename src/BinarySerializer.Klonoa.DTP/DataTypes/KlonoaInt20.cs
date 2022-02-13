@@ -18,7 +18,7 @@
         public override void SerializeImpl(SerializerObject s)
         {
             SerializedValue = s.Serialize<int>(SerializedValue, name: nameof(SerializedValue));
-            s.Log($"{nameof(Value)}: {Value}");
+            s.Log("{0}: {1}", nameof(Value), Value);
         }
     }
 }

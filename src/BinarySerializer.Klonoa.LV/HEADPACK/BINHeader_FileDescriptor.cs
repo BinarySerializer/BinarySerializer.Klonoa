@@ -10,9 +10,9 @@
         public override void SerializeImpl(SerializerObject s)
         {
             FileOffsetValue = s.Serialize<uint>(FileOffsetValue, name: nameof(FileOffsetValue));
-            s.Log($"{nameof(FILE_Offset)}: {FILE_Offset}");
+            s.Log("{0}: {1}", nameof(FILE_Offset), FILE_Offset);
             FileLengthValue = s.Serialize<uint>(FileLengthValue, name: nameof(FileLengthValue));
-            s.Log($"{nameof(FILE_Length)}: {FILE_Length}");
+            s.Log("{0}: {1}", nameof(FILE_Length), FILE_Length);
         }
     }
 }
