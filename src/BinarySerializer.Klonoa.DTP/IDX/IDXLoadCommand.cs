@@ -100,7 +100,7 @@
             Archive_LevelPack, // Level data (.NAK)
 
             // Unknown
-            Archive_Unk0,
+            Archive_ClipTable,
             Unk1,
             
             // Code

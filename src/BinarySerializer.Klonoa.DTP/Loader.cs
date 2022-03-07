@@ -378,8 +378,8 @@ namespace BinarySerializer.Klonoa.DTP
                 case IDXLoadCommand.FileType.Archive_MenuBackgrounds:
                     return LoadBINFile<ArchiveFile<TIM_ArchiveFile>>(fileIndex);
 
-                case IDXLoadCommand.FileType.Archive_Unk0:
-                    return LoadBINFile<Unk0_ArchiveFile>(fileIndex);
+                case IDXLoadCommand.FileType.Archive_ClipTable:
+                    return LoadBINFile<ClipTable_ArchiveFile>(fileIndex);
 
                 case IDXLoadCommand.FileType.Unk1:
                     return LoadBINFile<RawData_File>(fileIndex);

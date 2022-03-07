@@ -5,8 +5,8 @@ namespace BinarySerializer.Klonoa.DTP
 {
     public abstract class KlonoaSettings_DTP : KlonoaSettings
     {
-        public virtual int BLOCK_Fix => 0;
-        public virtual int BLOCK_Menu => 1;
+        public virtual int BLOCK_Boot => 0;
+        public virtual int BLOCK_Title => 1;
         public virtual int BLOCK_FirstLevel => 3;
 
         public virtual string FilePath_BIN => "FILE.BIN";

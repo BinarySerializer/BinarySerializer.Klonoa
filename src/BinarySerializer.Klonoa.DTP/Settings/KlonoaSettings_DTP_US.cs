@@ -46,7 +46,7 @@ namespace BinarySerializer.Klonoa.DTP
             [0x8001845C] = IDXLoadCommand.FileType.Archive_LevelPack,
 
             // Unknown
-            [0x800264d8] = IDXLoadCommand.FileType.Archive_Unk0,
+            [0x800264d8] = IDXLoadCommand.FileType.Archive_ClipTable,
             [0x80022FD0] = IDXLoadCommand.FileType.Unk1,
 
             // Code

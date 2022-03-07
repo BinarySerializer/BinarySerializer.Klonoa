@@ -1,6 +1,6 @@
 ﻿namespace BinarySerializer.Klonoa.DTP
 {
-    public class Unk0_ArchiveFile : ArchiveFile<Unk0_ArchiveFile.Block>
+    public class ClipTable_ArchiveFile : ArchiveFile<ClipTable_ArchiveFile.Block>
     {
         public class Block : BinarySerializable
         {
