@@ -557,29 +557,14 @@ namespace BinarySerializer.Klonoa.DTP
         /// Adds the TIM file data to the VRAM
         /// </summary>
         /// <param name="tim">The TIM file to add</param>
-        public void AddToVRAM(PS1_TIM tim)
-        {
-            if (tim == null) 
-                throw new ArgumentNullException(nameof(tim));
-
-            // Add the palette if available
-            if (tim.Clut != null)
-                VRAM.AddPalette(tim.Clut.Palette, 0, 0, tim.Clut.Region.XPos * 2, tim.Clut.Region.YPos, tim.Clut.Region.Width * 2, tim.Clut.Region.Height);
-
-            // Add the image data
-            if (!(tim.Region.XPos == 0 && tim.Region.YPos == 0) && tim.Region.Width != 0 && tim.Region.Height != 0)
-                VRAM.AddDataAt(0, 0, tim.Region.XPos * 2, tim.Region.YPos, tim.ImgData, tim.Region.Width * 2, tim.Region.Height);
-        }
+        public void AddToVRAM(PS1_TIM tim) => VRAM.AddTIM(tim);
 
         /// <summary>
         /// Adds the data to the VRAM
         /// </summary>
         /// <param name="data">The data to add</param>
         /// <param name="region">The region to add to</param>
-        public void AddToVRAM(byte[] data, PS1_VRAMRegion region)
-        {
-            VRAM.AddDataAt(0, 0, region.XPos * 2, region.YPos, data, region.Width * 2, region.Height);
-        }
+        public void AddToVRAM(byte[] data, PS1_VRAMRegion region) => VRAM.AddDataAt(data, region);
 
         /// <summary>
         /// Gets the first loaded file of the specified type, or null if none was found
