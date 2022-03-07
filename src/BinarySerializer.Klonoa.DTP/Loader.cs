@@ -43,7 +43,7 @@ namespace BinarySerializer.Klonoa.DTP
         /// <summary>
         /// The Klonoa settings, used for version specific properties and functionality
         /// </summary>
-        public KlonoaSettings_DTP Settings => (KlonoaSettings_DTP)KlonoaSettings;
+        public KlonoaSettings_DTP_PS1 Settings => (KlonoaSettings_DTP_PS1)KlonoaSettings;
 
         /// <summary>
         /// The current IDX entry, determined by the <see cref="BINBlock"/>

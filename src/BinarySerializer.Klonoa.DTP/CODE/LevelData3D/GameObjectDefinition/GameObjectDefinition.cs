@@ -999,7 +999,7 @@ namespace BinarySerializer.Klonoa.DTP
                     break;
 
                 case GlobalGameObjectType.VRAMScrollAnimation:
-                    Data.VRAMScrollInfos = loader.Settings.VRAMScrollInfos.TryGetValue(loader.BINBlock, out KlonoaSettings_DTP.VRAMScrollInfo[] v) ? v : null;
+                    Data.VRAMScrollInfos = loader.Settings.VRAMScrollInfos.TryGetValue(loader.BINBlock, out KlonoaSettings_DTP_PS1.VRAMScrollInfo[] v) ? v : null;
                     break;
 
                 case GlobalGameObjectType.VRAMScrollAnimationWithTexture:

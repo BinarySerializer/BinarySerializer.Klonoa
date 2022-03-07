@@ -13,6 +13,11 @@
         DTP,
 
         /// <summary>
+        /// Klonoa: Door to Phantomile (PS2)
+        /// </summary>
+        DTP_PS2,
+
+        /// <summary>
         /// Klonoa 2: Lunatea's Veil
         /// </summary>
         LV,

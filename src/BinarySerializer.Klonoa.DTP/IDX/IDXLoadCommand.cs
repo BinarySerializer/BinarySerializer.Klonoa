@@ -9,7 +9,7 @@
         // Type 1
         public uint BIN_LBA { get; set; } // The LBA offset relative to the LBA of the BIN
         public uint BIN_Offset => BIN_LBA * SectorSize;
-        public Pointer BIN_Pointer => new Pointer(BIN_Offset, Context.GetFile(Context.GetKlonoaSettings<KlonoaSettings_DTP>().FilePath_BIN));
+        public Pointer BIN_Pointer => new Pointer(BIN_Offset, Context.GetFile(Context.GetKlonoaSettings<KlonoaSettings_DTP_PS1>().FilePath_BIN));
         public uint BIN_UnknownPointerValue { get; set; }
         public uint BIN_LengthValue { get; set; }
         public uint BIN_Length => BIN_LengthValue * SectorSize;
@@ -43,7 +43,7 @@
 
                 FILE_DestinationValue = s.Serialize<uint>(FILE_DestinationValue, name: nameof(FILE_DestinationValue));
 
-                var settings = Context.GetKlonoaSettings<KlonoaSettings_DTP>(throwIfNotFound: false);
+                var settings = Context.GetKlonoaSettings<KlonoaSettings_DTP_PS1>(throwIfNotFound: false);
 
                 if (settings != null)
                 {

@@ -42,12 +42,12 @@ namespace BinarySerializer.Klonoa.DTP
         public GameObjectData_RawTextureAnimation RawTextureAnimation { get; set; }
         public float AnimatedAbsoluteTransformSpeed { get; set; } = 1;
         public bool DoesAnimatedAbsoluteTransformPingPong { get; set; }
-        public KlonoaSettings_DTP.TextureAnimationInfo TextureAnimationInfo { get; set; }
-        public KlonoaSettings_DTP.PaletteAnimationInfo PaletteAnimationInfo { get; set; }
+        public KlonoaSettings_DTP_PS1.TextureAnimationInfo TextureAnimationInfo { get; set; }
+        public KlonoaSettings_DTP_PS1.PaletteAnimationInfo PaletteAnimationInfo { get; set; }
         public PS1_VRAMRegion[] PaletteAnimationVRAMRegions { get; set; }
         public uint GeyserPlatformPositionsPointer { get; set; }
         public GameObjectData_GeyserPlatformPosition[] GeyserPlatformPositions { get; set; }
-        public KlonoaSettings_DTP.VRAMScrollInfo[] VRAMScrollInfos { get; set; }
+        public KlonoaSettings_DTP_PS1.VRAMScrollInfo[] VRAMScrollInfos { get; set; }
         public bool IsMovementPathAbsolute { get; set; }
         public bool IsCollisionAbsolute { get; set; }
         public bool ShowAllModels { get; set; } = true; // If false then only one should show at once

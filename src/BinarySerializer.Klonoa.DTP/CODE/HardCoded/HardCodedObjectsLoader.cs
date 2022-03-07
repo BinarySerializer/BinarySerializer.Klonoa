@@ -78,7 +78,7 @@ namespace BinarySerializer.Klonoa.DTP
                 if (textureAnimIndex != -1)
                 {
                     // Mouth animation (FUN_5_7__8011bff0)
-                    obj.TextureAnimationInfo = new KlonoaSettings_DTP.TextureAnimationInfo(false, 8);
+                    obj.TextureAnimationInfo = new KlonoaSettings_DTP_PS1.TextureAnimationInfo(false, 8);
                     var frames = new byte[4][];
 
                     for (int i = 0; i < 4; i++)

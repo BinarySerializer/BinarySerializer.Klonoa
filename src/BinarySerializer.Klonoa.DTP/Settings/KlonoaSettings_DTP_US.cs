@@ -2,7 +2,7 @@
 
 namespace BinarySerializer.Klonoa.DTP
 {
-    public class KlonoaSettings_DTP_US : KlonoaSettings_DTP
+    public class KlonoaSettings_DTP_US : KlonoaSettings_DTP_PS1
     {
         public override KlonoaGameVersion Version => KlonoaGameVersion.DTP;
 
