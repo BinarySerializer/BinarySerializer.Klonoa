@@ -3,7 +3,7 @@
 namespace BinarySerializer.Klonoa.DTP
 {
     /// <summary>
-    /// The backgrounds in a level
+    /// The backgrounds in a level. File extension is BA.
     /// </summary>
     public class BackgroundPack_ArchiveFile : ArchiveFile
     {

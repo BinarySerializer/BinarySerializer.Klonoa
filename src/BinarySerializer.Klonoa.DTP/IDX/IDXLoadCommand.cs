@@ -68,43 +68,43 @@
             Unknown,
 
             // Textures
-            Archive_TIM_Generic, // Textures
+            Archive_TIM_Generic, // Textures (.TIA)
             Archive_TIM_SongsText, // Songs text, used in the menu
             Archive_TIM_SaveText, // Memory card save text
-            Archive_TIM_SpriteSheets, // Sprite sheets, used in levels
+            Archive_TIM_SpriteSheets, // Sprite sheets, used in levels (.ARC)
 
             // Sounds
-            OA05, // Sound bank
-            SEQ, // Sound (music?)
+            OA05, // Sound bank (.OAF)
+            SEQ, // Sound (music?) (.SEQ)
 
             // Backgrounds
-            Archive_BackgroundPack, // Backgrounds
+            Archive_BackgroundPack, // Backgrounds (.BA)
 
             // Sprites
             FixedSprites, // Fixed sprite descriptors
-            Archive_SpritePack, // Sprites
+            Archive_SpritePack, // Sprites (.ARC)
             Archive_LevelMenuSprites,
 
             // World map
             Archive_WorldMap, // World map graphics
 
             // Menu
-            Archive_MenuSprites, // Menu graphics
+            Archive_MenuSprites, // Menu graphics (.OFF)
             Proto_Archive_MenuSprites_0, // Menu graphics
             Proto_Archive_MenuSprites_1, // Menu graphics
             Proto_Archive_MenuSprites_2, // Menu graphics
-            Font, // Menu font
+            Font, // Menu font // DAT
             Archive_MenuBackgrounds, // Menu backgrounds
             
             // Level
-            Archive_LevelPack, // Level data
+            Archive_LevelPack, // Level data (.NAK)
 
             // Unknown
             Archive_Unk0,
             Unk1,
             
             // Code
-            Code, // Compiled code
+            Code, // Compiled code (.BIN)
             CodeNoDest, // Compiled code (with a hard-coded destination)
         }
     }

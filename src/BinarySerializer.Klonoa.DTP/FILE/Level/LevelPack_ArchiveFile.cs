@@ -1,5 +1,7 @@
 ﻿namespace BinarySerializer.Klonoa.DTP
 {
+    // File extension is NAK.
+
     public class LevelPack_ArchiveFile : ArchiveFile
     {
         public ArchiveFile ObjectAssets { get; set; } // Referenced from objects

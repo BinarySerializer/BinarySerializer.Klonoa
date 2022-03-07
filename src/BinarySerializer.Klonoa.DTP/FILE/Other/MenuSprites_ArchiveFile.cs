@@ -1,5 +1,7 @@
 ﻿namespace BinarySerializer.Klonoa.DTP
 {
+    // File extension is OFF.
+
     public class MenuSprites_ArchiveFile : ArchiveFile
     {
         public Sprites_ArchiveFile Sprites_0 { get; set; } // Menu text

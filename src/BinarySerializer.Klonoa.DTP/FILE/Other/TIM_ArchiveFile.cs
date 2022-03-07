@@ -2,7 +2,7 @@
 
 namespace BinarySerializer.Klonoa.DTP
 {
-    // According to the prototype the source extensions for the data in this is .TIA (TIM archive?)
+    // File extension is TIA (TIM archive?).
 
     /// <summary>
     /// An archive file where every file is a TIM file

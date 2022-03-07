@@ -2,7 +2,8 @@
 
 namespace BinarySerializer.Klonoa.DTP
 {
-    // According to the prototype the source extensions for the data in this is .NAK (nakaj)
+    // According to the prototype the source extensions for the data in this is NAK (nakaj). In the PS2 version the file extension for
+    // the level pack is NAK.
 
     /// <summary>
     /// A sector of a level

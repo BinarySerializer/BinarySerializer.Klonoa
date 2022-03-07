@@ -1,6 +1,6 @@
 ﻿namespace BinarySerializer.Klonoa.DTP
 {
-    // Some sound related pack
+    // Some sound related pack. File extension is OAF.
     public class OA05_File : BaseFile
     {
         public string Header { get; set; }
