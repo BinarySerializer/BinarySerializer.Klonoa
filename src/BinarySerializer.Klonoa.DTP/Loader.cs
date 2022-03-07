@@ -381,7 +381,8 @@ namespace BinarySerializer.Klonoa.DTP
                 case IDXLoadCommand.FileType.Archive_ClipTable:
                     return LoadBINFile<ClipTable_ArchiveFile>(fileIndex);
 
-                case IDXLoadCommand.FileType.Unk1:
+                // TODO: Parse palettes
+                case IDXLoadCommand.FileType.BackgroundPalettes:
                     return LoadBINFile<RawData_File>(fileIndex);
 
                 case IDXLoadCommand.FileType.Code:

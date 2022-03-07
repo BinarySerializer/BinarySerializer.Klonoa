@@ -79,6 +79,7 @@
 
             // Backgrounds
             Archive_BackgroundPack, // Backgrounds (.BA)
+            BackgroundPalettes, // Additional palettes for the background (.CLT)
 
             // Sprites
             FixedSprites, // Fixed sprite descriptors
@@ -99,9 +100,8 @@
             // Level
             Archive_LevelPack, // Level data (.NAK)
 
-            // Unknown
+            // Other
             Archive_ClipTable,
-            Unk1,
             
             // Code
             Code, // Compiled code (.BIN)
