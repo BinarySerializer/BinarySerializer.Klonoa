@@ -16,7 +16,7 @@ namespace BinarySerializer.Klonoa.DTP
         protected Loader(Context context, IDX idx) : base(context)
         {
             IDX = idx;
-            MemoryFiles = new HashSet<MemoryMappedByteArrayFile>();
+            MemoryFiles = new HashSet<MemoryMappedStreamFile>();
             VRAM = new PS1_VRAM();
             SpriteSets = new Sprites_ArchiveFile[70];
             LoadedFiles = new BaseFile[idx.Entries.Length][];
@@ -29,7 +29,7 @@ namespace BinarySerializer.Klonoa.DTP
 
         #region Protected Properties
 
-        protected HashSet<MemoryMappedByteArrayFile> MemoryFiles { get; }
+        protected HashSet<MemoryMappedStreamFile> MemoryFiles { get; }
 
         #endregion
 
@@ -308,7 +308,7 @@ namespace BinarySerializer.Klonoa.DTP
                 // Memory map code files
                 case IDXLoadCommand.FileType.Code:
                     var rawData = ((RawData_File)binFile).Data;
-                    var f = new MemoryMappedByteArrayFile(Context, $"CODE_{BINBlock}_{fileIndex}", cmd.FILE_Destination, rawData);
+                    var f = new MemoryMappedStreamFile(Context, $"CODE_{BINBlock}_{fileIndex}", cmd.FILE_Destination, rawData);
                     Context.AddFile(f);
                     MemoryFiles.Add(f);
                     break;
@@ -583,7 +583,7 @@ namespace BinarySerializer.Klonoa.DTP
 
         public BinaryFile FindCodeFile(uint address)
         {
-            var files = Context.MemoryMap.Files.OfType<MemoryMappedByteArrayFile>().ToList();
+            var files = Context.MemoryMap.Files.OfType<MemoryMappedStreamFile>().ToList();
             files.Sort((a, b) => b.BaseAddress.CompareTo(a.BaseAddress));
             var file = files.FirstOrDefault(f => address >= f.BaseAddress && address <= f.BaseAddress + f.Length);
 
