@@ -2,6 +2,8 @@ namespace BinarySerializer.Klonoa.LV
 {
     public class CommandSection : BinarySerializable
     {
+        public Pointer Pre_Offset { get; set; }
+
         public ushort SectionSize { get; set; }
         public ushort Ushort_02 { get; set; }
         public Pointer CommandsPointer { get; set; }
@@ -11,7 +13,7 @@ namespace BinarySerializer.Klonoa.LV
         {
             SectionSize = s.Serialize<ushort>(SectionSize, name: nameof(SectionSize));
             Ushort_02 = s.Serialize<ushort>(Ushort_02, name: nameof(Ushort_02));
-            CommandsPointer = s.SerializePointer(CommandsPointer, name: nameof(CommandsPointer));
+            CommandsPointer = s.SerializePointer(CommandsPointer, anchor: Pre_Offset, name: nameof(CommandsPointer));
             s.SerializePadding(8, logIfNotNull: true);
             int ActualSectionSize = SectionSize * 0x10;
             long LastCommandOffset = CommandsPointer.FileOffset + ActualSectionSize - 0x10;

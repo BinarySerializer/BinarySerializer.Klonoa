@@ -10,7 +10,7 @@ namespace BinarySerializer.Klonoa.LV
             s.SerializePadding(4);
             SectionCount = s.Serialize<uint>(SectionCount, name: nameof(SectionCount));
             s.SerializePadding(8);
-            Sections = s.SerializeObjectArray<CommandSection>(Sections, SectionCount * 2, name: nameof(Sections));
+            Sections = s.SerializeObjectArray<CommandSection>(Sections, SectionCount * 2, name: nameof(Sections), onPreSerialize: x => x.Pre_Offset = Offset);
         }
     }
 }
