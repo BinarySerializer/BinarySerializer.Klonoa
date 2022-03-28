@@ -16,7 +16,7 @@ namespace BinarySerializer.Klonoa.LV
             int ActualSectionSize = SectionSize * 0x10;
             long LastCommandOffset = CommandsPointer.FileOffset + ActualSectionSize - 0x10;
             if (SectionSize > 0x02)
-                s.DoAt(CommandsPointer, () => Commands = s.SerializeObjectArrayUntil<GeometryCommand>(Commands, x => x.VIFCode.CMD == 0x11 && x.Offset.FileOffset >= LastCommandOffset, name: nameof(Commands)));
+                s.DoAt(CommandsPointer, () => Commands = s.SerializeObjectArrayUntil<GeometryCommand>(Commands, x => x.VIFCode.CMD == PS2.VIFcode.Command.FLUSH && x.Offset.FileOffset >= LastCommandOffset, name: nameof(Commands)));
         }
     }
 }

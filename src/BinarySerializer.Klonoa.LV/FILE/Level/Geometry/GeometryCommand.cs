@@ -21,11 +21,11 @@ namespace BinarySerializer.Klonoa.LV
             VIFCode = s.SerializeObject<VIFcode>(VIFCode, name: nameof(VIFCode));
             switch (VIFCode.CMD)
             {
-                case 0x11:
-                case 0x14:
+                case PS2.VIFcode.Command.FLUSH:
+                case PS2.VIFcode.Command.MSCAL:
                     Type = CommandType.NOP;
                     break;
-                case 0x50:
+                case PS2.VIFcode.Command.DIRECT:
                     GIFTag = s.SerializeObject<GIFtag>(GIFTag, name: nameof(GIFTag));
                     CLAMP = s.SerializeObject<GSReg_CLAMP_1>(CLAMP, onPreSerialize: x => x.SerializeTag = true, name: nameof(CLAMP));
                     Type = CommandType.TransferData;
