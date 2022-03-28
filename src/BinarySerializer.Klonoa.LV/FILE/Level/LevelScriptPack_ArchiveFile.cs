@@ -2,38 +2,39 @@
 {
     public class LevelScriptPack_ArchiveFile : ArchiveFile
     {
-        /* Field names referred from prototype debug strings: https://hiddenpalace.org/Klonoa_2:_Lunatea's_Veil_(Sep_17,_2001_prototype)
-            0-5 = BgDecode
-            6-11 = BgAnm
-            12 = FlatMirror
-            13 = CurveMirror
-            14 = VPA
-            15 = VPO
-            16 = MTexVPM
-            17 = MiniPuppet
-            18 = Puppet
-            19 = m1100a (debug only)
-            20 = m1100b (debug only)
+        /* 
+            Field names inferred from prototype debug strings: https://hiddenpalace.org/Klonoa_2:_Lunatea's_Veil_(Sep_17,_2001_prototype)
+                0-5 = BgDecode
+                6-11 = BgAnm
+                12 = FlatMirror
+                13 = CurveMirror
+                14 = VPA
+                15 = VPO
+                16 = MTexVPM
+                17 = MiniPuppet
+                18 = Puppet
+                19 = m1100a
+                20 = m1100b
         */
 
-        public RawData_File[] BackgroundMeshes { get; set; }
+        public LevelGeometry_File[] BackgroundMeshes { get; set; }
         public RawData_File[] BackgroundAnimations { get; set; }
         public RawData_File FlatMirror { get; set; }
         public RawData_File CurveMirror { get; set; }
         public RawData_File VPA { get; set; }
         public RawData_File VPO { get; set; }
-        public RawData_File MTexVPM { get; set; }
+        public LevelGeometry_File MTexVPM { get; set; }
         public RawData_ArchiveFile MiniCutscenes { get; set; }
         public RawData_ArchiveFile Cutscenes { get; set; }
-        public RawData_File M1100a { get; set; }
-        public RawData_File M1100b { get; set; }
+        public LevelGeometry_File M1100a { get; set; }
+        public LevelGeometry_File M1100b { get; set; }
         public RawData_File DummyFile { get; set; }
 
         protected override void SerializeFiles(SerializerObject s)
         {
             for (int i = 0; i < OffsetTable.FilesCount; i++)
             {
-                BackgroundMeshes ??= new RawData_File[6];
+                BackgroundMeshes ??= new LevelGeometry_File[6];
                 BackgroundAnimations ??= new RawData_File[6];
 
                 if (!IsDummy(i))
