@@ -1,5 +1,5 @@
 ﻿using System;
-using BinarySerializer.GBA;
+using BinarySerializer.Nintendo;
 
 namespace BinarySerializer.Klonoa.KH
 {
