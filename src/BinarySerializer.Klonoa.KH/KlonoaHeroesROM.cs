@@ -1,9 +1,9 @@
 ﻿using System;
-using BinarySerializer.Nintendo;
+using BinarySerializer.Nintendo.GBA;
 
 namespace BinarySerializer.Klonoa.KH
 {
-    public class KlonoaHeroesROM : GBA_ROMBase
+    public class KlonoaHeroesROM : ROMBase
     {
         /// <summary>
         /// Optional flags for determining which data to serialize from the ROM. Defaults to <see cref="SerializeDataFlags.All"/>

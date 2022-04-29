@@ -1,4 +1,4 @@
-﻿using BinarySerializer.Nintendo;
+﻿using BinarySerializer.Nintendo.GBA;
 
 namespace BinarySerializer.Klonoa.KH
 {
@@ -6,7 +6,7 @@ namespace BinarySerializer.Klonoa.KH
     {
         public sbyte XPos { get; set; }
         public sbyte YPos { get; set; }
-        public GBA_OBJ_ATTR ObjAttr { get; set; }
+        public OBJ_ATTR ObjAttr { get; set; }
         public byte PaletteMode { get; set; }
         public byte PaletteIndex { get; set; }
         public byte PaletteMemoryIndex { get; set; } // The index in memory, not in the animation file
@@ -17,7 +17,7 @@ namespace BinarySerializer.Klonoa.KH
         {
             XPos = s.Serialize<sbyte>(XPos, name: nameof(XPos));
             YPos = s.Serialize<sbyte>(YPos, name: nameof(YPos));
-            ObjAttr = s.SerializeObject<GBA_OBJ_ATTR>(ObjAttr, name: nameof(ObjAttr));
+            ObjAttr = s.SerializeObject<OBJ_ATTR>(ObjAttr, name: nameof(ObjAttr));
             s.DoBits<byte>(b =>
             {
                 PaletteMode = b.SerializeBits<byte>(PaletteMode, 4, name: nameof(PaletteMode));

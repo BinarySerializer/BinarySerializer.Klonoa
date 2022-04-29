@@ -1,5 +1,5 @@
 ﻿using System;
-using BinarySerializer.Nintendo;
+using BinarySerializer.Nintendo.GBA;
 
 namespace BinarySerializer.Klonoa.KH
 {
@@ -25,7 +25,7 @@ namespace BinarySerializer.Klonoa.KH
         public ushort Ushort_3E { get; set; }
 
         // Parsed from offsets
-        public GBA_MapTile[] TileMap { get; set; }
+        public MapTile[] TileMap { get; set; }
         public RGBA5551Color[] Palette { get; set; }
         public byte[] TileSet { get; set; }
         public byte[] CollisionMap { get; set; }
@@ -61,7 +61,7 @@ namespace BinarySerializer.Klonoa.KH
             Ushort_3C = s.Serialize<ushort>(Ushort_3C, name: nameof(Ushort_3C));
             Ushort_3E = s.Serialize<ushort>(Ushort_3E, name: nameof(Ushort_3E));
 
-            DoAtOffset(s, TileMapOffset, () => TileMap = s.SerializeObjectArray<GBA_MapTile>(TileMap, TileMapLength / 2, name: nameof(TileMap)));
+            DoAtOffset(s, TileMapOffset, () => TileMap = s.SerializeObjectArray<MapTile>(TileMap, TileMapLength / 2, name: nameof(TileMap)));
             DoAtOffset(s, PaletteOffset, () => Palette = s.SerializeObjectArray<RGBA5551Color>(Palette, 256, name: nameof(Palette)));
             DoAtOffset(s, TileSetOffset, () => TileSet = s.SerializeArray<byte>(TileSet, TileSetLength, name: nameof(TileSet)));
             DoAtOffset(s, CollisionMapOffset, () => CollisionMap = s.SerializeArray<byte>(CollisionMap, CollisionMapLength, name: nameof(CollisionMap)));

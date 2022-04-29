@@ -1,4 +1,4 @@
-﻿using BinarySerializer.Nintendo;
+﻿using BinarySerializer.Nintendo.GBA;
 
 namespace BinarySerializer.Klonoa.KH
 {
@@ -21,7 +21,7 @@ namespace BinarySerializer.Klonoa.KH
 
         public RGBA5551Color[] Palette { get; set; }
         public byte[] TileSet { get; set; }
-        public GBA_MapTile[] TileMap { get; set; }
+        public MapTile[] TileMap { get; set; }
 
         public override void SerializeImpl(SerializerObject s)
         {
@@ -43,14 +43,14 @@ namespace BinarySerializer.Klonoa.KH
             s.DoAt(Offset + TileMapOffset, () =>
             {
                 // In affine mode each tile is 8-bit rather than 16-bit
-                int tilesCount = (TileMapWidth / GBAConstants.TileSize) * (TileMapHeight / GBAConstants.TileSize);
+                int tilesCount = (TileMapWidth / Constants.TileSize) * (TileMapHeight / Constants.TileSize);
                 
                 IsAffine = tilesCount == TileMapLength;
 
                 if (!HasTileMap)
                     tilesCount = 0;
 
-                return TileMap = s.SerializeObjectArray<GBA_MapTile>(TileMap, tilesCount, x => x.Pre_IsAffine = IsAffine, name: nameof(TileMap));
+                return TileMap = s.SerializeObjectArray<MapTile>(TileMap, tilesCount, x => x.Pre_IsAffine = IsAffine, name: nameof(TileMap));
             });
             
             if (TileMapOffset != 0)
