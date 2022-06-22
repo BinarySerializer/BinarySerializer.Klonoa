@@ -44,7 +44,7 @@ namespace BinarySerializer.Klonoa
                 encoder = header == ULZEncoder.Header ? new ULZEncoder() : null;
             }
 
-            s.DoEncodedIf(encoder, encoder != null, () =>
+            s.DoEncoded(encoder, () =>
             {
                 long fileSize;
 
