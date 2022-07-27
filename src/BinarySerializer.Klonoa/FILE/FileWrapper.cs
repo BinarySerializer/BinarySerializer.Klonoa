@@ -85,7 +85,7 @@ namespace BinarySerializer.Klonoa
                 Pre_EndPointer != null &&
                 !(FileData is BaseFile { DisableNotFullySerializedWarning: true }))
             {
-                s.LogWarning($"Archived file of type {typeof(File).Name} at {Offset} was not fully serialized. {s.CurrentPointer} != {Pre_EndPointer}");
+                s.SystemLog?.LogWarning($"Archived file of type {typeof(File).Name} at {Offset} was not fully serialized. {s.CurrentPointer} != {Pre_EndPointer}");
             }
         }
     }

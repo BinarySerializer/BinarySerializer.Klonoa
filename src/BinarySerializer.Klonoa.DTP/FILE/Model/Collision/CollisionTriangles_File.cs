@@ -15,7 +15,7 @@
 
                 long actualCount = (Pre_FileSize - 4) / 28;
                 if (Count != actualCount)
-                    s.LogWarning($"Collision count {Count} does not match count of data in file {actualCount}");
+                    s.SystemLog?.LogWarning($"Collision count {Count} does not match count of data in file {actualCount}");
             }
             else
             {
