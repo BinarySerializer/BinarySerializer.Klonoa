@@ -25,7 +25,7 @@
         public RawData_File VPO { get; set; }
         public LevelGeometry_File MTexVPM { get; set; }
         public RawData_ArchiveFile MiniCutscenes { get; set; }
-        public RawData_ArchiveFile Cutscenes { get; set; }
+        public Cutscenes_ArchiveFile Cutscenes { get; set; }
         public LevelGeometry_File M1100a { get; set; }
         public LevelGeometry_File M1100b { get; set; }
         public RawData_File DummyFile { get; set; }
