@@ -17,24 +17,24 @@
                 20 = m1100b
         */
 
-        public LevelGeometry_File[] BackgroundMeshes { get; set; }
+        public VIFGeometry_File[] BackgroundMeshes { get; set; }
         public RawData_File[] BackgroundAnimations { get; set; }
         public RawData_File FlatMirror { get; set; }
         public RawData_File CurveMirror { get; set; }
         public RawData_File VPA { get; set; }
         public RawData_File VPO { get; set; }
-        public LevelGeometry_File MTexVPM { get; set; }
+        public VIFGeometry_File MTexVPM { get; set; }
         public RawData_ArchiveFile MiniCutscenes { get; set; }
         public Cutscenes_ArchiveFile Cutscenes { get; set; }
-        public LevelGeometry_File M1100a { get; set; }
-        public LevelGeometry_File M1100b { get; set; }
+        public VIFGeometry_File M1100a { get; set; }
+        public VIFGeometry_File M1100b { get; set; }
         public RawData_File DummyFile { get; set; }
 
         protected override void SerializeFiles(SerializerObject s)
         {
             for (int i = 0; i < OffsetTable.FilesCount; i++)
             {
-                BackgroundMeshes ??= new LevelGeometry_File[6];
+                BackgroundMeshes ??= new VIFGeometry_File[6];
                 BackgroundAnimations ??= new RawData_File[6];
 
                 if (!IsDummy(i))

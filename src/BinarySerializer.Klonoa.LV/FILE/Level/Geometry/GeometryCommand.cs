@@ -36,7 +36,8 @@ namespace BinarySerializer.Klonoa.LV
                     {
                         SectionPosition = s.SerializeObject(SectionPosition, name: nameof(SectionPosition));
                         Type = CommandType.SectionPosition;
-                    } else if (unpack.VN == VIFcode_Unpack.UnpackVN.V4 && unpack.VL == VIFcode_Unpack.UnpackVL.VL_32)
+                    } 
+                    else if (unpack.VN == VIFcode_Unpack.UnpackVN.V4 && unpack.VL == VIFcode_Unpack.UnpackVL.VL_32)
                     {
                         if (unpack.ADDR == 0)
                         {
@@ -53,21 +54,25 @@ namespace BinarySerializer.Klonoa.LV
                         {
                             throw new BinarySerializableException(this, $"Unknown command for address {unpack.ADDR}");
                         }
-                    } else if (unpack.VN == VIFcode_Unpack.UnpackVN.V3 && unpack.VL == VIFcode_Unpack.UnpackVL.VL_16)
+                    } 
+                    else if (unpack.VN == VIFcode_Unpack.UnpackVN.V3 && unpack.VL == VIFcode_Unpack.UnpackVL.VL_16)
                     {
                         Vertices = s.SerializeObjectArray<KlonoaLV_Vector16>(Vertices, unpack.SIZE, name: nameof(Vertices));
                         s.Align(4);
                         Type = CommandType.Vertices;
-                    } else if (unpack.VN == VIFcode_Unpack.UnpackVN.V2 && unpack.VL == VIFcode_Unpack.UnpackVL.VL_16)
+                    } 
+                    else if (unpack.VN == VIFcode_Unpack.UnpackVN.V2 && unpack.VL == VIFcode_Unpack.UnpackVL.VL_16)
                     {
                         UVs = s.SerializeObjectArray<KlonoaLV_UV16>(UVs, unpack.SIZE, name: nameof(UVs));
                         Type = CommandType.UVs;
-                    } else if (unpack.VN == VIFcode_Unpack.UnpackVN.V3 && unpack.VL == VIFcode_Unpack.UnpackVL.VL_8)
+                    } 
+                    else if (unpack.VN == VIFcode_Unpack.UnpackVN.V3 && unpack.VL == VIFcode_Unpack.UnpackVL.VL_8)
                     {
                         VertexColors = s.SerializeObjectArray<RGB888Color>(VertexColors, unpack.SIZE, name: nameof(VertexColors));
                         s.Align(4);
                         Type = CommandType.VertexColors;
-                    } else
+                    } 
+                    else
                     {
                         throw new BinarySerializableException(this, $"Unknown command for data type {unpack.VN}-{unpack.VL}");
                     }

@@ -6,7 +6,7 @@ namespace BinarySerializer.Klonoa.LV
     public class LevelSector_ArchiveFile : ArchiveFile
     {
         public GSTextures_File LevelTextures { get; set; } // Compressed GSTextures
-        public LevelGeometry_File LevelGeometry { get; set; } // Compressed VIF codes
+        public VIFGeometry_File LevelGeometry { get; set; } // Compressed VIF codes
         public RawData_File LevelObjectData { get; set; } // General data about objects in the level sector (actors, lights, etc)
         public RawData_File LevelCollisionData { get; set; } // TODO: Verify that this is in fact collision data
         public RawData_File LevelMovementPaths { get; set; } // TODO: Verify this as well
