@@ -10,7 +10,7 @@ namespace BinarySerializer.Klonoa.LV
         public RawData_File ObjectData { get; set; } // General data about objects in the level sector (actors, lights, etc)
         public RawData_File CollisionData { get; set; } // TODO: Verify that this is in fact collision data
         public CameraData_File CameraData { get; set; }
-        public RawData_File LightData { get; set; } // Data about the lights themselves, such as color
+        public LightData_File LightData { get; set; }
 
         protected override void SerializeFiles(SerializerObject s)
         {

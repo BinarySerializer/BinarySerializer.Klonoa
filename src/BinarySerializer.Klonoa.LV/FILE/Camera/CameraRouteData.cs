@@ -1,6 +1,6 @@
 namespace BinarySerializer.Klonoa.LV
 {
-    public class RouteCameraData : BinarySerializable
+    public class CameraRouteData : BinarySerializable
     {
         public uint Route { get; set; }
         public uint Height { get; set; }
