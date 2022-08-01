@@ -6,6 +6,8 @@ namespace BinarySerializer.Klonoa.LV
     {
         public byte[] TextureDescriptor { get; set; } // TODO: Parse this
         public Pointer[] FramePointers { get; set; }
+        public override int FPS => 60;
+        public override bool IsAligned => true;
 
         public override void SerializeImpl(SerializerObject s)
         {

@@ -17,7 +17,7 @@
                 20 = m1100b
         */
 
-        public VIFGeometry_File[] BackgroundMeshes { get; set; }
+        public VIFGeometry_File[] BackgroundGeometry { get; set; }
         public RawData_File[] BackgroundAnimations { get; set; }
         public RawData_File FlatMirror { get; set; }
         public RawData_File CurveMirror { get; set; }
@@ -34,13 +34,13 @@
         {
             for (int i = 0; i < OffsetTable.FilesCount; i++)
             {
-                BackgroundMeshes ??= new VIFGeometry_File[6];
+                BackgroundGeometry ??= new VIFGeometry_File[6];
                 BackgroundAnimations ??= new RawData_File[6];
 
                 if (!IsDummy(i))
                 {
                     if (i < 6)
-                        BackgroundMeshes[i] = SerializeFile(s, BackgroundMeshes[i], i, name: $"{nameof(BackgroundMeshes)}[{i}]");
+                        BackgroundGeometry[i] = SerializeFile(s, BackgroundGeometry[i], i, name: $"{nameof(BackgroundGeometry)}[{i}]");
                     else if (i < 12)
                         BackgroundAnimations[i - 6] = SerializeFile(s, BackgroundAnimations[i - 6], i, name: $"{nameof(BackgroundAnimations)}[{i - 6}]");
                     else
