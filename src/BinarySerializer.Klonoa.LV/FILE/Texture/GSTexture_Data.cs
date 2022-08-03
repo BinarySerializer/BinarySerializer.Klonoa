@@ -42,7 +42,7 @@ namespace BinarySerializer.Klonoa.LV
             } else // End of packet
             {
                 TEXFLUSH = s.SerializeObject<GSReg_TEXFLUSH>(TEXFLUSH, onPreSerialize: x => x.SerializeTag = true, name: nameof(TEXFLUSH));
-                if (GIFTag_Packed.EOP != 1)
+                if (!GIFTag_Packed.EOP)
                     // For level sector textures, the first GIFTag is not marked as EOP
                     // There is however an extra GIFTag that is marked as EOP, so let's use that instead so the condition-check in GSTextures_File works properly
                     GIFTag_Packed = s.SerializeObject<GIFtag>(GIFTag_Packed, name: nameof(GIFTag_Packed));

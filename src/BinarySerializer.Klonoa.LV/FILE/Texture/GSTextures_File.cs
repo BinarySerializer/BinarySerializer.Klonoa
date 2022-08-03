@@ -24,7 +24,7 @@ namespace BinarySerializer.Klonoa.LV
                 }
                 VIFCode_NOP = s.SerializeObject<VIFcode>(VIFCode_NOP, name: nameof(VIFCode_NOP));
                 VIFCode_DIRECTHL = s.SerializeObject<VIFcode>(VIFCode_DIRECTHL, name: nameof(VIFCode_DIRECTHL));
-                Packets = s.SerializeObjectArrayUntil<GSTexture_Packet>(Packets, x => x.GIFTag_Packed.EOP == 1, name: nameof(Packets));
+                Packets = s.SerializeObjectArrayUntil<GSTexture_Packet>(Packets, x => x.GIFTag_Packed.EOP, name: nameof(Packets));
             }
             
         }
