@@ -8,15 +8,20 @@
             context.AddSettings<KlonoaSettings>(settings);
         }
 
-        public static KlonoaSettings GetKlonoaSettings(this Context context, bool throwIfNotFound = true)
-        {
-            return context.GetSettings<KlonoaSettings>(throwIfNotFound);
-        }
+        public static KlonoaSettings GetKlonoaSettings(this Context context) => 
+            context.GetRequiredSettings<KlonoaSettings>();
+        public static KlonoaSettings TryGetKlonoaSettings(this Context context) => 
+            context.GetSettings<KlonoaSettings>();
 
-        public static Settings GetKlonoaSettings<Settings>(this Context context, bool throwIfNotFound = true)
+        public static Settings GetKlonoaSettings<Settings>(this Context context)
             where Settings : KlonoaSettings
         {
-            var settings = context.GetSettings<KlonoaSettings>(throwIfNotFound);
+            return (Settings)context.GetRequiredSettings<KlonoaSettings>();
+        }
+        public static Settings TryGetKlonoaSettings<Settings>(this Context context)
+            where Settings : KlonoaSettings
+        {
+            KlonoaSettings settings = context.GetSettings<KlonoaSettings>();
 
             if (settings == null)
                 return null;

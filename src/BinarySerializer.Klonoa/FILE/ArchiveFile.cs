@@ -138,7 +138,7 @@ namespace BinarySerializer.Klonoa
                 return;
             }
 
-            KlonoaSettings settings = Context.GetKlonoaSettings(false);
+            KlonoaSettings settings = Context.TryGetKlonoaSettings();
             HashSet<KlonoaSettings.RelocatedFile> relocatedFiles = null;
             settings?.RelocatedFiles?.TryGetValue(Offset, out relocatedFiles);
 

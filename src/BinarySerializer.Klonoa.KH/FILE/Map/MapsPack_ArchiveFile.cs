@@ -12,7 +12,7 @@ namespace BinarySerializer.Klonoa.KH
         {
             Maps ??= new Map_File[OffsetTable.FilesCount];
 
-            KlonoaSettings_KH.MapID serializeMap = s.Context.GetKlonoaSettings<KlonoaSettings_KH>(throwIfNotFound: false)?.SerializeMap;
+            KlonoaSettings_KH.MapID serializeMap = s.Context.TryGetKlonoaSettings<KlonoaSettings_KH>()?.SerializeMap;
 
             for (int i = 0; i < Maps.Length; i++)
             {

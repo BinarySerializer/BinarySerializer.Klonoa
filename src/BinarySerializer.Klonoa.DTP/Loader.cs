@@ -133,7 +133,7 @@ namespace BinarySerializer.Klonoa.DTP
             // Set the file pointers
             Pointer p = null;
             var s = Deserializer;
-            var binFile = s.Context.GetFile(Settings.FilePath_BIN);
+            var binFile = s.Context.GetRequiredFile(Settings.FilePath_BIN);
 
             for (int binBlockIndex = 0; binBlockIndex < IDX.Entries.Length; binBlockIndex++)
             {
@@ -548,7 +548,7 @@ namespace BinarySerializer.Klonoa.DTP
             // Serialize level data 2D if a level index is specified
             if (GlobalLevelIndex != -1)
             {
-                var pointerTablePointer = new Pointer(Settings.Address_LevelData2DPointerTable, Context.GetFile(Settings.FilePath_EXE));
+                var pointerTablePointer = new Pointer(Settings.Address_LevelData2DPointerTable, Context.GetRequiredFile(Settings.FilePath_EXE));
                 var levelDataPointer = s.DoAt(pointerTablePointer + (GlobalLevelIndex * 4), () => s.SerializePointer(default, name: "LevelData2DPointer"));
                 LevelData2D = s.DoAt(levelDataPointer, () => s.SerializeObject<LevelData2D>(default, name: nameof(LevelData2D)));
             }

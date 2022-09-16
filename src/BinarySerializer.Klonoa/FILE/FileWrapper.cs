@@ -22,7 +22,7 @@ namespace BinarySerializer.Klonoa
 
         public override void SerializeImpl(SerializerObject s)
         {
-            KlonoaSettings settings = s.Context.GetKlonoaSettings(throwIfNotFound: false);
+            KlonoaSettings settings = s.Context.TryGetKlonoaSettings();
 
             IStreamEncoder encoder = null;
 

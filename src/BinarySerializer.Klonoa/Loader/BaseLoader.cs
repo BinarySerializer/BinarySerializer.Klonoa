@@ -23,7 +23,7 @@
         /// <summary>
         /// The Klonoa settings, used for version specific properties and functionality
         /// </summary>
-        public KlonoaSettings KlonoaSettings => Context.GetSettings<KlonoaSettings>();
+        public KlonoaSettings KlonoaSettings => Context.GetRequiredSettings<KlonoaSettings>();
 
         public KlonoaGameVersion GameVersion => KlonoaSettings.Version;
 
