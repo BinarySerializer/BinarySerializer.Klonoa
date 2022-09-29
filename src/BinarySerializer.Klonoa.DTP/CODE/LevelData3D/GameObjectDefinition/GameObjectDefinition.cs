@@ -88,7 +88,7 @@ namespace BinarySerializer.Klonoa.DTP
             if (Data.GlobalGameObjectType == GlobalGameObjectType.Unknown)
             {
                 var count = DataFileIndices?.Select((x, i) => new { x, i }).ToList().FindIndex(x => x.x == 0 && x.i > 0);
-                s.SystemLog?.LogWarning($"Unknown game object at {Offset} with {count ?? 0} data files");
+                s.SystemLogger?.LogWarning($"Unknown game object at {Offset} with {count ?? 0} data files");
 
                 Data.UnknownData = new RawData_File[count ?? 0];
 
@@ -1110,7 +1110,7 @@ namespace BinarySerializer.Klonoa.DTP
             }
 
             if (checkForUnparsedFiles && DataFileIndices != null && DataFileIndices[_dataFileIndex] != 0)
-                s.SystemLog?.LogWarning($"Game object of type {Data.GlobalGameObjectType} has unparsed data file(s)");
+                s.SystemLogger?.LogWarning($"Game object of type {Data.GlobalGameObjectType} has unparsed data file(s)");
         }
 
         private void CreateModels(int count) => Data.Models ??= Enumerable.Range(0, count).Select(x => new GameObjectData_Model()).ToArray();
@@ -1130,7 +1130,7 @@ namespace BinarySerializer.Klonoa.DTP
             where T : BinarySerializable, new()
         {
             if (!isUnused)
-                s.SystemLog?.LogWarning($"Data file skipped at index {_dataFileIndex} for object of type {Data.GlobalGameObjectType}");
+                s.SystemLogger?.LogWarning($"Data file skipped at index {_dataFileIndex} for object of type {Data.GlobalGameObjectType}");
             
             SerializeDataFile<T>(s, null, name: isUnused ? "Unused" : "Unknown");
         }

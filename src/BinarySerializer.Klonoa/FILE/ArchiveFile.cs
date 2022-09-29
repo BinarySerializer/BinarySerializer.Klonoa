@@ -81,7 +81,7 @@ namespace BinarySerializer.Klonoa
         {
             if (index >= OffsetTable.FilePointers.Length)
             {
-                s.SystemLog?.LogWarning($"File {index} of requested type {typeof(T).Name} does not exist in archive at {Offset}");
+                s.SystemLogger?.LogWarning($"File {index} of requested type {typeof(T).Name} does not exist in archive at {Offset}");
                 return obj;
             }
 

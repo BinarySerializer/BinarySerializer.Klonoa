@@ -13,7 +13,7 @@
 
             if (size == -1)
             {
-                s.SystemLog?.LogWarning($"No data parsed for raw data file at {Offset} due to the file size not being specified");
+                s.SystemLogger?.LogWarning($"No data parsed for raw data file at {Offset} due to the file size not being specified");
                 size = 0;
             }
 

@@ -584,7 +584,7 @@ namespace BinarySerializer.Klonoa.KH
                 Arg_Padding = s.Serialize<short>(Arg_Padding, name: nameof(Arg_Padding));
 
                 if (Arg_Padding != 0)
-                    s.SystemLog?.LogWarning($"Padding for command {PrimaryType}-{SecondaryType} has data!");
+                    s.SystemLogger?.LogWarning($"Padding for command {PrimaryType}-{SecondaryType} has data!");
             }
         }
 

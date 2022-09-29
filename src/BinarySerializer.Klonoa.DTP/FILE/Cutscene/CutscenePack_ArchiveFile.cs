@@ -55,7 +55,7 @@
                 // Make sure the files count if valid
                 if ((OffsetTable.FilesCount - cutscenesStartFile) % cutsceneFilesCount != 0)
                 {
-                    s.SystemLog?.LogWarning($"Cutscene pack is invalid. Files count is {OffsetTable.FilesCount}");
+                    s.SystemLogger?.LogWarning($"Cutscene pack is invalid. Files count is {OffsetTable.FilesCount}");
                     return;
                 }
 

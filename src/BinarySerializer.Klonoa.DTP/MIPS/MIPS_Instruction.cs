@@ -37,14 +37,14 @@
                 else if (Funct == 0x08)
                     Mnemonic = InstructionMnemonic.jr;
                 else
-                    s.SystemLog?.LogWarning("Unknown MIPS instruction with opcode {0} and funt {1}", Opcode, Funct);
+                    s.SystemLogger?.LogWarning("Unknown MIPS instruction with opcode {0} and funt {1}", Opcode, Funct);
             }
             else if (Opcode == 0x0F)
                 Mnemonic = InstructionMnemonic.lui;
             else if (Opcode == 0x23)
                 Mnemonic = InstructionMnemonic.lw;
             else
-                s.SystemLog?.LogWarning("Unknown MIPS instruction with opcode {0}", Opcode);
+                s.SystemLogger?.LogWarning("Unknown MIPS instruction with opcode {0}", Opcode);
 
             s.Log("{0}: {1}", nameof(Mnemonic), Mnemonic);
 

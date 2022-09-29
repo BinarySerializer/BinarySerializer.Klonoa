@@ -2,7 +2,7 @@ using System;
 
 namespace BinarySerializer.Klonoa.LV
 {
-    public class CutsceneCommand : BinarySerializable
+    public class CutsceneCommand : BinarySerializable, ISerializerShortLog
     {
         public CommandType Type { get; set; }
 
@@ -659,8 +659,7 @@ namespace BinarySerializer.Klonoa.LV
             }
         }
 
-        public override bool UseShortLog => true;
-		public override string ShortLog => ToString();
+		public string ShortLog => ToString();
 		public override string ToString()
         {
             string args = "";

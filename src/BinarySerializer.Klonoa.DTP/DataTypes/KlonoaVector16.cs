@@ -3,7 +3,7 @@
     /// <summary>
     /// A vector with 16-bit values
     /// </summary>
-    public class KlonoaVector16 : BinarySerializable
+    public class KlonoaVector16 : BinarySerializable, ISerializerShortLog
     {
         public KlonoaVector16()
         {
@@ -31,7 +31,7 @@
         public static KlonoaVector16 operator +(KlonoaVector16 v1, KlonoaVector16 v2) => 
             new KlonoaVector16((short)(v1.X + v2.X), (short)(v1.Y + v2.Y), (short)(v1.Z + v2.Z));
 
-        public override bool UseShortLog => true;
+        public string ShortLog => ToString();
         public override string ToString() => $"({X}, {Y}, {Z})";
     }
 }

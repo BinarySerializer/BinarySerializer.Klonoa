@@ -70,7 +70,7 @@
 
                 default:
                     Data_Raw = s.SerializeArray<byte>(Data_Raw, 56, name: nameof(Data_Raw));
-                    s.SystemLog?.LogWarning($"Unknown background object type {Type}");
+                    s.SystemLogger?.LogWarning($"Unknown background object type {Type}");
                     break;
             }
 

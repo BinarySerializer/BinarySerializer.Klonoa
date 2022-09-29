@@ -391,7 +391,7 @@ namespace BinarySerializer.Klonoa.DTP
 
                 case IDXLoadCommand.FileType.Unknown:
                 default:
-                    Context.SystemLog?.LogWarning($"Unsupported file format for file {fileIndex} parsed at 0x{cmd.FILE_FunctionPointer:X8}");
+                    Context.SystemLogger?.LogWarning($"Unsupported file format for file {fileIndex} parsed at 0x{cmd.FILE_FunctionPointer:X8}");
                     return LoadBINFile<RawData_File>(fileIndex);
             }
         }
