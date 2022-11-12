@@ -5,6 +5,8 @@ namespace BinarySerializer.Klonoa.LV
     /// </summary>
     public class KlonoaLV_Vector16 : BinarySerializable
     {
+        public bool Pre_Padding { get; set; } = false;
+
         public short X { get; set; }
         public short Y { get; set; }
         public short Z { get; set; }
@@ -24,6 +26,7 @@ namespace BinarySerializer.Klonoa.LV
             X = s.Serialize<short>(X, name: nameof(X));
             Y = s.Serialize<short>(Y, name: nameof(Y));
             Z = s.Serialize<short>(Z, name: nameof(Z));
+            if (Pre_Padding) s.SerializePadding(2);
         }
     }
 }
