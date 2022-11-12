@@ -11,17 +11,17 @@ namespace BinarySerializer.Klonoa.LV
         public short BgSpeedT { get; set; }
 
         // Regular fields
-        public int FogColorR { get; set; }
-        public int FogColorG { get; set; }
-        public int FogColorB { get; set; }
-        public int FogColorA { get; set; }
+        public KlonoaLV_IntColor FogColor { get; set; }
         public int FogNear { get; set; }
         public int FogFar { get; set; }
         public PS2_RGBA8888Color BGT { get; set; }
         public PS2_RGBA8888Color BGU { get; set; }
+        public bool IsDummy => Pre_FileSize == 0x10;
 
         public override void SerializeImpl(SerializerObject s)
         {
+            if (IsDummy)
+                return;
             if (Pre_FileSize == 0x30)
             {
                 s.SerializeMagicString("MBSTVER1", 8);
@@ -31,10 +31,7 @@ namespace BinarySerializer.Klonoa.LV
                 BgSpeedT = s.Serialize<short>(BgSpeedT, name: nameof(BgSpeedT));
             }
 
-            FogColorR = s.Serialize<int>(FogColorR, name: nameof(FogColorR));
-            FogColorG = s.Serialize<int>(FogColorG, name: nameof(FogColorG));
-            FogColorB = s.Serialize<int>(FogColorB, name: nameof(FogColorB));
-            FogColorA = s.Serialize<int>(FogColorA, name: nameof(FogColorA));
+            FogColor = s.SerializeObject<KlonoaLV_IntColor>(FogColor, name: nameof(FogColor));
             FogNear = s.Serialize<int>(FogNear, name: nameof(FogNear));
             FogFar = s.Serialize<int>(FogFar, name: nameof(FogFar));
             BGT = s.SerializeObject<PS2_RGBA8888Color>(BGT, name: nameof(BGT));
