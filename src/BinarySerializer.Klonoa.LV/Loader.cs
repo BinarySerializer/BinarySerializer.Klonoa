@@ -141,6 +141,9 @@ namespace BinarySerializer.Klonoa.LV
 
             // Serialize the file
             var file = s.SerializeObject<T>(null, x => x.Pre_FileSize = length, name: $"{bin}_{fileIndex}");
+            if (file is LevelDataPack_ArchiveFile) {
+                ((LevelDataPack_ArchiveFile)(object)file).Pre_Level = (fileIndex - 1) / 2;
+            }
 
             // Return the file
             return file;
