@@ -140,10 +140,14 @@ namespace BinarySerializer.Klonoa.LV
             }
 
             // Serialize the file
-            var file = s.SerializeObject<T>(null, x => x.Pre_FileSize = length, name: $"{bin}_{fileIndex}");
-            if (file is LevelDataPack_ArchiveFile) {
-                ((LevelDataPack_ArchiveFile)(object)file).Pre_Level = (fileIndex - 1) / 2;
-            }
+            var file = s.SerializeObject<T>(null, x => {
+                x.Pre_FileSize = length;
+
+                // Set level number for parsing hard-coded files
+                if (x is LevelDataPack_ArchiveFile) {
+                    ((LevelDataPack_ArchiveFile)(object)x).Pre_Level = (fileIndex - 1) / 2;
+                }
+            }, name: $"{bin}_{fileIndex}");
 
             // Return the file
             return file;
