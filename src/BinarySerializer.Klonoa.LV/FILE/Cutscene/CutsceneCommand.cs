@@ -258,6 +258,9 @@ namespace BinarySerializer.Klonoa.LV
                 case CommandType.Control_PositionCPM:
                     Data128A = s.SerializeObject<CutsceneCommandData128A>(Data128A, name: nameof(Data128A));
                     break;
+                case CommandType.Control_CpyFT:
+                    Data32B = s.SerializeObject<CutsceneCommandData32B>(Data32B, name: nameof(Data32B));
+                    break;
                 case CommandType.Control_TimeFT:
                     s.SerializePadding(2);
                     break;
@@ -642,6 +645,30 @@ namespace BinarySerializer.Klonoa.LV
                 case CommandType.Sound_NBGM:
                     Data32B = s.SerializeObject<CutsceneCommandData32B>(Data32B, name: nameof(Data32B));
                     break;
+                case CommandType.Sound_SPitSet:
+                    Data96E = s.SerializeObject<CutsceneCommandData96E>(Data96E, name: nameof(Data96E));
+                    break;
+                case CommandType.Sound_SPitMV:  
+                    Data96E = s.SerializeObject<CutsceneCommandData96E>(Data96E, name: nameof(Data96E));
+                    break;
+                case CommandType.Sound_SPitMVP:
+                    Data96E = s.SerializeObject<CutsceneCommandData96E>(Data96E, name: nameof(Data96E));
+                    break;
+                case CommandType.Sound_SVolSet:
+                    Data96F = s.SerializeObject<CutsceneCommandData96F>(Data96F, name: nameof(Data96F));
+                    break;
+                case CommandType.Sound_SVolMV:
+                    Data96F = s.SerializeObject<CutsceneCommandData96F>(Data96F, name: nameof(Data96F));
+                    break;
+                case CommandType.Sound_SVolMVP:
+                    Data96F = s.SerializeObject<CutsceneCommandData96F>(Data96F, name: nameof(Data96F));
+                    break;
+                case CommandType.Sound_SEv:
+                    Data96D = s.SerializeObject<CutsceneCommandData96D>(Data96D, name: nameof(Data96D));
+                    break;
+                case CommandType.Sound_BGMSync:
+                    s.SerializePadding(4);
+                    break;
                 case CommandType.Sound_AC3J:
                     Data32A = s.SerializeObject<CutsceneCommandData32A>(Data32A, name: nameof(Data32A));
                     break;
@@ -938,9 +965,9 @@ namespace BinarySerializer.Klonoa.LV
             Sound_SelpOff = 0x0404,
             Sound_ABGM = 0x0405,
             Sound_NBGM = 0x0406,
-            Sound_SpitSet = 0x0407,
-            Sound_SpitMV = 0x0408,
-            Sound_SpitMVP = 0x0409,
+            Sound_SPitSet = 0x0407,
+            Sound_SPitMV = 0x0408,
+            Sound_SPitMVP = 0x0409,
             Sound_SVolSet = 0x040A,
             Sound_SVolMV = 0x040B,
             Sound_SVolMVP = 0x040C,
