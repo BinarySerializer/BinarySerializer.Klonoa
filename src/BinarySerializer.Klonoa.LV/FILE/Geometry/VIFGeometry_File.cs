@@ -2,15 +2,16 @@ namespace BinarySerializer.Klonoa.LV
 {
     public class VIFGeometry_File : BaseFile
     {
-        public uint SectionCount; // Needs to be multiplied by 2; half of the sections are empty
-        public CommandSection[] Sections;
+        public uint Type;
+        public uint SectionCount;
+        public VIFGeometry_Section[] Sections;
 
         public override void SerializeImpl(SerializerObject s)
         {
-            s.SerializePadding(4);
+            Type = s.Serialize<uint>(Type, name: nameof(Type));
             SectionCount = s.Serialize<uint>(SectionCount, name: nameof(SectionCount));
             s.SerializePadding(8);
-            Sections = s.SerializeObjectArray<CommandSection>(Sections, SectionCount * 2, name: nameof(Sections), onPreSerialize: x => x.Pre_Offset = Offset);
+            Sections = s.SerializeObjectArray<VIFGeometry_Section>(Sections, SectionCount * 2, name: nameof(Sections), onPreSerialize: x => x.Pre_Offset = Offset);
         }
     }
 }
