@@ -1,18 +1,18 @@
 namespace BinarySerializer.Klonoa.LV {
     public class Model_ArchiveFile : ArchiveFile {
-        public ModelGeometry_File ModelGeometry { get; set; }
-        public ArchiveFile<GSTextures_File> ModelTextures { get; set; }
-        public ModelMorphTargets_ArchiveFile ModelMorphTargets { get; set; }
-        public ModelAnimData_ArchiveFile ModelAnimData { get; set; }
-        public ModelDescriptor_File ModelDescriptor { get; set; } // Includes model name (3 characters long)
+        public ModelGeometry_File Geometry { get; set; }
+        public ArchiveFile<GSTextures_File> Textures { get; set; }
+        public ModelMorphTargets_ArchiveFile MorphTargets { get; set; }
+        public ModelAnimationData_ArchiveFile AnimationData { get; set; }
+        public ModelDescriptor_File Descriptor { get; set; } // Includes model name (3 characters long)
 
         protected override void SerializeFiles(SerializerObject s)
         {
-            ModelGeometry = SerializeFile(s, ModelGeometry, 0, name: nameof(ModelGeometry));
-            ModelTextures = SerializeFile(s, ModelTextures, 1, name: nameof(ModelTextures));
-            ModelMorphTargets = SerializeFile(s, ModelMorphTargets, 2, onPreSerialize: x => x.Pre_Meshes = ModelGeometry.Meshes, name: nameof(ModelMorphTargets));
-            ModelAnimData = SerializeFile(s, ModelAnimData, 3, name: nameof(ModelAnimData));
-            ModelDescriptor = SerializeFile(s, ModelDescriptor, 4, name: nameof(ModelDescriptor));
+            Geometry = SerializeFile(s, Geometry, 0, name: nameof(Geometry));
+            Textures = SerializeFile(s, Textures, 1, name: nameof(Textures));
+            MorphTargets = SerializeFile(s, MorphTargets, 2, onPreSerialize: x => x.Pre_Meshes = Geometry.Meshes, name: nameof(MorphTargets));
+            AnimationData = SerializeFile(s, AnimationData, 3, name: nameof(AnimationData));
+            Descriptor = SerializeFile(s, Descriptor, 4, name: nameof(Descriptor));
         }
     }
 }
