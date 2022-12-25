@@ -33,7 +33,7 @@ namespace BinarySerializer.Klonoa.LV
             var parser = new VIF_Parser() { IsVIF1 = true, };
             int microProgramIndex = 0;
 
-            VIFGeometry_Block ExecuteMicroProgram() {
+            VIFGeometry_Block ExecuteMicroProgram(uint programAddress) {
                 parser.HasPendingChanges = false;
                 byte[] microProgram = parser.GetCurrentBuffer();
 
@@ -51,7 +51,7 @@ namespace BinarySerializer.Klonoa.LV
                         BinaryDeserializer s = context.Deserializer;
                         s.Goto(file.StartPointer + tops);
 
-                        var gifCmd = s.SerializeObject<VIFGeometry_Block>(default, name: "GIFCommand");
+                        var gifCmd = s.SerializeObject<VIFGeometry_Block>(default, name: "VIFGeometry_Block", onPreSerialize: x => x.Pre_ProgramAddress = programAddress);
 
                         return gifCmd;
                     } finally {
@@ -69,17 +69,12 @@ namespace BinarySerializer.Klonoa.LV
                     if (parser.StartsNewMicroProgram(command))
                     {
                         if (parser.HasPendingChanges) {
-                            VIFGeometry_Block block = ExecuteMicroProgram();
+                            VIFGeometry_Block block = ExecuteMicroProgram(command.VIFCode.IMMEDIATE);
                             if (block != null) yield return block;
                         }
                     }
 
                     parser.ExecuteCommand(command, executeFull: true);
-                }
-
-                if (parser.HasPendingChanges) {
-                    VIFGeometry_Block block = ExecuteMicroProgram();
-                    if (block != null) yield return block;
                 }
             }
         }

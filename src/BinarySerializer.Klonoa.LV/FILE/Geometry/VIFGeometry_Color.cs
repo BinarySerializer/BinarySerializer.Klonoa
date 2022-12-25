@@ -5,6 +5,22 @@ namespace BinarySerializer.Klonoa.LV
     /// </summary>
     public class VIFGeometry_Color : BaseBytewiseRGBColor
     {
+        public override float Red
+        {
+            get => R / 255f;
+            set => R = (byte)(value * 255);
+        }
+        public override float Green
+        {
+            get => G / 255f;
+            set => G = (byte)(value * 255);
+        }
+        public override float Blue
+        {
+            get => B / 255f;
+            set => B = (byte)(value * 255);
+        }
+
         public override void SerializeImpl(SerializerObject s)
         {
             R = s.Serialize<byte>(R, name: nameof(R));

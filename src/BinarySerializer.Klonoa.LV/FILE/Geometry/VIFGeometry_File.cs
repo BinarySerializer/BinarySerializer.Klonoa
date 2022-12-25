@@ -21,7 +21,8 @@ namespace BinarySerializer.Klonoa.LV
                 s.SerializePadding(4, logIfNotNull: true);
             }
             s.SerializePadding(8);
-            Sections = s.SerializeObjectArray<VIFGeometry_Section>(Sections, SectionCount * (Type == 0 ? 2 : 1), name: nameof(Sections), onPreSerialize: x => x.Pre_Offset = Offset);
+            Sections = s.SerializeObjectArray<VIFGeometry_Section>(Sections, SectionCount * (Type == 0 ? 2 : 1), 
+                onPreSerialize: x => x.Pre_Offset = Offset, name: nameof(Sections));
         }
     }
 }
