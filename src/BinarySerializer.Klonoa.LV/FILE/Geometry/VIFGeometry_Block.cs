@@ -23,7 +23,7 @@ namespace BinarySerializer.Klonoa.LV
                 vertexCount += tag.NLOOP;
             }
 
-            if (Pre_ProgramAddress == 0x12) {
+            if (Pre_ProgramAddress == 0x12 || Pre_ProgramAddress == 0x04) {
                 Vertices = s.DoAt(Offset + 0x00C0, () => s.SerializeObjectArray<VIFGeometry_Vertex>(Vertices, vertexCount, name: nameof(Vertices)));
                 UVs = s.DoAt(Offset + 0x0520, () => s.SerializeObjectArray<VIFGeometry_UV>(UVs, vertexCount, name: nameof(UVs)));
                 VertexColors = s.DoAt(Offset + 0x0980, () => s.SerializeObjectArray<VIFGeometry_Color>(VertexColors, vertexCount, name: nameof(VertexColors)));

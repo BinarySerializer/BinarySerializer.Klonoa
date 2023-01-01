@@ -70,7 +70,7 @@ namespace BinarySerializer.Klonoa.LV
             HeadTextureValue = s.Serialize<byte>(HeadTextureValue, name: nameof(HeadTextureValue));
             HeightAdjust = s.Serialize<byte>(HeightAdjust, name: nameof(HeightAdjust));
             BaseTextureArea = s.Serialize<byte>(BaseTextureArea, name: nameof(BaseTextureArea));
-            s.SerializePadding(1, name: nameof(Translation));
+            s.SerializePadding(1);
             PlaneSizeX = s.Serialize<float>(PlaneSizeX, name: nameof(PlaneSizeX));
             PlaneSizeZ = s.Serialize<float>(PlaneSizeZ, name: nameof(PlaneSizeZ));
             MeshSizeX = s.Serialize<float>(MeshSizeX, name: nameof(MeshSizeX));
@@ -93,7 +93,7 @@ namespace BinarySerializer.Klonoa.LV
             AdjustHeightNear = s.Serialize<float>(AdjustHeightNear, name: nameof(AdjustHeightNear));
             AdjustHeightValue = s.Serialize<float>(AdjustHeightValue, name: nameof(AdjustHeightValue));
             AlphaBlend = s.Serialize<float>(AlphaBlend, name: nameof(AlphaBlend));
-            s.SerializePadding(12, name: nameof(Translation));
+            s.SerializePadding(12);
         }
     }
 }

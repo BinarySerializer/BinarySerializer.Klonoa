@@ -51,9 +51,9 @@ namespace BinarySerializer.Klonoa.LV
                         BinaryDeserializer s = context.Deserializer;
                         s.Goto(file.StartPointer + tops);
 
-                        var gifCmd = s.SerializeObject<VIFGeometry_Block>(default, name: "VIFGeometry_Block", onPreSerialize: x => x.Pre_ProgramAddress = programAddress);
+                        var block = s.SerializeObject<VIFGeometry_Block>(default, name: "VIFGeometry_Block", onPreSerialize: x => x.Pre_ProgramAddress = programAddress);
 
-                        return gifCmd;
+                        return block;
                     } finally {
                         memoryStream.Close();
                         context.RemoveFile(microProgramKey);

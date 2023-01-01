@@ -33,6 +33,11 @@ namespace BinarySerializer.Klonoa.LV
         public string Name {get; set; }
 
         /// <summary>
+        /// Unknown value.
+        /// </summary>
+        public uint UInt_10 { get; set; }
+
+        /// <summary>
         /// Pointer to morph animation data.
         /// Null pointer if there is no morph animation.
         /// </summary>
@@ -156,7 +161,7 @@ namespace BinarySerializer.Klonoa.LV
             RotationCount = s.Serialize<ushort>(RotationCount, name: nameof(RotationCount));
             TranslationCount = s.Serialize<ushort>(TranslationCount, name: nameof(TranslationCount));
             Name = s.SerializeString(Name, 8, name: nameof(Name));
-            s.SerializePadding(4, logIfNotNull: true);
+            UInt_10 = s.Serialize<uint>(UInt_10, name: nameof(UInt_10));
             MorphAnimationPointer = s.SerializePointer(MorphAnimationPointer, anchor: Offset, name: nameof(MorphAnimationPointer));
             KeyframesPointer = s.SerializePointer(KeyframesPointer, anchor: Offset, name: nameof(KeyframesPointer));
             s.SerializePadding(4, logIfNotNull: true);
@@ -175,6 +180,8 @@ namespace BinarySerializer.Klonoa.LV
             LoopFlag = s.Serialize<uint>(LoopFlag, name: nameof(LoopFlag));
             TransitionIn = s.Serialize<ushort>(TransitionIn, name: nameof(TransitionIn));
             TransitionOut = s.Serialize<ushort>(TransitionOut, name: nameof(TransitionOut));
+            UShort_50 = s.Serialize<ushort>(UShort_50, name: nameof(UShort_50));
+            UShort_52 = s.Serialize<ushort>(UShort_52, name: nameof(UShort_52));
             ULong_54 = s.Serialize<ulong>(ULong_54, name: nameof(ULong_54));
             
             if (HasMorphAnimation) {
@@ -208,6 +215,8 @@ namespace BinarySerializer.Klonoa.LV
                     TranslationVectors[i] = s.SerializeObjectArray<KlonoaLV_Vector16>(TranslationVectors[i], TranslationCount, name: $"{nameof(TranslationVectors)}[{i}]");
                 }
             }
+
+            s.Goto(Offset + Pre_FileSize);
         }
     }
 }

@@ -23,9 +23,6 @@ namespace BinarySerializer.Klonoa.LV
             for (int i = 0; i < Pre_FrameCount; i++) {
                 MorphFrames[i] = s.SerializeObjectArray<ModelAnimation_MorphFrames>(MorphFrames[i], ChannelCount, name: $"{nameof(MorphFrames)}[{i}]");
             }
-            if (s.CurrentFileOffset % 16 != 0) {
-                s.SerializePadding(16 - (int)(s.CurrentFileOffset % 16), logIfNotNull: true);
-            }
         }
     }
 }

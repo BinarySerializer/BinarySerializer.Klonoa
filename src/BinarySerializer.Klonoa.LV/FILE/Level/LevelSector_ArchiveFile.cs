@@ -16,10 +16,10 @@ namespace BinarySerializer.Klonoa.LV
         {
             LevelSectorEncoder encoder = new LevelSectorEncoder();
 
-            Textures = SerializeFile(s, Textures, 0, fileEncoder: encoder, name: nameof(Textures));
-            Geometry = SerializeFile(s, Geometry, 1, fileEncoder: encoder, name: nameof(Geometry));
+            Textures = SerializeFile(s, Textures, 0, fileEncoder: encoder, logIfNotFullyParsed: false, name: nameof(Textures));
+            Geometry = SerializeFile(s, Geometry, 1, fileEncoder: encoder, logIfNotFullyParsed: false, name: nameof(Geometry)); // Level 40_5's geometry does not decompress fully
             RouteData = SerializeFile(s, RouteData, 2, name: nameof(RouteData));
-            CollisionData = SerializeFile(s, CollisionData, 3, fileEncoder: encoder, name: nameof(CollisionData));
+            CollisionData = SerializeFile(s, CollisionData, 3, fileEncoder: encoder, logIfNotFullyParsed: false, name: nameof(CollisionData));
             CameraData = SerializeFile(s, CameraData, 4, name: nameof(CameraData));
             LightData = SerializeFile(s, LightData, 5, name: nameof(LightData));
         }

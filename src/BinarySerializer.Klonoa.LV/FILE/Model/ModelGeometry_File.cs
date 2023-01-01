@@ -16,6 +16,7 @@ namespace BinarySerializer.Klonoa.LV
             VertexScale = s.Serialize<float>(VertexScale, name: nameof(VertexScale));
             s.SerializePadding(4);
             Meshes = s.SerializeObjectArray<ModelMesh>(Meshes, MeshCount, onPreSerialize: x => x.Pre_GeometryPointer = Offset, name: nameof(Meshes));
+            s.Goto(Offset + Pre_FileSize);
         }
     }
 }

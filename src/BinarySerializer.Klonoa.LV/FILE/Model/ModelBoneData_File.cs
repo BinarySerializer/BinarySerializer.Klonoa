@@ -13,8 +13,11 @@ namespace BinarySerializer.Klonoa.LV {
             LocalJointsPointer = s.SerializePointer(LocalJointsPointer, anchor: Offset, name: nameof(LocalJointsPointer));
             GlobalJointsPointer = s.SerializePointer(GlobalJointsPointer, anchor: Offset, name: nameof(GlobalJointsPointer));
             ParentJoints = s.SerializeArray<short>(ParentJoints, JointCount, name: nameof(ParentJoints));
-            s.DoAt(LocalJointsPointer, () => LocalJointPositions = s.SerializeObjectArray<KlonoaLV_FloatVector>(LocalJointPositions, JointCount, onPreSerialize: _ => s.Align(16), name: nameof(LocalJointPositions)));
-            s.DoAt(GlobalJointsPointer, () => GlobalJointPositions = s.SerializeObjectArray<KlonoaLV_FloatVector>(GlobalJointPositions, JointCount, onPreSerialize: _ => s.Align(16), name: nameof(GlobalJointPositions)));
+            s.DoAt(LocalJointsPointer, () => LocalJointPositions = s.SerializeObjectArray<KlonoaLV_FloatVector>(LocalJointPositions, JointCount, 
+                onPreSerialize: _ => s.Align(16), name: nameof(LocalJointPositions)));
+            s.DoAt(GlobalJointsPointer, () => GlobalJointPositions = s.SerializeObjectArray<KlonoaLV_FloatVector>(GlobalJointPositions, JointCount, 
+                onPreSerialize: _ => s.Align(16), name: nameof(GlobalJointPositions)));
+            s.Goto(Offset + Pre_FileSize);
         }
     }
 }

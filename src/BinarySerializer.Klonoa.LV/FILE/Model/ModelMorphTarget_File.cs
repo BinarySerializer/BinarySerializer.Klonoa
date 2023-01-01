@@ -3,8 +3,7 @@ namespace BinarySerializer.Klonoa.LV {
     {
         // This is needed to get the vertices/normals pointers from the skin descriptors of the target mesh
         public ModelMesh[] Pre_Meshes { get; set; }
-
-        public bool IsEmpty { get; set; }
+        
         public string Magic { get; set; } // FZ
         public byte[] Magic2 { get; set; } // 80 00 40 00
         public ushort MeshCount { get; set; } // Should always be 1
@@ -20,10 +19,10 @@ namespace BinarySerializer.Klonoa.LV {
         public KlonoaLV_Vector16[][] Vertices { get; set; }
         public KlonoaLV_Vector16[][] Normals { get; set; }
 
+        public bool IsEmpty => Pre_FileSize == 16;
+
         public override void SerializeImpl(SerializerObject s) 
         {
-            IsEmpty = Pre_FileSize == 16;
-            
             if (!IsEmpty)
             {
                 Magic = s.SerializeString(Magic, 2, name: nameof(Magic));
@@ -51,6 +50,8 @@ namespace BinarySerializer.Klonoa.LV {
                     s.DoAt(normalsPointer, () => Normals[i] = s.SerializeObjectArray<KlonoaLV_Vector16>(Normals[i], skinDescriptor.NormalCount, name: $"{nameof(Normals)}[{i}]"));
                 }
             }
+
+            s.Goto(Offset + Pre_FileSize);
         }
     }
 }

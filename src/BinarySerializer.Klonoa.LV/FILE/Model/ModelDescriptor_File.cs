@@ -5,6 +5,7 @@ namespace BinarySerializer.Klonoa.LV {
         public override void SerializeImpl(SerializerObject s) 
         {
             ModelName = s.SerializeString(ModelName, 3, name: nameof(ModelName));
+            s.Goto(Offset + Pre_FileSize);
         }
     }
 }

@@ -8,6 +8,8 @@ namespace BinarySerializer.Klonoa.LV
         {
             // Parse until an invalid command is found (icky solution for now)
             Commands = s.SerializeObjectArrayUntil<CutsceneCommand>(Commands, (cmd) => cmd.Type == CutsceneCommand.CommandType.Invalid, name: nameof(Commands));
+
+            s.Goto(Offset + Pre_FileSize);
         }
     }
 }

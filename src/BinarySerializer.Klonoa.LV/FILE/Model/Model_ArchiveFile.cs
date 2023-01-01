@@ -12,7 +12,8 @@ namespace BinarySerializer.Klonoa.LV {
             Textures = SerializeFile(s, Textures, 1, name: nameof(Textures));
             MorphTargets = SerializeFile(s, MorphTargets, 2, onPreSerialize: x => x.Pre_Meshes = Geometry.Meshes, name: nameof(MorphTargets));
             AnimationData = SerializeFile(s, AnimationData, 3, name: nameof(AnimationData));
-            Descriptor = SerializeFile(s, Descriptor, 4, name: nameof(Descriptor));
+            if (OffsetTable.FilesCount > 4)
+                Descriptor = SerializeFile(s, Descriptor, 4, name: nameof(Descriptor));
         }
     }
 }
