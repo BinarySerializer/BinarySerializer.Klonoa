@@ -217,7 +217,7 @@ namespace BinarySerializer.Klonoa
             OffsetTable.RecalculateSize();
 
             // Files will be placed starting from the end of the offset table
-            Pointer fileOffset = OffsetTable.Offset + OffsetTable.Size;
+            Pointer fileOffset = OffsetTable.Offset + OffsetTable.SerializedSize;
 
             // Helper for aligning the offset
             void align()
@@ -290,12 +290,12 @@ namespace BinarySerializer.Klonoa
                         fileObj.RecalculateSize();
 
                         // Increase the pointer by the size
-                        fileOffset += fileObj.Size;
+                        fileOffset += fileObj.SerializedSize;
                     }
 
                     // Update the size if a base file
                     if (fileObj is BaseFile ff)
-                        ff.Pre_FileSize = fileObj.Size;
+                        ff.Pre_FileSize = fileObj.SerializedSize;
                 }
 
                 align();

@@ -10,7 +10,7 @@ namespace BinarySerializer.Klonoa.DTP
     /// </summary>
     public class Sector_ArchiveFile : ArchiveFile
     {
-        public PS1_TMD LevelModel { get; set; } // The 3D level model
+        public TMD LevelModel { get; set; } // The 3D level model
 
         public LevelModelObjectSectorMap_File LevelModelObjectSectorMap { get; set; } // Defines which objects to render where
         public LevelCollisionSectorMap_File LevelCollisionSectorMap { get; set; } // Defines which collision to check for where
@@ -23,7 +23,7 @@ namespace BinarySerializer.Klonoa.DTP
 
         protected override void SerializeFiles(SerializerObject s)
         {
-            LevelModel = SerializeFile<PS1_TMD>(s, LevelModel, 0, name: nameof(LevelModel));
+            LevelModel = SerializeFile<TMD>(s, LevelModel, 0, name: nameof(LevelModel));
             LevelModelObjectSectorMap = SerializeFile<LevelModelObjectSectorMap_File>(s, LevelModelObjectSectorMap, 1, name: nameof(LevelModelObjectSectorMap));
             LevelCollisionSectorMap = SerializeFile<LevelCollisionSectorMap_File>(s, LevelCollisionSectorMap, 2, name: nameof(LevelCollisionSectorMap));
             LevelCollisionTriangles = SerializeFile<CollisionTriangles_File>(s, LevelCollisionTriangles, 3, onPreSerialize: x => x.Pre_HasCount = false, name: nameof(LevelCollisionTriangles));

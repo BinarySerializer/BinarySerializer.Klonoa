@@ -23,7 +23,7 @@ namespace BinarySerializer.Klonoa.DTP
                 {
                     new GameObjectData_Model()
                     {
-                        TMD = LoadCutsceneAsset<PS1_TMD>(0),
+                        TMD = LoadCutsceneAsset<TMD>(0),
                         IsMissingImageData = isMissingImageData,
                         Position = new KlonoaVector16(-0x10b0, -0x440, 0xdc0),
                         Rotation = new KlonoaVector16(0, 2892, 0),
@@ -79,7 +79,7 @@ namespace BinarySerializer.Klonoa.DTP
                 {
                     new GameObjectData_Model()
                     {
-                        TMD = LoadCutsceneAsset<PS1_TMD>(2),
+                        TMD = LoadCutsceneAsset<TMD>(2),
                     }
                 };
 
@@ -125,7 +125,7 @@ namespace BinarySerializer.Klonoa.DTP
             //    {
             //        new GameObjectData_Model()
             //        {
-            //            TMD = LoadCutsceneAsset<PS1_TMD>(3),
+            //            TMD = LoadCutsceneAsset<TMD>(3),
             //        },
             //    };
 
@@ -142,7 +142,7 @@ namespace BinarySerializer.Klonoa.DTP
 
         protected override void LoadBossObjects_14_0()
         {
-            PS1_TIM tim = LoadBossAsset<PS1_TIM>(10);
+            TIM tim = LoadBossAsset<TIM>(10);
 
             if (LoadVRAMData)
                 Loader.AddToVRAM(tim);
@@ -150,7 +150,7 @@ namespace BinarySerializer.Klonoa.DTP
             TIM_ArchiveFile timArchive = LoadBossAsset<TIM_ArchiveFile>(11);
 
             if (LoadVRAMData)
-                foreach (PS1_TIM t in timArchive.Files)
+                foreach (TIM t in timArchive.Files)
                     Loader.AddToVRAM(t);
 
             timArchive = LoadBossAsset<TIM_ArchiveFile>(13);
@@ -159,14 +159,14 @@ namespace BinarySerializer.Klonoa.DTP
                 // Note: The last one should not be loaded
                 for (var i = 0; i < 3; i++)
                 {
-                    PS1_TIM t = timArchive.Files[i];
+                    TIM t = timArchive.Files[i];
                     Loader.AddToVRAM(t);
                 }
 
             timArchive = LoadBossAsset<TIM_ArchiveFile>(16);
 
             if (LoadVRAMData)
-                foreach (PS1_TIM t in timArchive.Files)
+                foreach (TIM t in timArchive.Files)
                     Loader.AddToVRAM(t);
 
             // Some blue box - leftover debug obj
@@ -176,7 +176,7 @@ namespace BinarySerializer.Klonoa.DTP
                 {
                     new GameObjectData_Model()
                     {
-                        TMD = LoadBossAsset<PS1_TMD>(0),
+                        TMD = LoadBossAsset<TMD>(0),
                     }
                 };
 
@@ -190,7 +190,7 @@ namespace BinarySerializer.Klonoa.DTP
                 {
                     new GameObjectData_Model()
                     {
-                        TMD = LoadBossAsset<PS1_TMD>(1),
+                        TMD = LoadBossAsset<TMD>(1),
                     }
                 };
 
@@ -249,7 +249,7 @@ namespace BinarySerializer.Klonoa.DTP
                 {
                     new GameObjectData_Model()
                     {
-                        TMD = LoadBossAsset<PS1_TMD>(19),
+                        TMD = LoadBossAsset<TMD>(19),
                     }
                 };
 
@@ -257,7 +257,7 @@ namespace BinarySerializer.Klonoa.DTP
             });
 
             // Some attack models
-            var tmds = LoadBossAsset<ArchiveFile<PS1_TMD>>(21);
+            var tmds = LoadBossAsset<ArchiveFile<TMD>>(21);
 
             for (var i = 0; i < tmds.Files.Length; i++)
             {
@@ -284,22 +284,22 @@ namespace BinarySerializer.Klonoa.DTP
             TIM_ArchiveFile timArchive = LoadBossAsset<TIM_ArchiveFile>(2);
 
             if (LoadVRAMData)
-                foreach (PS1_TIM t in timArchive.Files)
+                foreach (TIM t in timArchive.Files)
                     Loader.AddToVRAM(t);
 
             timArchive = LoadBossAsset<TIM_ArchiveFile>(4);
 
             if (LoadVRAMData)
-                foreach (PS1_TIM t in timArchive.Files)
+                foreach (TIM t in timArchive.Files)
                     Loader.AddToVRAM(t);
 
             timArchive = LoadBossAsset<TIM_ArchiveFile>(8);
 
             if (LoadVRAMData)
-                foreach (PS1_TIM t in timArchive.Files)
+                foreach (TIM t in timArchive.Files)
                     Loader.AddToVRAM(t);
 
-            PS1_TIM tim = LoadBossAsset<PS1_TIM>(10);
+            TIM tim = LoadBossAsset<TIM>(10);
 
             if (LoadVRAMData)
                 Loader.AddToVRAM(tim);

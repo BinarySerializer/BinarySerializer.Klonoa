@@ -4,7 +4,7 @@ namespace BinarySerializer.Klonoa.DTP
 {
     public class GameObjectData_Model
     {
-        public PS1_TMD TMD { get; set; }
+        public TMD TMD { get; set; }
         public bool IsMissingImageData { get; set; } // Set to true if the model is missing VRAM data to render
         public KlonoaVector16[] TMDObjectPositionOffsets { get; set; }
         public UnknownModelObjectsData_File UnknownModelObjectsData { get; set; }

@@ -25,7 +25,7 @@ namespace BinarySerializer.Klonoa.DTP
                 {
                     new GameObjectData_Model()
                     {
-                        TMD = LoadCutsceneAsset<PS1_TMD>(0),
+                        TMD = LoadCutsceneAsset<TMD>(0),
                         Position = new KlonoaVector16(-0x10b0, -0x440, 0xdc0),
                         Rotation = new KlonoaVector16(0, 2892, 0),
                     },
@@ -54,7 +54,7 @@ namespace BinarySerializer.Klonoa.DTP
             });
         }
 
-        protected virtual void LoadCutsceneObject_Ghadius(int headTmdIndex, int bodyTmdIndex, int animIndex, int textureAnimIndex, KlonoaVector16 pos, KlonoaVector16 rot, PS1_VRAMRegion vramRegion)
+        protected virtual void LoadCutsceneObject_Ghadius(int headTmdIndex, int bodyTmdIndex, int animIndex, int textureAnimIndex, KlonoaVector16 pos, KlonoaVector16 rot, Rect vramRegion)
         {
             AddGameObject(GlobalGameObjectType.Cutscene_Ghadius, obj =>
             {
@@ -63,12 +63,12 @@ namespace BinarySerializer.Klonoa.DTP
                     // Head
                     new GameObjectData_Model()
                     {
-                        TMD = LoadCutsceneAsset<PS1_TMD>(headTmdIndex),
+                        TMD = LoadCutsceneAsset<TMD>(headTmdIndex),
                     },
                     // Body
                     new GameObjectData_Model()
                     {
-                        TMD = LoadCutsceneAsset<PS1_TMD>(bodyTmdIndex),
+                        TMD = LoadCutsceneAsset<TMD>(bodyTmdIndex),
                     },
                 };
 
@@ -125,7 +125,7 @@ namespace BinarySerializer.Klonoa.DTP
             LoadCutsceneObject_Ghadius(0, 1, 2, 25, 
                 new KlonoaVector16(0, (-0x8000 >> 12) - (0x259000 >> 12), -0x400), // Custom z value 
                 new KlonoaVector16(0, 0xa40000 >> 12, 0), 
-                new PS1_VRAMRegion(0x240, 0x100, 0x10, 0x40));
+                new Rect(0x240, 0x100, 0x10, 0x40));
 
             // Sprite
             AddGameObject(GlobalGameObjectType.Cutscene_Sprites, obj =>
@@ -159,7 +159,7 @@ namespace BinarySerializer.Klonoa.DTP
                 {
                     new GameObjectData_Model()
                     {
-                        TMD = LoadCutsceneAsset<PS1_TMD>(tmdIndex, x => x.Pre_HasBones = true),
+                        TMD = LoadCutsceneAsset<TMD>(tmdIndex, x => x.Pre_HasBones = true),
                     }
                 };
 
@@ -182,7 +182,7 @@ namespace BinarySerializer.Klonoa.DTP
                 if (palIndex != -1)
                 {
                     obj.RawVRAMData = LoadCutsceneAsset<RawData_File>(palIndex);
-                    obj.RawVRAMDataRegion = new PS1_VRAMRegion(0x110, 0x1eb, 0x10, 0x04);
+                    obj.RawVRAMDataRegion = new Rect(0x110, 0x1eb, 0x10, 0x04);
 
                     if (LoadVRAMData)
                         Loader.AddToVRAM(obj.RawVRAMData.Data, obj.RawVRAMDataRegion);
@@ -205,7 +205,7 @@ namespace BinarySerializer.Klonoa.DTP
                     x.Pre_FramesCount = obj.Positions.FramesCount;
                 });
 
-                PS1_TMD tmd = LoadCutsceneAsset<PS1_TMD>(2);
+                TMD tmd = LoadCutsceneAsset<TMD>(2);
 
                 obj.Models = Enumerable.Range(0, obj.Positions.ObjectsCount).Select(x => new GameObjectData_Model()
                 {
@@ -238,7 +238,7 @@ namespace BinarySerializer.Klonoa.DTP
                 {
                     new GameObjectData_Model()
                     {
-                        TMD = LoadCutsceneAsset<PS1_TMD>(0),
+                        TMD = LoadCutsceneAsset<TMD>(0),
                     }
                 };
 
@@ -256,7 +256,7 @@ namespace BinarySerializer.Klonoa.DTP
                 {
                     new GameObjectData_Model()
                     {
-                        TMD = LoadCutsceneAsset<PS1_TMD>(0),
+                        TMD = LoadCutsceneAsset<TMD>(0),
                     }
                 };
 
@@ -272,11 +272,11 @@ namespace BinarySerializer.Klonoa.DTP
                 {
                     new GameObjectData_Model()
                     {
-                        TMD = LoadCutsceneAsset<PS1_TMD>(0),
+                        TMD = LoadCutsceneAsset<TMD>(0),
                     },
                     new GameObjectData_Model()
                     {
-                        TMD = LoadCutsceneAsset<PS1_TMD>(1),
+                        TMD = LoadCutsceneAsset<TMD>(1),
                     },
                 };
 
@@ -295,13 +295,13 @@ namespace BinarySerializer.Klonoa.DTP
                     // Body
                     new GameObjectData_Model()
                     {
-                        TMD = LoadCutsceneAsset<PS1_TMD>(tmdIndex),
+                        TMD = LoadCutsceneAsset<TMD>(tmdIndex),
                         Position = pos,
                     },
                     // Propeller
                     new GameObjectData_Model()
                     {
-                        TMD = LoadCutsceneAsset<PS1_TMD>(propellerTmdIndex),
+                        TMD = LoadCutsceneAsset<TMD>(propellerTmdIndex),
                         Position = new KlonoaVector16((short)(pos.X + 0), (short)(pos.Y + (-0x86000 >> 12)), (short)(pos.Z + (0x240000 >> 12))),
                     },
                 };
@@ -327,7 +327,7 @@ namespace BinarySerializer.Klonoa.DTP
                 {
                     new GameObjectData_Model()
                     {
-                        TMD = LoadCutsceneAsset<PS1_TMD>(2),
+                        TMD = LoadCutsceneAsset<TMD>(2),
                     },
                 };
             });
@@ -348,7 +348,7 @@ namespace BinarySerializer.Klonoa.DTP
         protected virtual void LoadCutsceneObjects_17_0()
         {
             // Ghadius
-            LoadCutsceneObject_Ghadius(0, 1, 2, 24, new KlonoaVector16(-32, 3800, 0), new KlonoaVector16(0, 0x800, 0), new PS1_VRAMRegion(0x2C0, 0x100, 0x10, 0x40));
+            LoadCutsceneObject_Ghadius(0, 1, 2, 24, new KlonoaVector16(-32, 3800, 0), new KlonoaVector16(0, 0x800, 0), new Rect(0x2C0, 0x100, 0x10, 0x40));
         }
 
         protected virtual void LoadCutsceneObjects_18_0()
@@ -367,7 +367,7 @@ namespace BinarySerializer.Klonoa.DTP
                 {
                     new GameObjectData_Model()
                     {
-                        TMD = LoadCutsceneAsset<PS1_TMD>(0),
+                        TMD = LoadCutsceneAsset<TMD>(0),
                     },
                 };
             });
@@ -381,7 +381,7 @@ namespace BinarySerializer.Klonoa.DTP
 
                 // Overwrites sprite data so the sprites in this sector will work
                 if (LoadVRAMData)
-                    Loader.AddToVRAM(vramData.Data, new PS1_VRAMRegion((short)(0x200 + (0x40 * i)), 0, 0x40, 0x100));
+                    Loader.AddToVRAM(vramData.Data, new Rect((short)(0x200 + (0x40 * i)), 0, 0x40, 0x100));
             }
         }
 
@@ -409,7 +409,7 @@ namespace BinarySerializer.Klonoa.DTP
                 {
                     new GameObjectData_Model()
                     {
-                        TMD = LoadCutsceneAsset<PS1_TMD>(2),
+                        TMD = LoadCutsceneAsset<TMD>(2),
                     },
                 };
 
@@ -446,7 +446,7 @@ namespace BinarySerializer.Klonoa.DTP
                 {
                     new GameObjectData_Model()
                     {
-                        TMD = LoadBossAsset<PS1_TMD>(0, x => x.Pre_HasBones = true), // Note: File 4 is a duplicate of this
+                        TMD = LoadBossAsset<TMD>(0, x => x.Pre_HasBones = true), // Note: File 4 is a duplicate of this
                         ModelBoneAnimations = new GameObjectData_ModelBoneAnimations()
                         {
                             Animations = Enumerable.Range(0, anim.Rotations.Length).Select(x => new GameObjectData_ModelBoneAnimation
@@ -477,7 +477,7 @@ namespace BinarySerializer.Klonoa.DTP
                     // Legs
                     new GameObjectData_Model()
                     {
-                        TMD = LoadBossAsset<PS1_TMD>(8, x => x.Pre_HasBones = true), // 10 bones
+                        TMD = LoadBossAsset<TMD>(8, x => x.Pre_HasBones = true), // 10 bones
 
                         // Note: This animation includes the other models as well
                         ModelBoneAnimations = GameObjectData_ModelBoneAnimations.FromCommonBossModelBoneAnimation(anim)
@@ -486,19 +486,19 @@ namespace BinarySerializer.Klonoa.DTP
                     // Body inside
                     new GameObjectData_Model()
                     {
-                        TMD = LoadBossAsset<PS1_TMD>(9),
+                        TMD = LoadBossAsset<TMD>(9),
                     },
 
                     // Shell 1
                     new GameObjectData_Model()
                     {
-                        TMD = LoadBossAsset<PS1_TMD>(10),
+                        TMD = LoadBossAsset<TMD>(10),
                     },
 
                     // Shell 2
                     new GameObjectData_Model()
                     {
-                        TMD = LoadBossAsset<PS1_TMD>(11),
+                        TMD = LoadBossAsset<TMD>(11),
                     },
                 };
 
@@ -506,7 +506,7 @@ namespace BinarySerializer.Klonoa.DTP
                 obj.Position = new KlonoaVector16(0, -50, 0); // Custom
 
                 // What is the below data for? Appears unused?
-                obj.TIM = LoadBossAsset<PS1_TIM>(5);
+                obj.TIM = LoadBossAsset<TIM>(5);
                 obj.TIMArchive = LoadBossAsset<TIM_ArchiveFile>(13);
 
                 if (LoadVRAMData)
@@ -525,7 +525,7 @@ namespace BinarySerializer.Klonoa.DTP
                 {
                     new GameObjectData_Model()
                     {
-                        TMD = LoadBossAsset<PS1_TMD>(14),
+                        TMD = LoadBossAsset<TMD>(14),
                     },
                 };
                 obj.Position = new KlonoaVector16(1280, -768, 640); // Custom position so it's out of the way
@@ -569,7 +569,7 @@ namespace BinarySerializer.Klonoa.DTP
             LoadBossAsset<RawData_File>(17);
 
             // TODO: What are the two last models? White rectangles?
-            var totemModels = LoadBossAsset<ArchiveFile<PS1_TMD>>(20); // 3+2
+            var totemModels = LoadBossAsset<ArchiveFile<TMD>>(20); // 3+2
             var totemModelPositions = new KlonoaVector16[]
             {
                 new KlonoaVector16(0, 0, 0),
@@ -602,7 +602,7 @@ namespace BinarySerializer.Klonoa.DTP
                 {
                     new GameObjectData_Model()
                     {
-                        TMD = LoadBossAsset<PS1_TMD>(2, x => x.Pre_HasBones = true),
+                        TMD = LoadBossAsset<TMD>(2, x => x.Pre_HasBones = true),
                         ModelBoneAnimations = GameObjectData_ModelBoneAnimations.FromCommonBossModelBoneAnimation(anim),
                         Rotation = new KlonoaVector16(0, 0x800, 0) // Custom
                     }
@@ -618,12 +618,12 @@ namespace BinarySerializer.Klonoa.DTP
                 {
                     new GameObjectData_Model()
                     {
-                        TMD = LoadBossAsset<PS1_TMD>(6),
+                        TMD = LoadBossAsset<TMD>(6),
                         Position = new KlonoaVector16(0, -500, 1000), // Custom
                     },
                     new GameObjectData_Model()
                     {
-                        TMD = LoadBossAsset<PS1_TMD>(20),
+                        TMD = LoadBossAsset<TMD>(20),
                         Position = new KlonoaVector16(300, -500, 1000), // Custom
                     },
                 };
@@ -632,7 +632,7 @@ namespace BinarySerializer.Klonoa.DTP
             // Attack part
             AddGameObject(GlobalGameObjectType.Boss_BaladiumAttackPart, obj =>
             {
-                var models = LoadBossAsset<ArchiveFile<PS1_TMD>>(8);
+                var models = LoadBossAsset<ArchiveFile<TMD>>(8);
 
                 obj.Models = models.Files.Select(x => new GameObjectData_Model()
                 {
@@ -672,18 +672,18 @@ namespace BinarySerializer.Klonoa.DTP
                     // Body
                     new GameObjectData_Model()
                     {
-                        TMD = LoadBossAsset<PS1_TMD>(0, x => x.Pre_HasBones = true),
+                        TMD = LoadBossAsset<TMD>(0, x => x.Pre_HasBones = true),
                         ModelBoneAnimations = GameObjectData_ModelBoneAnimations.FromCommonBossModelBoneAnimation(anim),
                     },
 
                     // Hands
                     new GameObjectData_Model()
                     {
-                        TMD = LoadBossAsset<PS1_TMD>(2),
+                        TMD = LoadBossAsset<TMD>(2),
                     },
                     new GameObjectData_Model()
                     {
-                        TMD = LoadBossAsset<PS1_TMD>(3),
+                        TMD = LoadBossAsset<TMD>(3),
                     },
                 };
             });
@@ -703,18 +703,18 @@ namespace BinarySerializer.Klonoa.DTP
                     // Body
                     new GameObjectData_Model()
                     {
-                        TMD = LoadBossAsset<PS1_TMD>(4, x => x.Pre_HasBones = true),
+                        TMD = LoadBossAsset<TMD>(4, x => x.Pre_HasBones = true),
                         ModelBoneAnimations = GameObjectData_ModelBoneAnimations.FromCommonBossModelBoneAnimation(anim),
                     },
 
                     // Claws
                     new GameObjectData_Model()
                     {
-                        TMD = LoadBossAsset<PS1_TMD>(6),
+                        TMD = LoadBossAsset<TMD>(6),
                     },
                     new GameObjectData_Model()
                     {
-                        TMD = LoadBossAsset<PS1_TMD>(7),
+                        TMD = LoadBossAsset<TMD>(7),
                     },
                 };
 
@@ -731,7 +731,7 @@ namespace BinarySerializer.Klonoa.DTP
                 {
                     new GameObjectData_Model()
                     {
-                        TMD = archive.SerializeFile<PS1_TMD>(Deserializer, default, 0),
+                        TMD = archive.SerializeFile<TMD>(Deserializer, default, 0),
                     },
                 };
 
@@ -746,11 +746,11 @@ namespace BinarySerializer.Klonoa.DTP
                     // Claws
                     new GameObjectData_Model()
                     {
-                        TMD = LoadBossAsset<PS1_TMD>(9),
+                        TMD = LoadBossAsset<TMD>(9),
                     },
                     new GameObjectData_Model()
                     {
-                        TMD = LoadBossAsset<PS1_TMD>(10),
+                        TMD = LoadBossAsset<TMD>(10),
                     },
                 };
             });
@@ -775,7 +775,7 @@ namespace BinarySerializer.Klonoa.DTP
 
         protected virtual void LoadBossObjects_20_1()
         {
-            var mainModels = LoadBossAsset<ArchiveFile<PS1_TMD>>(0);
+            var mainModels = LoadBossAsset<ArchiveFile<TMD>>(0);
 
             // Ghadius head and hands
             AddGameObject(GlobalGameObjectType.Boss_Ghadius, obj =>
@@ -848,7 +848,7 @@ namespace BinarySerializer.Klonoa.DTP
                 {
                     new GameObjectData_Model()
                     {
-                        TMD = archive.SerializeFile<PS1_TMD>(Deserializer, default, 0),
+                        TMD = archive.SerializeFile<TMD>(Deserializer, default, 0),
                     },
                 };
 
@@ -859,7 +859,7 @@ namespace BinarySerializer.Klonoa.DTP
             // Attack part
             AddGameObject(GlobalGameObjectType.Boss_GhadiusAttack, obj =>
             {
-                var tmds = LoadBossAsset<ArchiveFile<PS1_TMD>>(3);
+                var tmds = LoadBossAsset<ArchiveFile<TMD>>(3);
 
                 obj.Models = tmds.Files.Select(x => new GameObjectData_Model()
                 {
@@ -873,7 +873,7 @@ namespace BinarySerializer.Klonoa.DTP
             // Sprites
             LoadBossObject_Sprites(6);
 
-            var tmds7 = LoadBossAsset<ArchiveFile<PS1_TMD>>(7);
+            var tmds7 = LoadBossAsset<ArchiveFile<TMD>>(7);
 
             AddGameObject(GlobalGameObjectType.Boss_GhadiusAttack, obj =>
             {
@@ -907,10 +907,10 @@ namespace BinarySerializer.Klonoa.DTP
             LoadBossAsset<RawData_File>(9);
 
             // TODO: File 11 has TIM
-            LoadBossAsset<PS1_TIM>(11);
+            LoadBossAsset<TIM>(11);
 
             // TODO: File 12 has TIM
-            LoadBossAsset<PS1_TIM>(12);
+            LoadBossAsset<TIM>(12);
 
             // TODO: File 13 has texture data
             LoadBossAsset<RawData_File>(13);
@@ -936,7 +936,7 @@ namespace BinarySerializer.Klonoa.DTP
                     x.Pre_HasInitialRotations = true;
                 }, encoder: encoder);
 
-                var tmd = LoadBossAsset<PS1_TMD>(0, x =>
+                var tmd = LoadBossAsset<TMD>(0, x =>
                 {
                     x.Pre_HasColorTable = true;
                     x.Pre_HasBones = true;
@@ -973,7 +973,7 @@ namespace BinarySerializer.Klonoa.DTP
                 {
                     new GameObjectData_Model()
                     {
-                        TMD = LoadBossAsset<PS1_TMD>(3, encoder: encoder),
+                        TMD = LoadBossAsset<TMD>(3, encoder: encoder),
                         IsMissingImageData = isJulyProto,
                         ModelBoneAnimations = GameObjectData_ModelBoneAnimations.FromCommonBossModelBoneAnimation(anim),
                     }
@@ -1001,7 +1001,7 @@ namespace BinarySerializer.Klonoa.DTP
                 {
                     new GameObjectData_Model()
                     {
-                        TMD = LoadBossAsset<PS1_TMD>(6, x => x.Pre_HasBones = true, encoder: encoder),
+                        TMD = LoadBossAsset<TMD>(6, x => x.Pre_HasBones = true, encoder: encoder),
                         IsMissingImageData = isJulyProto,
                         ModelBoneAnimations = GameObjectData_ModelBoneAnimations.FromCommonBossModelBoneAnimation(anim),
                     }
@@ -1017,7 +1017,7 @@ namespace BinarySerializer.Klonoa.DTP
                 {
                     new GameObjectData_Model()
                     {
-                        TMD = LoadBossAsset<PS1_TMD>(19, encoder: encoder),
+                        TMD = LoadBossAsset<TMD>(19, encoder: encoder),
                     }
                 };
                  
@@ -1058,7 +1058,7 @@ namespace BinarySerializer.Klonoa.DTP
                     {
                         new GameObjectData_Model()
                         {
-                            TMD = LoadBossAsset<PS1_TMD>(22),
+                            TMD = LoadBossAsset<TMD>(22),
                             IsMissingImageData = true,
                         },
                     };
@@ -1075,7 +1075,7 @@ namespace BinarySerializer.Klonoa.DTP
                     {
                         new GameObjectData_Model()
                         {
-                            TMD = LoadBossAsset<PS1_TMD>(26, x =>
+                            TMD = LoadBossAsset<TMD>(26, x =>
                             {
                                 x.Pre_HasColorTable = true;
                                 x.Pre_HasBones = true;
@@ -1122,14 +1122,14 @@ namespace BinarySerializer.Klonoa.DTP
                     // Eyes
                     new GameObjectData_Model()
                     {
-                        TMD = LoadBossAsset<PS1_TMD>(8, encoder: encoder),
+                        TMD = LoadBossAsset<TMD>(8, encoder: encoder),
                         IsMissingImageData = isJulyProto,
                         ModelBoneAnimations = boneAnim,
                     },
                     // Mouth
                     new GameObjectData_Model()
                     {
-                        TMD = LoadBossAsset<PS1_TMD>(9, encoder: encoder),
+                        TMD = LoadBossAsset<TMD>(9, encoder: encoder),
                         IsMissingImageData = isJulyProto,
                         ModelBoneAnimations = boneAnim,
                     },
@@ -1143,7 +1143,7 @@ namespace BinarySerializer.Klonoa.DTP
 
             if (isJulyProto)
             {
-                var tmds = LoadBossAsset<ArchiveFile<PS1_TMD>>(17);
+                var tmds = LoadBossAsset<ArchiveFile<TMD>>(17);
 
                 // Colored gems
                 for (var i = 0; i < tmds.Files.Length; i++)
@@ -1171,7 +1171,7 @@ namespace BinarySerializer.Klonoa.DTP
                     {
                         new GameObjectData_Model()
                         {
-                            TMD = LoadBossAsset<PS1_TMD>(17, encoder: encoder),
+                            TMD = LoadBossAsset<TMD>(17, encoder: encoder),
                         }
                     };
 
@@ -1197,7 +1197,7 @@ namespace BinarySerializer.Klonoa.DTP
                     x.Pre_HasInitialRotations = true;
                 }, encoder: encoder);
 
-                var tmd = LoadBossAsset<PS1_TMD>(12, x =>
+                var tmd = LoadBossAsset<TMD>(12, x =>
                 {
                     x.Pre_HasColorTable = true;
                     x.Pre_HasBones = true;
@@ -1220,7 +1220,7 @@ namespace BinarySerializer.Klonoa.DTP
 
             if (isJulyProto)
             {
-                var tmds = LoadBossAsset<ArchiveFile<PS1_TMD>>(18);
+                var tmds = LoadBossAsset<ArchiveFile<TMD>>(18);
 
                 // Duplicates of the platforms loaded below, so ignore for now
                 // Platforms
@@ -1247,7 +1247,7 @@ namespace BinarySerializer.Klonoa.DTP
                     {
                         new GameObjectData_Model()
                         {
-                            TMD = LoadBossAsset<PS1_TMD>(18, encoder: new LevelSectorEncoder()),
+                            TMD = LoadBossAsset<TMD>(18, encoder: new LevelSectorEncoder()),
                         }
                     };
 
@@ -1256,7 +1256,7 @@ namespace BinarySerializer.Klonoa.DTP
             }
 
             // 8 * 4
-            PS1_TMD[] platformTMDPieces = LoadBossAsset<ArchiveFile<PS1_TMD>>(20, encoder: encoder).Files;
+            TMD[] platformTMDPieces = LoadBossAsset<ArchiveFile<TMD>>(20, encoder: encoder).Files;
 
             var platformAnim = LoadBossAsset<CommonBossModelBoneAnimation_ArchiveFile>(21, x =>
             {

@@ -17,7 +17,7 @@ namespace BinarySerializer.Klonoa.DTP
         {
             IDX = idx;
             MemoryFiles = new HashSet<MemoryMappedStreamFile>();
-            VRAM = new PS1_VRAM();
+            VRAM = new VRAM();
             SpriteSets = new Sprites_ArchiveFile[70];
             LoadedFiles = new BaseFile[idx.Entries.Length][];
 
@@ -92,7 +92,7 @@ namespace BinarySerializer.Klonoa.DTP
         /// <summary>
         /// The VRAM. This gets allocated to when processing TIM files.
         /// </summary>
-        public PS1_VRAM VRAM { get; }
+        public VRAM VRAM { get; }
 
         /// <summary>
         /// The sprite sets array
@@ -247,7 +247,7 @@ namespace BinarySerializer.Klonoa.DTP
                         if (BINBlock == 19 && i == invalidIndex)
                             continue;
 
-                        PS1_TIM tim = ((TIM_ArchiveFile)binFile).Files[i];
+                        TIM tim = ((TIM_ArchiveFile)binFile).Files[i];
                         AddToVRAM(tim);
                     }
 
@@ -558,14 +558,14 @@ namespace BinarySerializer.Klonoa.DTP
         /// Adds the TIM file data to the VRAM
         /// </summary>
         /// <param name="tim">The TIM file to add</param>
-        public void AddToVRAM(PS1_TIM tim) => VRAM.AddTIM(tim);
+        public void AddToVRAM(TIM tim) => VRAM.AddTIM(tim);
 
         /// <summary>
         /// Adds the data to the VRAM
         /// </summary>
         /// <param name="data">The data to add</param>
         /// <param name="region">The region to add to</param>
-        public void AddToVRAM(byte[] data, PS1_VRAMRegion region) => VRAM.AddDataAt(data, region);
+        public void AddToVRAM(byte[] data, Rect region) => VRAM.AddDataAt(data, region);
 
         /// <summary>
         /// Gets the first loaded file of the specified type, or null if none was found

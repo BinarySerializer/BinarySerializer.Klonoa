@@ -7,7 +7,7 @@ namespace BinarySerializer.Klonoa.DTP
     /// </summary>
     public class PlayerSprite_File : BaseFile
     {
-        public PS1_TIM TIM { get; set; }
+        public TIM TIM { get; set; }
 
         public uint Raw_Size { get; set; }
         public ushort Raw_Width { get; set; }
@@ -19,7 +19,7 @@ namespace BinarySerializer.Klonoa.DTP
             // If ULZ compressed then it's a TIM file (the x and y coordinates are irrelevant though)
             if (Pre_IsCompressed)
             {
-                TIM = s.SerializeObject<PS1_TIM>(TIM, name: nameof(TIM));
+                TIM = s.SerializeObject<TIM>(TIM, name: nameof(TIM));
             }
             // If not ULZ compressed it's raw data compressed using an unknown compression type
             else

@@ -9,9 +9,9 @@ namespace BinarySerializer.Klonoa.DTP
 
         public ModifyType Type => Int_02 < 0 ? ModifyType.ClearImage : ModifyType.MoveImage;
 
-        public PS1_VRAMRegion ClearRegion => new PS1_VRAMRegion(0x374, (short)(Byte_00 * -0x10 + 0x1f0), 0xc, 0x10);
-        public PS1_VRAMRegion MoveRegion_Source => new PS1_VRAMRegion(0x3f4, (short)(Int_02 * 0x10 + 0x180), 0xc, 0x10);
-        public PS1_VRAMRegion MoveRegion_Destination => new PS1_VRAMRegion(0x374, (short)(Byte_00 * -0x10 + 0x1f0), 0xc, 0x10);
+        public Rect ClearRegion => new(0x374, (short)(Byte_00 * -0x10 + 0x1f0), 0xc, 0x10);
+        public Rect MoveRegion_Source => new(0x3f4, (short)(Int_02 * 0x10 + 0x180), 0xc, 0x10);
+        public Rect MoveRegion_Destination => new(0x374, (short)(Byte_00 * -0x10 + 0x1f0), 0xc, 0x10);
 
         public override void SerializeImpl(SerializerObject s)
         {

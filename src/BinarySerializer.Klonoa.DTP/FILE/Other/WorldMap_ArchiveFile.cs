@@ -8,8 +8,8 @@ namespace BinarySerializer.Klonoa.DTP
         public RawData_ArchiveFile File_1 { get; set; } // TODO: Parse this - appears to only be used by a specific object?
 
         // Both contain a palette each, only one gets loaded at a time. 1 gets loaded if (((DAT_800cac56 == '\0') && (GlobalSectorIndex - 8 < 0x32))
-        public PS1_TIM Palette1 { get; set; }
-        public PS1_TIM Palette2 { get; set; }
+        public TIM Palette1 { get; set; }
+        public TIM Palette2 { get; set; }
 
         public AnimatedSprites_ArchiveFile AnimatedSprites { get; set; }
         public Sprites_ArchiveFile Proto_Sprites { get; set; }
@@ -25,8 +25,8 @@ namespace BinarySerializer.Klonoa.DTP
             }
             else
             {
-                Palette1 = SerializeFile<PS1_TIM>(s, Palette1, 2, name: nameof(Palette1));
-                Palette2 = SerializeFile<PS1_TIM>(s, Palette2, 3, name: nameof(Palette2));
+                Palette1 = SerializeFile<TIM>(s, Palette1, 2, name: nameof(Palette1));
+                Palette2 = SerializeFile<TIM>(s, Palette2, 3, name: nameof(Palette2));
                 AnimatedSprites = SerializeFile<AnimatedSprites_ArchiveFile>(s, AnimatedSprites, 4, name: nameof(AnimatedSprites));
             }
         }

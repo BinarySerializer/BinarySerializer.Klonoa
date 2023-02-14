@@ -17,7 +17,7 @@ namespace BinarySerializer.Klonoa.DTP
         public CollisionTriangles_File Collision { get; set; }
         public MovementPath_File MovementPaths { get; set; }
         public ArchiveFile<MovementPath_File> MovementPathsArchive { get; set; }
-        public PS1_TIM TIM { get; set; }
+        public TIM TIM { get; set; }
         public TIM_ArchiveFile TIMArchive { get; set; }
         public GameObjectData_Sprites[] Sprites { get; set; }
         public VectorAnimation_File LightPositions { get; set; } // Each light has two positions, source and destination
@@ -33,7 +33,7 @@ namespace BinarySerializer.Klonoa.DTP
         public RGBAnimations_File RGBAnimations { get; set; }
         public VectorAnimation_File ScenerySprites { get; set; }
         public RawData_File RawVRAMData { get; set; }
-        public PS1_VRAMRegion RawVRAMDataRegion { get; set; }
+        public Rect RawVRAMDataRegion { get; set; }
         public VectorAnimation_File Positions { get; set; }
         public VectorAnimation_File Rotations { get; set; }
 
@@ -44,7 +44,7 @@ namespace BinarySerializer.Klonoa.DTP
         public bool DoesAnimatedAbsoluteTransformPingPong { get; set; }
         public KlonoaSettings_DTP_PS1.TextureAnimationInfo TextureAnimationInfo { get; set; }
         public KlonoaSettings_DTP_PS1.PaletteAnimationInfo PaletteAnimationInfo { get; set; }
-        public PS1_VRAMRegion[] PaletteAnimationVRAMRegions { get; set; }
+        public Rect[] PaletteAnimationVRAMRegions { get; set; }
         public uint GeyserPlatformPositionsPointer { get; set; }
         public GameObjectData_GeyserPlatformPosition[] GeyserPlatformPositions { get; set; }
         public KlonoaSettings_DTP_PS1.VRAMScrollInfo[] VRAMScrollInfos { get; set; }

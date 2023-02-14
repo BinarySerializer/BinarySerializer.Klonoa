@@ -262,28 +262,28 @@ namespace BinarySerializer.Klonoa.DTP
             // FUN_7_8__80122274
             [7] = new VRAMScrollInfo[]
             {
-                new VRAMScrollInfo(new PS1_VRAMRegion()
+                new VRAMScrollInfo(new Rect()
                 {
                     XPos = 0x1A0,
                     YPos = 0x102,
                     Width = 0x10,
                     Height = 0xFE,
                 }, 0x1A0, 0x100, 1),
-                new VRAMScrollInfo(new PS1_VRAMRegion()
+                new VRAMScrollInfo(new Rect()
                 {
                     XPos = 0x1A0,
                     YPos = 0x100,
                     Width = 0x10,
                     Height = 0x2,
                 }, 0x1A0, 0x1FE, 1),
-                new VRAMScrollInfo(new PS1_VRAMRegion()
+                new VRAMScrollInfo(new Rect()
                 {
                     XPos = 0x190,
                     YPos = 0x101,
                     Width = 0x8,
                     Height = 0x7F,
                 }, 0x190, 0x100, 1),
-                new VRAMScrollInfo(new PS1_VRAMRegion()
+                new VRAMScrollInfo(new Rect()
                 {
                     XPos = 0x190,
                     YPos = 0x100,
@@ -294,28 +294,28 @@ namespace BinarySerializer.Klonoa.DTP
             // FUN_8_7__80116f48
             [8] = new VRAMScrollInfo[]
             {
-                new VRAMScrollInfo(new PS1_VRAMRegion()
+                new VRAMScrollInfo(new Rect()
                 {
                     XPos = 0x1F0,
                     YPos = 0x2,
                     Width = 0x10,
                     Height = 0xFE,
                 }, 0x1F0, 0, 1),
-                new VRAMScrollInfo(new PS1_VRAMRegion()
+                new VRAMScrollInfo(new Rect()
                 {
                     XPos = 0x1F0,
                     YPos = 0x0,
                     Width = 0x10,
                     Height = 0x2,
                 }, 0x1F0, 0xFE, 1),
-                new VRAMScrollInfo(new PS1_VRAMRegion()
+                new VRAMScrollInfo(new Rect()
                 {
                     XPos = 0x1D8,
                     YPos = 0x1,
                     Width = 0x8,
                     Height = 0x7F,
                 }, 0x1D8, 0x0, 1),
-                new VRAMScrollInfo(new PS1_VRAMRegion()
+                new VRAMScrollInfo(new Rect()
                 {
                     XPos = 0x1D8,
                     YPos = 0x0,
@@ -326,28 +326,28 @@ namespace BinarySerializer.Klonoa.DTP
             // FUN_13_8__801205a4
             [13] = new VRAMScrollInfo[]
             {
-                new VRAMScrollInfo(new PS1_VRAMRegion()
+                new VRAMScrollInfo(new Rect()
                 {
                     XPos = 0x1B0,
                     YPos = 0x102,
                     Width = 0x10,
                     Height = 0xFE,
                 }, 0x1b0, 0x100, 1),
-                new VRAMScrollInfo(new PS1_VRAMRegion()
+                new VRAMScrollInfo(new Rect()
                 {
                     XPos = 0x1B0,
                     YPos = 0x100,
                     Width = 0x10,
                     Height = 0x2,
                 }, 0x1b0, 0x1fe, 1),
-                new VRAMScrollInfo(new PS1_VRAMRegion()
+                new VRAMScrollInfo(new Rect()
                 {
                     XPos = 0x198,
                     YPos = 0x101,
                     Width = 0x8,
                     Height = 0x7F,
                 }, 0x198, 0x100, 1),
-                new VRAMScrollInfo(new PS1_VRAMRegion()
+                new VRAMScrollInfo(new Rect()
                 {
                     XPos = 0x198,
                     YPos = 0x100,
@@ -358,28 +358,28 @@ namespace BinarySerializer.Klonoa.DTP
             // FUN_15_8__8011b3c8
             [15] = new VRAMScrollInfo[]
             {
-                new VRAMScrollInfo(new PS1_VRAMRegion()
+                new VRAMScrollInfo(new Rect()
                 {
                     XPos = 0x160,
                     YPos = 0x141,
                     Width = 0x10,
                     Height = 0xBF,
                 }, 0x160, 0x140, 4),
-                new VRAMScrollInfo(new PS1_VRAMRegion()
+                new VRAMScrollInfo(new Rect()
                 {
                     XPos = 0x160,
                     YPos = 0x140,
                     Width = 0x10,
                     Height = 0x1,
                 }, 0x160, 0x1ff, 4),
-                new VRAMScrollInfo(new PS1_VRAMRegion()
+                new VRAMScrollInfo(new Rect()
                 {
                     XPos = 0x150,
                     YPos = 0x121,
                     Width = 0x8,
                     Height = 0x5F,
                 }, 0x150, 0x120, 8),
-                new VRAMScrollInfo(new PS1_VRAMRegion()
+                new VRAMScrollInfo(new Rect()
                 {
                     XPos = 0x150,
                     YPos = 0x120,
@@ -390,28 +390,28 @@ namespace BinarySerializer.Klonoa.DTP
             // FUN_19_8__801208d8
             [19] = new VRAMScrollInfo[]
             {
-                new VRAMScrollInfo(new PS1_VRAMRegion()
+                new VRAMScrollInfo(new Rect()
                 {
                     XPos = 0x160,
                     YPos = 0x182,
                     Width = 0x10,
                     Height = 0x7E,
                 }, 0x160, 0x180, 1),
-                new VRAMScrollInfo(new PS1_VRAMRegion()
+                new VRAMScrollInfo(new Rect()
                 {
                     XPos = 0x160,
                     YPos = 0x180,
                     Width = 0x10,
                     Height = 0x2,
                 }, 0x160, 0x1FE, 1),
-                new VRAMScrollInfo(new PS1_VRAMRegion()
+                new VRAMScrollInfo(new Rect()
                 {
                     XPos = 0x150,
                     YPos = 0x141,
                     Width = 0x8,
                     Height = 0x3F,
                 }, 0x150, 0x140, 1),
-                new VRAMScrollInfo(new PS1_VRAMRegion()
+                new VRAMScrollInfo(new Rect()
                 {
                     XPos = 0x150,
                     YPos = 0x140,
@@ -422,28 +422,28 @@ namespace BinarySerializer.Klonoa.DTP
             // FUN_24_7__8011d3c8
             [24] = new VRAMScrollInfo[]
             {
-                new VRAMScrollInfo(new PS1_VRAMRegion()
+                new VRAMScrollInfo(new Rect()
                 {
                     XPos = 0x1F0,
                     YPos = 0x1,
                     Width = 0x10,
                     Height = 0xBF,
                 }, 0x1F0, 0x00, 4),
-                new VRAMScrollInfo(new PS1_VRAMRegion()
+                new VRAMScrollInfo(new Rect()
                 {
                     XPos = 0x1F0,
                     YPos = 0x0,
                     Width = 0x10,
                     Height = 0x1,
                 }, 0x1F0, 0xBF, 4),
-                new VRAMScrollInfo(new PS1_VRAMRegion()
+                new VRAMScrollInfo(new Rect()
                 {
                     XPos = 0x1D8,
                     YPos = 0x1,
                     Width = 0x8,
                     Height = 0x5F,
                 }, 0x1D8, 0x00, 8),
-                new VRAMScrollInfo(new PS1_VRAMRegion()
+                new VRAMScrollInfo(new Rect()
                 {
                     XPos = 0x1D8,
                     YPos = 0x20,
@@ -493,7 +493,7 @@ namespace BinarySerializer.Klonoa.DTP
 
         public class VRAMScrollInfo
         {
-            public VRAMScrollInfo(PS1_VRAMRegion region, int destinationX, int destinationY, int animSpeed)
+            public VRAMScrollInfo(Rect region, int destinationX, int destinationY, int animSpeed)
             {
                 Region = region;
                 DestinationX = destinationX;
@@ -501,7 +501,7 @@ namespace BinarySerializer.Klonoa.DTP
                 AnimSpeed = animSpeed;
             }
 
-            public PS1_VRAMRegion Region { get; }
+            public Rect Region { get; }
             public int DestinationX { get; }
             public int DestinationY { get; }
             public int AnimSpeed { get; }
