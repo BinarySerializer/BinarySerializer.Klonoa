@@ -4,25 +4,25 @@
     {
         public int Pre_Level { get; set; } = -1; // Semi-hacky way to pass level down for parsing hard-coded files
 
-        public LevelCommonAssets_ArchiveFile CommonAssets { get; set; } 
-        public RawData_ArchiveFile Archive_1 { get; set; } // Contains geometry and textures for dream stones, not sure about the other files
-        public ArchiveFile<RawData_ArchiveFile> Archive_2 { get; set; } // ? (seems like the number of archives inside this archive is equal to the number of level sectors)
-        public LevelMiscAssets_ArchiveFile MiscAssets { get; set; }
-        public RawData_ArchiveFile File_4 { get; set; } // ?
-        public RawData_File Boundary_0 { get; set; } 
-        public RawData_File Boundary_1 { get; set; }
-        public RawData_File Boundary_2 { get; set; }
+        public LevelNakanoPack_ArchiveFile NakanoPack { get; set; } 
+        public LevelOkanoPack_ArchiveFile OkanoPack { get; set; }
+        public ArchiveFile<RawData_ArchiveFile> HoshinoPack { get; set; } // ? (seems like the number of archives inside this archive is equal to the number of level sectors)
+        public LevelHaradaPack_ArchiveFile HaradaPack { get; set; }
+        public RawData_ArchiveFile AbePack { get; set; } // ?
+        public RawData_File HatoPack { get; set; } 
+        public RawData_File TakePack { get; set; }
+        public RawData_File KazuyaPack { get; set; }
 
         protected override void SerializeFiles(SerializerObject s)
         {
-            CommonAssets = SerializeFile(s, CommonAssets, 0, onPreSerialize: x => x.Pre_Level = Pre_Level, name: nameof(CommonAssets));
-            Archive_1 = SerializeFile(s, Archive_1, 1, name: nameof(Archive_1));
-            Archive_2 = SerializeFile(s, Archive_2, 2, name: nameof(Archive_2));
-            MiscAssets = SerializeFile(s, MiscAssets, 3, name: nameof(MiscAssets));
-            File_4 = SerializeFile(s, File_4, 4, name: nameof(File_4));
-            Boundary_0 = SerializeFile(s, Boundary_0, 5, name: nameof(Boundary_0));
-            Boundary_1 = SerializeFile(s, Boundary_1, 6, name: nameof(Boundary_1));
-            Boundary_2 = SerializeFile(s, Boundary_2, 7, name: nameof(Boundary_2));
+            NakanoPack = SerializeFile(s, NakanoPack, 0, onPreSerialize: x => x.Pre_Level = Pre_Level, name: nameof(NakanoPack));
+            OkanoPack = SerializeFile(s, OkanoPack, 1, name: nameof(OkanoPack));
+            HoshinoPack = SerializeFile(s, HoshinoPack, 2, name: nameof(HoshinoPack));
+            HaradaPack = SerializeFile(s, HaradaPack, 3, name: nameof(HaradaPack));
+            AbePack = SerializeFile(s, AbePack, 4, name: nameof(AbePack));
+            HatoPack = SerializeFile(s, HatoPack, 5, name: nameof(HatoPack));
+            TakePack = SerializeFile(s, TakePack, 6, name: nameof(TakePack));
+            KazuyaPack = SerializeFile(s, KazuyaPack, 7, name: nameof(KazuyaPack));
         }
     }
 }

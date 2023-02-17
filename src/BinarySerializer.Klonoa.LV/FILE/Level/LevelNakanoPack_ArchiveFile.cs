@@ -1,6 +1,6 @@
 namespace BinarySerializer.Klonoa.LV
 {
-    public class LevelCommonAssets_ArchiveFile : ArchiveFile
+    public class LevelNakanoPack_ArchiveFile : ArchiveFile
     {
         public int Pre_Level { get; set; }
 
