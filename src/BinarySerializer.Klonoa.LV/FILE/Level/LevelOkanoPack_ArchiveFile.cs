@@ -30,14 +30,13 @@ namespace BinarySerializer.Klonoa.LV
         public RouteData_File KanranRoute { get; set; }
         public RouteData_File Map0631Route { get; set; }
 
-        // ZakID
-        public RawData_File ZakID { get; set; }
+        // Zako IDs
+        public ZakoIDs_File ZakoIDs { get; set; }
 
         // Enemy/item data for each vision
         public RawData_File[] Zak { get; set; }
         public RawData_File[] Items { get; set; }
-        public RawData_File[] Zako { get; set; }
-
+        public RouteData_File[] ZakoRoutes { get; set; }
 
         protected override void SerializeFiles(SerializerObject s)
         {
@@ -67,16 +66,16 @@ namespace BinarySerializer.Klonoa.LV
             KanranRoute = SerializeFile(s, KanranRoute, 21, name: nameof(KanranRoute));
             Map0631Route = SerializeFile(s, Map0631Route, 22, name: nameof(Map0631Route));
 
-            ZakID = SerializeFile(s, ZakID, 23, name: nameof(ZakID));
+            ZakoIDs = SerializeFile(s, ZakoIDs, 23, name: nameof(ZakoIDs));
             
             int visionCount = (OffsetTable.FilesCount - 24) / 3;
             Zak ??= new RawData_File[visionCount];
             Items ??= new RawData_File[visionCount];
-            Zako ??= new RawData_File[visionCount];
+            ZakoRoutes ??= new RouteData_File[visionCount];
             for (int i = 0; i < visionCount; i++) {
                 Zak[i] = SerializeFile(s, Zak[i], 24 + i * 3, name: $"{nameof(Zak)}[{i}]");
                 Items[i] = SerializeFile(s, Items[i], 24 + i * 3 + 1, name: $"{nameof(Items)}[{i}]");
-                Zako[i] = SerializeFile(s, Zako[i], 24 + i * 3 + 2, name: $"{nameof(Zako)}[{i}]");
+                ZakoRoutes[i] = SerializeFile(s, ZakoRoutes[i], 24 + i * 3 + 2, name: $"{nameof(ZakoRoutes)}[{i}]");
             }
         }
     }
