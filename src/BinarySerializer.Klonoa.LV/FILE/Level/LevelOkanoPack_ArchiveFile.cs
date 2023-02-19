@@ -35,7 +35,7 @@ namespace BinarySerializer.Klonoa.LV
 
         // Enemy/item data for each vision
         public RawData_File[] Zak { get; set; }
-        public RawData_File[] Items { get; set; }
+        public LevelSectorDreamstones_File[] DreamstoneData { get; set; }
         public RouteData_File[] ZakoRoutes { get; set; }
 
         protected override void SerializeFiles(SerializerObject s)
@@ -70,11 +70,11 @@ namespace BinarySerializer.Klonoa.LV
             
             int visionCount = (OffsetTable.FilesCount - 24) / 3;
             Zak ??= new RawData_File[visionCount];
-            Items ??= new RawData_File[visionCount];
+            DreamstoneData ??= new LevelSectorDreamstones_File[visionCount];
             ZakoRoutes ??= new RouteData_File[visionCount];
             for (int i = 0; i < visionCount; i++) {
                 Zak[i] = SerializeFile(s, Zak[i], 24 + i * 3, name: $"{nameof(Zak)}[{i}]");
-                Items[i] = SerializeFile(s, Items[i], 24 + i * 3 + 1, name: $"{nameof(Items)}[{i}]");
+                DreamstoneData[i] = SerializeFile(s, DreamstoneData[i], 24 + i * 3 + 1, name: $"{nameof(DreamstoneData)}[{i}]");
                 ZakoRoutes[i] = SerializeFile(s, ZakoRoutes[i], 24 + i * 3 + 2, name: $"{nameof(ZakoRoutes)}[{i}]");
             }
         }
