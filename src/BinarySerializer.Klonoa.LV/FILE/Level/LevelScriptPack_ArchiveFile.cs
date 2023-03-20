@@ -18,7 +18,7 @@
         */
 
         public VIFGeometry_File[] BackgroundGeometry { get; set; }
-        public RawData_File[] BackgroundAnimations { get; set; }
+        public BackgroundAnimation_File[] BackgroundAnimations { get; set; }
         public RawData_File FlatMirror { get; set; }
         public RawData_File CurveMirror { get; set; }
         public RawData_File VPA { get; set; }
@@ -35,7 +35,7 @@
             for (int i = 0; i < OffsetTable.FilesCount; i++)
             {
                 BackgroundGeometry ??= new VIFGeometry_File[6];
-                BackgroundAnimations ??= new RawData_File[6];
+                BackgroundAnimations ??= new BackgroundAnimation_File[6];
 
                 if (!IsDummy(i))
                 {
