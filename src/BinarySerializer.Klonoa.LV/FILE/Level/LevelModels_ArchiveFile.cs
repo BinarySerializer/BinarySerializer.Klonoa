@@ -1,11 +1,9 @@
-using System.Collections.Generic;
-
 namespace BinarySerializer.Klonoa.LV
 {
     public class LevelModels_ArchiveFile : ArchiveFile
     {
         public ArchiveFile<Model_ArchiveFile>[] Models { get; set; }
-        public RawData_File File_Last { get; set; } // ?
+        public ModelClipShadowData_File ClipShadowData { get; set; }
 
         protected override void SerializeFiles(SerializerObject s)
         {   
@@ -18,7 +16,7 @@ namespace BinarySerializer.Klonoa.LV
                 Models[i] = SerializeFile<ArchiveFile<Model_ArchiveFile>>(s, Models[i], i, name: $"{nameof(Models)}[{i}]");
             }
 
-            File_Last = SerializeFile(s, File_Last, OffsetTable.FilesCount - 1, name: nameof(File_Last));
+            ClipShadowData = SerializeFile(s, ClipShadowData, OffsetTable.FilesCount - 1, name: nameof(ClipShadowData));
         }
     }
 }
