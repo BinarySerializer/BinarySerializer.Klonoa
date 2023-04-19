@@ -11,7 +11,7 @@
         public RawData_ArchiveFile AbePack { get; set; } // ?
         public RawData_File HatoPack { get; set; } 
         public RawData_File TakePack { get; set; }
-        public RawData_File KazuyaPack { get; set; }
+        public LevelKazuyaPack_ArchiveFile KazuyaPack { get; set; }
 
         protected override void SerializeFiles(SerializerObject s)
         {
