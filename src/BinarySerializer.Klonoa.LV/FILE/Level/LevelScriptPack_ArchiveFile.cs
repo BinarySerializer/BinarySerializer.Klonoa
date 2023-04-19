@@ -17,24 +17,24 @@
                 20 = m1100b
         */
 
-        public VIFGeometry_File[] BackgroundGeometry { get; set; }
+        public VPM_File[] BackgroundGeometry { get; set; }
         public BackgroundAnimation_File[] BackgroundAnimations { get; set; }
         public RawData_File FlatMirror { get; set; }
         public RawData_File CurveMirror { get; set; }
         public RawData_File VPA { get; set; }
         public RawData_File VPO { get; set; }
-        public VIFGeometry_File MTexVPM { get; set; }
+        public VPM_File MTexVPM { get; set; }
         public RawData_ArchiveFile MiniCutscenes { get; set; }
-        public Cutscenes_ArchiveFile Cutscenes { get; set; }
-        public VIFGeometry_File M1100a { get; set; }
-        public VIFGeometry_File M1100b { get; set; }
+        public HRPPack_ArchiveFile Cutscenes { get; set; }
+        public VPM_File M1100a { get; set; }
+        public VPM_File M1100b { get; set; }
         public RawData_File DummyFile { get; set; }
 
         protected override void SerializeFiles(SerializerObject s)
         {
             for (int i = 0; i < OffsetTable.FilesCount; i++)
             {
-                BackgroundGeometry ??= new VIFGeometry_File[6];
+                BackgroundGeometry ??= new VPM_File[6];
                 BackgroundAnimations ??= new BackgroundAnimation_File[6];
 
                 if (!IsDummy(i))

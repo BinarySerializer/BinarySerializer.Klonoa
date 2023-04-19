@@ -1,7 +1,7 @@
 namespace BinarySerializer.Klonoa.LV {
     public class NowLoadingSprite_ArchiveFile : ArchiveFile {
         public RawData_File File_0; // ? (has a bunch of float values)
-        public GSTextures_File Sprite;
+        public GMS_File Sprite;
 
         protected override void SerializeFiles(SerializerObject s)
         {

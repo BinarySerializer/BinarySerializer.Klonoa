@@ -97,7 +97,7 @@ namespace BinarySerializer.Klonoa.LV
                     
                     bool isPreload = fileIndex % 2 == 0; // Even archives are preload, odd archives are data
                     if (isPreload)
-                        return LoadBINFile<LevelPreloadPack_ArchiveFile>(bin, fileIndex, languageIndex, bgmIndex);
+                        return LoadBINFile<PreloadDataPack_ArchiveFile>(bin, fileIndex, languageIndex, bgmIndex);
                     else
                         return LoadBINFile<LevelDataPack_ArchiveFile>(bin, fileIndex, languageIndex, bgmIndex);
                 case BINType.BGM:

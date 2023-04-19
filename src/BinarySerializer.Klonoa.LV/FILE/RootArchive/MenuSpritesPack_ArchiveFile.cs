@@ -7,8 +7,7 @@ namespace BinarySerializer.Klonoa.LV {
         public RawData_File Boundary_2;
         public RawData_File Boundary_3;
         public RawData_File Boundary_4;
-        public GSTextures_File MenuSprites;
-
+        public GMS_File MenuSprites;
 
         protected override void SerializeFiles(SerializerObject s)
         {

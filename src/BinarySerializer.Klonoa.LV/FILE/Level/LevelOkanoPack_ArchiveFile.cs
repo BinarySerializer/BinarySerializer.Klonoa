@@ -2,10 +2,10 @@ namespace BinarySerializer.Klonoa.LV
 {
     public class LevelOkanoPack_ArchiveFile : ArchiveFile
     {
-        public GSTextures_File DreamstoneTexture { get; set; }
-        public GSTextures_File LargeDreamstoneTexture { get; set; }
-        public VIFGeometry_File DreamstoneGeometry { get; set; }
-        public VIFGeometry_File LargeDreamstoneGeometry { get; set; }
+        public GMS_File DreamstoneTexture { get; set; }
+        public GMS_File LargeDreamstoneTexture { get; set; }
+        public VPM_File DreamstoneGeometry { get; set; }
+        public VPM_File LargeDreamstoneGeometry { get; set; }
 
         // Collision, TODO: find out what these names are supposed to mean
         public RawData_File MyuboCollision { get; set; }
@@ -23,23 +23,25 @@ namespace BinarySerializer.Klonoa.LV
         public RawData_File Map0631Collision { get; set; }
 
         // Routes
-        public RouteData_File Map0636Route { get; set; }
-        public RouteData_File Map0635Route { get; set; }
-        public RouteData_File Oku5mRoute { get; set; }
-        public RouteData_File PlaneRoute { get; set; }
-        public RouteData_File KanranRoute { get; set; }
-        public RouteData_File Map0631Route { get; set; }
+        public RT_File Map0636Route { get; set; }
+        public RT_File Map0635Route { get; set; }
+        public RT_File Oku5mRoute { get; set; }
+        public RT_File PlaneRoute { get; set; }
+        public RT_File KanranRoute { get; set; }
+        public RT_File Map0631Route { get; set; }
 
         // Zako IDs
-        public ZakoIDs_File ZakoIDs { get; set; }
+        public ZAKID_File ZakoIDs { get; set; }
 
         // Enemy/item data for each vision
         public RawData_File[] Zak { get; set; }
-        public LevelSectorDreamstones_File[] DreamstoneData { get; set; }
-        public RouteData_File[] ZakoRoutes { get; set; }
+        public ITM_File[] DreamstoneData { get; set; }
+        public RT_File[] ZakoRoutes { get; set; }
 
         protected override void SerializeFiles(SerializerObject s)
         {
+            if (OffsetTable.FilesCount == 0)
+                return;
             DreamstoneTexture = SerializeFile(s, DreamstoneTexture, 0, name: nameof(DreamstoneTexture));
             LargeDreamstoneTexture = SerializeFile(s, LargeDreamstoneTexture, 1, name: nameof(LargeDreamstoneTexture));
             DreamstoneGeometry = SerializeFile(s, DreamstoneGeometry, 2, name: nameof(DreamstoneGeometry));
@@ -70,8 +72,8 @@ namespace BinarySerializer.Klonoa.LV
             
             int visionCount = (OffsetTable.FilesCount - 24) / 3;
             Zak ??= new RawData_File[visionCount];
-            DreamstoneData ??= new LevelSectorDreamstones_File[visionCount];
-            ZakoRoutes ??= new RouteData_File[visionCount];
+            DreamstoneData ??= new ITM_File[visionCount];
+            ZakoRoutes ??= new RT_File[visionCount];
             for (int i = 0; i < visionCount; i++) {
                 Zak[i] = SerializeFile(s, Zak[i], 24 + i * 3, name: $"{nameof(Zak)}[{i}]");
                 DreamstoneData[i] = SerializeFile(s, DreamstoneData[i], 24 + i * 3 + 1, name: $"{nameof(DreamstoneData)}[{i}]");

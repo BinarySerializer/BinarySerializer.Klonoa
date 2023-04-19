@@ -5,7 +5,7 @@ namespace BinarySerializer.Klonoa.LV
         public int Pre_Level { get; set; }
 
         public LevelSectors_ArchiveFile SectorData;
-        public LevelModels_ArchiveFile ModelData;
+        public LevelModelsPack_ArchiveFile ModelData;
         public VTPack_ArchiveFile VTData;
 
         protected override void SerializeFiles(SerializerObject s)

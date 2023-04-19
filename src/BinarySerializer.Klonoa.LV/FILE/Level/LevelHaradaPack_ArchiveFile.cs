@@ -3,11 +3,11 @@ namespace BinarySerializer.Klonoa.LV
     public class LevelHaradaPack_ArchiveFile : ArchiveFile
     {
         public ArchiveFile<LevelScriptPack_ArchiveFile> ScriptData { get; set; } // Seems mainly like script data for each level section, but looks like there may be a bit of geometry in here as well
-        public GSTextures_File DialogueBoxTexture { get; set; }
+        public GMS_File DialogueBoxTexture { get; set; }
         public BackgroundTexturesArchive_ArchiveFile BackgroundTextures { get; set; }
-        public ArchiveFile<LevelSectorConfig_File> SectorConfigs { get; set; }
+        public ArchiveFile<MVC_File> SectorConfigs { get; set; }
         public RawData_File File_4 { get; set; }
-        public GSTextures_File DialogueFont { get; set; }
+        public GMS_File DialogueFont { get; set; }
 
         protected override void SerializeFiles(SerializerObject s)
         {
