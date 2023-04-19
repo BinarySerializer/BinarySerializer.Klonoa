@@ -8,26 +8,26 @@ namespace BinarySerializer.Klonoa.LV
     {
         public Pointer Pre_Offset { get; set; }
 
-        public ushort SectionSize { get; set; }
-        public ushort Ushort_02 { get; set; }
-        public Pointer CommandsPointer { get; set; }
+        public Chain_DMAtag DMAtag;
         public VIF_Command[] Commands { get; set; }
 
         public override void SerializeImpl(SerializerObject s)
         {
-            SectionSize = s.Serialize<ushort>(SectionSize, name: nameof(SectionSize));
-            Ushort_02 = s.Serialize<ushort>(Ushort_02, name: nameof(Ushort_02));
-            CommandsPointer = s.SerializePointer(CommandsPointer, anchor: Pre_Offset, name: nameof(CommandsPointer));
+            DMAtag = s.SerializeObject<Chain_DMAtag>(DMAtag, name: nameof(DMAtag));
             s.SerializePadding(8, logIfNotNull: true);
-            long lastCommandOffset = CommandsPointer.FileOffset + SectionSize * 0x10 - 0x04;
+            
             VIF_Parser parser = new VIF_Parser() { IsVIF1 = true };
-            s.DoAt(CommandsPointer, () => {
-                Commands = s.SerializeObjectArrayUntil<VIF_Command>(Commands, c => c.Offset.FileOffset >= lastCommandOffset, 
-                    onPreSerialize: (x, _) => x.Pre_Parser = parser, name: nameof(Commands));
+            long commandsSize = DMAtag.QWC * 0x10;
+            long currentSize = 0;
+            s.DoAt(Pre_Offset + DMAtag.ADDR, () => {
+                Commands = s.SerializeObjectArrayUntil<VIF_Command>(Commands, c => {
+                    currentSize += c.SerializedSize;
+                    return currentSize >= commandsSize;
+                }, onPreSerialize: (x, _) => x.Pre_Parser = parser, name: nameof(Commands));
             });
         }
 
-        public IEnumerable<VPMMicroMem> ParseBlocks(Context context, string key)
+        public IEnumerable<VPMMicroMem> ParseMicroMemory(Context context, string key)
         {
             // Create a parser
             var parser = new VIF_Parser() { IsVIF1 = true, };
@@ -51,7 +51,7 @@ namespace BinarySerializer.Klonoa.LV
                         BinaryDeserializer s = context.Deserializer;
                         s.Goto(file.StartPointer + tops);
 
-                        var block = s.SerializeObject<VPMMicroMem>(default, name: "VIFGeometry_Block", onPreSerialize: x => x.Pre_ProgramAddress = programAddress);
+                        var block = s.SerializeObject<VPMMicroMem>(default, name: "VPM_MicroMem", onPreSerialize: x => x.Pre_ProgramAddress = programAddress);
 
                         return block;
                     } finally {
@@ -62,7 +62,7 @@ namespace BinarySerializer.Klonoa.LV
                 return null;
             }
             
-            if (SectionSize > 2) { // Sections with a size of 2 don't seem to do anything
+            if (DMAtag.QWC > 2) { // Sections with a size of 2 don't seem to do anything
                 // Enumerate every command
                 foreach (VIF_Command command in Commands)
                 {
