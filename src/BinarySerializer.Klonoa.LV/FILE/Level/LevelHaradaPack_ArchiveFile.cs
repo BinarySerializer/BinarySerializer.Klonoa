@@ -6,7 +6,7 @@ namespace BinarySerializer.Klonoa.LV
         public GMS_File DialogueBoxTexture { get; set; }
         public BackgroundTexturesArchive_ArchiveFile BackgroundTextures { get; set; }
         public ArchiveFile<MVC_File> SectorConfigs { get; set; }
-        public RawData_File File_4 { get; set; }
+        public PTSE_File PuppetSoundEffects { get; set; }
         public GMS_File DialogueFont { get; set; }
 
         protected override void SerializeFiles(SerializerObject s)
@@ -15,7 +15,7 @@ namespace BinarySerializer.Klonoa.LV
             DialogueBoxTexture = SerializeFile(s, DialogueBoxTexture, 1, name: nameof(DialogueBoxTexture));
             BackgroundTextures = SerializeFile(s, BackgroundTextures, 2, name: nameof(BackgroundTextures));
             SectorConfigs = SerializeFile(s, SectorConfigs, 3, name: nameof(SectorConfigs));
-            File_4 = SerializeFile(s, File_4, 4, name: nameof(File_4));
+            PuppetSoundEffects = SerializeFile(s, PuppetSoundEffects, 4, name: nameof(PuppetSoundEffects));
             DialogueFont = SerializeFile(s, DialogueFont, 5, name: nameof(DialogueFont));
         }
     }
