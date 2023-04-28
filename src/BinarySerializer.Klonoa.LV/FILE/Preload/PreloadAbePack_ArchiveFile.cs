@@ -2,13 +2,14 @@ namespace BinarySerializer.Klonoa.LV
 {
     public class PreloadAbePack_ArchiveFile : ArchiveFile
     {
-        public MiscTextures_ArchiveFile ParticleTextures { get; set; }
-        public MiscTextures_ArchiveFile ReflectionTextures { get; set; }
+        public GIMPack_ArchiveFile[] GIMPacks { get; set; }
 
         protected override void SerializeFiles(SerializerObject s)
         {
-            ParticleTextures = SerializeFile(s, ParticleTextures, 0, name: nameof(ParticleTextures));
-            ReflectionTextures = SerializeFile(s, ReflectionTextures, 1, name: nameof(ReflectionTextures));
+            GIMPacks ??= new GIMPack_ArchiveFile[OffsetTable.FilesCount];
+            for (int i = 0; i < GIMPacks.Length; i++) {
+                GIMPacks[i] = SerializeFile(s, GIMPacks[i], i, name: $"{nameof(GIMPacks)}[{i}]");
+            }
         }
     }
 }
