@@ -1,14 +1,14 @@
 namespace BinarySerializer.Klonoa.LV
 {
-    public class MiscTextures_ArchiveFile : ArchiveFile
+    public class GIMPack_ArchiveFile : ArchiveFile
     {
-        public RawData_File File_0 { get; set; }
+        public GIMIDs_File GIM_IDs { get; set; }
         public ArchiveFile<GIM_File> GIM_Files { get; set; }
 
         protected override void SerializeFiles(SerializerObject s)
         {
-            File_0 = SerializeFile(s, File_0, 0, name: nameof(File_0));
             GIM_Files = SerializeFile(s, GIM_Files, 1, name: nameof(GIM_Files));
+            GIM_IDs = SerializeFile(s, GIM_IDs, 0, onPreSerialize: x => x.Pre_Count = GIM_Files.Files.Length, name: nameof(GIM_IDs));
         }
     }
 }
