@@ -4,7 +4,7 @@ namespace BinarySerializer.Klonoa.LV {
         public ArchiveFile<GMS_File> GMSPack { get; set; }
         public SFZPack_ArchiveFile SFZPack { get; set; }
         public ACTPack_ArchiveFile AnimationPack { get; set; }
-        public SFXDescriptor_File Descriptor { get; set; } // Includes model name (3 characters long)
+        public SFXOutlineSpecularData_File OutlineSpecularData { get; set; }
 
         protected override void SerializeFiles(SerializerObject s)
         {
@@ -13,7 +13,7 @@ namespace BinarySerializer.Klonoa.LV {
             SFZPack = SerializeFile(s, SFZPack, 2, onPreSerialize: x => x.Pre_Parts = SFX.Parts, name: nameof(SFZPack));
             AnimationPack = SerializeFile(s, AnimationPack, 3, name: nameof(AnimationPack));
             if (OffsetTable.FilesCount > 4)
-                Descriptor = SerializeFile(s, Descriptor, 4, name: nameof(Descriptor));
+                OutlineSpecularData = SerializeFile(s, OutlineSpecularData, 4, name: nameof(OutlineSpecularData));
         }
     }
 }
