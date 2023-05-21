@@ -21,8 +21,13 @@ namespace BinarySerializer.Klonoa.LV
         {
             Name = s.SerializeString(Name, name: nameof(Name));
             s.Align(16);
-            OutlineFlags = s.SerializeArray<OutlineFlag>(OutlineFlags, 64, name: nameof(OutlineFlags));
-            SpecularToggle = s.SerializeArray<byte>(SpecularToggle, 64, name: nameof(SpecularToggle));
+            if (Pre_FileSize > 0x10) {
+                OutlineFlags = s.SerializeArray<OutlineFlag>(OutlineFlags, 64, name: nameof(OutlineFlags));
+                SpecularToggle = s.SerializeArray<byte>(SpecularToggle, 64, name: nameof(SpecularToggle));
+            } else {
+                OutlineFlags ??= new OutlineFlag[64];
+                SpecularToggle ??= new byte[64];
+            }
         }
     }
 
