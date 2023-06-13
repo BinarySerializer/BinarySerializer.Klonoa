@@ -61,7 +61,7 @@ namespace BinarySerializer.Klonoa.KH
             Ushort_3C = s.Serialize<ushort>(Ushort_3C, name: nameof(Ushort_3C));
             Ushort_3E = s.Serialize<ushort>(Ushort_3E, name: nameof(Ushort_3E));
 
-            DoAtOffset(s, TileMapOffset, () => TileMap = s.SerializeObjectArray<MapTile>(TileMap, TileMapLength / 2, name: nameof(TileMap)));
+            DoAtOffset(s, TileMapOffset, () => TileMap = s.SerializeIntoArray<MapTile>(TileMap, TileMapLength / 2, MapTile.SerializeInto_Regular, name: nameof(TileMap)));
             DoAtOffset(s, PaletteOffset, () => Palette = s.SerializeObjectArray<RGBA5551Color>(Palette, 256, name: nameof(Palette)));
             DoAtOffset(s, TileSetOffset, () => TileSet = s.SerializeArray<byte>(TileSet, TileSetLength, name: nameof(TileSet)));
             DoAtOffset(s, CollisionMapOffset, () => CollisionMap = s.SerializeArray<byte>(CollisionMap, CollisionMapLength, name: nameof(CollisionMap)));

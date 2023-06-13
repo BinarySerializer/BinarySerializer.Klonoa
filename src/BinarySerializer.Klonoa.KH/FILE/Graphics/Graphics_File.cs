@@ -50,7 +50,7 @@ namespace BinarySerializer.Klonoa.KH
                 if (!HasTileMap)
                     tilesCount = 0;
 
-                return TileMap = s.SerializeObjectArray<MapTile>(TileMap, tilesCount, x => x.Pre_IsAffine = IsAffine, name: nameof(TileMap));
+                TileMap = s.SerializeIntoArray<MapTile>(TileMap, tilesCount, IsAffine ? MapTile.SerializeInto_Affine : MapTile.SerializeInto_Regular, name: nameof(TileMap));
             });
             
             if (TileMapOffset != 0)
