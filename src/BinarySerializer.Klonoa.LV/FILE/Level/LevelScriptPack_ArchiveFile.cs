@@ -20,7 +20,7 @@
         public VPM_File[] BackgroundGeometry { get; set; }
         public BackgroundAnimation_File[] BackgroundAnimations { get; set; }
         public FlatMirror_File FlatMirror { get; set; }
-        public RawData_File CurveMirror { get; set; }
+        public CurveMirror_File CurveMirror { get; set; }
         public RawData_File VPA { get; set; }
         public RawData_File VPO { get; set; }
         public VPM_File MTexVPM { get; set; }
