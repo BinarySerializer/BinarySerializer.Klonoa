@@ -1,8 +1,7 @@
 namespace BinarySerializer.Klonoa.BV
 {
     /// <summary>
-    /// Right-handed, Y-up vector.
-    /// Signed fixed point (12:4) integers.
+    /// Right-handed, Y-up vector with 16-bit values.
     /// </summary>
     public class VMD_Vector : BinarySerializable
     {
