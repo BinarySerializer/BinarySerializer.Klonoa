@@ -23,7 +23,7 @@ namespace BinarySerializer.Klonoa.LV
         public ushort Palette_DSAY { get; set; }
         public ushort Palette_RRW { get; set; }
         public ushort Palette_RRH { get; set; }
-        public PS2_RGBA8888Color[] Palette { get; set; }
+        public SerializableColor[] Palette { get; set; }
 
         public override void SerializeImpl(SerializerObject s)
         {
@@ -71,7 +71,7 @@ namespace BinarySerializer.Klonoa.LV
             Palette_DSAY = s.Serialize<ushort>(Palette_DSAY, name: nameof(Palette_DSAY));
             Palette_RRW = s.Serialize<ushort>(Palette_RRW, name: nameof(Palette_RRW));
             Palette_RRH = s.Serialize<ushort>(Palette_RRH, name: nameof(Palette_RRH));
-            Palette = s.SerializeObjectArray<PS2_RGBA8888Color>(Palette, Palette_RRW * Palette_RRH, name: nameof(Palette));
+            Palette = s.SerializeIntoArray<SerializableColor>(Palette, Palette_RRW * Palette_RRH, PS2Color.RGBA8888, name: nameof(Palette));
         }
     }
 }

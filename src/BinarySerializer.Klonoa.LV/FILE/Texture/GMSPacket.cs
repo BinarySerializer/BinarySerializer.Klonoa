@@ -16,7 +16,7 @@ namespace BinarySerializer.Klonoa.LV
         public GIFtag GIFTag_Image { get; set; }
         public bool IsPalette => BITBLTBUF.DPSM == GS.PixelStorageMode.PSMCT32;
         public byte[] ImgData { get; set; }
-        public PS2_RGBA8888Color[] Palette { get; set; }
+        public SerializableColor[] Palette { get; set; }
 
         // End of packet
         public Chain_DMAtag DMATag { get; set; }
@@ -37,7 +37,7 @@ namespace BinarySerializer.Klonoa.LV
                 if (!IsPalette)
                     ImgData = s.SerializeArray<byte>(ImgData, GIFTag_Image.NLOOP * 0x10, name: nameof(ImgData));
                 else
-                    Palette = s.SerializeObjectArray<PS2_RGBA8888Color>(Palette, GIFTag_Image.NLOOP * 4, name: nameof(Palette));
+                    Palette = s.SerializeIntoArray<SerializableColor>(Palette, GIFTag_Image.NLOOP * 4, PS2Color.RGBA8888, name: nameof(Palette));
             } else // End of packet
             {
                 TEXFLUSH = s.SerializeObject<GSReg_TEXFLUSH>(TEXFLUSH, onPreSerialize: x => x.SerializeTag = true, name: nameof(TEXFLUSH));

@@ -14,8 +14,8 @@ namespace BinarySerializer.Klonoa.LV
         public KlonoaLV_IntColor FogColor { get; set; } // Fog only applies to level geometry
         public int FogStart { get; set; }
         public int FogEnd { get; set; }
-        public PS2_RGBA8888Color BGT { get; set; }
-        public PS2_RGBA8888Color BGU { get; set; }
+        public SerializableColor BGT { get; set; }
+        public SerializableColor BGU { get; set; }
         public bool IsDummy => Pre_FileSize == 0x10;
 
         public override void SerializeImpl(SerializerObject s)
@@ -34,8 +34,8 @@ namespace BinarySerializer.Klonoa.LV
             FogColor = s.SerializeObject<KlonoaLV_IntColor>(FogColor, name: nameof(FogColor));
             FogStart = s.Serialize<int>(FogStart, name: nameof(FogStart));
             FogEnd = s.Serialize<int>(FogEnd, name: nameof(FogEnd));
-            BGT = s.SerializeObject<PS2_RGBA8888Color>(BGT, name: nameof(BGT));
-            BGU = s.SerializeObject<PS2_RGBA8888Color>(BGU, name: nameof(BGU));
+            BGT = s.SerializeInto<SerializableColor>(BGT, PS2Color.RGBA8888, name: nameof(BGT));
+            BGU = s.SerializeInto<SerializableColor>(BGU, PS2Color.RGBA8888, name: nameof(BGU));
         }
     }
 }

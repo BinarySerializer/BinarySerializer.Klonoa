@@ -17,7 +17,7 @@
             public short YPos { get; set; }
             public short YPos_RelativeObj { get; set; } // An index to a background object, can be -1
 
-            public RGBA8888Color Color { get; set; }
+            public SerializableColor Color { get; set; }
 
             public override void SerializeImpl(SerializerObject s)
             {
@@ -25,7 +25,7 @@
                 XPos_RelativeObj = s.Serialize<short>(XPos_RelativeObj, name: nameof(XPos_RelativeObj));
                 YPos = s.Serialize<short>(YPos, name: nameof(YPos));
                 YPos_RelativeObj = s.Serialize<short>(YPos_RelativeObj, name: nameof(YPos_RelativeObj));
-                Color = s.SerializeObject<RGBA8888Color>(Color, name: nameof(Color));
+                Color = s.SerializeInto<SerializableColor>(Color, BytewiseColor.RGBA8888, name: nameof(Color));
             }
         }
     }
