@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.IO;
-using BinarySerializer.PS2;
+using BinarySerializer.PlayStation.PS2;
 
 namespace BinarySerializer.Klonoa.LV
 {

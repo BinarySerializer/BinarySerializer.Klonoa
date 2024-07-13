@@ -1,4 +1,4 @@
-﻿using BinarySerializer.PS1;
+﻿using BinarySerializer.PlayStation.PS1;
 using System.Collections.Generic;
 
 namespace BinarySerializer.Klonoa.DTP

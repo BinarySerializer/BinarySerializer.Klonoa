@@ -1,5 +1,5 @@
 ﻿using System.Linq;
-using BinarySerializer.PS1;
+using BinarySerializer.PlayStation.PS1;
 
 namespace BinarySerializer.Klonoa.DTP
 {
